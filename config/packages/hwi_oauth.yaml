@@ -1,0 +1,8 @@
+hwi_oauth:
+    firewall_names: [shop]
+    resource_owners:
+        facebook:
+            type: facebook
+            client_id: "%env(APP_FB_CLIENT_ID)%"
+            client_secret: "%env(APP_FB_SECRET)%"
+            scope: "email"

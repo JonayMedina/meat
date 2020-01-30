@@ -1,0 +1,5 @@
+sylius_shop:
+    resource: "@SyliusShopBundle/Resources/config/routing.yml"
+
+sylius_shop_payum:
+    resource: "@SyliusShopBundle/Resources/config/routing/payum.yml"
