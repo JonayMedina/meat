@@ -1,0 +1,50 @@
+/* PWS Theme */
+body.centered {
+    background: #262626;
+}
+
+.ui.primary.submit.button {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: rgb(48, 48, 48);
+    border: 2px solid #303030;
+}
+
+.ui.primary.submit.button:hover, .ui.primary.button:focus {
+    background-color: #f5532d !important;
+    border-color: #f5532d !important;
+    color: #ffffff !important;
+}
+
+.ui.toggle.checkbox input:checked ~ .box:before, .ui.toggle.checkbox input:checked ~ label:before, .ui.toggle.checkbox input:focus:checked ~ .box:before, .ui.toggle.checkbox input:focus:checked ~ label:before {
+    background-color: #f5532d !important;
+}
+
+.ui.inverted.menu {
+    background: #262626
+}
+
+.ui.header .circular.icon {
+    color: #f5532d;
+    background: rgba(245, 83, 45, 0.1);
+}
+
+#sidebar.ui.sidebar.vertical.menu .item.active, .ui.primary.button {
+    background-color: #f5532d !important;
+}
+
+a {
+    color: rgba(245, 83, 45, 0.7);
+}
+
+a:hover, .ui.sortable.table thead th:after, .ui.breadcrumb a:hover {
+    color: #f5532d
+}
+
+.ui.form .field > input:focus, .ui.form .field > textarea:focus {
+    border-color: rgba(245, 83, 45, 0.4);
+}
+
+.admin-logo {
+    max-width: 200px;
+    margin: 0 auto;
+}

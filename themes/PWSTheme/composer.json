@@ -1,0 +1,14 @@
+{
+  "name": "sylius/theme-skeleton",
+  "authors": [
+    {
+      "name": "Hafid Roca",
+      "email": "rroca@praga.ws"
+    }
+  ],
+  "extra": {
+    "sylius-theme": {
+      "title": "PWS Theme"
+    }
+  }
+}
