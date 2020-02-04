@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% block title %}{{ sylius.channel.name }}{% endblock %}</title>
+    <link rel="icon" href="{{ asset('bundles/syliusshop/img/favicon.ico') }}" type="image/x-icon" />
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="description" content="{{ sylius.channel.description }}"/>
@@ -22,6 +23,8 @@
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'assets/shop/css/style.css'} %}
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
     {% endblock %}
 
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
@@ -31,21 +34,27 @@
 {{ sonata_block_render_event('sylius.shop.layout.before_body') }}
 <div class="pusher">
     {% block top %}
-        <div id="menu" class="ui large sticky inverted stackable menu">
-            {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
+        <div class="top-menu">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-right">
+                        {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
 
-            {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
-            {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
+                        {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
+                        {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
 
-            {{ sonata_block_render_event('sylius.shop.layout.before_security_widget') }}
+                        {{ sonata_block_render_event('sylius.shop.layout.before_security_widget') }}
 
-            {{ render(controller('sylius.controller.shop.security_widget:renderAction')) }}
+                        {{ render(controller('sylius.controller.shop.security_widget:renderAction')) }}
 
-            {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
+                        {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
+                    </div>
+                </div>
+            </div>
         </div>
     {% endblock %}
 
-    <div class="ui container">
+    <div class="container">
         {% block header %}
             <header>
                 {% include '@SyliusShop/_header.html.twig' %}
@@ -75,6 +84,9 @@
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
 
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
+
+
+    <script src="{{ asset('bundles/syliusshop/css/bootstrap.min.js') }}"></script>
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

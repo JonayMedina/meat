@@ -912,3 +912,4 @@ sylius:
         zone_consisting_of_provinces: 'Zona formada por provincias'
         zone_details: 'Detalles de la zona'
         zones: 'Zonas'
+        wholesalers: 'Mayoristas'
