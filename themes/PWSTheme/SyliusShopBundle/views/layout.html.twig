@@ -22,6 +22,29 @@
 
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'assets/shop/css/style.css'} %}
 
+        <style>
+            /* Fonts */
+            @font-face {
+                font-family: "Raleway Medium";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Medium.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Regular";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Regular.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway SemiBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-SemiBold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Light";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
+            }
+        </style>
+
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
@@ -35,7 +58,7 @@
 <div class="pusher">
     {% block top %}
         <div class="top-menu">
-            <div class="container">
+{#            <div class="container">#}
                 <nav class="navbar navbar-expand-lg navbar-light">
                     {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
 
@@ -47,7 +70,7 @@
 
                     {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
                 </nav>
-            </div>
+{#            </div>#}
         </div>
     {% endblock %}
 
