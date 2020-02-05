@@ -24,13 +24,18 @@
     ],
     "require": {
         "php": "^7.2",
+        "hwi/oauth-bundle": "^0.6.3",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/httplug-bundle": "^1.13",
-        "hwi/oauth-bundle": "^0.6.3",
         "sylius/shop-api-plugin": "dev-master",
         "sylius/sylius": "~1.6.0",
         "symfony/dotenv": "^4.3",
-        "symfony/flex": "^1.2"
+        "symfony/flex": "^1.2",
+        "symfony/messenger": "^4.4",
+        "symfony/serializer-pack": "^1.0",
+        "ext-amqp": "*",
+        "ext-json": "*",
+        "ext-intl": "*"
     },
     "require-dev": {
         "behat/behat": "^3.4",

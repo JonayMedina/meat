@@ -1,14 +1,35 @@
 framework:
     messenger:
+        default_bus: meathouse.command_bus
+        buses:
+            meathouse.command_bus:
+                middleware:
+                    - doctrine_transaction
+                    - messenger.middleware.dispatch_after_current_bus
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: {}
+        
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        # failure_transport: failed
+        failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            # failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
-
+            async:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    queue_name: sync
+                    auto_setup: true
+                
+            failed:
+                dsn: 'doctrine://default'
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    queue_name: failed
+                    auto_setup: true
+            
         routing:
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
+            'App\Message\Sync':  async
+
