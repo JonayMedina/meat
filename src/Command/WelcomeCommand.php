@@ -2,12 +2,12 @@
 
 namespace App\Command;
 
+use App\Message\Sync;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class WelcomeCommand
@@ -18,6 +18,22 @@ class WelcomeCommand extends Command
 {
     protected static $defaultName = 'app:welcome';
 
+    /**
+     * @var MessageBusInterface $bus
+     */
+    private $bus;
+
+    /**
+     * WelcomeCommand constructor.
+     * @param MessageBusInterface $bus
+     */
+    public function __construct(MessageBusInterface $bus)
+    {
+        parent::__construct();
+        $this->bus = $bus;
+    }
+
+
     protected function configure()
     {
         $this->setDescription('Welcome message');
@@ -26,6 +42,8 @@ class WelcomeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        //$this->bus->dispatch(new Sync(Sync::TYPE_UPDATE, Sync::MODEL_ORDER , ['id' => rand(1,20), 'name' => 'This is a test'], ['name' => ['hello', 'This is a test']]));
 
         $milk = '
  _________________________
