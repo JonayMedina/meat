@@ -1,12 +1,35 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{#
-
-    Available variables:
-
-    * "form" - Login form.
-
-#}
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block content %}
+    {{ sonata_block_render_event('sylius.shop.login.after_content_header') }}
+
+    <div class="row login">
+        <div class="col-12 segment">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-center">{{ 'sylius.ui.welcome' | trans }}</h1>
+                    <p class="text-center">{{ 'sylius.ui.access_your_store_account_or_create_a_new_one' | trans }} <a href="{{ path('sylius_shop_register') }}">{{ 'sylius.ui.create_here' | trans }}</a></p>
+                </div>
+                <div class="col-12">
+                    {{ sonata_block_render_event('sylius.shop.login.before_login') }}
+
+                    {{ form_start(form, {'action': path('sylius_shop_login_check'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
+                    {% include '@SyliusShop/Login/_form.html.twig' %}
+
+                    {{ sonata_block_render_event('sylius.shop.login.form', {'form': form}) }}
+
+                    <a class="d-block text-center" href="{{ path('sylius_shop_request_password_reset_token') }}">{{ 'sylius.ui.forgot_password'|trans }}</a>
+                    <button type="submit" class="btn-rounded margin-0-auto">{{ 'sylius.ui.login'|trans }}</button>
+                    <input type="hidden" name="_csrf_shop_security_token" value="{{ csrf_token('shop_authenticate') }}">
+                    {{ form_end(form, {'render_rest': false}) }}
+
+                    <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+                    {{ sonata_block_render_event('sylius.shop.login.after_login') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

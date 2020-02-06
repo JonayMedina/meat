@@ -22,6 +22,29 @@
 
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'assets/shop/css/style.css'} %}
 
+        <style>
+            /* Fonts */
+            @font-face {
+                font-family: "Raleway Medium";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Medium.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Regular";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Regular.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway SemiBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-SemiBold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Light";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
+            }
+        </style>
+
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
@@ -30,12 +53,14 @@
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
 </head>
 
-<body class="pushable">
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/{{ app.request.locale|slice(0, 2) }}/sdk.js#xfbml=1&version=v6.0"></script>
 {{ sonata_block_render_event('sylius.shop.layout.before_body') }}
 <div class="pusher">
     {% block top %}
         <div class="top-menu">
-            <div class="container">
+{#            <div class="container">#}
                 <nav class="navbar navbar-expand-lg navbar-light">
                     {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
 
@@ -47,7 +72,7 @@
 
                     {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
                 </nav>
-            </div>
+{#            </div>#}
         </div>
     {% endblock %}
 
@@ -58,7 +83,7 @@
 
                 {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
 
-                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}
+{#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
             </header>
         {% endblock %}
 
