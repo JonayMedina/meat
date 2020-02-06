@@ -1,11 +1,17 @@
 /* General */
 body {
     font-family: "Raleway Regular", sans-serif !important;
+    background: #F5F5F5 !important;
 }
 
 img, iframe {
     max-width: 100%;
     height: auto;
+}
+
+a, a:hover {
+    font-family: "Raleway Medium", sans-serif;
+    color: #AB162B !important;
 }
 
 /* Custom */
@@ -24,7 +30,7 @@ img, iframe {
     left: 0;
 }
 
-.navbar-nav, .sub-navbar-nav ul {
+a, .navbar-nav, .sub-navbar-nav ul, .login {
     font-size: 16px;
     letter-spacing: 0.7px;
 }
@@ -101,4 +107,78 @@ img, iframe {
 
 .ui.circular.button i {
     margin-right: 20px !important;
+}
+
+.segment {
+    position: relative;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+    box-shadow: 0 1px 2px 0 rgba(34,36,38,.15);
+    margin: 1rem 0;
+    padding: 1em 1em;
+    border-radius: .28571429rem;
+    border: 1px solid rgba(34,36,38,.15);
+}
+
+.login {
+    color: #404040;
+}
+
+.login h1 {
+    font-size: 32px;
+    font-family: "Raleway Medium", sans-serif;
+    color: #AB162B;
+    padding: 20px 0;
+}
+
+.login form {
+    max-width: 454px !important;
+    padding: 20px 0 25px 0;
+    border-bottom: 1px solid #917171;
+    text-align: center;
+}
+
+.login form div {
+    padding: 0 80px;
+}
+
+.login form label {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    text-align: left;
+}
+
+.login form input {
+    font-family: "Raleway Light", sans-serif !important;
+    font-size: 16px !important;
+    border-radius: 15px !important;
+}
+
+.login form input, .login form input:-webkit-autofill {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+    border-color: #F5F5F5 !important;
+}
+
+.login a, .login  a:hover {
+    text-decoration: underline !important;
+}
+
+.margin-0-auto {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0 auto;
+}
+
+.btn-rounded {
+    -webkit-appearance: none;
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 16px;
+    color: #ffffff;
+    background: #AB162B;
+    border-radius: 10em;
+    padding: 10px 30px;
+    margin-top: 20px;
 }

@@ -53,7 +53,9 @@
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
 </head>
 
-<body class="pushable">
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/{{ app.request.locale|slice(0, 2) }}/sdk.js#xfbml=1&version=v6.0"></script>
 {{ sonata_block_render_event('sylius.shop.layout.before_body') }}
 <div class="pusher">
     {% block top %}
@@ -81,7 +83,7 @@
 
                 {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
 
-                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}
+{#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
             </header>
         {% endblock %}
 
