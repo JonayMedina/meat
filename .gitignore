@@ -4,6 +4,8 @@
 /public/media
 !/public/media/image/.gitkeep
 
+.DS_Store
+
 /node_modules
 
 /etc/build/*
