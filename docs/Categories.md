@@ -1,5 +1,5 @@
 # Categories
-These endpoints will allow you to easily manage taxons. Base URI is /api/v1/taxons.
+These endpoints will allow you to easily manage taxonomies. Base URI is /api/v1/categories.
 
 ## Model
 
@@ -10,7 +10,7 @@ These endpoints will allow you to easily manage taxons. Base URI is /api/v1/taxo
 |root|The main ancestor of the taxon|
 |parent|Parent of the taxon|
 |translations|Collection of translations (each contains slug, name and description in the respective language)|
-|position|Position of the taxon among other taxons|
+|position|Position of the taxon among other categories|
 |images|Images assigned to the taxon|
 |left|Location within the whole taxonomy|
 |right|Location within the whole taxonomy|
@@ -20,12 +20,12 @@ These endpoints will allow you to easily manage taxons. Base URI is /api/v1/taxo
 
 
 ## 1. Get category collection
-To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/ endpoint with the GET method.
+To retrieve a paginated list of categories you will need to call the /api/v1/categories/ endpoint with the GET method.
 > **Stateless**  
 
 ### 1.1 Request
 
-* URL: /api/v1/taxons/
+* URL: /api/v1/categories/
 * Method: GET
 
 |Parameter|Parameter type|Description|
@@ -46,13 +46,13 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
     "total": 5,
     "_links": {
         "self": {
-            "href": "\/api\/v1\/taxons\/?page=1&limit=10"
+            "href": "/api/v1/categories/?page=1&limit=10"
         },
         "first": {
-            "href": "\/api\/v1\/taxons\/?page=1&limit=10"
+            "href": "/api/v1/categories/?page=1&limit=10"
         },
         "last": {
-            "href": "\/api\/v1\/taxons\/?page=1&limit=10"
+            "href": "/api/v1/categories/?page=1&limit=10"
         }
     },
     "_embedded": {
@@ -74,7 +74,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/1"
+                        "href": "/api/v1/categories/1"
                     }
                 }
             },
@@ -91,7 +91,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -104,7 +104,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -121,7 +121,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             },
@@ -138,7 +138,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -151,7 +151,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/5"
+                            "href": "/api/v1/categories/5"
                         }
                     }
                 },
@@ -161,14 +161,14 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                         "locale": "es_GT",
                         "id": 6,
                         "name": "Men",
-                        "slug": "t-shirts\/men",
+                        "slug": "t-shirts/men",
                         "description": "Reprehenderit vero atque eaque sunt perferendis est."
                     }
                 },
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/6"
+                        "href": "/api/v1/categories/6"
                     }
                 }
             },
@@ -185,7 +185,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -198,7 +198,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/5"
+                            "href": "/api/v1/categories/5"
                         }
                     }
                 },
@@ -208,14 +208,14 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                         "locale": "es_GT",
                         "id": 7,
                         "name": "Women",
-                        "slug": "t-shirts\/women",
+                        "slug": "t-shirts/women",
                         "description": "Illum quia beatae assumenda impedit."
                     }
                 },
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/7"
+                        "href": "/api/v1/categories/7"
                     }
                 }
             },
@@ -232,7 +232,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -245,7 +245,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                     "images": [],
                     "_links": {
                         "self": {
-                            "href": "\/api\/v1\/taxons\/1"
+                            "href": "/api/v1/categories/1"
                         }
                     }
                 },
@@ -262,7 +262,7 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/9"
+                        "href": "/api/v1/categories/9"
                     }
                 }
             }
@@ -299,12 +299,12 @@ To retrieve a paginated list of taxons you will need to call the /api/v1/taxons/
 | _embedded.items[]._links.self.href          | Category API URL              | URL       | (Required)   |
 
 ## 2. Create category
-To create a new taxon you will need to call the /api/v1/taxons/ endpoint with the POST method.
+To create a new taxon you will need to call the /api/v1/categories/ endpoint with the POST method.
 > **Stateless**  
 
 ### 2.1 Request
 
-* URL: /api/v1/taxons/
+* URL: /api/v1/categories/
 * Method: POST
 * Body:
 
@@ -365,7 +365,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -386,7 +386,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -408,7 +408,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -429,7 +429,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -456,7 +456,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
     ],
     "_links": {
         "self": {
-            "href": "\/api\/v1\/taxons\/9"
+            "href": "/api/v1/categories/9"
         }
     }
 }
@@ -469,7 +469,7 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
 |root|The main ancestor of the taxon|
 |parent|Parent of the taxon|
 |translations|Collection of translations (each contains slug, name and description in the respective language)|
-|position|Position of the taxon among other taxons|
+|position|Position of the taxon among other categories|
 |images|Images assigned to the taxon|
 |left|Location within the whole taxonomy|
 |right|Location within the whole taxonomy|
@@ -478,12 +478,12 @@ To create a new taxon you will need to call the /api/v1/taxons/ endpoint with th
 
 
 ## 3. Get single category
-To retrieve the details of a taxon you will need to call the /api/v1/taxons/{code} endpoint with the GET method.
+To retrieve the details of a taxon you will need to call the /api/v1/categories/{code} endpoint with the GET method.
 > **Stateless**  
 
 ### 3.1 Request
 
-* URL: /api/v1/taxons/{code}
+* URL: /api/v1/categories/{code}
 * Method: GET
 
 > To see the details of the taxon with code = toys use the below method:
@@ -516,7 +516,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -537,7 +537,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -559,7 +559,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -580,7 +580,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -607,7 +607,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
     ],
     "_links": {
         "self": {
-            "href": "\/api\/v1\/taxons\/9"
+            "href": "/api/v1/categories/9"
         }
     }
 }
@@ -620,7 +620,7 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
 |root|The main ancestor of the taxon|
 |parent|Parent of the taxon|
 |translations|Collection of translations (each contains slug, name and description in the respective language)|
-|position|Position of the taxon among other taxons|
+|position|Position of the taxon among other categories|
 |images|Images assigned to the taxon|
 |left|Location within the whole taxonomy|
 |right|Location within the whole taxonomy|
@@ -630,12 +630,12 @@ To retrieve the details of a taxon you will need to call the /api/v1/taxons/{cod
 
 
 ## 4. Updating a category
-To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint with the PUT method.
+To fully update a taxon you will need to call the /api/v1/categories/{code} endpoint with the PUT method.
 > **Stateless**  
 
 ### 4.1 Request
 
-* URL: /api/v1/taxons/{code}
+* URL: /api/v1/categories/{code}
 * Method: PUT, PATCH
 * Body: 
 
@@ -659,7 +659,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
 |parent|request|(optional) The parent taxon’s code|
 |images|request|(optional) Images codes assigned to the taxon|
 
-> To update a taxon partially you will need to call the /api/v1/taxons/{code} endpoint with the PATCH method.
+> To update a taxon partially you will need to call the /api/v1/categories/{code} endpoint with the PATCH method.
 
 ### 4.2 Response
 
@@ -689,7 +689,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -710,7 +710,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -732,7 +732,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
                 "images": [],
                 "_links": {
                     "self": {
-                        "href": "\/api\/v1\/taxons\/5"
+                        "href": "/api/v1/categories/5"
                     }
                 }
             }
@@ -753,7 +753,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
         "images": [],
         "_links": {
             "self": {
-                "href": "\/api\/v1\/taxons\/1"
+                "href": "/api/v1/categories/1"
             }
         }
     },
@@ -780,7 +780,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
     ],
     "_links": {
         "self": {
-            "href": "\/api\/v1\/taxons\/9"
+            "href": "/api/v1/categories/9"
         }
     }
 }
@@ -793,7 +793,7 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
 |root|The main ancestor of the taxon|
 |parent|Parent of the taxon|
 |translations|Collection of translations (each contains slug, name and description in the respective language)|
-|position|Position of the taxon among other taxons|
+|position|Position of the taxon among other categories|
 |images|Images assigned to the taxon|
 |left|Location within the whole taxonomy|
 |right|Location within the whole taxonomy|
@@ -802,12 +802,12 @@ To fully update a taxon you will need to call the /api/v1/taxons/{code} endpoint
 
 
 ## 5. Removing a category
-To delete a taxon you will need to call the /api/v1/taxons/{code} endpoint with the DELETE method.
+To delete a taxon you will need to call the /api/v1/categories/{code} endpoint with the DELETE method.
 > **Stateless**  
 
 ### 5.1 Request
 
-* URL: /api/v1/taxons/{code}
+* URL: /api/v1/categories/{code}
 * Method: DELETE
 
 ### 5.2 Response
@@ -817,11 +817,11 @@ To delete a taxon you will need to call the /api/v1/taxons/{code} endpoint with 
 
 
 ## 6. Set position of product in a Taxon
-Products can by grouped by taxon, therefore for every product there is a relation between the product and the assigned taxon. What is more, every product can have a specific position in the taxon to which it belongs. To put products in a specific order you will need to call the /api/v1/taxons/{code}/products endpoint wih the PUT method.
+Products can by grouped by taxon, therefore for every product there is a relation between the product and the assigned taxon. What is more, every product can have a specific position in the taxon to which it belongs. To put products in a specific order you will need to call the /api/v1/categories/{code}/products endpoint wih the PUT method.
 
 ### 6.1 Request
 
-* URL: /api/v1/taxons/{code}/products
+* URL: /api/v1/categories/{code}/products
 * Method: PUT
 * Body: 
 

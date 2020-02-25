@@ -46,16 +46,16 @@ To retrieve a paginated list of payments you will need to call the /api/v1/payme
     "total":20,
     "_links":{
         "self":{
-            "href":"\/api\/v1\/payments\/?page=1&limit=2"
+            "href":"/api/v1/payments/?page=1&limit=2"
         },
         "first":{
-            "href":"\/api\/v1\/payments\/?page=1&limit=2"
+            "href":"/api/v1/payments/?page=1&limit=2"
         },
         "last":{
-            "href":"\/api\/v1\/payments\/?page=10&limit=2"
+            "href":"/api/v1/payments/?page=10&limit=2"
         },
         "next":{
-            "href":"\/api\/v1\/payments\/?page=2&limit=2"
+            "href":"/api/v1/payments/?page=2&limit=2"
         }
     },
     "_embedded":{
@@ -67,7 +67,7 @@ To retrieve a paginated list of payments you will need to call the /api/v1/payme
                     "code":"bank_transfer",
                     "_links":{
                         "self":{
-                            "href":"\/api\/v1\/payment-methods\/bank_transfer"
+                            "href":"/api/v1/payment-methods/bank_transfer"
                         }
                     }
                 },
@@ -75,13 +75,13 @@ To retrieve a paginated list of payments you will need to call the /api/v1/payme
                 "state":"new",
                 "_links":{
                     "self":{
-                        "href":"\/api\/v1\/payments\/1"
+                        "href":"/api/v1/payments/1"
                     },
                     "payment-method":{
-                        "href":"\/api\/v1\/payment-methods\/bank_transfer"
+                        "href":"/api/v1/payment-methods/bank_transfer"
                     },
                     "order":{
-                        "href":"\/api\/v1\/orders\/1"
+                        "href":"/api/v1/orders/1"
                     }
                 }
             },
@@ -92,7 +92,7 @@ To retrieve a paginated list of payments you will need to call the /api/v1/payme
                     "code":"bank_transfer",
                     "_links":{
                         "self":{
-                            "href":"\/api\/v1\/payment-methods\/bank_transfer"
+                            "href":"/api/v1/payment-methods/bank_transfer"
                         }
                     }
                 },
@@ -100,13 +100,13 @@ To retrieve a paginated list of payments you will need to call the /api/v1/payme
                 "state":"new",
                 "_links":{
                     "self":{
-                        "href":"\/api\/v1\/payments\/2"
+                        "href":"/api/v1/payments/2"
                     },
                     "payment-method":{
-                        "href":"\/api\/v1\/payment-methods\/bank_transfer"
+                        "href":"/api/v1/payment-methods/bank_transfer"
                     },
                     "order":{
-                        "href":"\/api\/v1\/orders\/2"
+                        "href":"/api/v1/orders/2"
                     }
                 }
             }
@@ -162,7 +162,7 @@ To retrieve the details of a payment you will need to call the /api/v1/payments/
         "code":"bank_transfer",
         "_links":{
             "self":{
-                "href":"\/api\/v1\/payment-methods\/bank_transfer"
+                "href":"/api/v1/payment-methods/bank_transfer"
             }
         }
     },
@@ -170,13 +170,13 @@ To retrieve the details of a payment you will need to call the /api/v1/payments/
     "state":"new",
     "_links":{
         "self":{
-            "href":"\/api\/v1\/payments\/20"
+            "href":"/api/v1/payments/20"
         },
         "payment-method":{
-            "href":"\/api\/v1\/payment-methods\/bank_transfer"
+            "href":"/api/v1/payment-methods/bank_transfer"
         },
         "order":{
-            "href":"\/api\/v1\/orders\/20"
+            "href":"/api/v1/orders/20"
         }
     }
 }

@@ -1,7 +1,7 @@
-# Orders & ratings
+# Orders
 Orders API endpoint is /api/v1/orders.
 
-### Model
+### Order Model
 |Field|Description|
 |--- |--- |
 |id|Id of the order|
@@ -191,36 +191,37 @@ Order list.
 | _links.last.href              | Link to last page                           | URL    | (Optional)   |
 | _links.next.href              | Link to next page                           | URL    | (Optional)   |
 | _embedded                     | Embedded data                               | Object | (Required)   |
-| _embedded.id                  | Order ID                                    | Int    | (Required)   |
-| _embedded.items[]               | Items wrapper                               | Object | (Required)   |
-| _embedded.items[].id            | Item ID                                     | Int    | (Required)   |
-| _embedded.items[].quantity      | Quantity of this item                                    | Int    | (Required)   |
-| _embedded.items[].unitPriuce    | Unit price of item                                    | Int    | (Required)   |
-| _embedded.items[].total                      | Total of item                                   | Int    | (Required)   |
-| _embedded.items[].adjustments               | Price adjustments (Promotions)                   | Object    | (Required)   |
-| _embedded.items[].adjustmentsTotal          | Adjustments total                                | Int    | (Required)   |
-| _embedded.items[].variant                   | Variant Data                                  | Object    | (Required)   |
-| _embedded.items[].variant.id                | Variant ID                                    | Int    | (Required)   |
-| _embedded.items[].variant.code              | Variant code                                    | String    | (Required)   |
-| _embedded.items[].variant.optionValues      | Variant Options                             | Object    | (Required)   |
-| _embedded.items[].variant.optionValues.code | Option code                                    | String    | (Required)   |
-| _embedded.items[].variant.optionValues.translations | Option translations                                    | Int    | (Required)   |
-| _embedded.items[].variant.optionValues.translations.es_GT.value | Option label                                    | Int    | (Required)   |
-| _embedded.items[].links                     | Links to relted entities                                    | Object    | (Required)   |
-| _embedded.items[].links.order.href          | Link to order                                    | URL    | (Required)   |
-| _embedded.items[].links.product.href        | Link to product                                    | URL    | (Required)   |
-| _embedded.items[].links.variant.href        | Link to variant                                  | URL    | (Required)   |
-| _embedded.itemsTotal        | Sum of all items prices    | Int    | (Required)   |
-| _embedded.adjustments        | List of adjustments related to the order       | Object    | (Required)   |
-| _embedded.total        | Sum of items total and adjustments total             | Int    | (Required)   |
-| _embedded.customer        | Cusrtomer Object                                    | Object    | (Required)   |
-| _embedded.checkoutState        | State of the checkout process                                   | Object    | (Required)   |
-| _embedded.number        | Serial number of the order                                   | Int    | (Optional)   |
-| _embedded.rating        | Order rating                                   | Int    | (Optional)   |
-| _embedded.shippingAddress     | Detailed address serialization                                   | Object    | (Optional)   |
-| _embedded.billingAddress     | Detailed address serialization                                   | Object    | (Optional)   |
-| _embedded.shipments     | Detailed serialization of all related shipments                       | Object    | (Optional)   |
-| _embedded.payments     | Detailed serialization of all related payments                         | Object    | (Optional)   |
+| _embedded.items[]             | Items wrapper                               | Object | (Required)   |
+| _embedded.items[].id                  | Order ID                                    | Int    | (Required)   |
+| _embedded.items[].items[]               | Order Items wrapper                               | Object | (Required)   |
+| _embedded.items[].items[].id            | Item ID                                     | Int    | (Required)   |
+| _embedded.items[].items[].quantity      | Quantity of this item                                    | Int    | (Required)   |
+| _embedded.items[].items[].unitPriuce    | Unit price of item                                    | Int    | (Required)   |
+| _embedded.items[].items[].total                      | Total of item                                   | Int    | (Required)   |
+| _embedded.items[].items[].adjustments               | Price adjustments (Promotions)                   | Object    | (Required)   |
+| _embedded.items[].items[].adjustmentsTotal          | Adjustments total                                | Int    | (Required)   |
+| _embedded.items[].items[].variant                   | Variant Data                                  | Object    | (Required)   |
+| _embedded.items[].items[].variant.id                | Variant ID                                    | Int    | (Required)   |
+| _embedded.items[].items[].variant.code              | Variant code                                    | String    | (Required)   |
+| _embedded.items[].items[].variant.optionValues      | Variant Options                             | Object    | (Required)   |
+| _embedded.items[].items[].variant.optionValues.code | Option code                                    | String    | (Required)   |
+| _embedded.items[].items[].variant.optionValues.translations | Option translations                                    | Int    | (Required)   |
+| _embedded.items[].items[].variant.optionValues.translations.es_GT.value | Option label                                    | Int    | (Required)   |
+| _embedded.items[].items[].links                     | Links to relted entities                                    | Object    | (Required)   |
+| _embedded.items[].items[].links.order.href          | Link to order                                    | URL    | (Required)   |
+| _embedded.items[].items[].links.product.href        | Link to product                                    | URL    | (Required)   |
+| _embedded.items[].items[].links.variant.href        | Link to variant                                  | URL    | (Required)   |
+| _embedded.items[].itemsTotal        | Sum of all items prices    | Int    | (Required)   |
+| _embedded.items[].adjustments        | List of adjustments related to the order       | Object    | (Required)   |
+| _embedded.items[].total        | Sum of items total and adjustments total             | Int    | (Required)   |
+| _embedded.items[].customer        | Cusrtomer Object                                    | Object    | (Required)   |
+| _embedded.items[].checkoutState        | State of the checkout process                                   | Object    | (Required)   |
+| _embedded.items[].number        | Serial number of the order                                   | Int    | (Optional)   |
+| _embedded.items[].rating        | Order rating                                   | Int    | (Optional)   |
+| _embedded.items[].shippingAddress     | Detailed address serialization                                   | Object    | (Optional)   |
+| _embedded.items[].billingAddress     | Detailed address serialization                                   | Object    | (Optional)   |
+| _embedded.items[].shipments     | Detailed serialization of all related shipments                       | Object    | (Optional)   |
+| _embedded.items[].payments     | Detailed serialization of all related payments                         | Object    | (Optional)   |
 
 ## 2. Get single order
 You can request detailed order information by executing the following request:

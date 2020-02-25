@@ -14,7 +14,7 @@
 |emailCanonical|Canonicalized customers email|
 |firstName|Customers first name|
 |lastName|Customers last name|
-|gender|Customers gender|
+|gender|Customers gender (u: unknown, f: female, m: male)|
 |birthday|Customers birthday|
 |group|Customer group code|
 
@@ -77,10 +77,10 @@ Customer list.
                     "id":405,
                     "user":{
                          "id":404,
-                         "username":"gaylord.bins@example.com",
+                         "username":"firstName.lastName@example.com",
                          "enabled":true
                     },
-                    "email":"gaylord.bins@example.com",
+                    "email":"firstName.lastName@example.com",
                     "firstName":"Dereck",
                     "lastName":"McDermott"
              }
@@ -101,15 +101,15 @@ Customer list.
 | _links.last.href              | Link to last page                           | URL    | (Optional)   |
 | _links.next.href              | Link to next page                           | URL    | (Optional)   |
 | _embedded                     | Embedded data                               | Object | (Required)   |
-| _embedded.items               | Items wrapper                               | Object | (Required)   |
-| _embedded.items.id            | Customer ID                                 | Int    | (Required)   |
-| _embedded.items.user          | Related user associated with this customer  | Object | (Optional)   |
-| _embedded.items.user.id       | User ID                                     | Int    | (Optional)   |
-| _embedded.items.user.username | Username                                    | string | (Optional)   |
-| _embedded.items.user.enabled  | Is this user enabled?                       | bool   | (Optional)   |
-| _embedded.items.email         | Customer Email                              | String | (Required)   |
-| _embedded.items.firstName     | First name                                  | String | (Required)   |
-| _embedded.items.lastName      | Last name                                   | String | (Required)   |
+| _embedded.items[]             | Items wrapper                               | Object | (Required)   |
+| _embedded.items[].id          | Customer ID                                 | Int    | (Required)   |
+| _embedded.items[].user        | Related user associated with this customer  | Object | (Optional)   |
+| _embedded.items[].user.id     | User ID                                     | Int    | (Optional)   |
+| _embedded.items[].user.username | Username                                    | string | (Optional)   |
+| _embedded.items[].user.enabled  | Is this user enabled?                       | bool   | (Optional)   |
+| _embedded.items[].email       | Customer Email                              | String | (Required)   |
+| _embedded.items[].firstName   | First name                                  | String | (Required)   |
+| _embedded.items[].lastName    | Last name                                   | String | (Required)   |
 
 ## 2. Create customer
 
@@ -140,7 +140,7 @@ Creates a new customer.
 | firstName                 | Customer’s first name                       | string    | (Required)   |
 | lastName                  | Customer’s last name                        | string    | (Required)   |
 | email                     | (unique) Customer’s email                   | string    | (Required)   |
-| gender                    | Customer’s gender                           | string    | (Required)   |
+| gender                    | Customer’s gender (u: unknown, f: female, m: male)   | string    | (Required)   |
 | birthday                  | Customer’s birthday                         | string    | (Optional)   |
 | user                      | User model                                  | Object | (Optional)   |
 | user.plainPassword        | Users plain password. Required if user account should be created together with customer                             | string | (Optional)   |
@@ -185,7 +185,7 @@ Creates a new customer.
 |emailCanonical|Canonicalized customers email|
 |firstName|Customers first name|
 |lastName|Customers last name|
-|gender|Customers gender|
+|gender|Customers gender (u: unknown, f: female, m: male)|
 |birthday|Customers birthday|
 |group|Customer group code|
 
@@ -240,7 +240,7 @@ You can request detailed customer information by executing the following request
 |emailCanonical|Canonicalized customers email|
 |firstName|Customers first name|
 |lastName|Customers last name|
-|gender|Customers gender|
+|gender|Customers gender  (u: unknown, f: female, m: male)|
 |birthday|Customers birthday|
 |group|Customer group code|
 
@@ -304,7 +304,7 @@ You can request full or partial update of resource. For full customer update, yo
 |emailCanonical|Canonicalized customers email|
 |firstName|Customers first name|
 |lastName|Customers last name|
-|gender|Customers gender|
+|gender|Customers gender  (u: unknown, f: female, m: male)|
 |birthday|Customers birthday|
 |group|Customer group code|
 
