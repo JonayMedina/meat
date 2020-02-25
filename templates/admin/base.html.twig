@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} - {{ app_name }}</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('meathouse/img/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('meathouse/img/favicon-16x16.png')}}">
+
+    <link href="{{asset('meathouse/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+
+    <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
+
+    {% block styles %}
+    {% endblock %}
+    <style>
+        body {
+            background-color: #404040;
+        }
+
+        .pace .pace-progress {
+            background: #AB162B;
+        }
+
+        #main-logo {
+            width: 140px;
+            text-align: center;
+        }
+
+        .nav-header {
+            background-image: none;
+            background-color: #404040;
+        }
+
+        .nav > li.active {
+            background: #69595C;
+            border-left: none;
+        }
+
+        .navbar-default .nav > li.active > a:hover, .navbar-default .nav > li.active > a:focus {
+            background-color: #69595C;
+        }
+
+        .navbar-default .nav > li > a:hover, .navbar-default .nav > li > a:focus {
+            background-color: #404040;
+            color: white;
+        }
+
+        body.mini-navbar .nav-header {
+            padding: 0;
+            background-color: #404040;
+        }
+
+        body.mini-navbar #main-logo {
+            width: 50px;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #AB162B;
+            border-color: #B03143;
+        }
+
+        .text-primary {
+            color: #AB162B !important;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header text-center">
+                    <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
+                </li>
+
+                <li class="active">
+                    <a href="{{path('dashboard_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Historico de ordenes</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-newspaper-o"></i> <span class="nav-label">Banner de noticias</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-tags"></i> <span class="nav-label">Cupones</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-life-ring"></i> <span class="nav-label">Envio push</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Usuarios</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-star-o"></i> <span class="nav-label">Calificaciones</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Admin de compra</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-map-marker"></i> <span class="nav-label">Ubicaciones</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-question-circle-o"></i> <span class="nav-label">FAQ's</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Sobre Procasa</span> </a>
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-legal"></i> <span class="nav-label">Términos</span> </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a href="#" class="text-primary">
+                            Cristina Benito <i class="fa fa-chevron-down"></i>
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="{{asset('meathouse/js/jquery-3.1.1.min.js')}}"></script>
+<script src="{{ asset('meathouse/js/popper.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('meathouse/js/inspinia.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/pace/pace.min.js') }}"></script>
+{% block javascript %}
+{% endblock %}
+
+</body>
+
+</html>

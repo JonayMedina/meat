@@ -12,3 +12,8 @@ hwi_oauth_login:
 
 facebook:
     path: /login/check-facebook
+
+meathouse_admin:
+    resource: "Controller/Admin"
+    type:     annotation
+    prefix:   /admin

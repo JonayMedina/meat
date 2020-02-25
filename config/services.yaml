@@ -2,6 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: es_GT
+    app_name: "%env(APP_NAME)%"
 
 services:
     # Default configuration for services in *this* file
