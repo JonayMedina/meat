@@ -125,7 +125,7 @@
                     <div class="ibox">
                         <div class="ibox-content no-padding">
                             <br><br>
-                            <h3 class="text-center">{% trans with {'%x%': 5} %}app.ui.top_%x%_most_purchased_products{% endtrans %}</h3>
+                            <h3 class="text-center">{% trans with {'%x%': constant('App\\Service\\DashboardService::TOP_X_PRODUCTS')} %}app.ui.top_%x%_most_purchased_products{% endtrans %}</h3>
                             <br>
 
                             <table class="table top-products-table">
@@ -139,30 +139,23 @@
                                 </thead>
 
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Churrasquito</td>
-                                    <td>Q34.00</td>
-                                    <td>340</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Coulotte</td>
-                                    <td>45.00</td>
-                                    <td>300</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Torta de res</td>
-                                    <td>45.00</td>
-                                    <td>230</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Tilapia</td>
-                                    <td>34.00</td>
-                                    <td>150</td>
-                                </tr>
+                                {% for product in dashboard.topProducts %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{product['name']}}</td>
+                                        <td>
+                                            {{ dashboard.currency }}
+                                            {{ product['price']|price }}
+                                        </td>
+                                        <td>{{product['quantity']}}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            {{ 'app.ui.no_products_found'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>

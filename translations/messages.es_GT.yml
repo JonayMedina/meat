@@ -92,6 +92,7 @@ app:
             oct: Oct
             nov: Nov
             dec: Dic
+        no_products_found: No se encontraron productos para mostrar en este listado.
 
 sylius:
     form:

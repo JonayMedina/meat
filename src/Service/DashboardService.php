@@ -4,8 +4,10 @@ namespace App\Service;
 
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\QueryBuilder;
+use App\Entity\Product\Product;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Payment\Model\PaymentInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
@@ -21,6 +23,11 @@ class DashboardService
      * Date modifier, for dashboard start date.
      */
     const START_DATE_MODIFIER = '-6 months';
+
+    /**
+     * Number of products to show on dashboard top.
+     */
+    const TOP_X_PRODUCTS = 5;
 
     /**
      * @var ContainerInterface $container
@@ -83,6 +90,11 @@ class DashboardService
     private $purchasesInDateRangeChartData = [];
 
     /**
+     * @var array $topProducts
+     */
+    private $topProducts = [];
+
+    /**
      * DashboardService constructor.
      * @param ContainerInterface $container
      * @param LoggerInterface $logger
@@ -100,6 +112,7 @@ class DashboardService
             ->retrieveUserAgeChartData()
             ->retrievePurchasesByUserChartData()
             ->retrieveNumberOfOrdersChartData()
+            ->retrieveTopProducts()
             ->calculateAverageRating();
     }
 
@@ -277,42 +290,45 @@ class DashboardService
     private function retrieveNumberOfOrdersChartData(): self
     {
         $data = [];
-        $statuses = [
-            OrderInterface::STATE_FULFILLED,
-            OrderInterface::STATE_CANCELLED,
-            OrderPaymentStates::STATE_AWAITING_PAYMENT,
-        ];
 
-        foreach ($statuses as $status) {
+        try {
+            // Pending...
+            $pending = $this->container->get('sylius.repository.order')
+                ->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->andWhere('o.paymentState = :status')
+                ->setParameter('status', OrderPaymentStates::STATE_AWAITING_PAYMENT)
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            // Cancelled...
+            $cancelled = $this->container->get('sylius.repository.order')
+                ->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->andWhere('o.paymentState = :status OR o.paymentState = :refundedState')
+                ->setParameter('status', OrderInterface::STATE_CANCELLED)
+                ->setParameter('refundedState', 'refunded')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            // Fulfilled
+            $fulfilled = $this->container->get('sylius.repository.order')
+                ->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->andWhere('o.state = :status')
+                ->andWhere('o.paymentState != :refundedState')
+                ->setParameter('status', OrderInterface::STATE_FULFILLED)
+                ->setParameter('refundedState', 'refunded')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            $data[OrderPaymentStates::STATE_AWAITING_PAYMENT] = $pending;
+            $data[OrderInterface::STATE_CANCELLED] = $cancelled;
+            $data[OrderInterface::STATE_FULFILLED] = $fulfilled;
+
+        } catch (\Exception $exception) {
             $number = null;
-
-            try {
-                if ($status === OrderPaymentStates::STATE_AWAITING_PAYMENT) {
-                    // Pending...
-                    $number = $this->container->get('sylius.repository.order')
-                        ->createQueryBuilder('o')
-                        ->select('COUNT(o)')
-                        ->andWhere('o.paymentState = :status')
-                        ->setParameter('status', $status)
-                        ->getQuery()
-                        ->getSingleScalarResult();
-
-                } else {
-                    $number = $this->container->get('sylius.repository.order')
-                        ->createQueryBuilder('o')
-                        ->select('COUNT(o)')
-                        ->andWhere('o.state = :status')
-                        ->setParameter('status', $status)
-                        ->getQuery()
-                        ->getSingleScalarResult();
-                }
-
-            } catch (\Exception $exception) {
-                $number = null;
-                $this->logger->error($exception->getMessage());
-            }
-
-            $data[$status] = $number;
+            $this->logger->error($exception->getMessage());
         }
 
         $this->numberOfOrdersChartData = $data;
@@ -392,6 +408,25 @@ class DashboardService
         }
 
         $this->purchasesInDateRangeChartData = $dates;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve top product list.
+     * @return $this
+     */
+    private function retrieveTopProducts(): self
+    {
+        $code = $this->getChannel()->getCode();
+        $locale = $this->container->getParameter('locale');
+
+        $sql = "SELECT p.id, pt.name, pr.price, COUNT(oi.id) as quantity FROM sylius_product p LEFT JOIN sylius_product_variant pv ON p.id=pv.product_id LEFT JOIN sylius_product_translation pt ON (pt.translatable_id = p.id AND pt.locale = '". $locale ."') LEFT JOIN sylius_channel_pricing pr ON pr.product_variant_id = pv.id LEFT JOIN sylius_order_item oi ON oi.variant_id=pv.id LEFT JOIN sylius_order o ON o.id=oi.order_id WHERE p.enabled = true AND pr.channel_code = '". $code ."' AND pv.position = 0 AND o.state='". OrderInterface::STATE_FULFILLED ."' AND o.payment_state='". PaymentInterface::STATE_COMPLETED ."' GROUP BY pr.price, p.id ORDER BY quantity DESC;";
+        $connection = $this->container->get('doctrine')->getManager()->getConnection();
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+        $this->topProducts = $stmt->fetchAll();
+
 
         return $this;
     }
@@ -506,5 +541,28 @@ class DashboardService
     public function getPurchasesInDateRangeChartData(): array
     {
         return $this->purchasesInDateRangeChartData;
+    }
+
+    /**
+     * Return top products
+     * @return Product[]
+     */
+    public function getTopProducts(): array
+    {
+        return $this->topProducts;
+    }
+
+    public function getChannel(): ChannelInterface
+    {
+        return $this->container->get('sylius.context.channel')->getChannel();
+    }
+
+    /**
+     * Return currency
+     * @return string|null
+     */
+    public function getCurrency(): ?string
+    {
+        return $this->container->get('sylius.context.currency')->getCurrencyCode();
     }
 }
