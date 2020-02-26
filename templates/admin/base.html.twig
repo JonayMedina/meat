@@ -13,6 +13,9 @@
     <link href="{{asset('meathouse/font-awesome/css/all.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/font-awesome/css/v4-shims.min.css')}}" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/datapicker/datepicker3.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}">
+
     <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
 
@@ -61,6 +64,12 @@
         }
 
         .btn-primary {
+            color: #fff;
+            background-color: #AB162B;
+            border-color: #B03143;
+        }
+
+        .btn-primary:hover, .btn-primary:visited, .btn-primary:active, .btn-primary:focus {
             color: #fff;
             background-color: #AB162B;
             border-color: #B03143;
@@ -140,40 +149,40 @@
                 </li>
 
                 <li class="active">
-                    <a href="{{path('dashboard_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+                    <a href="{{path('dashboard_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">{{'app.ui.dashboard'|trans}}</span></a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">Historico de ordenes</span> </a>
+                    <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">{{'app.ui.order_history'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-newspaper-o"></i> <span class="nav-label">Banner de noticias</span> </a>
+                    <a href="#"><i class="fa fa-newspaper-o"></i> <span class="nav-label">{{'app.ui.news_banner'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-tags"></i> <span class="nav-label">Cupones</span> </a>
+                    <a href="#"><i class="fa fa-tags"></i> <span class="nav-label">{{'app.ui.coupons'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-bell"></i> <span class="nav-label">Envio push</span> </a>
+                    <a href="#"><i class="fa fa-bell"></i> <span class="nav-label">{{'app.ui.send_push'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Usuarios</span> </a>
+                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">{{'app.ui.users'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-star"></i> <span class="nav-label">Calificaciones</span> </a>
+                    <a href="#"><i class="fa fa-star"></i> <span class="nav-label">{{'app.ui.ratings'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Admin de compra</span> </a>
+                    <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">{{'app.ui.purchase_admin'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-store"></i> <span class="nav-label">Ubicaciones</span> </a>
+                    <a href="#"><i class="fa fa-store"></i> <span class="nav-label">{{'app.ui.locations'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-question-circle-o"></i> <span class="nav-label">FAQ's</span> </a>
+                    <a href="#"><i class="fa fa-question-circle-o"></i> <span class="nav-label">{{'app.ui.faqs'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Sobre Procasa</span> </a>
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">{{'app.ui.about_procasa'|trans}}</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-file-alt"></i> <span class="nav-label">Términos</span> </a>
+                    <a href="#"><i class="fa fa-file-alt"></i> <span class="nav-label">{{'app.ui.terms_and_conditions'|trans}}</span> </a>
                 </li>
             </ul>
         </div>
@@ -213,6 +222,37 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('meathouse/js/inspinia.js') }}"></script>
 <script src="{{ asset('meathouse/js/plugins/pace/pace.min.js') }}"></script>
+
+<script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
+<script>
+    /**
+     * Datepicker JS defaults
+     * */
+    if ($.fn.datepicker.dates) {
+        $.fn.datepicker.dates['{{ app.request.locale  }}'] = {
+            days: ["{{ 'app.ui.dates.sunday' | trans }}", "{{ 'app.ui.dates.monday' | trans }}", "{{ 'app.ui.dates.tuesday' | trans }}", "{{ 'app.ui.dates.wednesday' | trans }}", "{{ 'app.ui.dates.thursday' | trans }}", "{{ 'app.ui.dates.friday' | trans }}", "{{ 'app.ui.dates.saturday' | trans }}"],
+            daysShort: ["{{ 'app.ui.dates.sun' | trans }}", "{{ 'app.ui.dates.mon' | trans }}", "{{ 'app.ui.dates.tue' | trans }}", "{{ 'app.ui.dates.wed' | trans }}", "{{ 'app.ui.dates.thu' | trans }}", "{{ 'app.ui.dates.fri' | trans }}", "{{ 'app.ui.dates.sat' | trans }}"],
+            daysMin: ["{{ 'app.ui.dates.su' | trans }}", "{{ 'app.ui.dates.mo' | trans }}", "{{ 'app.ui.dates.tu' | trans }}", "{{ 'app.ui.dates.we' | trans }}", "{{ 'app.ui.dates.th' | trans }}", "{{ 'app.ui.dates.fr' | trans }}", "{{ 'app.ui.dates.sa' | trans }}"],
+            months: ["{{ 'app.ui.dates.january' | trans }}", "{{ 'app.ui.dates.february' | trans }}", "{{ 'app.ui.dates.march' | trans }}", "{{ 'app.ui.dates.april' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.june' | trans }}", "{{ 'app.ui.dates.july' | trans }}", "{{ 'app.ui.dates.august' | trans }}", "{{ 'app.ui.dates.september' | trans }}", "{{ 'app.ui.dates.october' | trans }}", "{{ 'app.ui.dates.november' | trans }}", "{{ 'app.ui.dates.december' | trans }}"],
+            monthsShort: ["{{ 'app.ui.dates.jan' | trans }}", "{{ 'app.ui.dates.feb' | trans }}", "{{ 'app.ui.dates.mar' | trans }}", "{{ 'app.ui.dates.apr' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.jun' | trans }}", "{{ 'app.ui.dates.jul' | trans }}", "{{ 'app.ui.dates.aug' | trans }}", "{{ 'app.ui.dates.sep' | trans }}", "{{ 'app.ui.dates.oct' | trans }}", "{{ 'app.ui.dates.nov' | trans }}", "{{ 'app.ui.dates.dec' | trans }}"],
+            today: "{{ 'app.ui.today' | trans }}",
+            clear: "{{ 'app.ui.clear' | trans }}",
+            format: "yyyy-mm-dd",
+            titleFormat: "MM yyyy",
+            weekStart: 0
+        };
+
+        $.fn.datepicker.defaults.language = '{{ app.request.locale  }}';
+        $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
+        $.fn.datepicker.defaults.startView = 1;
+        $.fn.datepicker.defaults.todayBtn = "linked";
+        $.fn.datepicker.defaults.keyboardNavigation = false;
+        $.fn.datepicker.defaults.forceParse = false;
+        $.fn.datepicker.defaults.autoclose = true;
+        $.fn.datepicker.defaults.todayHighlight = true;
+    }
+</script>
 {% block javascript %}
 {% endblock %}
 

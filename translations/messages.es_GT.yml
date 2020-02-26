@@ -3,11 +3,95 @@
 
 app:
     ui:
+        dashboard: Dashboard
         login_with_facebook: Facebook
-        login_with_google: Google
-        login_with_instagram: Instagram
-        login_with_spotify: Spotify
         login_with_apple: Apple
+        gender: 
+            label: Género
+            female: Femenino
+            male: Masculino
+            undefined: No definido
+        total: Total
+        n/a: N/A
+        user_age: Edades de usuario
+        purchases_per_user: Compras por usuario
+        start_date: Fecha de inicio
+        end_date: Fecha de fin
+        filter: Filtrar
+        purchases_in_date_range: Compras en rango de fechas
+        number_of_orders: Cantidad de pedidos
+        average_rating: Rating promedio
+        product: Producto
+        current_price: Precio actual
+        quantity: Cantidad
+        top_%x%_most_purchased_products: Top %x% productos más comprados
+        users_with_purchases: Usuarios con compras
+        users_without_purchases: Usuarios sin compras
+        order:
+            label: Orden
+            status:
+                label: Estado
+                delivered: Entregado
+                cancelled: Cancelado
+                pending: Pendiente
+        order_history: Histórico de órdenes
+        news_banner: Banner de noticias
+        coupons: Cupones
+        send_push: Envío push
+        users: Users
+        ratings: Calificaciones
+        purchase_admin: Admin de compra
+        locations: Ubicaciones
+        faqs: FAQ's
+        about_procasa: Sobre Procasa
+        terms_and_conditions: Términos y condiciones
+        today: Hoy
+        clear: Limpiar
+        dates:
+            sunday: Domingo
+            monday: Lunes
+            tuesday: Martes
+            wednesday: Miércoles
+            thursday: Jueves
+            friday: Viernes
+            saturday: Sábado
+            sun: Dom
+            mon: Lun
+            tue: Mar
+            wed: Mie
+            thu: Jue
+            fri: Vie
+            sat: Sab
+            su: Do
+            mo: Lu
+            tu: Ma
+            we: Mi
+            th: Ju
+            fr: Vi
+            sa: Sa
+            january: Enero
+            february: Febrero
+            march: Marzo
+            april: Abil
+            may: Mayo
+            june: Junio
+            july: Julio
+            august: Agosto
+            september: Septiembre
+            october: Octubre
+            november: Noviembre
+            december: Diciembre
+            jan: Ene
+            feb: Feb
+            mar: Mar
+            apr: Abr
+            jun: Jun
+            jul: Jul
+            aug: Ago
+            sep: Sep
+            oct: Oct
+            nov: Nov
+            dec: Dic
 
 sylius:
     form:
