@@ -4,13 +4,249 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="text-center m-t-lg">
-            <h1>
-                INSPINIA Static Seed Project for BS4
-            </h1>
-            <small>
-                It is an application skeleton for a typical web app. You can use it to quickly bootstrap your webapp projects and dev environment for these projects.
-            </small>
+        <div class="m-t-lg">
+            <h1>Dashboard</h1>
+            <br><br>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h3 class="text-center">Género <br> Total: 3000</h3>
+                            <canvas id="doughnutGenderChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h3 class="text-center">Edades de usuarios <br> Total: 3000</h3>
+                            <canvas id="doughnutAgesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h3 class="text-center">Compras por usuario <br> Total: 3000</h3>
+                            <canvas id="doughnutPurchasesChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox filter-ibox">
+                        <div class="ibox-content">
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label for="filter-start-date">Fecha inicio</label>
+                                            </div>
+
+                                            <div class="col-sm-9">
+                                                <input id="filter-start-date" type="date" placeholder="" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <label for="filter-end-date">Fecha fin</label>
+                                            </div>
+
+                                            <div class="col-sm-9">
+                                                <input id="filter-end-date" type="date" placeholder="" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <a href="#" class="btn btn-block btn-lg btn-primary">
+                                        Filtrar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h3 class="text-center">Compras en rango de fechas</h3>
+                            <canvas id="barOrdersChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h3 class="text-center">Cantidad de pedidos <br> Total: 2060</h3>
+                            <canvas id="doughnutOrdersChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-content">
+                            <h2 class="rating-title">Rating promedio</h2>
+
+                            <div class="rating-stars">
+                                <i class="fa fa-star yellow"></i>
+                                <i class="fa fa-star yellow"></i>
+                                <i class="fa fa-star yellow"></i>
+                                <i class="fa fa-star yellow"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox">
+                        <div class="ibox-content no-padding">
+                            <br><br>
+                            <h3 class="text-center">Top 5 productos más comprados</h3>
+                            <br>
+
+                            <table class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Producto</th>
+                                    <th>Precio actual</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Churrasquito</td>
+                                    <td>Q34.00</td>
+                                    <td>340</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Coulotte</td>
+                                    <td>45.00</td>
+                                    <td>300</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Torta de res</td>
+                                    <td>45.00</td>
+                                    <td>230</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Tilapia</td>
+                                    <td>34.00</td>
+                                    <td>150</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+
+{% block javascript %}
+{{ parent() }}
+    <!-- ChartJS-->
+    <script src="{{ asset('meathouse/js/plugins/chartJs/Chart.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            var doughnutOptions = {
+                responsive: true
+            };
+
+            var barOptions = {
+                responsive: true,
+                legend: false
+            };
+
+            var genderData = {
+                labels: ["Femenino","Masculino","No definido" ],
+                datasets: [{
+                    data: [70,27,85],
+                    backgroundColor: ["#FF8E36","#2A87E5","#2AE562"]
+                }]
+            };
+
+            var genderChart = document.getElementById("doughnutGenderChart").getContext("2d");
+            new Chart(genderChart, {type: 'doughnut', data: genderData, options:doughnutOptions});
+
+            var agesData = {
+                labels: ["18-24","25-34","35-44", "45+", "N/A"],
+                datasets: [{
+                    data: [70,27,85, 14,12],
+                    backgroundColor: ["#2A87E5","#2AE562","#FF8E36", "#E52AAD", "#2AE5D2"]
+                }]
+            };
+
+            var agesChart = document.getElementById("doughnutAgesChart").getContext("2d");
+            new Chart(agesChart, {type: 'doughnut', data: agesData, options:doughnutOptions});
+
+            var purchasesData = {
+                labels: ["Usuarios con compras","Usuarios sin compras"],
+                datasets: [{
+                    data: [630,410],
+                    backgroundColor: ["#2AE562","#2A87E5"]
+                }]
+            };
+
+            var purchasesBar = document.getElementById("doughnutPurchasesChart").getContext("2d");
+            new Chart(purchasesBar, {type: 'bar', data: purchasesData, options:barOptions});
+
+
+            var ordersData = {
+                labels: ["Entregado","Cancelado", "Pendientes" ],
+                datasets: [{
+                    data: [70,27,85],
+                    backgroundColor: ["#F5A623","#4A90E2","#7ED321"]
+                }]
+            } ;
+
+            var ordersChart = document.getElementById("doughnutOrdersChart").getContext("2d");
+            new Chart(ordersChart, {type: 'doughnut', data: ordersData, options:doughnutOptions});
+
+
+            var barOrdersData = {
+                labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+                datasets: [{
+                    data: [24,21,30,27,32,30,22,22,25,26,34,23],
+                    backgroundColor: ["#2AE562","#2AE562","#2AE562","#2AE562","#2AE562","#2AE562","#2AE562","#2AE562","#2AE562","#2AE562" ,"#2AE562" ,"#2AE562"]
+                }]
+            };
+
+            var barOrdersChart = document.getElementById("barOrdersChart").getContext("2d");
+            new Chart(barOrdersChart, {type: 'bar', data: barOrdersData, options:barOptions});
+        });
+    </script>
 {% endblock %}

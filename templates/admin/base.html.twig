@@ -10,7 +10,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('meathouse/img/favicon-16x16.png')}}">
 
     <link href="{{asset('meathouse/css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('meathouse/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/font-awesome/css/all.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/font-awesome/css/v4-shims.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
@@ -68,6 +69,64 @@
         .text-primary {
             color: #AB162B !important;
         }
+
+        .nav > li > a i.fa {
+            font-size: 25px;
+        }
+
+        .wrapper-content h1 {
+            color: #AB162B;
+        }
+
+        .rating-stars {
+            font-size: 40px;
+            float: right;
+        }
+
+        .rating-stars .yellow {
+            color: #FDD039;
+        }
+
+        .rating-title {
+            float: left;
+            margin-top: 18px !important;
+        }
+
+        table.top-products-table thead th {
+            font-weight: bold;
+            color: #AB162B;
+            background-color: #FAF5F6;
+            height: 41px;
+        }
+
+        table.top-products-table tbody td {
+            height: 77px;
+            padding-top: 30px;
+        }
+
+        .filter-ibox .form-control {
+            border-radius: 20px;
+            height: 48px;
+            color: #917171;
+            background-color: #FAF5F6;
+        }
+
+        .filter-ibox .btn-primary {
+            border-radius: 20px;
+            height: 48px;
+            padding-top: 14px;
+        }
+
+        .filter-ibox label {
+            font-weight: bold;
+            padding-top: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .navbar-static-side {
+                width: 300px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -93,19 +152,19 @@
                     <a href="#"><i class="fa fa-tags"></i> <span class="nav-label">Cupones</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-life-ring"></i> <span class="nav-label">Envio push</span> </a>
+                    <a href="#"><i class="fa fa-bell"></i> <span class="nav-label">Envio push</span> </a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-users"></i> <span class="nav-label">Usuarios</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-star-o"></i> <span class="nav-label">Calificaciones</span> </a>
+                    <a href="#"><i class="fa fa-star"></i> <span class="nav-label">Calificaciones</span> </a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">Admin de compra</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-map-marker"></i> <span class="nav-label">Ubicaciones</span> </a>
+                    <a href="#"><i class="fa fa-store"></i> <span class="nav-label">Ubicaciones</span> </a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-question-circle-o"></i> <span class="nav-label">FAQ's</span> </a>
@@ -114,7 +173,7 @@
                     <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Sobre Procasa</span> </a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-legal"></i> <span class="nav-label">Términos</span> </a>
+                    <a href="#"><i class="fa fa-file-alt"></i> <span class="nav-label">Términos</span> </a>
                 </li>
             </ul>
         </div>
