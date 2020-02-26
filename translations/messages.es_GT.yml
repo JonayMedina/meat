@@ -93,6 +93,10 @@ app:
             nov: Nov
             dec: Dic
         no_products_found: No se encontraron productos para mostrar en este listado.
+        tables:
+            header:
+                number: No.
+        from_a_total_of_%orders%_orders: De un total de %orders% ordenes
 
 sylius:
     form:

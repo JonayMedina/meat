@@ -30,7 +30,7 @@ class Dashboard extends AbstractController
             'dashboard' => $dashboardService
                 ->setStartDate($startDate)
                 ->setEndDate($endDate)
-                ->retrievePurchasesInDateRangeChartData()
+                ->recalculate()
         ]);
     }
 }

@@ -85,6 +85,11 @@ class DashboardService
     private $averageRating;
 
     /**
+     * @var float $averageRatingCounter
+     */
+    private $averageRatingCounter;
+
+    /**
      * @var array $purchasesInDateRangeChartData
      */
     private $purchasesInDateRangeChartData = [];
@@ -103,17 +108,6 @@ class DashboardService
     {
         $this->container = $container;
         $this->logger = $logger;
-
-        $this->customerCount();
-        $this->orderCount();
-
-        $this
-            ->retrieveGenderChartData()
-            ->retrieveUserAgeChartData()
-            ->retrievePurchasesByUserChartData()
-            ->retrieveNumberOfOrdersChartData()
-            ->retrieveTopProducts()
-            ->calculateAverageRating();
     }
 
     /**
@@ -345,14 +339,29 @@ class DashboardService
             $averageRating = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('AVG(o.rating)')
+                ->andWhere('o.createdAt BETWEEN :start AND :end')
+                ->setParameter('start', $this->getStartDate() . ' 00:00:00')
+                ->setParameter('end', $this->getEndDate() . ' 23:59:59')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            $averageRatingCounter = $this->container->get('sylius.repository.order')
+                ->createQueryBuilder('o')
+                ->select('COUNT(o)')
+                ->andWhere('o.rating IS NOT NULL')
+                ->andWhere('o.createdAt BETWEEN :start AND :end')
+                ->setParameter('start', $this->getStartDate() . ' 00:00:00')
+                ->setParameter('end', $this->getEndDate() . ' 23:59:59')
                 ->getQuery()
                 ->getSingleScalarResult();
         } catch (\Exception $exception) {
             $averageRating = null;
+            $averageRatingCounter = null;
             $this->logger->error($exception->getMessage());
         }
 
         $this->averageRating = $averageRating;
+        $this->averageRatingCounter = $averageRatingCounter;
 
         return $this;
     }
@@ -360,7 +369,7 @@ class DashboardService
     /**
      * Retrieve purchases in date range.
      */
-    public function retrievePurchasesInDateRangeChartData(): self
+    private function retrievePurchasesInDateRangeChartData(): self
     {
         $dates = [];
         $locale = $this->container->getParameter('locale');
@@ -390,8 +399,8 @@ class DashboardService
             foreach ($dates as $index => $date) {
                 $counter = $this->orderCount(true)
                     ->andWhere('o.createdAt BETWEEN :start AND :end')
-                    ->setParameter('start', $date['start'])
-                    ->setParameter('end', $date['end'])
+                    ->setParameter('start', $date['start'] . ' 00:00:00')
+                    ->setParameter('end', $date['end'] . ' 23:59:59')
                     ->getQuery()
                     ->getSingleScalarResult();
 
@@ -421,12 +430,11 @@ class DashboardService
         $code = $this->getChannel()->getCode();
         $locale = $this->container->getParameter('locale');
 
-        $sql = "SELECT p.id, pt.name, pr.price, COUNT(oi.id) as quantity FROM sylius_product p LEFT JOIN sylius_product_variant pv ON p.id=pv.product_id LEFT JOIN sylius_product_translation pt ON (pt.translatable_id = p.id AND pt.locale = '". $locale ."') LEFT JOIN sylius_channel_pricing pr ON pr.product_variant_id = pv.id LEFT JOIN sylius_order_item oi ON oi.variant_id=pv.id LEFT JOIN sylius_order o ON o.id=oi.order_id WHERE p.enabled = true AND pr.channel_code = '". $code ."' AND pv.position = 0 AND o.state='". OrderInterface::STATE_FULFILLED ."' AND o.payment_state='". PaymentInterface::STATE_COMPLETED ."' GROUP BY pr.price, p.id ORDER BY quantity DESC;";
+        $sql = "SELECT p.id, pt.name, pr.price, COUNT(oi.id) as quantity FROM sylius_product p LEFT JOIN sylius_product_variant pv ON p.id=pv.product_id LEFT JOIN sylius_product_translation pt ON (pt.translatable_id = p.id AND pt.locale = '". $locale ."') LEFT JOIN sylius_channel_pricing pr ON pr.product_variant_id = pv.id LEFT JOIN sylius_order_item oi ON oi.variant_id=pv.id LEFT JOIN sylius_order o ON o.id=oi.order_id WHERE p.enabled = true AND pr.channel_code = '". $code ."' AND pv.position = 0 AND o.state='". OrderInterface::STATE_FULFILLED ."' AND o.payment_state='". PaymentInterface::STATE_COMPLETED ."' GROUP BY pr.price, p.id ORDER BY quantity DESC LIMIT ". self::TOP_X_PRODUCTS .";";
         $connection = $this->container->get('doctrine')->getManager()->getConnection();
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         $this->topProducts = $stmt->fetchAll();
-
 
         return $this;
     }
@@ -490,6 +498,14 @@ class DashboardService
     public function getAverageRating(): ?float
     {
         return $this->averageRating;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAverageRatingCounter(): float
+    {
+        return $this->averageRatingCounter;
     }
 
     /**
@@ -564,5 +580,25 @@ class DashboardService
     public function getCurrency(): ?string
     {
         return $this->container->get('sylius.context.currency')->getCurrencyCode();
+    }
+
+    /**
+     * Recalculate all data.
+     */
+    public function recalculate(): self
+    {
+        $this->customerCount();
+        $this->orderCount();
+
+        $this
+            ->retrieveGenderChartData()
+            ->retrieveUserAgeChartData()
+            ->retrievePurchasesByUserChartData()
+            ->retrieveNumberOfOrdersChartData()
+            ->retrieveTopProducts()
+            ->calculateAverageRating()
+            ->retrievePurchasesInDateRangeChartData();
+
+        return $this;
     }
 }

@@ -108,7 +108,7 @@
                         <div class="ibox-content">
                             <h2 class="rating-title">{{ 'app.ui.average_rating'|trans }}</h2>
 
-                            <div class="rating-stars">
+                            <div class="rating-stars" data-toggle="tooltip" data-placement="top" title="{% trans with {'%orders%': dashboard.averageRatingCounter} %}app.ui.from_a_total_of_%orders%_orders{% endtrans %}">
                                 {% for i in 1..constant('App\\Entity\\Order\\Order::MAX_RATING') %}
                                     <i class="fa fa-star {% if i <= dashboard.averageRating %}yellow{% endif %}"></i>
                                 {% endfor %}
@@ -131,7 +131,7 @@
                             <table class="table top-products-table">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>{{ 'app.ui.tables.header.number'|trans }}</th>
                                     <th>{{ 'app.ui.product'|trans }}</th>
                                     <th>{{ 'app.ui.current_price'|trans }}</th>
                                     <th>{{ 'app.ui.quantity'|trans }}</th>
@@ -188,7 +188,10 @@
             $('.datepicker').datepicker({
                 'language': '{{ app.request.locale }}',
                 'format': 'dd/mm/yyyy',
+                'endDate': 'today'
             });
+
+            $('[data-toggle="tooltip"]').tooltip();
 
             var doughnutOptions = {
                 responsive: true
