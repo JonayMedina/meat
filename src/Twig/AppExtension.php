@@ -2,8 +2,8 @@
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\Extension\AbstractExtension;
 
 class AppExtension extends AbstractExtension
 {
@@ -18,7 +18,6 @@ class AppExtension extends AbstractExtension
     {
         $price = $number / 100;
         $price = number_format($price, $decimals, $decPoint, $thousandsSep);
-        $price = $price;
 
         return $price;
     }
