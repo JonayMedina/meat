@@ -5,10 +5,10 @@ namespace App\Service;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Sylius\Component\Core\OrderPaymentStates;
-use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Payment\Model\PaymentInterface;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
+use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,7 +20,7 @@ class DashboardService
     /**
      * Date modifier, for dashboard start date.
      */
-    const START_DATE_MODIFIER = '-1 month';
+    const START_DATE_MODIFIER = '-6 months';
 
     /**
      * @var ContainerInterface $container
@@ -78,6 +78,11 @@ class DashboardService
     private $averageRating;
 
     /**
+     * @var array $purchasesInDateRangeChartData
+     */
+    private $purchasesInDateRangeChartData = [];
+
+    /**
      * DashboardService constructor.
      * @param ContainerInterface $container
      * @param LoggerInterface $logger
@@ -90,12 +95,12 @@ class DashboardService
         $this->customerCount();
         $this->orderCount();
 
-        $this->retrieveGenderChartData();
-        $this->retrieveUserAgeChartData();
-        $this->retrievePurchasesByUserChartData();
-        $this->retrieveNumberOfOrdersChartData();
-
-        $this->calculateAverageRating();
+        $this
+            ->retrieveGenderChartData()
+            ->retrieveUserAgeChartData()
+            ->retrievePurchasesByUserChartData()
+            ->retrieveNumberOfOrdersChartData()
+            ->calculateAverageRating();
     }
 
     /**
@@ -153,7 +158,7 @@ class DashboardService
     /**
      * Retrieve Gender Chart Data.
      */
-    private function retrieveGenderChartData(): void
+    private function retrieveGenderChartData(): self
     {
         $data = [];
         $genders = [
@@ -180,12 +185,14 @@ class DashboardService
         }
 
         $this->genderChartData = $data;
+
+        return $this;
     }
 
     /**
      * Retrieve User Age Chart Data.
      */
-    private function retrieveUserAgeChartData(): void
+    private function retrieveUserAgeChartData(): self
     {
         $data = [];
         $sections = [
@@ -231,12 +238,14 @@ class DashboardService
         }
 
         $this->userAgeChartData = $data;
+
+        return $this;
     }
 
     /**
      * Retrieve purchases by user chart data.
      */
-    private function retrievePurchasesByUserChartData(): void
+    private function retrievePurchasesByUserChartData(): self
     {
         // with no purchases
         $sql = "SELECT COUNT(DISTINCT c.id) FROM sylius_customer c LEFT JOIN sylius_order o ON c.id = o.customer_id WHERE o.id IS NULL OR o.state != '". OrderInterface::STATE_FULFILLED ."' OR o.payment_state = '". PaymentInterface::STATE_REFUNDED ."' OR o.payment_state = '" . PaymentInterface::STATE_FAILED . "' OR o.payment_state = '". PaymentInterface::STATE_CANCELLED ."'";
@@ -258,12 +267,14 @@ class DashboardService
         ];
 
         $this->purchasesByUserData = $data;
+
+        return $this;
     }
 
     /**
      * Retrieve number of orders chart data.
      */
-    private function retrieveNumberOfOrdersChartData(): void
+    private function retrieveNumberOfOrdersChartData(): self
     {
         $data = [];
         $statuses = [
@@ -305,9 +316,14 @@ class DashboardService
         }
 
         $this->numberOfOrdersChartData = $data;
+
+        return $this;
     }
 
-    private function calculateAverageRating()
+    /**
+     * Calculate order average rating.
+     */
+    private function calculateAverageRating(): self
     {
         try {
             $averageRating = $this->container->get('sylius.repository.order')
@@ -321,6 +337,63 @@ class DashboardService
         }
 
         $this->averageRating = $averageRating;
+
+        return $this;
+    }
+
+    /**
+     * Retrieve purchases in date range.
+     */
+    public function retrievePurchasesInDateRangeChartData(): self
+    {
+        $dates = [];
+        $locale = $this->container->getParameter('locale');
+        $localeParts = explode( '_', $locale);
+
+        if ($localeParts[0] == 'es') {
+            $locale = 'es_ES';
+        }
+
+        try {
+            $start    = (new \DateTime($this->getStartDate()))->modify('first day of this month');
+            $end      = (new \DateTime($this->getEndDate()))->modify('first day of next month');
+            $interval = \DateInterval::createFromDateString('1 month');
+            $period   = new \DatePeriod($start, $interval, $end);
+
+            foreach ($period as $dt) {
+                $dates[] = [
+                    'start' => $dt->format("Y-m-01"),
+                    'end' => $dt->format("Y-m-t"),
+                ];
+            }
+
+            $dates[0]['start'] = $this->getStartDate();
+            $dates[count($dates)-1]['end'] = $this->getEndDate();
+
+            // get purchases data
+            foreach ($dates as $index => $date) {
+                $counter = $this->orderCount(true)
+                    ->andWhere('o.createdAt BETWEEN :start AND :end')
+                    ->setParameter('start', $date['start'])
+                    ->setParameter('end', $date['end'])
+                    ->getQuery()
+                    ->getSingleScalarResult();
+
+                $dates[$index]['purchases'] = $counter;
+
+                setlocale(LC_ALL, $locale);
+                $dateObject = new \DateTime($dates[$index]['start']);
+
+                $dates[$index]['label'] = ucfirst(strftime("%B", $dateObject->getTimestamp()));
+            }
+
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+        }
+
+        $this->purchasesInDateRangeChartData = $dates;
+
+        return $this;
     }
 
     /**
@@ -387,16 +460,18 @@ class DashboardService
     /**
      * @return string
      */
-    public function getStartDate(): string
+    public function getStartDate(): ?string
     {
-        return $this->startDate;
+        $date = str_replace('/', '-', $this->startDate );
+
+        return date("Y-m-d", strtotime($date));
     }
 
     /**
      * @param string $startDate
      * @return DashboardService
      */
-    public function setStartDate(string $startDate): self
+    public function setStartDate(?string $startDate): self
     {
         $this->startDate = $startDate;
 
@@ -406,19 +481,30 @@ class DashboardService
     /**
      * @return string
      */
-    public function getEndDate(): string
+    public function getEndDate(): ?string
     {
-        return $this->endDate;
+        $date = str_replace('/', '-', $this->endDate);
+
+        return date("Y-m-d", strtotime($date));
     }
 
     /**
      * @param string $endDate
      * @return DashboardService
      */
-    public function setEndDate(string $endDate): self
+    public function setEndDate(?string $endDate): self
     {
         $this->endDate = $endDate;
 
         return $this;
+    }
+
+    /**
+     * Purchases in date range.
+     * @return array
+     */
+    public function getPurchasesInDateRangeChartData(): array
+    {
+        return $this->purchasesInDateRangeChartData;
     }
 }
