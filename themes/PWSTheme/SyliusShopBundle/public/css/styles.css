@@ -182,3 +182,64 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 10px 30px;
     margin-top: 20px;
 }
+
+.bg-gray {
+    background: #404040;
+}
+
+#footer .logo img {
+    max-width: 110px;
+}
+
+#footer > .container {
+    padding-top: 35px;
+    padding-bottom: 40px;
+}
+
+#footer .links a {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+    padding-bottom: 8px;
+}
+
+#footer .app-btns {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    color: #AB162B;
+}
+
+#footer .app-btns > div a:first-of-type {
+    margin-right: 20px;
+}
+
+#footer .bottom-footer {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+    color: #ffffff !important;
+    padding-top: 30px;
+    padding-bottom: 25px;
+}
+
+#footer .bottom-footer a, #footer .bottom-footer a:hover {
+    color: #ffffff !important;
+}
+
+#footer .bottom-footer .opposite, #footer .bottom-footer .opposite:hover {
+    background: #ffffff;
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #404040 !important;
+    text-decoration: none;
+}
+
+#footer .bottom-footer i {
+    font-size: 23px;
+}
+
+#footer .bottom-footer .opposite i {
+    font-size: 17px;
+}

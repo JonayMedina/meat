@@ -916,3 +916,6 @@ sylius:
         wholesalers: 'Mayoristas'
         catalogue: 'Catálogo'
         locations: 'Ubicaciones'
+        about_procasa: 'Acerca de Procasa'
+        work_with_us: 'Trabaja con nosotros'
+        download_app: 'Simplifícate y descarga el app de '
