@@ -23,7 +23,7 @@ class Dashboard extends AbstractController
      */
     public function indexAction(DashboardService $dashboardService, Request $request)
     {
-        $startDate = $request->get('start', date('d/m/Y', strtotime('-1 month', time())));
+        $startDate = $request->get('start', date('d/m/Y', strtotime(DashboardService::START_DATE_MODIFIER, time())));
         $endDate = $request->get('end', date('d/m/Y'));
 
         return $this->render('/admin/dashboard/index.html.twig', [

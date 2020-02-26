@@ -18,6 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class DashboardService
 {
     /**
+     * Date modifier, for dashboard start date.
+     */
+    const START_DATE_MODIFIER = '-1 month';
+
+    /**
      * @var ContainerInterface $container
      */
     private $container;

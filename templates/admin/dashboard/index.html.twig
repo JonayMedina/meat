@@ -52,7 +52,7 @@
                                             </div>
 
                                             <div class="col-sm-9">
-                                                <input id="filter-start-date" type="text" placeholder="" class="form-control datepicker" value="{{ app.request.get('start')|default('now'|date_modify("-1 month")|date('d/m/Y')) }}">
+                                                <input id="filter-start-date" type="text" placeholder="" class="form-control datepicker" value="{{ app.request.get('start')|default('now'|date_modify(constant('App\\Service\\DashboardService::START_DATE_MODIFIER'))|date('d/m/Y')) }}">
                                             </div>
                                         </div>
                                     </div>
