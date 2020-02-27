@@ -105,6 +105,17 @@ app:
         holidays: Días de feriado
         searcher: Buscador
         category_color: Color en categorías
+        qty_of_active_coupons_%total%: "Cantidad de cupones activos: %total%"
+        new_coupon: Nuevo cupón
+        coupon: Cupón
+        discount_type: Tipo de descuento
+        actions: Acciones
+        duration: Duración
+        view: Ver
+        delete: Borrar
+        search_box:
+            coupon: ¿Qué cupón buscas?
+        no_coupons_found: No se encontraron cupones, para crear uno, presione el botón "Nuevo cupón"
 
 sylius:
     form:

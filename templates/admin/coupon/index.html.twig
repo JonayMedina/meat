@@ -4,11 +4,73 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.coupons'|trans }}</h1>
-            <br><br>
 
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                <h1>{{ 'app.ui.coupons'|trans }} <small>{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_active_coupons_%total%{% endtrans %}</small></h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        &nbsp;
+                        {{'app.ui.new_coupon'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
+
+                        <div class="search-box">
+                            <input type="search" class="search-box-input form-control" placeholder="{{ 'app.ui.search_box.coupon'|trans }}">
+                        </div>
+
+                        <table class="table top-products-table">
+                            <thead>
+                            <tr>
+                                <th>{{ 'app.ui.tables.header.number'|trans }}</th>
+                                <th>{{ 'app.ui.coupon'|trans }}</th>
+                                <th>{{ 'app.ui.duration'|trans }}</th>
+                                <th>{{ 'app.ui.discount_type'|trans }}</th>
+                                <th style="width: 200px">{{ 'app.ui.actions'|trans }}</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for coupon in coupons %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ coupon['code'] }}</td>
+                                    <td>{{ coupon['created_at']|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} - {{ coupon['expires_at'] ? coupon['expires_at']|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
+                                    <td>{{ 'app.ui.n/a'|trans }}</td>
+                                    <td>
+                                        <a href="#" class="btn btn-default btn-action-button">
+                                            {{ 'app.ui.view'|trans }}
+                                        </a>
+                                        &nbsp;
+                                        <a href="#" class="btn btn-danger btn-action-button">
+                                            {{ 'app.ui.delete'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        {{ 'app.ui.no_coupons_found'|trans }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+
 {% endblock %}
