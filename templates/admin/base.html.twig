@@ -143,48 +143,13 @@
 <div id="wrapper">
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
+
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header text-center">
                     <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
                 </li>
-
-                <li class="active">
-                    <a href="{{path('dashboard_index')}}"><i class="fa fa-dashboard"></i> <span class="nav-label">{{'app.ui.dashboard'|trans}}</span></a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-shopping-cart"></i> <span class="nav-label">{{'app.ui.order_history'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-newspaper-o"></i> <span class="nav-label">{{'app.ui.news_banner'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-tags"></i> <span class="nav-label">{{'app.ui.coupons'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-bell"></i> <span class="nav-label">{{'app.ui.send_push'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-users"></i> <span class="nav-label">{{'app.ui.users'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-star"></i> <span class="nav-label">{{'app.ui.ratings'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label">{{'app.ui.purchase_admin'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-store"></i> <span class="nav-label">{{'app.ui.locations'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-question-circle-o"></i> <span class="nav-label">{{'app.ui.faqs'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">{{'app.ui.about_procasa'|trans}}</span> </a>
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-file-alt"></i> <span class="nav-label">{{'app.ui.terms_and_conditions'|trans}}</span> </a>
-                </li>
             </ul>
+            {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
         </div>
     </nav>
 

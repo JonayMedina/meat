@@ -34,8 +34,8 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    app.listener.admin.menu_builder:
-        class: App\Menu\AdminMenuListener
+        
+    App\Menu\MenuBuilder:
+        arguments: ["@knp_menu.factory"]
         tags:
-            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar } # The alias is what is used to retrieve the menu
