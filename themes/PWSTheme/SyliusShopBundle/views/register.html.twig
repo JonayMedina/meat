@@ -8,14 +8,14 @@
     <div class="row register">
         <div class="col-12 segment">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <h1 class="text-center">{{ 'sylius.ui.create_your_account' | trans }}</h1>
                     <div class="instructions margin-0-auto">
                         <p>{{ 'sylius.ui.register_page_message' | trans }}</p>
                         <p>{{ 'sylius.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'sylius.ui.sign_in_here'|trans }}</a></p>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     {{ sonata_block_render_event('sylius.shop.register.before_form') }}
 
                     {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
@@ -23,11 +23,34 @@
 
                     {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
 
-                    <button type="submit" class="ui large primary button">
-                        {{ 'sylius.ui.create_an_account'|trans }}
-                    </button>
+                    <p class="text-center small">{{ 'sylius.ui.required_fields' | trans }}</p>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn-rounded">
+                            {{ 'sylius.ui.create_an_account'|trans }}
+                        </button>
+                    </div>
+
+                    <p class="text-center">{{ 'sylius.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'sylius.ui.terms_and_conditions' | trans }}</a></p>
                     {{ form_row(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">{{ 'sylius.ui.terms_and_conditions' | trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
                 </div>
             </div>
         </div>

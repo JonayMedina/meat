@@ -117,6 +117,17 @@ sylius:
         notes: 'Notas adicionales'
         variant:
             tracked: 'Con seguimiento'
+        customer:
+            gender: 'Género'
+            email: 'Correo'
+        user:
+            password:
+                label: 'Contraseña'
+    gender:
+        male:
+            label: 'M'
+        female:
+            label: 'F'
     ui:
         abandoned: 'Abandonado'
         about: 'Sobre nosotros'
@@ -415,7 +426,7 @@ sylius:
         editing_user: 'Editando usuario'
         editing_variant: 'Editando variante'
         editing_zone: 'Editando zona'
-        email: 'Dirección de correo electrónico'
+        email: 'Correo'
         email_templates: 'Plantillas de correo electrónico'
         email_verified: 'Correo electrónico verificado'
         emails: 'Correos electrónicos'
@@ -693,7 +704,7 @@ sylius:
         parent: 'Padre'
         partially_paid: 'Parcialmente pagado'
         partially_shipped: 'Enviado parcialmente'
-        password: 'Contraseña de API'
+        password: 'Contraseña'
         payment: 'Pago'
         payment_details: 'Detalles de pago'
         payment_method: 'Modo de pago'
@@ -1019,3 +1030,6 @@ sylius:
         register_page_message: 'Completa los campos para crear una cuenta en Meat House.'
         have_account_already: 'Si ya tienes una cuenta, '
         create_your_account: 'Crea tu cuenta'
+        optional_fields_to_offers: 'Campos opcionales para promociones optimizadas.'
+        required_fields: 'Los campos con un asterisco (*) son obligatorios para registrarte.'
+        by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '

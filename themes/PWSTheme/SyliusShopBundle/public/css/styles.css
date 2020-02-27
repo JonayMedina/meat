@@ -12,6 +12,12 @@ img, iframe {
 a, a:hover {
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B !important;
+    cursor: pointer;
+}
+
+p.small {
+     font-family: "Raleway Italic", sans-serif !important;
+    font-size: 14px !important;
 }
 
 /* Utilities */
@@ -21,6 +27,25 @@ a, a:hover {
     right: 0;
     bottom: 0;
     margin: 0 auto;
+}
+
+.border-right {
+    border-right: 1px solid #917171;
+}
+
+.btn-rounded {
+    -webkit-appearance: none;
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 16px;
+    color: #ffffff;
+    background: #AB162B;
+    border-radius: 10em;
+    padding: 10px 30px;
+    margin-top: 20px;
+}
+
+.bg-gray {
+    background: #404040;
 }
 
 /* Custom */
@@ -159,7 +184,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 
 .login form label, .register form label {
     font-family: "Raleway SemiBold", sans-serif;
-    font-size: 16px;
+    font-size: 16px !important;
     text-align: left;
 }
 
@@ -189,19 +214,24 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     text-decoration: underline !important;
 }
 
-.btn-rounded {
-    -webkit-appearance: none;
-    font-family: "Raleway Medium", sans-serif;
-    font-size: 16px;
-    color: #ffffff;
-    background: #AB162B;
-    border-radius: 10em;
-    padding: 10px 30px;
-    margin-top: 20px;
+.register .form .row > div:first-of-type {
+    padding-right: 30px;
 }
 
-.bg-gray {
-    background: #404040;
+.register .form .row > div:last-of-type {
+    padding-left: 30px;
+}
+
+.field .dropdown .grouped {
+    display: flex !important;
+}
+
+.field .dropdown .grouped .field {
+    margin-right: 20px !important;
+}
+
+.field .dropdown .grouped .field label {
+    margin-left: 10px;
 }
 
 #footer .logo img {
