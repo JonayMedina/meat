@@ -48,7 +48,7 @@ class CouponController extends AbstractController
     private function countActiveCoupons(): ?int
     {
         try {
-            $sql = "SELECT COUNT(c.id) FROM sylius_promotion_coupon c WHERE expires_at IS NULL OR expires_at < CURDATE();";
+            $sql = "SELECT COUNT(c.id) FROM sylius_promotion_coupon c WHERE expires_at IS NULL OR expires_at > CURDATE();";
             $connection = $this->container->get('doctrine')->getManager()->getConnection();
             $stmt = $connection->prepare($sql);
 
@@ -69,7 +69,7 @@ class CouponController extends AbstractController
     private function getCoupons(): array
     {
         try {
-            $sql = "SELECT * FROM sylius_promotion_coupon c WHERE expires_at IS NULL OR expires_at < CURDATE();";
+            $sql = "SELECT * FROM sylius_promotion_coupon c;";
             $connection = $this->container->get('doctrine')->getManager()->getConnection();
             $stmt = $connection->prepare($sql);
 
