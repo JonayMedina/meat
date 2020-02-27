@@ -30,10 +30,19 @@
                             {{ 'sylius.ui.create_an_account'|trans }}
                         </button>
                     </div>
-
-                    <p class="text-center">{{ 'sylius.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'sylius.ui.terms_and_conditions' | trans }}</a></p>
                     {{ form_row(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}
+
+                    <div class="text-center">
+                        <h3 class="text-center mt-3">{{ 'sylius.ui.create_an_account_using_social_networks' | trans }}</h3>
+
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
+                            <i class="fab fa-facebook-square"></i>
+                            {{ 'sylius.ui.register_with'|trans }} Facebook
+                        </a>
+                    </div>
+
+                    <p class="text-center mt-4">{{ 'sylius.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'sylius.ui.terms_and_conditions' | trans }}</a></p>
                 </div>
             </div>
         </div>

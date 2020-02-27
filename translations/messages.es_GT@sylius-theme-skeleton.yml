@@ -1044,4 +1044,6 @@ sylius:
         optional_fields_to_offers: 'Campos opcionales para promociones optimizadas.'
         required_fields: 'Los campos con un asterisco (*) son obligatorios para registrarte.'
         by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '
-        login_with: 'Ingresar con ' 
+        login_with: 'Ingresar con '
+        register_with: 'Regístrame con '
+        create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
