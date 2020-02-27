@@ -97,6 +97,8 @@ app:
             header:
                 number: No.
         from_a_total_of_%orders%_orders: De un total de %orders% ordenes
+        your_profile: Tu perfil
+        logout: Salir
 
 sylius:
     form:

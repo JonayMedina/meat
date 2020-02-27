@@ -196,9 +196,14 @@
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
-                        <a href="#" class="text-primary">
-                            Cristina Benito <i class="fa fa-chevron-down"></i>
-                        </a>
+                        <div class="dropdown profile-element m-r-sm text-muted welcome-message">
+                            <a data-toggle="dropdown" class="dropdown-toggle count-info text-primary" href="#">
+                                <span class="block m-t-xs font-bold">Cristina Benito <i class="fa fa-caret-down"></i></span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="dropdown-item" href="#">{{ 'app.ui.logout'|trans }}</a></li>
+                            </ul>
+                        </div>
                     </li>
                 </ul>
 
