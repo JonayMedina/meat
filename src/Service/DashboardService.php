@@ -22,7 +22,7 @@ class DashboardService
     /**
      * Date modifier, for dashboard start date.
      */
-    const START_DATE_MODIFIER = '-6 months';
+    const START_DATE_MODIFIER = '-15 days';
 
     /**
      * Number of products to show on dashboard top.
@@ -380,27 +380,24 @@ class DashboardService
         }
 
         try {
-            $start    = (new \DateTime($this->getStartDate()))->modify('first day of this month');
-            $end      = (new \DateTime($this->getEndDate()))->modify('first day of next month');
-            $interval = \DateInterval::createFromDateString('1 month');
+            $start    = (new \DateTime($this->getStartDate()));
+            $end      = (new \DateTime($this->getEndDate()));
+            $interval = \DateInterval::createFromDateString('1 day');
             $period   = new \DatePeriod($start, $interval, $end);
 
             foreach ($period as $dt) {
                 $dates[] = [
-                    'start' => $dt->format("Y-m-01"),
-                    'end' => $dt->format("Y-m-t"),
+                    'start' => $dt->format("Y-m-d 00:00:00"),
+                    'end' => $dt->format("Y-m-d 23:59:59"),
                 ];
             }
-
-            $dates[0]['start'] = $this->getStartDate();
-            $dates[count($dates)-1]['end'] = $this->getEndDate();
 
             // get purchases data
             foreach ($dates as $index => $date) {
                 $counter = $this->orderCount(true)
                     ->andWhere('o.createdAt BETWEEN :start AND :end')
-                    ->setParameter('start', $date['start'] . ' 00:00:00')
-                    ->setParameter('end', $date['end'] . ' 23:59:59')
+                    ->setParameter('start', $date['start'])
+                    ->setParameter('end', $date['end'])
                     ->getQuery()
                     ->getSingleScalarResult();
 
@@ -409,7 +406,7 @@ class DashboardService
                 setlocale(LC_ALL, $locale);
                 $dateObject = new \DateTime($dates[$index]['start']);
 
-                $dates[$index]['label'] = ucfirst(strftime("%B", $dateObject->getTimestamp()));
+                $dates[$index]['label'] = ucfirst(strftime("%d %b %g", $dateObject->getTimestamp()));
             }
 
         } catch (\Exception $exception) {
