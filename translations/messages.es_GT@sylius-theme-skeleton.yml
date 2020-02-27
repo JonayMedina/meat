@@ -134,11 +134,14 @@ sylius:
         user:
             password:
                 label: 'Contraseña'
+            email: 'Correo'
     gender:
         male:
             label: 'M'
         female:
             label: 'F'
+    email:
+        label: 'Correo'
     ui:
         abandoned: 'Abandonado'
         about: 'Sobre nosotros'
@@ -206,7 +209,7 @@ sylius:
         available_until: 'Disponible hasta'
         average_order_value: 'Valor de pedido promedio'
         awaiting_payment: 'Esperando pago'
-        back: 'Volver'
+        back: 'Regresar'
         back_to_store: 'Volver a la tienda'
         back_to_details: 'Volver a detalles'
         backorder: 'En espera'
@@ -806,7 +809,7 @@ sylius:
         reserved: 'Reservado'
         reset: 'Restablecer'
         reset_button: 'Restablecer'
-        reset_password: 'Restablecer contraseña'
+        reset_password: 'Recupera tu contraseña'
         restore: 'Recuperar'
         retail_price: 'Precio de venta la público'
         return: 'Devolver'
@@ -1047,3 +1050,5 @@ sylius:
         login_with: 'Ingresar con '
         register_with: 'Regístrame con '
         create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
+        enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
+        send_instructions: 'Enviar instrucciones'

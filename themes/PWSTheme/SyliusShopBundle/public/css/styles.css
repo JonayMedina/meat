@@ -15,14 +15,42 @@ a, a:hover {
     cursor: pointer;
 }
 
+p {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+    text-align: left;
+}
+
 p.small {
-     font-family: "Raleway Italic", sans-serif !important;
+    font-family: "Raleway Italic", sans-serif !important;
     font-size: 14px !important;
 }
 
 h3 {
     font-family: "Raleway Medium", sans-serif;
     font-size: 24px;
+}
+
+form label {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px !important;
+    text-align: left;
+}
+
+form input {
+    font-family: "Raleway Light", sans-serif !important;
+    font-size: 16px !important;
+    border-radius: 15px !important;
+}
+
+form input, form input:-webkit-autofill {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+    border-color: #F5F5F5 !important;
+}
+
+button, button:hover, button:focus, a, a:hover, a:focus {
+    outline: none !important;
 }
 
 /* Utilities */
@@ -153,19 +181,6 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     margin-bottom: 0 !important;
 }
 
-.ui.circular.button {
-    background: #AB162B;
-    color: #ffffff;
-    font-family: "Raleway Medium", sans-serif;
-    font-size: 16px;
-    padding-left: 15px;
-    padding-right: 35px;
-}
-
-.ui.circular.button i {
-    margin-right: 20px !important;
-}
-
 .segment {
     position: relative;
     background: #fff;
@@ -177,22 +192,27 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border: 1px solid rgba(34,36,38,.15);
 }
 
-.login, .register {
+.login, .register, .forgot-password {
     color: #404040;
 }
 
-.login h1, .register h1 {
+.login h1, .register h1, .forgot-password h1 {
     font-size: 32px;
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B;
     padding: 20px 0;
 }
 
-.login form {
+.login form, .forgot-password form {
     max-width: 454px !important;
     padding: 20px 0 25px 0;
     border-bottom: 1px solid #917171;
     text-align: center;
+}
+
+.forgot-password form {
+    max-width: 400px !important;
+    border-bottom: none;
 }
 
 .register form {
@@ -205,35 +225,12 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 0 80px;
 }
 
-.login form label, .register form label {
-    font-family: "Raleway SemiBold", sans-serif;
-    font-size: 16px !important;
-    text-align: left;
-}
-
-.register p {
-    font-family: "Raleway Regular", sans-serif;
-    font-size: 16px;
-    text-align: left;
-}
-
 .register .instructions {
     width: 45%;
 }
 
-.login form input, .register form input {
-    font-family: "Raleway Light", sans-serif !important;
-    font-size: 16px !important;
-    border-radius: 15px !important;
-}
-
-.login form input, .login form input:-webkit-autofill, .register form input, .register form input:-webkit-autofill {
-    background: #F5F5F5 !important;
-    background-color: #F5F5F5 !important;
-    border-color: #F5F5F5 !important;
-}
-
-.login a:not(.btn-login-with), .login  a:not(.btn-login-with):hover, .register a:not(.btn-login-with), .register  a:not(.btn-login-with):hover {
+.login a:not(.btn-login-with), .login  a:not(.btn-login-with):hover, .register a:not(.btn-login-with), .register  a:not(.btn-login-with):hover,
+.forgot-password a:not(.btn-login-with), .forgot-password  a:not(.btn-login-with):hover {
     text-decoration: underline !important;
 }
 

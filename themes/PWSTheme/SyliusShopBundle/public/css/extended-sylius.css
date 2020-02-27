@@ -1,0 +1,12 @@
+.ui.circular.button {
+    background: #AB162B;
+    color: #ffffff;
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 16px;
+    padding-left: 15px;
+    padding-right: 35px;
+}
+
+.ui.circular.button i {
+    margin-right: 20px !important;
+}
