@@ -38,3 +38,8 @@ services:
         class: App\Menu\AdminMenuListener
         tags:
             - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
+                
+    app.form.extension.type.customer_registration:
+        class: App\Form\Extension\CustomerRegistrationTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\CustomerRegistrationType }

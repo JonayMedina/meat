@@ -1,12 +1,46 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{#
-
-    Available variables:
-
-    * "form" - Customer registration form.
-
-#}
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block content %}
+    {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
+
+    <div class="row register">
+        <div class="col-12 segment">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-center">{{ 'sylius.ui.create_your_account' | trans }}</h1>
+                    <div class="instructions margin-0-auto">
+                        <p>{{ 'sylius.ui.register_page_message' | trans }}</p>
+                        <p>{{ 'sylius.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'sylius.ui.sign_in_here'|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    {{ sonata_block_render_event('sylius.shop.register.before_form') }}
+
+                    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
+                    {% include '@SyliusShop/Register/_form.html.twig' %}
+
+                    {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
+
+                    <button type="submit" class="ui large primary button">
+                        {{ 'sylius.ui.create_an_account'|trans }}
+                    </button>
+                    {{ form_row(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function ($) {
+            $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
+            $('input[type="radio"]').closest('div.toggle').removeClass("checkbox");
+        });
+    </script>
 {% endblock %}
