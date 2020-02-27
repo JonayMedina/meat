@@ -25,7 +25,12 @@
                     <input type="hidden" name="_csrf_shop_security_token" value="{{ csrf_token('shop_authenticate') }}">
                     {{ form_end(form, {'render_rest': false}) }}
 
-                    <div class="fb-login-button" data-width="" data-size="large" data-button-type="login_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+                    <div class="text-center">
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
+                            <i class="fab fa-facebook-square"></i>
+                            {{ 'sylius.ui.login_with'|trans }} Facebook
+                        </a>
+                    </div>
 
                     {{ sonata_block_render_event('sylius.shop.login.after_login') }}
                 </div>

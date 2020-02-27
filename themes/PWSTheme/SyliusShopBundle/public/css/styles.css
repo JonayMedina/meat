@@ -48,6 +48,24 @@ p.small {
     background: #404040;
 }
 
+.btn-login-with, .btn-login-with:hover {
+    border-radius: 8px;
+    background: #f2f2f2;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    padding: 10px 15px;
+    display: inline-block;
+    margin-top: 25px;
+}
+
+.btn-login-with i {
+    margin-right: 20px;
+}
+
+.btn-login-with.facebook {
+    background: #3B5998;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -210,7 +228,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border-color: #F5F5F5 !important;
 }
 
-.login a, .login  a:hover, .register a, .register  a:hover {
+.login a:not(.btn-login-with), .login  a:not(.btn-login-with):hover, .register a:not(.btn-login-with), .register  a:not(.btn-login-with):hover {
     text-decoration: underline !important;
 }
 
