@@ -76,6 +76,8 @@
     <a href="{{ item.uri }}"{{ macros.attributes(item.linkAttributes) }}>
         {% if item.getExtra('icon') %}
             <i class="{{ item.getExtra('icon') }}"></i>
+            {% set icon = item.getExtra('icon') %}
+            <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
         {% endif %}
 
         {% if item.attributes['second-level'] is defined %}
@@ -106,7 +108,8 @@
     {% import "/menu/knp_menu_base.html.twig" as macros %}
     <span {{ macros.attributes(item.labelAttributes) }}>
         {% if item.attribute('icon') is not empty  %}
-            <i class="{{ item.attribute('icon') }}"></i>
+            {% set icon = item.attribute('icon') %}
+            <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
         {% endif %}
         {{ block('label') }}
 	</span>
@@ -118,7 +121,8 @@
     {%- set attributes = item.linkAttributes %}
     <a href="#"{{ macros.attributes(attributes) }}>
         {% if item.attribute('icon') is not empty  %}
-            <i class="{{ item.attribute('icon') }}"></i>
+            {% set icon = item.attribute('icon') %}
+            <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
         {% endif %}
         <span class="nav-label">{{ block('label') }}</span>
         <span class="fa arrow"></span>

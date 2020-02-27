@@ -33,7 +33,7 @@ class MenuBuilder
         $menu->addChild('app.ui.dashboard', [
             'route' => 'dashboard_index',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-chart-pie',
+            'icon' => 'dashboard',
             'routes' => [
                 'dashboard_index',
             ],
@@ -45,7 +45,7 @@ class MenuBuilder
         $menu->addChild('app.ui.order_history', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-shopping-cart',
+            'icon' => 'orders',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -57,7 +57,7 @@ class MenuBuilder
         $menu->addChild('app.ui.news_banner', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-newspaper-o',
+            'icon' => 'slider',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -69,7 +69,7 @@ class MenuBuilder
         $menu->addChild('app.ui.coupons', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-tags',
+            'icon' => 'coupons',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -81,7 +81,7 @@ class MenuBuilder
         $menu
             ->addChild('app.ui.send_push', ['uri' => '#'])
             ->setAttribute('dropdown', true)
-            ->setAttribute('icon', 'fa fa-lg fa-fw fa-bell')
+            ->setAttribute('icon', 'push')
             ->setLinkAttributes([
                 'aria-expanded' => 'false'
             ])
@@ -103,7 +103,7 @@ class MenuBuilder
         $menu->addChild('app.ui.users', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-users',
+            'icon' => 'users',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -115,7 +115,7 @@ class MenuBuilder
         $menu->addChild('app.ui.ratings', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-star',
+            'icon' => 'ratings',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -127,7 +127,7 @@ class MenuBuilder
         $menu
             ->addChild('app.ui.purchase_admin', ['uri' => '#'])
             ->setAttribute('dropdown', true)
-            ->setAttribute('icon', 'fa fa-lg fa-fw fa-cogs')
+            ->setAttribute('icon', 'settings')
             ->setLinkAttributes([
                 'aria-expanded' => 'false',
             ])
@@ -161,7 +161,7 @@ class MenuBuilder
         $menu->addChild('app.ui.locations', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-store',
+            'icon' => 'locations',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -173,7 +173,7 @@ class MenuBuilder
         $menu->addChild('app.ui.faqs', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-question-circle-o',
+            'icon' => 'faqs',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -185,7 +185,7 @@ class MenuBuilder
         $menu->addChild('app.ui.about_procasa', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-th-large',
+            'icon' => 'about-us',
             'routes' => [
                 'sylius_shop_homepage',
             ],
@@ -197,7 +197,7 @@ class MenuBuilder
         $menu->addChild('app.ui.terms_and_conditions', [
             'route' => 'sylius_shop_homepage',
         ])->setExtras([
-            'icon' => 'fa fa-lg fa-fw fa-file-alt',
+            'icon' => 'terms',
             'routes' => [
                 'sylius_shop_homepage',
             ],
