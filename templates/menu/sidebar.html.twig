@@ -1,0 +1,131 @@
+{% extends '/menu/knp_menu_base.html.twig' %}
+
+{% block item %}
+    {% import "/menu/knp_menu_base.html.twig" as macros %}
+    {% if item.displayed %}
+        {%- set attributes = item.attributes %}
+        {%- set is_dropdown = attributes.dropdown|default(false) %}
+        {%- set divider_prepend = attributes.divider_prepend|default(false) %}
+        {%- set divider_append = attributes.divider_append|default(false) %}
+
+        {# unset bootstrap specific attributes #}
+        {%- set attributes = attributes|merge({'dropdown': null, 'divider_prepend': null, 'divider_append': null }) %}
+
+        {%- if divider_prepend %}
+            {{ block('dividerElement') }}
+        {%- endif %}
+
+        {# building the class of the item #}
+        {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
+        {%- if matcher.isCurrent(item) %}
+            {%- set classes = classes|merge([options.currentClass]) %}
+        {%- elseif matcher.isAncestor(item, options.depth) %}
+            {%- set classes = classes|merge([options.ancestorClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeFirst %}
+            {%- set classes = classes|merge([options.firstClass]) %}
+        {%- endif %}
+        {%- if item.actsLikeLast %}
+            {%- set classes = classes|merge([options.lastClass]) %}
+        {%- endif %}
+
+        {# building the class of the children #}
+        {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
+        {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
+
+        {# adding classes for dropdown #}
+        {%- if is_dropdown %}
+            {%- set classes = classes|merge(['dropdown']) %}
+        {%- endif %}
+
+        {# putting classes together #}
+        {%- if classes is not empty %}
+            {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
+        {%- endif %}
+        {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
+
+        {# displaying the item #}
+        <li{{ macros.attributes(attributes) }}>
+            {%- if is_dropdown %}
+                {{ block('dropdownElement') }}
+            {%- elseif item.uri is not empty and (not item.current or options.currentAsLink) %}
+                {{ block('linkElement') }}
+            {%- else %}
+                {{ block('spanElement') }}
+            {%- endif %}
+            {# render the list of children#}
+            {{ block('list') }}
+        </li>
+
+        {%- if divider_append %}
+            {{ block('dividerElement') }}
+        {%- endif %}
+    {% endif %}
+{% endblock %}
+
+{% block dividerElement %}
+    {% if item.level == 1 %}
+        <li class="divider-vertical"></li>
+    {% else %}
+        <li class="divider"></li>
+    {% endif %}
+{% endblock %}
+
+{% block linkElement %}
+    {% import "/menu/knp_menu_base.html.twig" as macros %}
+    <a href="{{ item.uri }}"{{ macros.attributes(item.linkAttributes) }}>
+        {{ block('label') }}
+        {% if item.attribute('tag') is not empty  %}
+            <span class="label label-primary pull-right">{{ item.attribute('tag') | trans }}</span>
+        {% endif %}
+
+        {% if item.attribute('success-tag') is not empty  %}
+            <span class="label label-success pull-right">{{ item.attribute('success-tag') | trans }}</span>
+        {% endif %}
+
+        {% if item.attribute('warning-tag') is not empty  %}
+            <span class="label label-warning pull-right">{{ item.attribute('warning-tag') | trans }}</span>
+        {% endif %}
+
+        {% if item.attribute('danger-tag') is not empty  %}
+            <span class="label label-danger pull-right">{{ item.attribute('danger-tag') | trans }}</span>
+        {% endif %}
+    </a>
+{% endblock %}
+
+{% block spanElement %}
+    {% import "/menu/knp_menu_base.html.twig" as macros %}
+    <span {{ macros.attributes(item.labelAttributes) }}>
+        {% if item.attribute('icon') is not empty  %}
+            <i class="{{ item.attribute('icon') }}"></i>
+        {% endif %}
+        {{ block('label') }}
+	</span>
+{% endblock %}
+
+{% block dropdownElement %}
+    {% import "/menu/knp_menu_base.html.twig" as macros %}
+    {%- set classes = item.linkAttribute('class') is not empty ? [item.linkAttribute('class')] : [] %}
+    {%- set attributes = item.linkAttributes %}
+    <a href="#"{{ macros.attributes(attributes) }}>
+        {% if item.attribute('icon') is not empty  %}
+            <i class="{{ item.attribute('icon') }}"></i>
+        {% endif %}
+        <span class="nav-label">{{ block('label') }}</span>
+        <span class="fa arrow"></span>
+    </a>
+{% endblock %}
+
+{% block label %}
+    {% if item.getExtra('icon') %}
+        <i class="{{ item.getExtra('icon') }}"></i>
+    {% endif %}
+
+    {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
+        {{ item.label|raw }}
+    {% elseif item.getExtra('disable_translation', false) %}
+        {{ item.label }}
+    {% else %}
+        {{ item.label|trans }}
+    {% endif %}
+{% endblock %}
