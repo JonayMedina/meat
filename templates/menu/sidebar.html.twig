@@ -74,7 +74,18 @@
 {% block linkElement %}
     {% import "/menu/knp_menu_base.html.twig" as macros %}
     <a href="{{ item.uri }}"{{ macros.attributes(item.linkAttributes) }}>
-        {{ block('label') }}
+        {% if item.getExtra('icon') %}
+            <i class="{{ item.getExtra('icon') }}"></i>
+            {% set icon = item.getExtra('icon') %}
+            <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
+        {% endif %}
+
+        {% if item.attributes['second-level'] is defined %}
+            {{ block('label') }}
+        {% else %}
+            <span class="nav-label">{{ block('label') }}</span>
+        {% endif %}
+
         {% if item.attribute('tag') is not empty  %}
             <span class="label label-primary pull-right">{{ item.attribute('tag') | trans }}</span>
         {% endif %}
@@ -119,11 +130,6 @@
 {% endblock %}
 
 {% block label %}
-    {% if item.getExtra('icon') %}
-        {% set icon = item.getExtra('icon') %}
-        <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
-    {% endif %}
-
     {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
         {{ item.label|raw }}
     {% elseif item.getExtra('disable_translation', false) %}

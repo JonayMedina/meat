@@ -90,10 +90,12 @@ class MenuBuilder
             ->setChildrenAttribute('style', 'height: 0px;');
 
         $menu['app.ui.send_push']
-            ->addChild('app.ui.send_push', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.send_push', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         $menu['app.ui.send_push']
-            ->addChild('app.ui.segments', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.segments', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         /**
          * Users
@@ -134,19 +136,24 @@ class MenuBuilder
             ->setChildrenAttribute('style', 'height: 0px;');
 
         $menu['app.ui.purchase_admin']
-            ->addChild('app.ui.purchase_texts', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.purchase_texts', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         $menu['app.ui.purchase_admin']
-            ->addChild('app.ui.purchase_settings', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.purchase_settings', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         $menu['app.ui.purchase_admin']
-            ->addChild('app.ui.holidays', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.holidays', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         $menu['app.ui.purchase_admin']
-            ->addChild('app.ui.searcher', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.searcher', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         $menu['app.ui.purchase_admin']
-            ->addChild('app.ui.category_color', ['route' => 'sylius_shop_homepage']);
+            ->addChild('app.ui.category_color', ['route' => 'sylius_shop_homepage'])
+            ->setAttribute('second-level', 'true');
 
         /**
          * Locations
