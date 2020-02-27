@@ -99,6 +99,12 @@ app:
         from_a_total_of_%orders%_orders: De un total de %orders% ordenes
         your_profile: Tu perfil
         logout: Salir
+        segments: Segmentos
+        purchase_texts: Textos de compras
+        purchase_settings: Configuración de compra
+        holidays: Días de feriado
+        searcher: Buscador
+        category_color: Color en categorías
 
 sylius:
     form:

@@ -131,6 +131,14 @@
             padding-top: 16px;
         }
 
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        ul.nav-second-level {
+            background: #565656;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -144,7 +152,7 @@
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
 
-            <ul class="nav metismenu" id="side-menu">
+            <ul class="nav metismenu">
                 <li class="nav-header text-center">
                     <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
                 </li>
