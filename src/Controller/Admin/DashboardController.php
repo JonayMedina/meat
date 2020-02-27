@@ -11,8 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 /**
  * Class DashboardService
  * @package App\Controller\Admin
+ * @author Rodmar Zavala <rzavala@praga.ws>
  */
-class Dashboard extends AbstractController
+class DashboardController extends AbstractController
 {
     /**
      *

@@ -232,6 +232,25 @@
         $.fn.datepicker.defaults.todayHighlight = true;
     }
 </script>
+
+<script>
+    $(document).ready(function () {
+        var $sideMenu = $('#side-menu');
+        var $activeList = $sideMenu.find('li.active');
+        var $parent = $activeList.closest('li.dropdown');
+
+        if ($parent.length) {
+            // keep dropdown open
+            $parent.addClass('active');
+            var $ul = $parent.find('ul.nav');
+            var $a = $parent.find('[aria-expanded=false]');
+
+            $a.attr('aria-expanded', 'true');
+            $ul.attr('aria-expanded', 'true');
+            $ul.addClass('in');
+        }
+    });
+</script>
 {% block javascript %}
 {% endblock %}
 

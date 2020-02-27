@@ -5,6 +5,11 @@ namespace App\Twig;
 use Twig\TwigFilter;
 use Twig\Extension\AbstractExtension;
 
+/**
+ * Class AppExtension
+ * @package App\Twig
+ * @author Rodmar Zavala <rzavala@praga.ws>
+ */
 class AppExtension extends AbstractExtension
 {
     public function getFilters()
