@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class DashboardService
  * @package App\Service
+ * @author Rodmar Zavala <rzavala@praga.ws>
  */
 class DashboardService
 {
