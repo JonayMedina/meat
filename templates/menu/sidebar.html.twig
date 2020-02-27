@@ -75,7 +75,6 @@
     {% import "/menu/knp_menu_base.html.twig" as macros %}
     <a href="{{ item.uri }}"{{ macros.attributes(item.linkAttributes) }}>
         {% if item.getExtra('icon') %}
-            <i class="{{ item.getExtra('icon') }}"></i>
             {% set icon = item.getExtra('icon') %}
             <img src="{{ asset('meathouse/img/icons/' ~ icon ~ '.svg') }}" alt="{{ icon }}" title="{{ icon }}">
         {% endif %}
