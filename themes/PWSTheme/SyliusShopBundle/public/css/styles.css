@@ -310,3 +310,50 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 #footer .bottom-footer .opposite i {
     font-size: 17px;
 }
+
+/* Modal */
+.modal-content {
+    padding: 40px 0 !important;
+}
+
+.modal-title {
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 32px;
+    color: #AB162B;
+}
+
+.modal-header {
+    justify-content: center !important;
+    border-bottom: none !important;
+}
+
+.modal-footer {
+    border-top: none !important;
+}
+
+.modal .close {
+    position: absolute;
+    right: 15px;
+    color: #AB162B;
+    font-size: 30px;
+}
+
+.modal.fade {
+    background: rgba(145, 113, 113, .58);
+}
+
+.modal-body {
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}
+
+.modal .btn-rounded {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 50% !important;
+    }
+}

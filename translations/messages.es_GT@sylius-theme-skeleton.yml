@@ -145,7 +145,8 @@ sylius:
     ui:
         abandoned: 'Abandonado'
         about: 'Sobre nosotros'
-        accept: 'Aceptar'
+        accept: 'Sí acepto'
+        not_accept: 'No acepto'
         accepted: 'Aceptado'
         access_token: 'Token de acceso'
         access_your_store_account_or_create_a_new_one: 'Escribe tus credenciales para ingresar a tu cuenta. Si no tienes una, '
