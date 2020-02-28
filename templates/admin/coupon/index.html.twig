@@ -26,46 +26,53 @@
                     <div class="ibox-content no-padding">
 
                         <div class="search-box">
-                            <input type="search" class="search-box-input form-control" placeholder="{{ 'app.ui.search_box.coupon'|trans }}">
+                            <form action="" method="get">
+                                <input type="search" name="filter" class="search-box-input form-control" placeholder="{{ 'app.ui.search_box.coupon'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                            </form>
                         </div>
 
-                        <table class="table top-products-table">
-                            <thead>
-                            <tr>
-                                <th>{{ 'app.ui.tables.header.number'|trans }}</th>
-                                <th>{{ 'app.ui.coupon'|trans }}</th>
-                                <th>{{ 'app.ui.duration'|trans }}</th>
-                                <th>{{ 'app.ui.discount_type'|trans }}</th>
-                                <th style="width: 200px">{{ 'app.ui.actions'|trans }}</th>
-                            </tr>
-                            </thead>
+                        <div class="table-responsive-sm">
+                            <table class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th>{{ knp_pagination_sortable(pagination, 'app.ui.tables.header.number'|trans(), 'coupon.id' )|raw }}</th>
+                                    <th>{{ knp_pagination_sortable(pagination, 'app.ui.coupon'|trans(), 'coupon.code' )|raw }}</th>
+                                    <th>{{ knp_pagination_sortable(pagination, 'app.ui.duration'|trans(), 'coupon.createdAt' )|raw }}</th>
+                                    <th>{{ 'app.ui.discount_type'|trans }}</th>
+                                    <th class="actions-header">{{ 'app.ui.actions'|trans }}</th>
+                                </tr>
+                                </thead>
 
-                            <tbody>
-                            {% for coupon in coupons %}
-                                <tr>
-                                    <td>{{ loop.index }}</td>
-                                    <td>{{ coupon['code'] }}</td>
-                                    <td>{{ coupon['created_at']|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} - {{ coupon['expires_at'] ? coupon['expires_at']|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
-                                    <td>{{ 'app.ui.n/a'|trans }}</td>
-                                    <td>
-                                        <a href="#" class="btn btn-default btn-action-button">
-                                            {{ 'app.ui.view'|trans }}
-                                        </a>
-                                        &nbsp;
-                                        <a href="#" class="btn btn-danger btn-action-button">
-                                            {{ 'app.ui.delete'|trans }}
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="5" class="text-center">
-                                        {{ 'app.ui.no_coupons_found'|trans }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                                <tbody>
+                                {% for coupon in pagination %}
+                                    <tr>
+                                        <td>{{ coupon.id }}</td>
+                                        <td>{{ coupon.code }}</td>
+                                        <td>{{ coupon.createdAt|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} - {{ coupon.expiresAt ? coupon.expiresAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
+                                        <td>{{ 'app.ui.n/a'|trans }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-default btn-action-button">
+                                                {{ 'app.ui.view'|trans }}
+                                            </a>
+                                            &nbsp;
+                                            <a href="#" class="btn btn-danger btn-action-button">
+                                                {{ 'app.ui.delete'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            {{ 'app.ui.no_coupons_found'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        {{ knp_pagination_render(pagination) }}
                     </div>
                 </div>
             </div>

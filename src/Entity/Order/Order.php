@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
+use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sylius_order")
+ * @Cache("NONSTRICT_READ_WRITE")
  */
 class Order extends BaseOrder
 {

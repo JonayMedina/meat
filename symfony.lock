@@ -218,6 +218,9 @@
     "knplabs/gaufrette": {
         "version": "v0.6.0"
     },
+    "knplabs/knp-components": {
+        "version": "v2.3.3"
+    },
     "knplabs/knp-gaufrette-bundle": {
         "version": "v0.5.3"
     },
@@ -226,6 +229,9 @@
     },
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.1.1"
     },
     "lakion/mink-debug-extension": {
         "version": "v1.2.3"
