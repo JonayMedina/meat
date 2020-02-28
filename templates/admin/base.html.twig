@@ -162,9 +162,7 @@
         }
 
         .ibox-content .search-box {
-            padding-top: 30px;
-            padding-left: 30px;
-            padding-bottom: 30px;
+            padding: 30px;
             width: 400px;
         }
 
@@ -191,9 +189,42 @@
             color: #AB162B;
         }
 
+        .pagination {
+            justify-content: center;
+        }
+
+        .page-item.active .page-link {
+            background-color: #AB162B;
+            border-color: #AB162B;
+        }
+
+        .actions-header {
+            width: 200px;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
+            }
+        }
+
+        @media (max-width: 812px) {
+            .ibox-content .search-box {
+                width: 100%;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+
+            h1 small {
+                display: block;
+                margin-left: 2px;
+                margin-top: 8px;
+            }
+
+            .actions-header {
+                width: 100px;
             }
         }
     </style>

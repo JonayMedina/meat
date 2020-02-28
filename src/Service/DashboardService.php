@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Doctrine\ORM\Cache;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product\Product;
@@ -129,6 +130,8 @@ class DashboardService
 
             $this->customerTotal = $queryBuilder
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
@@ -155,6 +158,8 @@ class DashboardService
 
             $this->orderTotal = $queryBuilder
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
@@ -183,6 +188,8 @@ class DashboardService
                     ->andWhere('customer.gender = :gender')
                     ->setParameter('gender', $gender)
                     ->getQuery()
+                    ->setCacheable(true)
+                    ->setCacheMode(Cache::MODE_NORMAL)
                     ->getSingleScalarResult();
             } catch (\Exception $exception) {
                 $counter = null;
@@ -294,6 +301,8 @@ class DashboardService
                 ->andWhere('o.paymentState = :status')
                 ->setParameter('status', OrderPaymentStates::STATE_AWAITING_PAYMENT)
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
 
             // Cancelled...
@@ -304,6 +313,8 @@ class DashboardService
                 ->setParameter('status', OrderInterface::STATE_CANCELLED)
                 ->setParameter('refundedState', 'refunded')
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
 
             // Fulfilled
@@ -315,6 +326,8 @@ class DashboardService
                 ->setParameter('status', OrderInterface::STATE_FULFILLED)
                 ->setParameter('refundedState', 'refunded')
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
 
             $data[OrderPaymentStates::STATE_AWAITING_PAYMENT] = $pending;
@@ -344,6 +357,8 @@ class DashboardService
                 ->setParameter('start', $this->getStartDate() . ' 00:00:00')
                 ->setParameter('end', $this->getEndDate() . ' 23:59:59')
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
 
             $averageRatingCounter = $this->container->get('sylius.repository.order')
@@ -354,6 +369,8 @@ class DashboardService
                 ->setParameter('start', $this->getStartDate() . ' 00:00:00')
                 ->setParameter('end', $this->getEndDate() . ' 23:59:59')
                 ->getQuery()
+                ->setCacheable(true)
+                ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
         } catch (\Exception $exception) {
             $averageRating = null;
@@ -400,6 +417,8 @@ class DashboardService
                     ->setParameter('start', $date['start'])
                     ->setParameter('end', $date['end'])
                     ->getQuery()
+                    ->setCacheable(true)
+                    ->setCacheMode(Cache::MODE_NORMAL)
                     ->getSingleScalarResult();
 
                 $dates[$index]['purchases'] = $counter;
@@ -484,7 +503,7 @@ class DashboardService
      * Return order counter.
      * @return int
      */
-    public function getOrderTotal(): int
+    public function getOrderTotal(): ?int
     {
         return $this->orderTotal;
     }
@@ -501,7 +520,7 @@ class DashboardService
     /**
      * @return float
      */
-    public function getAverageRatingCounter(): float
+    public function getAverageRatingCounter(): ?float
     {
         return $this->averageRatingCounter;
     }

@@ -1,0 +1,11 @@
+# Loco yaml export: Symfony YAML object
+# Project: KnpPaginatorBundle.es_GT@sylius-theme-skeleton.xliff conversion
+# Release: Working copy
+# Locale: es-GT, Spanish (Guatemala)
+# Exported by: Unregistered user
+# Exported at: Fri, 28 Feb 2020 12:38:30 -0600
+---
+label_previous: Anterior
+label_next: Siguiente
+filter_searchword: Buscar...
+...
