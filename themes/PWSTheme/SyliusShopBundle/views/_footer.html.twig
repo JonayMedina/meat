@@ -3,7 +3,7 @@
         {{ sonata_block_render_event('sylius.shop.layout.before_footer') }}
         <div class="row">
             <div class="col-2">
-                <a class="logo" href="{{ path('sylius_shop_homepage') }}"><img src="{{ asset('bundles/syliusshop/img/logo.png') }}" alt="{{ sylius.channel.name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
+                <a class="logo" href="{{ path('sylius_shop_homepage') }}"><img src="{{ asset('bundles/syliusshop/img/logo.png') }}" alt="{{ app_name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
             </div>
             <div class="col-5 links">
                 <a href="#" class="d-block">{{ 'sylius.ui.about_procasa'|trans }}</a>
@@ -12,7 +12,7 @@
                 <a href="#" class="d-block">{{ 'sylius.ui.terms_and_conditions'|trans }}</a>
             </div>
             <div class="col-5 app-btns">
-                <p class="text-right">{{ 'sylius.ui.download_app'|trans  }} {{ sylius.channel.name }}</p>
+                <p class="text-right">{{ 'sylius.ui.download_app'|trans  }} {{ app_name }}</p>
                 <div class="text-right">
                     <a href="#"><img src="{{ asset('bundles/syliusshop/img/app/app_store.png') }}" alt="App Store logo" title="App Store logo" width="auto" height="auto"></a>
                     <a href="#"><img src="{{ asset('bundles/syliusshop/img/app/google_play.png') }}" alt="Google Play logo" title="Google Play logo" width="auto" height="auto"></a>
