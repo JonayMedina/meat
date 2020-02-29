@@ -7,7 +7,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Component\Pager\Pagination\PaginationInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -44,9 +46,10 @@ class CouponController extends AbstractController
      *
      * @Route("/coupon", name="coupons_index")
      * @param Request $request
+     * @param ChannelContextInterface $channelContext
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, ChannelContextInterface $channelContext)
     {
         $filter = $request->query->get('filter');
         $page = $request->query->getInt('page', 1);
@@ -54,7 +57,31 @@ class CouponController extends AbstractController
         return $this->render('/admin/coupon/index.html.twig', [
             'pagination' => $this->getCouponsPagination($filter, $page),
             'total' => $this->countActiveCoupons(),
+            'channel' => $channelContext->getChannel()
         ]);
+    }
+
+    /**
+     * Toggle the enable status on promotion code
+     * @Route("/coupon/{id}/toggle-status", name="coupons_toggle_status", options={"expose"=true})
+     * @param Request $request
+     * @return Response
+     */
+    public function toggleEnabledAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        $manager = $this->get('doctrine')->getManager();
+        $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
+        $coupon->setEnabled(!$coupon->isEnabled());
+
+        try {
+            $manager->flush();
+
+            return new JsonResponse(['type' => 'error', 'message', 'Ok'], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return new JsonResponse(['type' => 'error', 'message', $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     /**

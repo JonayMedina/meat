@@ -115,7 +115,7 @@ app:
         delete: Borrar
         search_box:
             coupon: ¿Qué cupón buscas?
-        no_coupons_found: No se encontraron cupones, para crear uno, presione el botón "Nuevo cupón"
+        no_coupons_found: No hay cupones existentes. Selecciona el botón "Nuevo cupón" para crear un nuevo cupón.
 
 sylius:
     form:

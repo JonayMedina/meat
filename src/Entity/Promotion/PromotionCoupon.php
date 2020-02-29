@@ -13,4 +13,49 @@ use Sylius\Component\Core\Model\PromotionCoupon as BasePromotionCoupon;
  */
 class PromotionCoupon extends BasePromotionCoupon
 {
+    /**
+     * @var bool $enabled
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $enabled;
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     * @return PromotionCoupon
+     */
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    /**
+     * Virtual field, return coupon type.
+     * @param $channel
+     * @return string|null
+     */
+    public function getType($channel): ?string
+    {
+        $promotion = $this->getPromotion();
+        $configuration = $promotion->getActions()[0]->getConfiguration()[$channel] ?? $promotion->getActions()[0]->getConfiguration();
+
+        if (isset($configuration['amount'])) {
+            return 'Cantidad fija - Q' . ($configuration['amount']/100);
+        }
+
+        if (isset($configuration['percentage'])) {
+            return 'Porcentaje de descuento - ' . ($configuration['percentage'] * 100) . '%';
+        }
+
+        return null;
+    }
 }
