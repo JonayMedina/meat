@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9694575f0f81a889c7974e2f03c0efa",
+    "content-hash": "bc05a1ab0fa99e99e3aba940b519eef1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1586,6 +1586,68 @@
                 "validator"
             ],
             "time": "2020-01-20T21:40:59+00:00"
+        },
+        {
+            "name": "friendsofsymfony/jsrouting-bundle",
+            "version": "2.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSJsRoutingBundle.git",
+                "reference": "165b3f4ae1f798ec320b9942f6db921f7b568bed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSJsRoutingBundle/zipball/165b3f4ae1f798ec320b9942f6db921f7b568bed",
+                "reference": "165b3f4ae1f798ec320b9942f6db921f7b568bed",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "symfony/console": "~3.3|^4.0|^5.0",
+                "symfony/framework-bundle": "~3.3|^4.0|^5.0",
+                "symfony/serializer": "~3.3|^4.0|^5.0",
+                "willdurand/jsonp-callback-validator": "~1.0"
+            },
+            "require-dev": {
+                "symfony/expression-language": "~3.3|^4.0|^5.0",
+                "symfony/phpunit-bridge": "^3.3|^4.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FOS\\JsRoutingBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "will+git@drnd.me"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
+                }
+            ],
+            "description": "A pretty nice way to expose your Symfony2 routing to client applications.",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "Js Routing",
+                "javascript",
+                "routing"
+            ],
+            "time": "2020-01-13T14:06:12+00:00"
         },
         {
             "name": "friendsofsymfony/oauth-server-bundle",

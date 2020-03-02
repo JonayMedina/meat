@@ -48,9 +48,15 @@
                                     <tr>
                                         <td>{{ coupon.id }}</td>
                                         <td>{{ coupon.code }}</td>
-                                        <td>{{ coupon.createdAt|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} - {{ coupon.expiresAt ? coupon.expiresAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
-                                        <td>{{ 'app.ui.n/a'|trans }}</td>
+                                        <td>{{ coupon.createdAt|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} -
+                                            <br> {{ coupon.expiresAt ? coupon.expiresAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
                                         <td>
+                                            {{ coupon.type(channel.code)|default('app.ui.n/a'|trans) }}
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="active-switch-{{ loop.index }}" class="switch-input" data-id="{{ coupon.id }}" {% if coupon.enabled %}checked{% endif %}>
+                                            <label for="active-switch-{{ loop.index }}" class="switch-label"></label>
+                                            &nbsp;
                                             <a href="#" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.view'|trans }}
                                             </a>
@@ -80,4 +86,35 @@
     </div>
 
 
+{% endblock %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/switch-input/switch-input.css') }}">
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+
+<script>
+$(document).ready(function() {
+    var $switch = $('.switch-input');
+
+    $switch.on('change', function() {
+        var id = $(this).data('id');
+        var isChecked = $(this).is(':checked');
+
+        $.ajax({
+            type: 'GET',
+            url: Routing.generate('coupons_toggle_status', {'id': id}),
+            success: function(data) {
+
+            },
+            error: function() {
+
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

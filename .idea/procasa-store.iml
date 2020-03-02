@@ -43,6 +43,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/friends-of-behat/symfony-extension" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friends-of-behat/variadic-extension" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/oauth-server-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/oauth2-php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/rest-bundle" />

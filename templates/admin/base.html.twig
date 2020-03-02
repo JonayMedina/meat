@@ -199,7 +199,7 @@
         }
 
         .actions-header {
-            width: 200px;
+            width: 300px;
         }
 
         @media (min-width: 768px) {
@@ -285,6 +285,10 @@
 <script src="{{ asset('meathouse/js/plugins/pace/pace.min.js') }}"></script>
 
 <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+
+<!-- FOS JS Routing -->
+<script src="/bundles/fosjsrouting/js/router.min.js"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
 <script>
     /**
