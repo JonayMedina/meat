@@ -24,7 +24,6 @@
     ],
     "require": {
         "php": "^7.2",
-        "ext-amqp": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
