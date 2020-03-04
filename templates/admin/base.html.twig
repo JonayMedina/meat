@@ -6,15 +6,15 @@
 
     <title>{% block title %}{% endblock %} - {{ app_name }}</title>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('meathouse/img/favicon-32x32.png')}}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('meathouse/img/favicon-16x16.png')}}">
+    <link rel="icon" type="image/png" href="{{asset('meathouse/img/favicon.png')}}">
 
     <link href="{{asset('meathouse/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/font-awesome/css/all.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/font-awesome/css/v4-shims.min.css')}}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/datapicker/datepicker3.css') }}">
-    <link rel="stylesheet" href="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/sweetalert/sweetalert.css') }}">
 
     <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
@@ -202,6 +202,75 @@
             width: 300px;
         }
 
+        .toast-success {
+            background-color: #4A90E2;
+        }
+
+        h3 {
+            color: #AB162B;
+        }
+
+        #blockUIMessage {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        #blockUIMessage img {
+            width: 120px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        input.form-control, select.form-control {
+            height: 40px !important;
+        }
+
+        textarea.form-control {
+            height: 70px;
+        }
+
+        .form-control:focus, .single-line:focus {
+            border-color: #404040;
+        }
+
+        .form-group label, .form-group legend {
+            font-weight: bold;
+        }
+
+        button.btn {
+            padding-top: 7px;
+        }
+
+        .width-250 {
+            width: 250px;
+        }
+
+        .width-200 {
+            width: 200px;
+        }
+
+        .width-150 {
+            width: 150px;
+        }
+
+        .width-100 {
+            width: 100px;
+        }
+
+        .fa-back-button {
+            font-size: 20px;
+            color: #AB162B;
+        }
+
+        .btn-back-button, .btn-back-button:hover {
+            color: #AB162B;
+            text-decoration: underline;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -225,6 +294,15 @@
 
             .actions-header {
                 width: 100px;
+            }
+
+            .switch-label {
+                top: 0;
+                margin-left: 17px;
+            }
+
+            #blockUIMessage img {
+                width: 80px;
             }
         }
     </style>
@@ -285,39 +363,15 @@
 <script src="{{ asset('meathouse/js/plugins/pace/pace.min.js') }}"></script>
 
 <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/blockUI/jquery.blockUI.min.js') }}"></script>
 
 <!-- FOS JS Routing -->
 <script src="/bundles/fosjsrouting/js/router.min.js"></script>
 <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 
-<script>
-    /**
-     * Datepicker JS defaults
-     * */
-    if ($.fn.datepicker.dates) {
-        $.fn.datepicker.dates['{{ app.request.locale  }}'] = {
-            days: ["{{ 'app.ui.dates.sunday' | trans }}", "{{ 'app.ui.dates.monday' | trans }}", "{{ 'app.ui.dates.tuesday' | trans }}", "{{ 'app.ui.dates.wednesday' | trans }}", "{{ 'app.ui.dates.thursday' | trans }}", "{{ 'app.ui.dates.friday' | trans }}", "{{ 'app.ui.dates.saturday' | trans }}"],
-            daysShort: ["{{ 'app.ui.dates.sun' | trans }}", "{{ 'app.ui.dates.mon' | trans }}", "{{ 'app.ui.dates.tue' | trans }}", "{{ 'app.ui.dates.wed' | trans }}", "{{ 'app.ui.dates.thu' | trans }}", "{{ 'app.ui.dates.fri' | trans }}", "{{ 'app.ui.dates.sat' | trans }}"],
-            daysMin: ["{{ 'app.ui.dates.su' | trans }}", "{{ 'app.ui.dates.mo' | trans }}", "{{ 'app.ui.dates.tu' | trans }}", "{{ 'app.ui.dates.we' | trans }}", "{{ 'app.ui.dates.th' | trans }}", "{{ 'app.ui.dates.fr' | trans }}", "{{ 'app.ui.dates.sa' | trans }}"],
-            months: ["{{ 'app.ui.dates.january' | trans }}", "{{ 'app.ui.dates.february' | trans }}", "{{ 'app.ui.dates.march' | trans }}", "{{ 'app.ui.dates.april' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.june' | trans }}", "{{ 'app.ui.dates.july' | trans }}", "{{ 'app.ui.dates.august' | trans }}", "{{ 'app.ui.dates.september' | trans }}", "{{ 'app.ui.dates.october' | trans }}", "{{ 'app.ui.dates.november' | trans }}", "{{ 'app.ui.dates.december' | trans }}"],
-            monthsShort: ["{{ 'app.ui.dates.jan' | trans }}", "{{ 'app.ui.dates.feb' | trans }}", "{{ 'app.ui.dates.mar' | trans }}", "{{ 'app.ui.dates.apr' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.jun' | trans }}", "{{ 'app.ui.dates.jul' | trans }}", "{{ 'app.ui.dates.aug' | trans }}", "{{ 'app.ui.dates.sep' | trans }}", "{{ 'app.ui.dates.oct' | trans }}", "{{ 'app.ui.dates.nov' | trans }}", "{{ 'app.ui.dates.dec' | trans }}"],
-            today: "{{ 'app.ui.today' | trans }}",
-            clear: "{{ 'app.ui.clear' | trans }}",
-            format: "yyyy-mm-dd",
-            titleFormat: "MM yyyy",
-            weekStart: 0
-        };
-
-        $.fn.datepicker.defaults.language = '{{ app.request.locale  }}';
-        $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
-        $.fn.datepicker.defaults.startView = 1;
-        $.fn.datepicker.defaults.todayBtn = "linked";
-        $.fn.datepicker.defaults.keyboardNavigation = false;
-        $.fn.datepicker.defaults.forceParse = false;
-        $.fn.datepicker.defaults.autoclose = true;
-        $.fn.datepicker.defaults.todayHighlight = true;
-    }
-</script>
+{{ include('admin/_defaults.html.twig') }}
 
 <script>
     $(document).ready(function () {
@@ -337,6 +391,7 @@
         }
     });
 </script>
+<script src="{{ asset('meathouse/js/app.js') }}"></script>
 {% block javascript %}
 {% endblock %}
 

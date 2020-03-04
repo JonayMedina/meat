@@ -178,6 +178,8 @@
 
             $filterDatesButton.on('click', function(e) {
                 e.preventDefault();
+                blockUI();
+
                 var startDate = $filterDatesStartDate.val();
                 var endDate = $filterDatesEndDate.val();
 

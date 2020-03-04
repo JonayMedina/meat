@@ -2,6 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Promotion\Promotion;
+use App\Entity\Promotion\PromotionAction;
+use App\Entity\Promotion\PromotionCoupon;
+use App\Form\Admin\PromotionType;
 use Psr\Log\LoggerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +66,167 @@ class CouponController extends AbstractController
     }
 
     /**
+     * New coupon.
+     * @Route("/coupon/new", name="coupons_new")
+     * @param Request $request
+     * @param ChannelContextInterface $channelContext
+     * @return Response
+     */
+    public function newAction(Request $request, ChannelContextInterface $channelContext)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $promotion = new Promotion();
+        $promotion->setCouponBased(true);
+        $promotion->setExclusive(true);
+
+        // additional data
+        $formData = $request->get('promotion');
+        $type = $formData['type'];
+        $amount = $formData['amount'];
+        $perCustomerUsageLimit = PromotionCoupon::MAX_USAGES_PER_USER;
+        $usageLimit = $formData['usageLimit'] ? $formData['usageLimit'] : null;
+        $restrictedUsagePerCustomer = isset($formData['oneUsagePerUser']) ? filter_var($formData['oneUsagePerUser'], FILTER_VALIDATE_BOOLEAN) : false;
+
+        if ($restrictedUsagePerCustomer) {
+            $perCustomerUsageLimit = 1;
+        }
+
+        $form = $this->createForm(PromotionType::class, $promotion, ['channel' => $channelContext->getChannel()]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $promotion->setUsageLimit($usageLimit);
+            $promotion->setName($promotion->getCode());
+            $promotion->addChannel($channelContext->getChannel());
+
+            $entityManager->persist($promotion);
+
+            /** Add Action */
+            $promotionAction = new PromotionAction();
+            $promotionAction->setPromotion($promotion);
+            $promotionAction->setType($type);
+
+            if ($type == PromotionCoupon::TYPE_FIXED_AMOUNT) {
+                $promotionAction->setConfiguration([$channelContext->getChannel()->getCode() => ['amount' => $amount * 100]]);
+            }
+
+            if ($type == PromotionCoupon::TYPE_PERCENTAGE) {
+                $promotionAction->setConfiguration(['percentage' => $amount / 100]);
+            }
+
+            $entityManager->persist($promotionAction);
+
+            /** coupon */
+            $coupon = new PromotionCoupon();
+            $coupon->setPromotion($promotion);
+            $coupon->setCode($promotion->getCode());
+            $coupon->setUsageLimit($promotion->getUsageLimit());
+            $coupon->setExpiresAt($promotion->getEndsAt());
+            $coupon->setPerCustomerUsageLimit($perCustomerUsageLimit);
+            $coupon->setReusableFromCancelledOrders(true);
+            $coupon->setEnabled(false);
+
+            $entityManager->persist($coupon);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('coupons_index');
+        }
+
+        return $this->render('/admin/coupon/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Show promotion code
+     * @Route("/coupon/{id}", name="coupons_show", methods={"GET"})
+     * @param Request $request
+     * @return Response
+     */
+    public function showAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        $manager = $this->get('doctrine')->getManager();
+        /** @var PromotionCoupon $coupon */
+        $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
+
+        return $this->render('/admin/coupon/show.html.twig', [
+            'coupon' => $coupon
+        ]);
+    }
+
+    /**
+     * Edit promotion code
+     * @Route("/coupon/{id}/edit", name="coupons_edit")
+     * @param Request $request
+     * @param ChannelContextInterface $channelContext
+     * @return Response
+     */
+    public function editAction(Request $request, ChannelContextInterface $channelContext)
+    {
+        $id = $request->get('id');
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $manager = $this->get('doctrine')->getManager();
+        /** @var PromotionCoupon $coupon */
+        $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
+        $promotion = $coupon->getPromotion();
+
+        // additional data
+        $formData = $request->get('promotion');
+        $type = $formData['type'];
+        $amount = $formData['amount'];
+        $perCustomerUsageLimit = PromotionCoupon::MAX_USAGES_PER_USER;
+        $usageLimit = $formData['usageLimit'] ? $formData['usageLimit'] : null;
+        $restrictedUsagePerCustomer = isset($formData['oneUsagePerUser']) ? filter_var($formData['oneUsagePerUser'], FILTER_VALIDATE_BOOLEAN) : false;
+
+        if ($restrictedUsagePerCustomer) {
+            $perCustomerUsageLimit = 1;
+        }
+
+        $form = $this->createForm(PromotionType::class, $promotion, ['channel' => $channelContext->getChannel()]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $promotion->setUsageLimit($usageLimit);
+            $promotion->setName($promotion->getCode());
+
+            $entityManager->flush();
+
+            $promotionAction = $promotion->getActions()[0];
+            $promotionAction->setType($type);
+
+            if ($type == PromotionCoupon::TYPE_FIXED_AMOUNT) {
+                $promotionAction->setConfiguration([$channelContext->getChannel()->getCode() => ['amount' => $amount * 100]]);
+            }
+
+            if ($type == PromotionCoupon::TYPE_PERCENTAGE) {
+                $promotionAction->setConfiguration(['percentage' => $amount / 100]);
+            }
+
+            /** coupon */
+            $coupon = $promotion->getCoupons()[0];
+            $coupon->setCode($promotion->getCode());
+            $coupon->setUsageLimit($promotion->getUsageLimit());
+            $coupon->setExpiresAt($promotion->getEndsAt());
+            $coupon->setPerCustomerUsageLimit($perCustomerUsageLimit);
+            $coupon->setReusableFromCancelledOrders(true);
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('coupons_index');
+        }
+
+        return $this->render('/admin/coupon/edit.html.twig', [
+            'coupon' => $coupon,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
      * Toggle the enable status on promotion code
      * @Route("/coupon/{id}/toggle-status", name="coupons_toggle_status", options={"expose"=true})
      * @param Request $request
@@ -78,9 +243,35 @@ class CouponController extends AbstractController
         try {
             $manager->flush();
 
-            return new JsonResponse(['type' => 'error', 'message', 'Ok'], Response::HTTP_OK);
+            return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
         } catch (\Exception $exception) {
-            return new JsonResponse(['type' => 'error', 'message', $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['type' => 'error', 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
+     * Delete promotion code
+     * @Route("/coupon/{id}", name="coupons_delete", methods={"DELETE"})
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        $manager = $this->get('doctrine')->getManager();
+        /** @var PromotionCoupon $coupon */
+        $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
+
+        $manager->remove($coupon->getPromotion());
+        $manager->remove($coupon);
+
+        try {
+            $manager->flush();
+
+            return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return new JsonResponse(['type' => 'error', 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -96,8 +287,11 @@ class CouponController extends AbstractController
             return $queryBuilder = $this->get('doctrine')->getManager()->getRepository('App:Promotion\PromotionCoupon')
                 ->createQueryBuilder('coupon')
                 ->select('COUNT(coupon)')
-                ->andWhere('coupon.expiresAt IS NULL OR coupon.expiresAt > :now')
+                ->andWhere('coupon.expiresAt IS NULL')
+                ->andWhere('coupon.expiresAt > :now')
+                ->andWhere('coupon.enabled = :enabled')
                 ->setParameter('now', $now)
+                ->setParameter('enabled', true)
                 ->getQuery()
                 ->getSingleScalarResult();
         } catch (\Exception $exception) {

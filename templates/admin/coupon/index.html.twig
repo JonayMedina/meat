@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="title-action">
-                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                    <a href="{{ path('coupons_new') }}" class="btn btn-primary btn-lg btn-standard-width">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;
                         {{'app.ui.new_coupon'|trans}}
@@ -45,11 +45,12 @@
 
                                 <tbody>
                                 {% for coupon in pagination %}
+                                    {% set promotion = coupon.promotion %}
                                     <tr>
                                         <td>{{ coupon.id }}</td>
                                         <td>{{ coupon.code }}</td>
-                                        <td>{{ coupon.createdAt|localizeddate("medium", "short")|default('app.ui.n/a'|trans) }} -
-                                            <br> {{ coupon.expiresAt ? coupon.expiresAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
+                                        <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
+                                            <br> {{ promotion.endsAt ? promotion.endsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
                                         <td>
                                             {{ coupon.type(channel.code)|default('app.ui.n/a'|trans) }}
                                         </td>
@@ -57,11 +58,11 @@
                                             <input type="checkbox" id="active-switch-{{ loop.index }}" class="switch-input" data-id="{{ coupon.id }}" {% if coupon.enabled %}checked{% endif %}>
                                             <label for="active-switch-{{ loop.index }}" class="switch-label"></label>
                                             &nbsp;
-                                            <a href="#" class="btn btn-default btn-action-button">
+                                            <a href="{{ path('coupons_show', {id: coupon.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.view'|trans }}
                                             </a>
                                             &nbsp;
-                                            <a href="#" class="btn btn-danger btn-action-button">
+                                            <a href="{{ path('coupons_delete', {id: coupon.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.coupon_error_on_remove_message'|trans }}">
                                                 {{ 'app.ui.delete'|trans }}
                                             </a>
                                         </td>
@@ -102,16 +103,18 @@ $(document).ready(function() {
 
     $switch.on('change', function() {
         var id = $(this).data('id');
-        var isChecked = $(this).is(':checked');
+        blockUI();
 
         $.ajax({
             type: 'GET',
             url: Routing.generate('coupons_toggle_status', {'id': id}),
-            success: function(data) {
-
+            success: function() {
+                success('{{ 'app.ui.coupon_has_been_updated'|trans }}', '{{ 'app.ui.saved'|trans }}');
+                unblockUI();
             },
             error: function() {
-
+                error('{{ 'app.ui.standard_error_message'|trans }}', '{{ 'app.ui.error'|trans }}');
+                unblockUI();
             }
         });
     });
