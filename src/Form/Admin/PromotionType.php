@@ -12,6 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class PromotionType extends AbstractType
 {
@@ -31,23 +34,34 @@ class PromotionType extends AbstractType
 
         $builder
             ->add('code', null, [
-                'label' => 'app.ui.coupon_code'
+                'label' => 'app.ui.coupon_code',
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'app.ui.coupon_description',
-                'required' => false
+                'constraints' => [
+                    new Length(['min' => 5])
+                ]
             ])
             ->add('startsAt', null, [
                 'label' => 'app.ui.coupon_starts_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
-                'time_label' => 'Hora'
+                'time_label' => 'Hora',
+                'constraints' => [
+                    new GreaterThan(['value' => 'today'])
+                ]
             ])
             ->add('endsAt', null, [
                 'label' => 'app.ui.coupon_ends_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
-                'time_label' => 'Hora'
+                'time_label' => 'Hora',
+                'constraints' => [
+                    new GreaterThan(['value' => 'today'])
+                ]
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'app.ui.coupon_type',
@@ -57,12 +71,18 @@ class PromotionType extends AbstractType
                     'app.ui.coupon_' .PromotionCoupon::TYPE_FIXED_AMOUNT => PromotionCoupon::TYPE_FIXED_AMOUNT
                 ],
                 'mapped' => false,
-                'data' =>  $coupon ? $coupon->getTypeSlug($channel->getCode()) : null
+                'data' =>  $coupon ? $coupon->getTypeSlug($channel->getCode()) : null,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('amount', null, [
                 'label' => 'app.ui.coupon_amount',
                 'mapped' => false,
-                'data' =>  $coupon ? $coupon->getValue($channel->getCode()) : null
+                'data' =>  $coupon ? $coupon->getValue($channel->getCode()) : null,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('oneUsagePerUser', CheckboxType::class, [
                 'label' => 'app.ui.coupon_one_usage_per_user',
