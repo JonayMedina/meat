@@ -599,6 +599,9 @@
     "sylius-labs/coding-standard": {
         "version": "v2.0.0"
     },
+    "sylius-labs/polyfill-symfony-event-dispatcher": {
+        "version": "v1.0.0"
+    },
     "sylius/fixtures-bundle": {
         "version": "v1.4.1"
     },
@@ -634,9 +637,6 @@
     },
     "symfony/cache-contracts": {
         "version": "v1.1.5"
-    },
-    "symfony/class-loader": {
-        "version": "v3.4.14"
     },
     "symfony/config": {
         "version": "v4.1.3"
