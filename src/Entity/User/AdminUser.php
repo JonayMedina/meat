@@ -13,4 +13,17 @@ use Sylius\Component\Core\Model\AdminUser as BaseAdminUser;
  */
 class AdminUser extends BaseAdminUser
 {
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string
+    {
+        if (!empty($this->getFirstName())) {
+            $fullName = $this->getFirstName() . ' ' . $this->getLastName();
+            return (string)$fullName;
+        }
+
+        return $this->getUsername();
+    }
+
 }

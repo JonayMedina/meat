@@ -160,4 +160,11 @@ app:
         created_by: Creado por
         updated_at: Última actualización
         coupon_limit_to_%x%_users: Limitar el uso del cupón a %x% usuarios
+        login:
+            title: Ingresar
+            welcome_message: ¡Bienvenido al Administrador de Procasa!
+            motd: Escribe tus credenciales para ingresar a tu cuenta.
+            email: Correo
+            password: Contraseña
+            request_new_password: Solicitar nueva contraseña
         

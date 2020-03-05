@@ -14,6 +14,19 @@ security:
     encoders:
         Sylius\Component\User\Model\UserInterface: argon2i
     firewalls:
+        admin:
+            switch_user: true
+            context: admin
+            pattern: "%sylius.security.admin_regex%"
+            provider: sylius_admin_user_provider
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\AppAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
+            
 #        admin:
 #            switch_user: true
 #            context: admin
@@ -126,6 +139,6 @@ security:
         - { path: "%sylius.security.shop_regex%/register", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/verify", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
-        #- { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
+        - { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
         - { path: "%sylius.security.api_regex%/.*", role: ROLE_API_ACCESS }
         - { path: "%sylius.security.shop_regex%/account", role: ROLE_USER }
