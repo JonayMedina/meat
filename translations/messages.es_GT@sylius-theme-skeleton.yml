@@ -152,4 +152,12 @@ app:
         percentage_input_placeholder: Escribe el % de descuento
         hide_main_menu: Esconder menú
         show_main_menu: Mostrar menú
+        quantiy_of_usages: Cantidad de usos
+        total_of_discounts: Cantidad total descontada
+        coupon_duration: Duración
+        coupon_usage_limit: Límite de uso
+        created_at: Fecha de creación
+        created_by: Creado por
+        updated_at: Última actualización
+        coupon_limit_to_%x%_users: Limitar el uso del cupón a %x% usuarios
         

@@ -150,9 +150,10 @@ class CouponController extends AbstractController
      * Show promotion code
      * @Route("/coupon/{id}", name="coupons_show", methods={"GET"})
      * @param Request $request
+     * @param ChannelContextInterface $channelContext
      * @return Response
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request, ChannelContextInterface $channelContext)
     {
         $id = $request->get('id');
 
@@ -161,7 +162,8 @@ class CouponController extends AbstractController
         $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
 
         return $this->render('/admin/coupon/show.html.twig', [
-            'coupon' => $coupon
+            'coupon' => $coupon,
+            'channel' => $channelContext->getChannel()->getCode()
         ]);
     }
 

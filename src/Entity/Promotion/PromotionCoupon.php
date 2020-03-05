@@ -26,6 +26,20 @@ class PromotionCoupon extends BasePromotionCoupon
     private $enabled;
 
     /**
+     * @var string $createdBy
+     *
+     * @ORM\Column(name="created_by", type="string", nullable=true)
+     */
+    private $createdBy;
+
+    /**
+     * @var string $updatedBy
+     *
+     * @ORM\Column(name="updated_by", type="string", nullable=true)
+     */
+    private $updatedBy;
+
+    /**
      * @return bool
      */
     public function isEnabled()
@@ -42,6 +56,38 @@ class PromotionCoupon extends BasePromotionCoupon
         $this->enabled = $enabled;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @param string $createdBy
+     */
+    public function setCreatedBy(?string $createdBy): void
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedBy(): ?string
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * @param string $updatedBy
+     */
+    public function setUpdatedBy(?string $updatedBy): void
+    {
+        $this->updatedBy = $updatedBy;
     }
 
     /**

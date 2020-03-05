@@ -26,22 +26,92 @@
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <h3>{{ 'app.ui.coupon_code_name'|trans }}</h3>
-                                {{ coupon.code }}
+                        <div class="show-container">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.coupon_code_name'|trans }}</h3>
+                                    {{ coupon.code }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.coupon_code_status'|trans }}</h3>
+                                    {{ coupon.enabled ? 'app.ui.active'|trans : 'app.ui.inactive'|trans }}
+                                </div>
                             </div>
-                            <div class="col-lg-6">
-                                <h3>{{ 'app.ui.coupon_code_status'|trans }}</h3>
-                                {{ coupon.enabled ? 'app.ui.active'|trans : 'app.ui.inactive'|trans }}
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.description'|trans }}</h3>
+                                    {{ promotion.description|default('app.ui.n/a'|trans) }}
+                                </div>
                             </div>
-                        </div>
-                        <br><br>
-                        <div class="row border-bottom">
-                            <div class="col-lg-6">
-                                <h3>{{ 'app.ui.description'|trans }}</h3>
-                                {{ promotion.description|default('app.ui.n/a'|trans) }}
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.quantiy_of_usages'|trans }}</h3>
+                                    {{ coupon.used|default('app.ui.n/a'|trans) }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.total_of_discounts'|trans }}</h3>
+                                    {{ ''|default('app.ui.n/a'|trans) }}
+                                </div>
                             </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.discount_type'|trans }}</h3>
+                                    {{ coupon.type(channel) }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.coupon_duration'|trans }}</h3>
+                                    {{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "medium") : 'app.ui.n/a'|trans }} - {{ promotion.endsAt ? promotion.endsAt|localizeddate("medium", "medium") : 'app.ui.n/a'|trans }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.coupon_usage_limit'|trans }}</h3>
+                                    {% if coupon.perCustomerUsageLimit != constant('App\\Entity\\Promotion\\PromotionCoupon::MAX_USAGES_PER_USER') %}
+                                        {{ 'app.ui.coupon_one_usage_per_user'|trans }}
+                                        <br>
+                                    {% endif %}
+
+                                    {% if coupon.usageLimit %}
+                                        {% trans with {'%x%': coupon.usageLimit} %}app.ui.coupon_limit_to_%x%_users{% endtrans %}
+                                        <br>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.created_at'|trans }}</h3>
+                                    {{ coupon.createdAt|localizeddate("medium", "none") }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.created_by'|trans }}</h3>
+                                    {{ coupon.createdBy|default('app.ui.n/a'|trans) }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.updated_at'|trans }}</h3>
+                                    {{ coupon.updatedAt|localizeddate("medium", "none") }}
+                                </div>
+                            </div>
+                            <br><br>
+
                         </div>
                     </div>
                 </div>
