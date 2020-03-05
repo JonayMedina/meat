@@ -14,13 +14,17 @@
             </li>
 
             {% if is_granted('ROLE_USER') %}
-                <div class="item">{{ 'app.ui.hello'|trans }} {{ app.user.customer.fullName }}!</div>
-
                 <li class="nav-item">
-                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="nav-link">{{ 'app.ui.my_account'|trans }}</a>
+                    <a href="#" class="nav-link">{{ 'app.ui.purchase_history'|trans }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ path('sylius_shop_logout') }}" class="nav-link sylius-logout-button">{{ 'app.ui.logout'|trans }}</a>
+                    <a href="#" class="nav-link">{{ 'app.ui.my_favorites'|trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="nav-link">{{ 'app.ui.view_my_profile'|trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('sylius_shop_logout') }}" class="nav-link sylius-logout-button">{{ 'sylius.ui.logout'|trans }}</a>
                 </li>
             {% else %}
                 <li class="nav-item">
