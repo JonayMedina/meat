@@ -85,6 +85,7 @@ app:
             feb: Feb
             mar: Mar
             apr: Abr
+            ma_: May
             jun: Jun
             jul: Jul
             aug: Ago
@@ -116,6 +117,49 @@ app:
         search_box:
             coupon: ¿Qué cupón buscas?
         no_coupons_found: No hay cupones existentes. Selecciona el botón "Nuevo cupón" para crear un nuevo cupón.
+        coupon_has_been_updated: El cupón fue actualizado correctamente.
+        saved: ¡Guardado!
+        standard_error_message: Hubo un error al intengar guardar el contenido, inténtelo de nuevo más tarde.
+        error: Error
+        yes: Sí
+        no: No
+        delete_title: ¿Está seguro?
+        delete_text: Está a punto de eliminar este recurso, esta acción no podrá deshacerse.
+        coupon_detail: Detalle del cupón
+        edit_coupon: Editar
+        coupon_code_name: Nombre del código
+        coupon_code_status: Estado
+        active: Activo
+        inactive: Inactivo
+        description: Descripción
+        block-ui-message: Cargando...
+        cancel: Cancelar
+        save: Guardar
+        coupon_code: Crea el código
+        coupon_description: Descripción (opcional)
+        coupon_starts_at: Fecha de inicio
+        coupon_ends_at: Fecha fin
+        coupon_type: Tipo de descuento
+        coupon_amount: Cantidad de descuento
+        coupon_one_usage_per_user: Un uso por usuario unicamente
+        limit_usage_to_x_quantity_of_users: Limitar el uso del cupón a x cantidad de usuarios
+        back: Regresar
+        coupon_order_percentage_discount: Porcentaje de descuento
+        coupon_order_fixed_discount: Cantidad de descuento
+        usage_limit: Cantidad de usos
+        coupon_error_on_remove_message: Hubo un error al eliminar el cupón, es posible que esta ya haya sido usado en una orden anterior y por lo tanto, no puede eliminarse.
+        fixed_discount_input_placeholder: Escribe la cantidad de quetzales de descuento
+        percentage_input_placeholder: Escribe el % de descuento
+        hide_main_menu: Esconder menú
+        show_main_menu: Mostrar menú
+        quantiy_of_usages: Cantidad de usos
+        total_of_discounts: Cantidad total descontada
+        coupon_duration: Duración
+        coupon_usage_limit: Límite de uso
+        created_at: Fecha de creación
+        created_by: Creado por
+        updated_at: Última actualización
+        coupon_limit_to_%x%_users: Limitar el uso del cupón a %x% usuarios 
         abandoned: 'Abandonado'
         about: 'Sobre nosotros'
         accept: 'Sí acepto'
@@ -182,7 +226,6 @@ app:
         available_until: 'Disponible hasta'
         average_order_value: 'Valor de pedido promedio'
         awaiting_payment: 'Esperando pago'
-        back: 'Regresar'
         back_to_store: 'Volver a la tienda'
         back_to_details: 'Volver a detalles'
         backorder: 'En espera'
@@ -202,7 +245,6 @@ app:
         by_position: 'Por posición'
         calculator: 'Calculadora'
         call_us: '¡Llámanos!'
-        cancel: 'Cancelar'
         cancelled: 'Cancelado'
         cart: 'Carrito'
         cart_locked: 'Carrito bloqueado'
@@ -291,7 +333,6 @@ app:
         create_variant: 'Crear variante'
         create_zone: 'Crear zona'
         created: 'Creado'
-        created_at: 'Fecha de creación'
         create_here: 'creala aquí.'
         creating_a_new_imagine_block: 'Crear un nuevo bloque de imagen'
         creating_a_new_simple_block: 'Crear un nuevo bloque simple'
@@ -338,7 +379,6 @@ app:
         delete_image: 'Borrar imagen'
         deleted: 'Eliminado'
         delivery_and_shipping: 'Entrega y envío'
-        description: 'Descripción'
         details: 'Detalles'
         disable: 'Desactivar'
         disabled: 'Deshabilitado'
@@ -350,7 +390,6 @@ app:
         edit_association_type: 'Editar tipo de asociación'
         edit_channel: 'Editar canal'
         edit_country: 'Editar país'
-        edit_coupon: 'Editar cupón'
         edit_currency: 'Editar moneda'
         edit_customer: 'Editar cliente'
         edit_exchange_rate: 'Editar tasa de cambio'
@@ -420,7 +459,6 @@ app:
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: 'Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos'
         enter_your_code: 'Introduzca su código'
         equal: 'Igual'
-        error: 'Error'
         exchange_rate: 'Tasa de cambio'
         exchange_rates: 'Tasas de cambio'
         exclusive: 'Exclusivo'
@@ -781,7 +819,6 @@ app:
         rules: 'Reglas'
         sales: 'Ventas'
         sales_this_month: 'Ventas'
-        save: 'Guardar'
         save_changes: 'Guardar cambios'
         save_positions: 'Guardar posiciones'
         scope: 'Ámbito'
@@ -942,7 +979,6 @@ app:
         updating_tax_rate: 'Actualizando tasa de impuesto'
         updating_date: 'Fecha de actualización'
         usage: 'Uso'
-        usage_limit: 'límite de uso de la promoción'
         use_the_contact_form_below_to_send_us_a_message: 'Utilice el formulario de contacto que se muestra a continuación para mandarnos un mensaje.'
         used: 'Usado'
         user_details: 'Detalles del usuario'

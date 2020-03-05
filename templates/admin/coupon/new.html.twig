@@ -1,0 +1,75 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.new_coupon'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('coupons_index')) }}
+                <br>
+                <h1>{{ 'app.ui.new_coupon'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        {{ include('/admin/coupon/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <style>
+        #promotion_startsAt_date, #promotion_endsAt_date {
+            width: 70%;
+        }
+
+        #promotion_startsAt_time, #promotion_endsAt_time {
+            width: calc(30% - 20px);
+            margin-left: 20px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block javascript %}
+{{ parent() }}
+<script>
+    $(document).ready(function () {
+        var $limitUsageCheckbox = $('#promotion_limitUsageToXQuantityOfUsers');
+        var $usageLimitWrapper = $('#usage-limit-wrapper');
+        var $typeInput = $('#promotion_type');
+        var $promotionAmountInput = $('#promotion_amount');
+
+        $typeInput.on('change', function() {
+            var value = $(this).val();
+
+            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_FIXED_AMOUNT') }}') {
+                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.fixed_discount_input_placeholder'|trans }}');
+            }
+
+            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_PERCENTAGE') }}') {
+                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.percentage_input_placeholder'|trans }}');
+            }
+        }).change();
+
+        $limitUsageCheckbox.on('change', function () {
+            if ($(this).is(':checked')) {
+                $usageLimitWrapper.slideDown('fast');
+            } else {
+                $usageLimitWrapper.slideUp('fast');
+            }
+        }).change();
+    });
+</script>
+{% endblock %}

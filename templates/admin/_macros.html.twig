@@ -1,0 +1,6 @@
+{% macro back(link, text = 'app.ui.back') %}
+    <i class="fa fa-chevron-left fa-back-button"></i>
+    <a href="{{ link }}" class="btn-back-button">
+        {{ text|trans }}
+    </a>
+{% endmacro %}

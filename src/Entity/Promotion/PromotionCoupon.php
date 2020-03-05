@@ -13,11 +13,31 @@ use Sylius\Component\Core\Model\PromotionCoupon as BasePromotionCoupon;
  */
 class PromotionCoupon extends BasePromotionCoupon
 {
+    const TYPE_PERCENTAGE = 'order_percentage_discount';
+
+    const TYPE_FIXED_AMOUNT = 'order_fixed_discount';
+
+    const MAX_USAGES_PER_USER = 100000;
+
     /**
      * @var bool $enabled
      * @ORM\Column(type="integer", nullable=true)
      */
     private $enabled;
+
+    /**
+     * @var string $createdBy
+     *
+     * @ORM\Column(name="created_by", type="string", nullable=true)
+     */
+    private $createdBy;
+
+    /**
+     * @var string $updatedBy
+     *
+     * @ORM\Column(name="updated_by", type="string", nullable=true)
+     */
+    private $updatedBy;
 
     /**
      * @return bool
@@ -39,11 +59,43 @@ class PromotionCoupon extends BasePromotionCoupon
     }
 
     /**
+     * @return string
+     */
+    public function getCreatedBy(): ?string
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * @param string $createdBy
+     */
+    public function setCreatedBy(?string $createdBy): void
+    {
+        $this->createdBy = $createdBy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpdatedBy(): ?string
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * @param string $updatedBy
+     */
+    public function setUpdatedBy(?string $updatedBy): void
+    {
+        $this->updatedBy = $updatedBy;
+    }
+
+    /**
      * Virtual field, return coupon type.
      * @param $channel
      * @return string|null
      */
-    public function getType($channel): ?string
+    public function getType(string $channel): ?string
     {
         $promotion = $this->getPromotion();
         $configuration = $promotion->getActions()[0]->getConfiguration()[$channel] ?? $promotion->getActions()[0]->getConfiguration();
@@ -54,6 +106,43 @@ class PromotionCoupon extends BasePromotionCoupon
 
         if (isset($configuration['percentage'])) {
             return 'Porcentaje de descuento - ' . ($configuration['percentage'] * 100) . '%';
+        }
+
+        return null;
+    }
+
+    /**
+     * Virtual field, return coupon type as slug.
+     * @param $channel
+     * @return string|null
+     */
+    public function getTypeSlug(string $channel): ?string
+    {
+        $promotion = $this->getPromotion();
+        $configuration = $promotion->getActions()[0]->getConfiguration()[$channel] ?? $promotion->getActions()[0]->getConfiguration();
+
+        if (isset($configuration['amount'])) {
+            return self::TYPE_FIXED_AMOUNT;
+        }
+
+        if (isset($configuration['percentage'])) {
+            return self::TYPE_PERCENTAGE;
+        }
+
+        return null;
+    }
+
+    public function getValue(string $channel)
+    {
+        $promotion = $this->getPromotion();
+        $configuration = $promotion->getActions()[0]->getConfiguration()[$channel] ?? $promotion->getActions()[0]->getConfiguration();
+
+        if (isset($configuration['amount'])) {
+            return $configuration['amount']/100;
+        }
+
+        if (isset($configuration['percentage'])) {
+            return $configuration['percentage'] * 100;
         }
 
         return null;

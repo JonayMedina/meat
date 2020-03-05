@@ -77,6 +77,9 @@ class MenuBuilder
             'icon' => 'coupons',
             'routes' => [
                 'coupons_index',
+                'coupons_show',
+                'coupons_edit',
+                'coupons_new',
             ],
         ]);
 
