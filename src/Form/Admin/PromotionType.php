@@ -5,6 +5,7 @@ namespace App\Form\Admin;
 use App\Entity\Promotion\Promotion;
 use App\Entity\Promotion\PromotionCoupon;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -12,9 +13,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 
 class PromotionType extends AbstractType
 {
@@ -36,13 +39,14 @@ class PromotionType extends AbstractType
             ->add('code', null, [
                 'label' => 'app.ui.coupon_code',
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Length(['max' => 15])
                 ]
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'app.ui.coupon_description',
                 'constraints' => [
-                    new Length(['min' => 5])
+                    new Length(['min' => 5, 'max' => 500])
                 ]
             ])
             ->add('startsAt', null, [
@@ -51,7 +55,8 @@ class PromotionType extends AbstractType
                 'time_widget' => 'single_text',
                 'time_label' => 'Hora',
                 'constraints' => [
-                    new GreaterThan(['value' => 'today'])
+                    new GreaterThan(['value' => 'now']),
+                    new DateTime()
                 ]
             ])
             ->add('endsAt', null, [
@@ -60,12 +65,12 @@ class PromotionType extends AbstractType
                 'time_widget' => 'single_text',
                 'time_label' => 'Hora',
                 'constraints' => [
-                    new GreaterThan(['value' => 'today'])
+                    new GreaterThan(['value' => 'now']),
+                    new DateTime()
                 ]
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'app.ui.coupon_type',
-                'placeholder' => 'app.ui.coupon_type',
                 'choices' => [
                     'app.ui.coupon_' . PromotionCoupon::TYPE_PERCENTAGE => PromotionCoupon::TYPE_PERCENTAGE,
                     'app.ui.coupon_' .PromotionCoupon::TYPE_FIXED_AMOUNT => PromotionCoupon::TYPE_FIXED_AMOUNT
@@ -76,12 +81,13 @@ class PromotionType extends AbstractType
                     new NotBlank()
                 ]
             ])
-            ->add('amount', null, [
+            ->add('amount', NumberType::class, [
                 'label' => 'app.ui.coupon_amount',
                 'mapped' => false,
                 'data' =>  $coupon ? $coupon->getValue($channel->getCode()) : null,
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Range(['min' => 0, 'max' => 999])
                 ]
             ])
             ->add('oneUsagePerUser', CheckboxType::class, [

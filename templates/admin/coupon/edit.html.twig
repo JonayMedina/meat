@@ -48,6 +48,20 @@
     $(document).ready(function () {
         var $limitUsageCheckbox = $('#promotion_limitUsageToXQuantityOfUsers');
         var $usageLimitWrapper = $('#usage-limit-wrapper');
+        var $typeInput = $('#promotion_type');
+        var $promotionAmountInput = $('#promotion_amount');
+
+        $typeInput.on('change', function() {
+            var value = $(this).val();
+
+            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_FIXED_AMOUNT') }}') {
+                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.fixed_discount_input_placeholder'|trans }}');
+            }
+
+            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_PERCENTAGE') }}') {
+                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.percentage_input_placeholder'|trans }}');
+            }
+        }).change();
 
         $limitUsageCheckbox.on('change', function () {
             if ($(this).is(':checked')) {

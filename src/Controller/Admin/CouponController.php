@@ -92,6 +92,12 @@ class CouponController extends AbstractController
             $perCustomerUsageLimit = 1;
         }
 
+        $exist = $entityManager->getRepository('App:Promotion\PromotionCoupon')->findOneBy(['code' => $formData['code']]);
+
+        if ($exist instanceof PromotionCoupon) {
+            $promotion->setCodeAlreadyInUse(true);
+        }
+
         $form = $this->createForm(PromotionType::class, $promotion, ['channel' => $channelContext->getChannel()]);
         $form->handleRequest($request);
 
@@ -185,6 +191,12 @@ class CouponController extends AbstractController
 
         if ($restrictedUsagePerCustomer) {
             $perCustomerUsageLimit = 1;
+        }
+
+        $exist = $entityManager->getRepository('App:Promotion\PromotionCoupon')->findOneBy(['code' => $formData['code']]);
+
+        if ($exist instanceof PromotionCoupon && $exist->getId() != $coupon->getId()) {
+            $promotion->setCodeAlreadyInUse(true);
         }
 
         $form = $this->createForm(PromotionType::class, $promotion, ['channel' => $channelContext->getChannel()]);
