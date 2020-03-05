@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CouponController extends AbstractController
 {
+    // TODO: Cron para deshabilitar cupon cuando 1) Haya pasado su fecha de funcionamiento 2) Cuando haya alcanzado el máximo de usos posibles.
     const PAGINATOR_LIMIT = 10;
 
     /**

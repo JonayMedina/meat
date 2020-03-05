@@ -6,7 +6,6 @@ use App\Entity\Promotion\Promotion;
 use App\Entity\Promotion\PromotionCoupon;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -88,6 +87,9 @@ class PromotionType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Range(['min' => 0, 'max' => 999])
+                ],
+                'attr' => [
+                    'maxlength' => 3
                 ]
             ])
             ->add('oneUsagePerUser', CheckboxType::class, [
@@ -102,13 +104,17 @@ class PromotionType extends AbstractType
                 'required' => false,
                 'data' => ($coupon && $coupon->getUsageLimit()) ? true : false
             ])
-            ->add('usageLimit', TextType::class, [
+            ->add('usageLimit', NumberType::class, [
                 'label' => 'app.ui.usage_limit',
                 'mapped' => false,
                 'required' => false,
-                'data' => $coupon ? $coupon->getUsageLimit() : false,
+                'data' => $coupon ? $coupon->getUsageLimit() : null,
+                'constraints' => [
+                    new Range(['min' => 0, 'max' => 9999])
+                ],
                 'attr' => [
-                    'class' => 'width-100'
+                    'class' => 'width-100',
+                    'maxlength' => 4
                 ]
             ])
         ;
