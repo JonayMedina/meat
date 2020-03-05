@@ -150,4 +150,6 @@ app:
         coupon_error_on_remove_message: Hubo un error al eliminar el cupón, es posible que esta ya haya sido usado en una orden anterior y por lo tanto, no puede eliminarse.
         fixed_discount_input_placeholder: Escribe la cantidad de quetzales de descuento
         percentage_input_placeholder: Escribe el % de descuento
+        hide_main_menu: Esconder menú
+        show_main_menu: Mostrar menú
         

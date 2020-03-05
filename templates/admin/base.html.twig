@@ -279,6 +279,51 @@
             background-color: #AB162B;
         }
 
+        .btn-show-main-menu span, .btn-show-main-menu i, .btn-hide-main-menu span, .btn-hide-main-menu i {
+            color: #917171;
+        }
+
+        .btn-show-main-menu {
+            display: none;
+        }
+
+        .btn-hide-main-menu {
+            display: block;
+        }
+
+        .mini-navbar .btn-hide-main-menu {
+            display: none;
+        }
+
+        .mini-navbar .btn-show-main-menu {
+            display: block;
+        }
+
+        /** Mobile experience */
+        .body-small .btn-hide-main-menu {
+            display: none;
+        }
+
+        .body-small .btn-show-main-menu {
+            display: block;
+        }
+
+        .body-small.mini-navbar .btn-hide-main-menu {
+            display: block;
+        }
+
+        .body-small.mini-navbar .btn-show-main-menu {
+            display: none;
+        }
+
+        #toggle-main-menu i {
+            font-size: 20px;
+        }
+
+        #toggle-main-menu span {
+            font-size: 15px;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -312,6 +357,24 @@
             #blockUIMessage img {
                 width: 80px;
             }
+
+            #toggle-main-menu i {
+                font-size: 15px;
+            }
+
+            #toggle-main-menu span {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            #toggle-main-menu i {
+                font-size: 15px;
+            }
+
+            #toggle-main-menu span {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -334,7 +397,23 @@
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
-                    <a class="navbar-minimalize minimalize-styl-2 btn" href="#"><i class="fa fa-bars"></i> </a>
+                    <div id="toggle-main-menu" style="display: none;">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-hide-main-menu" href="#">
+                            <i class="fa fa-arrow-left"></i>
+                            &nbsp;
+                            <span>
+                            {{ 'app.ui.hide_main_menu'|trans }}
+                        </span>
+                        </a>
+
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-show-main-menu" href="#">
+                            <i class="fa fa-arrow-right" style="font-size: 20px;"></i>
+                            &nbsp;
+                            <span style="font-size: 15px;">
+                            {{ 'app.ui.show_main_menu'|trans }}
+                        </span>
+                        </a>
+                    </div>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
@@ -387,6 +466,8 @@
         var $activeList = $sideMenu.find('li.active');
         var $parent = $activeList.closest('li.dropdown');
 
+        var $mainMenuToggle = $('#toggle-main-menu');
+
         if ($parent.length) {
             // keep dropdown open
             $parent.addClass('active');
@@ -397,6 +478,10 @@
             $ul.attr('aria-expanded', 'true');
             $ul.addClass('in');
         }
+
+        setTimeout(function () {
+            $mainMenuToggle.fadeIn('fast');
+        }, 500);
     });
 </script>
 <script src="{{ asset('meathouse/js/app.js') }}"></script>
