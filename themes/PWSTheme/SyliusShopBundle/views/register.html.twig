@@ -9,10 +9,10 @@
         <div class="col-12 segment">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <h1 class="text-center">{{ 'sylius.ui.create_your_account' | trans }}</h1>
+                    <h1 class="text-center">{{ 'app.ui.create_your_account' | trans }}</h1>
                     <div class="instructions margin-0-auto">
-                        <p>{{ 'sylius.ui.register_page_message' | trans }}</p>
-                        <p>{{ 'sylius.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'sylius.ui.sign_in_here'|trans }}</a></p>
+                        <p>{{ 'app.ui.register_page_message' | trans }}</p>
+                        <p>{{ 'app.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'app.ui.sign_in_here'|trans }}</a></p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -23,26 +23,26 @@
 
                     {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
 
-                    <p class="text-center small">{{ 'sylius.ui.required_fields' | trans }}</p>
+                    <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
 
                     <div class="text-center">
                         <button type="submit" class="btn-rounded">
-                            {{ 'sylius.ui.create_an_account'|trans }}
+                            {{ 'app.ui.create_an_account'|trans }}
                         </button>
                     </div>
                     {{ form_row(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}
 
                     <div class="text-center">
-                        <h3 class="text-center mt-3">{{ 'sylius.ui.create_an_account_using_social_networks' | trans }}</h3>
+                        <h3 class="text-center mt-3">{{ 'app.ui.create_an_account_using_social_networks' | trans }}</h3>
 
                         <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
                             <i class="fab fa-facebook-square"></i>
-                            {{ 'sylius.ui.register_with'|trans }} Facebook
+                            {{ 'app.ui.register_with'|trans }} Facebook
                         </a>
                     </div>
 
-                    <p class="text-center mt-4">{{ 'sylius.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'sylius.ui.terms_and_conditions' | trans }}</a></p>
+                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="termsModalLabel">{{ 'sylius.ui.terms_and_conditions' | trans }}</h5>
+                    <h5 class="modal-title" id="termsModalLabel">{{ 'app.ui.terms_and_conditions' | trans }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -96,8 +96,8 @@
                     When using the formula for Deliberate Attraction, spend most of your time “Allowing,” as it determines how quickly, or slowly, your desires will come to you.
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'sylius.ui.not_accept' | trans }}</button>
-                    <button type="button" class="btn-rounded">{{ 'sylius.ui.accept' | trans }}</button>
+                    <button type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'app.ui.not_accept' | trans }}</button>
+                    <button type="button" class="btn-rounded">{{ 'app.ui.accept' | trans }}</button>
                 </div>
             </div>
         </div>

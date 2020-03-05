@@ -116,33 +116,6 @@ app:
         search_box:
             coupon: ¿Qué cupón buscas?
         no_coupons_found: No hay cupones existentes. Selecciona el botón "Nuevo cupón" para crear un nuevo cupón.
-
-sylius:
-    form:
-        login:
-            username: 'Correo'
-            password: 'Contraseña'
-            remember_me: 'Recordarme'
-        option:
-            name: 'Nombre'
-        notes: 'Notas adicionales'
-        variant:
-            tracked: 'Con seguimiento'
-        customer:
-            gender: 'Género'
-            email: 'Correo'
-        user:
-            password:
-                label: 'Contraseña'
-            email: 'Correo'
-    gender:
-        male:
-            label: 'M'
-        female:
-            label: 'F'
-    email:
-        label: 'Correo'
-    ui:
         abandoned: 'Abandonado'
         about: 'Sobre nosotros'
         accept: 'Sí acepto'
@@ -153,7 +126,6 @@ sylius:
         account_credentials: 'Credenciales de la cuenta'
         account_panel_outline: 'Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos'
         action: 'Acción'
-        actions: 'Acciones'
         add: 'Añadir'
         add_action: 'Añadir acción'
         add_address: 'Añadir dirección'
@@ -258,7 +230,6 @@ sylius:
         choose_how_your_goods_will_be_delivered: 'Selecciona cómo se enviarán tus productos'
         choose_how_you_will_pay: 'Selecciona la forma de pago'
         city: 'Ciudad'
-        clear: 'Anular'
         clear_cart: 'Vaciar carrito'
         clear_filters: 'Borrar filtros'
         code: 'Código'
@@ -282,9 +253,7 @@ sylius:
         countries: 'Países'
         country: 'País'
         country_details: 'Detalles del país'
-        coupon: 'Cupón'
         coupon_based: 'Basado en cupones'
-        coupons: 'Cupones'
         create: 'Crear'
         create_a_new_address: 'Crear nueva dirección'
         create_a_new_customer_account: 'Crear una nueva cuenta de cliente'
@@ -357,7 +326,6 @@ sylius:
         customize_metadata: 'Personalizar metadatos'
         customize_products_metadata: 'Personalizar metadatos de productos'
         customizing_metadata: 'Personalización de metadatos'
-        dashboard: 'Panel general'
         data: 'Datos'
         date: 'Fecha'
         datetime: 'Fecha y hora'
@@ -367,7 +335,6 @@ sylius:
         default_currency: 'Moneda por defecto'
         default_locale: 'Idioma predeterminado'
         default_shipping_address: 'Dirección de envío por defecto'
-        delete: 'Eliminar'
         delete_image: 'Borrar imagen'
         deleted: 'Eliminado'
         delivery_and_shipping: 'Entrega y envío'
@@ -448,7 +415,6 @@ sylius:
         empty: 'Vacío'
         enable: 'Activar'
         enabled: '¿Activado?'
-        end_date: 'Fecha fin'
         ends_at: 'Fecha de fin'
         ends_with: 'Termina en'
         enjoy_all_the_features_that_are_available_on_your_personal_space_to_view_track_and_manage_all_your_data: 'Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos'
@@ -464,9 +430,7 @@ sylius:
         extra_information: 'Información extra'
         extra_notes: 'Notas adicionales'
         failed: 'Fallido'
-        faqs: 'Preguntas frecuentes'
         female: 'Mujer'
-        filter: 'Filtrar'
         filters: 'Filtros'
         fill_in_your_billing_and_shipping_addresses: 'Rellena tu dirección de facturación y envío'
         first_name: 'Nombre'
@@ -552,7 +516,6 @@ sylius:
         login: 'Iniciar sesión'
         login_button: 'Iniciar sesión'
         login_sylius_store: 'Iniciar sesión en la <small>tienda Sylius</small>'
-        logout: 'Cerrar sesión'
         main_taxon: 'Taxón principal'
         male: 'Hombre'
         manage: 'Administrar'
@@ -623,7 +586,6 @@ sylius:
         new_channel: 'Nuevo canal'
         new_comment_posted_on_order: 'Nuevo comentario publicado en el pedido'
         new_country: 'Nuevo país'
-        new_coupon: 'Nuevo cupón'
         new_currency: 'Nueva moneda'
         new_customer: 'Nuevo cliente'
         new_customers: 'Nuevos clientes'
@@ -687,19 +649,16 @@ sylius:
         notes: 'Notas'
         notify_customer: 'Notificar al cliente'
         number: 'Número'
-        number_of_orders: 'Número de pedidos'
         oauth_provider: 'Proveedor de OAuth'
         oldest_first: 'Más viejos primero'
         on_hold: 'En espera'
         options: 'Opciones de producto'
         options_matching: 'Opciones que coinciden'
         or: 'o'
-        order: 'Pedido'
         order_comment_name: 'Comentario del pedido'
         order_comments: 'Comentarios del pedido'
         order_confirmation_name: 'Confirmación de pedido'
         order_details: 'Detalles de su pedido'
-        order_history: 'Historial de pedidos'
         order_item_product: 'Producto'
         order_state: 'Estado del pedido'
         order_summary: 'Resumen del pedido'
@@ -752,7 +711,6 @@ sylius:
         privacy_policy: 'Política de privacidad'
         process_your_orders: 'Tramitar tus pedidos'
         processing: 'En proceso'
-        product: 'Producto'
         product_association_index: 'Asociación'
         product_association_type_index: 'Tipos de asociación'
         product_association_types: 'Tipos de asociación de productos'
@@ -783,7 +741,6 @@ sylius:
         qty: 'Cant'
         qty_max: 'Cant. máxima'
         qty_min: 'Cant. mínima'
-        quantity: 'Cantidad'
         rating: 'Valoración'
         ratio: 'Ratio'
         ready: 'Listo'
@@ -882,7 +839,6 @@ sylius:
         sort: 'Ordenar'
         sort_by_date: 'Ordenar por fecha'
         source_currency: 'Moneda origen'
-        start_date: 'Fecha de inicio'
         starts_at: 'Fecha de inicio'
         starts_with: 'Comienza por'
         state: 'Estado'
@@ -909,7 +865,6 @@ sylius:
         taxes: 'Impuestos'
         taxonomy: 'Taxonomía'
         taxons: 'Taxones'
-        terms_and_conditions: 'Términos y condiciones'
         text: 'Texto'
         textarea: 'Área de texto'
         thank_you: '¡Gracias!'
@@ -964,7 +919,6 @@ sylius:
         to: 'Hasta'
         toggle_sidebar: 'Ocultar/mostrar barra lateral'
         topic: 'Asunto'
-        total: 'Total'
         total_in_base_currency: 'Total en la moneda base'
         total_orders: 'Total pedidos'
         total_qty: 'Cant. total'
@@ -1002,7 +956,6 @@ sylius:
         variants: 'Variantes'
         verified: 'Verificado'
         verify: 'Verificar'
-        view: 'Ver'
         view_and_edit_cart: 'Ver y modificar carrito'
         view_more: 'Ver más'
         view_product_details: 'Ver detalles de %product%'
@@ -1027,7 +980,6 @@ sylius:
         your_last_5_orders: 'Sus últimos 5 pedidos'
         your_order_has_been_shipped: 'Su pedido ha sido enviado'
         your_products: 'Productos'
-        your_profile: 'Perfil'
         your_shopping_cart: 'Su carrito'
         your_store: 'Tu tienda'
         zone: 'Zona'
@@ -1038,8 +990,6 @@ sylius:
         zones: 'Zonas'
         wholesalers: 'Mayoristas'
         catalogue: 'Catálogo'
-        locations: 'Ubicaciones'
-        about_procasa: 'Acerca de Procasa'
         work_with_us: 'Trabaja con nosotros'
         download_app: 'Simplifícate y descarga el app de '
         register_page_message: 'Completa los campos para crear una cuenta en Meat House.'
@@ -1053,3 +1003,29 @@ sylius:
         create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
         enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
         send_instructions: 'Enviar instrucciones'
+
+sylius:
+    form:
+        login:
+            username: 'Correo'
+            password: 'Contraseña'
+            remember_me: 'Recordarme'
+        option:
+            name: 'Nombre'
+        notes: 'Notas adicionales'
+        variant:
+            tracked: 'Con seguimiento'
+        customer:
+            gender: 'Género'
+            email: 'Correo'
+        user:
+            password:
+                label: 'Contraseña'
+            email: 'Correo'
+    gender:
+        male:
+            label: 'M'
+        female:
+            label: 'F'
+    email:
+        label: 'Correo'        
