@@ -1003,6 +1003,9 @@ app:
         create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
         enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
         send_instructions: 'Enviar instrucciones'
+        purchase_history: 'Historial de compras'
+        my_favorites: 'Mis favoritos'
+        view_my_profile: 'Ver mi perfil'
 
 sylius:
     form:
