@@ -8,54 +8,61 @@
         <div>
             <img src="{{ asset('meathouse/img/logo_black.png') }}" alt="{{ app_name }}">
 
-            <h1>{{ 'app.ui.login.welcome_message'|trans }}</h1>
-            <p>{{ 'app.ui.login.motd'|trans }}</p>
+            {% if app.user %}
+                <div class="mb-3">
+                    <h1>
+                        {% trans with {'%user%': app.user} %}app.ui.login.logged_in_as_%user%_message{% endtrans %}
+                    </h1>
+                    <br>
+                    <a href="{{ path('dashboard_index') }}" class="btn">{{ 'app.ui.dashboard'|trans }}</a>
+                    <a href="{{ path('app_logout') }}" class="btn">{{ 'app.ui.logout'|trans }}</a>
+                </div>
+            {% else %}
+                <h1>{{ 'app.ui.login.welcome_message'|trans }}</h1>
+                <p>{{ 'app.ui.login.motd'|trans }}</p>
+            {% endif %}
         </div>
 
         <div class="middle-box text-center loginscreen animated fadeInDown">
             <div>
-                <form class="m-t" role="form" method="post">
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                    {% endif %}
+                {% if not app.user %}
+                    <form class="m-t" role="form" method="post">
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
 
-                    {% if app.user %}
-                        <div class="mb-3">
-                            You are logged in as {{ app.user }}, <a href="{{ path('app_logout') }}">Logout</a>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="form-group">
+                            <label for="">{{ 'app.ui.login.email'|trans }}</label>
+                            <input type="text" name="email" class="form-control" required="" autofocus>
                         </div>
-                    {% endif %}
-
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                    <div class="form-group">
-                        <label for="">{{ 'app.ui.login.email'|trans }}</label>
-                        <input type="text" name="email" class="form-control" required="" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="">{{ 'app.ui.login.password'|trans }}</label>
-                        <input type="password" name="password" class="form-control" required="">
-                    </div>
-
-                    {#
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
-
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" name="_remember_me"> Remember me
-                            </label>
+                        <div class="form-group">
+                            <label for="">{{ 'app.ui.login.password'|trans }}</label>
+                            <input type="password" name="password" class="form-control" required="">
                         </div>
-                    #}
 
-                    <a href="#">
-                        {{ 'app.ui.login.request_new_password'|trans }}
-                    </a>
-                    <br><br>
+                        {#
+                            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                            See https://symfony.com/doc/current/security/remember_me.html
 
-                    <button type="submit" class="btn btn-primary width-300 m-b">
-                        {{ 'app.ui.login.title'|trans }}
-                    </button>
-                </form>
+                            <div class="checkbox mb-3">
+                                <label>
+                                    <input type="checkbox" name="_remember_me"> Remember me
+                                </label>
+                            </div>
+                        #}
+
+                        <a href="#">
+                            {{ 'app.ui.login.request_new_password'|trans }}
+                        </a>
+                        <br><br>
+
+                        <button type="submit" class="btn btn-primary width-225 m-b">
+                            {{ 'app.ui.login.title'|trans }}
+                        </button>
+                    </form>
+                {% endif %}
             </div>
         </div>
     </div>

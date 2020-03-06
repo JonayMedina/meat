@@ -167,4 +167,5 @@ app:
             email: Correo
             password: Contraseña
             request_new_password: Solicitar nueva contraseña
+            logged_in_as_%user%_message: Ya has ingresado como %user%
         
