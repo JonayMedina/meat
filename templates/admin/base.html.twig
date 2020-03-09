@@ -497,6 +497,10 @@
             success('{{ message }}');
         {% endfor %}
 
+        {% for message in app.flashes('error') %}
+            error('{{ message }}');
+        {% endfor %}
+
         setTimeout(function () {
             $mainMenuToggle.fadeIn('fast');
         }, 500);

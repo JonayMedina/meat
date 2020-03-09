@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use Psr\Log\LoggerInterface;
 use App\Entity\TermsAndConditions;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Admin\TermsAndConditionsType;
@@ -26,10 +27,11 @@ class TermsAndConditionsController extends AbstractController
      * @param TermsAndConditionsRepository $repository
      * @param EntityManagerInterface $entityManager
      * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function indexAction(Request $request, TermsAndConditionsRepository $repository, EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function indexAction(Request $request, TermsAndConditionsRepository $repository, EntityManagerInterface $entityManager, TranslatorInterface $translator, LoggerInterface $logger)
     {
         $terms = $repository->findLatest();
 
@@ -42,9 +44,16 @@ class TermsAndConditionsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($terms);
-            $entityManager->flush();
 
-            $this->addFlash('success', $translator->trans('app.ui.terms_and_conditions_success_message'));
+            try {
+                $entityManager->flush();
+
+                // TODO: Send email to all registered users.
+                $this->addFlash('success', $translator->trans('app.ui.terms_and_conditions_success_message'));
+            } catch (\Exception $exception) {
+                $logger->error($exception->getMessage());
+                $this->addFlash('error', $translator->trans('app.ui.terms_and_conditions_error_while_saving_message'));
+            }
 
             return $this->redirectToRoute('dashboard_index');
         }

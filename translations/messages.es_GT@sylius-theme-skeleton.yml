@@ -171,5 +171,7 @@ app:
         save_changes: Guardar cambios
         terms_and_conditions_text: Este es el texto deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.
         terms_and_conditions_success_message: Se ha guardaro la nueva versión de los términos y condiciones.
-        success_title: ¡Felicidades!
+        success_default_title: ¡Felicidades!
+        error_default_title: ¡Error!
+        terms_and_conditions_error_while_saving_message: Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.
         
