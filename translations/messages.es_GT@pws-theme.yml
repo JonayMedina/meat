@@ -272,29 +272,6 @@ app:
         volume_based_pricing: Precio por volumen
         warning: Advertencia
         welcome: ¡Bienvenido!
-        welcome_to_our_store: Bienvenido a nuestra tienda
-        welcome_to_your_space: Bienvenido a tu espacio
-        write_your_own_review: Escriba su propia reseña
-        yes_label: Sí
-        you_are_customer_since: Eres cliente desde
-        you_are_reviewing: Está haciendo una reseña de
-        you_can_no_longer_change_payment_method_of_this_order: Ya no puede cambiar el método de pago de este pedido
-        you_have_no_addresses_defined: No tiene ninguna dirección definida
-        you_have_no_new_orders: No tiene pedidos nuevos
-        you_may_also_like: También le podría gustar
-        your_cart_is_empty: Su carrito está vacío
-        your_default_address: Su dirección por defecto
-        your_last_5_orders: Sus últimos 5 pedidos
-        your_order_has_been_shipped: Su pedido ha sido enviado
-        your_products: Productos
-        your_shopping_cart: Su carrito
-        your_store: Tu tienda
-        zone: Zona
-        zone_consisting_of_countries: Zona formada por países
-        zone_consisting_of_other_zones: Zona formada por otras zonas
-        zone_consisting_of_provinces: Zona formada por provincias
-        zone_details: Detalles de la zona
-        zones: Zonas
         wholesalers: Mayoristas
         catalogue: Catálogo
         work_with_us: Trabaja con nosotros
