@@ -211,7 +211,6 @@ class DashboardService
     {
         $data = [];
         $sections = [
-            ['min' => 1, 'max' => 17],
             ['min' => 18, 'max' => 24],
             ['min' => 25, 'max' => 34],
             ['min' => 35, 'max' => 44],
