@@ -99,6 +99,10 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     background: #3B5998;
 }
 
+.max-w-mx-content {
+    max-width: max-content;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -269,7 +273,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding-bottom: 8px;
 }
 
-#footer .app-btns {
+#footer .app-btns, #footer .app-btns p {
     font-family: "Raleway SemiBold", sans-serif;
     font-size: 16px;
     color: #AB162B;
@@ -465,8 +469,57 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     }
 }
 
+@media (max-width: 767px) {
+    #footer > div > div > div:first-of-type a.logo {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #footer > div > div > div:nth-of-type(2) {
+        text-align: center;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    #footer > div > div > div.app-btns p {
+        text-align: center !important;
+    }
+
+    #footer > div > div > div.app-btns div {
+        display: flex;
+        justify-content: center;
+    }
+
+    #footer > div > div > div.app-btns div a {
+        margin-bottom: 0;
+    }
+
+    #footer > div > div > div.app-btns div a:first-of-type {
+        margin-right: 25px;
+    }
+}
+
 @media (max-width: 575px) {
     #mobile-menu .navbar-nav li a, #mobile-menu .sub-navbar-nav ul li a {
         font-size: 17px;
+    }
+
+    #footer .bottom-footer > div > div > div:first-of-type {
+        order: 2;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    #footer .bottom-footer > div > div > div:first-of-type p, #footer .bottom-footer > div > div > div:nth-of-type(3) p {
+        text-align: center !important;
+    }
+
+    #footer .bottom-footer > div > div > div:nth-of-type(2) {
+        order: 1;
+        justify-content: space-around !important;
+    }
+
+    #footer .bottom-footer > div > div > div:nth-of-type(3) {
+        order: 3;
     }
 }

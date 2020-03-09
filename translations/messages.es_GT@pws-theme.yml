@@ -739,7 +739,7 @@ app:
         please_sign_in: 'Por favor, inicie sesión'
         postcode: 'Código postal'
         position: 'Posición'
-        powered_by: 'Creado con'
+        powered_by: 'Powered by'
         preferences: 'Preferencias'
         presentation: 'Presentación'
         previous: 'Anterior'
