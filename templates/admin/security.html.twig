@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} - {{ app_name }}</title>
+
+    <link rel="icon" type="image/png" href="{{asset('meathouse/img/favicon.png')}}">
+
+    <link href="{{ asset('meathouse/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('meathouse/font-awesome/css/all.css') }}" rel="stylesheet">
+    <link href="{{ asset('meathouse/font-awesome/css/v4-shims.min.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('meathouse/css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('meathouse/css/style.css') }}" rel="stylesheet">
+
+    {% block styles %}
+    {% endblock %}
+
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        .middle-box {
+            padding-top: 10px;
+        }
+
+        .login-header img {
+            width: 110px;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: #AB162B;
+            font-size: 30px;
+            font-weight: 400;
+        }
+
+        .login-header p {
+            font-size: 15px;
+        }
+
+        .top-box {
+            max-width: 900px;
+            z-index: 100;
+            margin: 0 auto;
+            padding-top: 80px;
+            padding-bottom: 80px;
+            margin-top: 150px;
+        }
+
+        .middle-box label {
+            font-weight: bold;
+            float: left;
+            margin-left: -5px;
+        }
+
+        .middle-box a {
+            color: #AB162B;
+            font-size: 13px;
+            text-decoration: underline;
+        }
+
+        .width-300 {
+            width: 300px;
+        }
+
+        .width-225 {
+            width: 225px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            background-color: #F5F5F5;
+        }
+
+        input.form-control, select.form-control {
+            height: 45px !important;
+        }
+
+        textarea.form-control {
+            height: 70px;
+        }
+
+        .form-control:focus, .single-line:focus {
+            border-color: #404040;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #AB162B;
+            border-color: #B03143;
+            border-radius: 25px;
+            height: 48px;
+            padding-top: 14px;
+        }
+
+        .btn-primary:hover, .btn-primary:visited, .btn-primary:active, .btn-primary:focus {
+            color: #fff;
+            background-color: #AB162B;
+            border-color: #B03143;
+        }
+
+        html, body {
+            height: auto;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg">
+{% block content %}
+{% endblock %}
+
+<!-- Mainly scripts -->
+<script src="{{ asset('meathouse/js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/popper.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/bootstrap.js') }}"></script>
+{% block javascripts %}
+{% endblock %}
+</body>
+</html>

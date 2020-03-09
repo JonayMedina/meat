@@ -1,0 +1,12 @@
+# config/packages/sylius_resource.yaml
+sylius_resource:
+    resources:
+        app.terms_and_conditions:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\TermsAndConditions
+                
+        app.about_store:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\AboutStore

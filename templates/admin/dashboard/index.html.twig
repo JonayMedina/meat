@@ -225,10 +225,10 @@
             new Chart(genderChart, {type: 'doughnut', data: genderData, options:doughnutOptions});
 
             var agesData = {
-                labels: ["18-", "18-24", "25-34", "35-44", "45+", "{{ 'app.ui.n/a'|trans }}"],
+                labels: ["18-24", "25-34", "35-44", "45+", "{{ 'app.ui.n/a'|trans }}"],
                 datasets: [{
-                    data: ["{{dashboard.userAgeChartData["117"]}}", "{{dashboard.userAgeChartData['1824']}}", "{{dashboard.userAgeChartData['2534']}}", "{{dashboard.userAgeChartData['3544']}}", "{{dashboard.userAgeChartData['451000']}}", "{{dashboard.userAgeChartData['na']}}"],
-                    backgroundColor: ["#AB162B", "#2A87E5","#2AE562","#FF8E36", "#E52AAD", "#2AE5D2"]
+                    data: ["{{dashboard.userAgeChartData['1824']}}", "{{dashboard.userAgeChartData['2534']}}", "{{dashboard.userAgeChartData['3544']}}", "{{dashboard.userAgeChartData['451000']}}", "{{dashboard.userAgeChartData['na']}}"],
+                    backgroundColor: ["#2A87E5","#2AE562","#FF8E36", "#E52AAD", "#2AE5D2"]
                 }]
             };
 

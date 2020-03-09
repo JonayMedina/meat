@@ -334,6 +334,10 @@
             padding-bottom: 35px;
         }
 
+        .padding-55 {
+            padding: 55px;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -429,10 +433,10 @@
                     <li>
                         <div class="dropdown m-r-sm">
                             <a data-toggle="dropdown" class="dropdown-toggle count-info text-primary" href="#">
-                                <span class="block m-t-xs font-bold">Cristina Benito <i class="fa fa-caret-down"></i></span>
+                                <span class="block m-t-xs font-bold">{{app.user}} <i class="fa fa-caret-down"></i></span>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a class="dropdown-item" href="#">{{ 'app.ui.logout'|trans }}</a></li>
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'app.ui.logout'|trans }}</a></li>
                             </ul>
                         </div>
                     </li>
@@ -488,6 +492,14 @@
             $ul.attr('aria-expanded', 'true');
             $ul.addClass('in');
         }
+
+        {% for message in app.flashes('success') %}
+            success('{{ message }}');
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            error('{{ message }}');
+        {% endfor %}
 
         setTimeout(function () {
             $mainMenuToggle.fadeIn('fast');
