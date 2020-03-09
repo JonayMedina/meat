@@ -1,7 +1,9 @@
 <div class="d-block d-sm-block d-md-block d-lg-none mobile-menu">
     <a class="navbar-brand" href="{{ path('sylius_shop_homepage') }}"><img src="{{ asset('bundles/syliusshop/img/logo.png') }}" alt="{{ app_name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
     <button class="navbar-toggler" type="button" data-toggle="modal" data-target="#mobile-menu">
-        <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+        <span class="navbar-toggler-icon">
+            <img src="{{ asset('bundles/syliusshop/img/burguer-menu-icon.png') }}" alt="Burguer icon">
+        </span>
     </button>
     <div class="mobile-cart">
         {{ render(url('sylius_shop_partial_cart_summary', {'template': '@SyliusShop/Cart/_widget.html.twig'})) }}
