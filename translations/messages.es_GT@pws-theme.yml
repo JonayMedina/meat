@@ -1042,6 +1042,11 @@ app:
         purchase_history: 'Historial de compras'
         my_favorites: 'Mis favoritos'
         view_my_profile: 'Ver mi perfil'
+    gender:
+        male:
+            label: 'M'
+        female:
+            label: 'F'
 
 sylius:
     form:
@@ -1061,10 +1066,5 @@ sylius:
             password:
                 label: 'Contraseña'
             email: 'Correo'
-    gender:
-        male:
-            label: 'M'
-        female:
-            label: 'F'
     email:
         label: 'Correo'        
