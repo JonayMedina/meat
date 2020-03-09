@@ -1042,6 +1042,17 @@ app:
         purchase_history: 'Historial de compras'
         my_favorites: 'Mis favoritos'
         view_my_profile: 'Ver mi perfil'
+        terms_and_conditions_text: Este es el texto deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.
+        terms_and_conditions_success_message: Se ha guardaro la nueva versión de los términos y condiciones.
+        success_default_title: ¡Felicidades!
+        error_default_title: ¡Error!
+        terms_and_conditions_error_while_saving_message: Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.
+        about_procasa_text: Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.
+        about_procasa_phrase: Frase
+        about_procasa_phrase_author: Author
+        about_us: Sobre nosotros
+        about_store_success_message: Se han guardado las configuraciones de la tienda.
+        about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.
     gender:
         male:
             label: 'M'
