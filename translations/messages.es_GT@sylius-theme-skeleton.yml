@@ -168,4 +168,8 @@ app:
             password: Contraseña
             request_new_password: Solicitar nueva contraseña
             logged_in_as_%user%_message: Ya has ingresado como %user%
+        save_changes: Guardar cambios
+        terms_and_conditions_text: Este es el texto deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.
+        terms_and_conditions_success_message: Se ha guardaro la nueva versión de los términos y condiciones.
+        success_title: ¡Felicidades!
         

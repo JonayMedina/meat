@@ -2,3 +2,15 @@
 # See the official DoctrineExtensions documentation for more details: https://github.com/Atlantic18/DoctrineExtensions/tree/master/doc/
 stof_doctrine_extensions:
     default_locale: '%locale%'
+    translation_fallback: true
+    orm:
+        default:
+            tree: true
+            timestampable: true
+            sluggable: true
+            loggable: true
+            blameable: true
+            uploadable: true
+            sortable: true
+            softdeleteable: false
+            translatable: false

@@ -334,6 +334,10 @@
             padding-bottom: 35px;
         }
 
+        .padding-55 {
+            padding: 55px;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -488,6 +492,10 @@
             $ul.attr('aria-expanded', 'true');
             $ul.addClass('in');
         }
+
+        {% for message in app.flashes('success') %}
+            success('{{ message }}');
+        {% endfor %}
 
         setTimeout(function () {
             $mainMenuToggle.fadeIn('fast');

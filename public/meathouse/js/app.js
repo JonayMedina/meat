@@ -9,6 +9,7 @@ $toastSuccess.toast({
 
 
 function success(text, title) {
+  title = title || $('#ui-success-title').html();
   $toastSuccess.find('.toast-title').html(title);
   $toastSuccess.find('.toast-body').html(text);
 
