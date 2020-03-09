@@ -43,7 +43,7 @@ app:
         purchase_admin: Admin de compra
         locations: Ubicaciones
         faqs: FAQ's
-        about_procasa: Sobre Procasa
+        about_procasa: Acerca de Procasa
         terms_and_conditions: Términos y condiciones
         today: Hoy
         clear: Limpiar
@@ -174,4 +174,9 @@ app:
         success_default_title: ¡Felicidades!
         error_default_title: ¡Error!
         terms_and_conditions_error_while_saving_message: Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.
-        
+        about_procasa_text: Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.
+        about_procasa_phrase: Frase
+        about_procasa_phrase_author: Author
+        about_us: Sobre nosotros
+        about_store_success_message: Se han guardado las configuraciones de la tienda.
+        about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.

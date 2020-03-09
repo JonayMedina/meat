@@ -20,7 +20,7 @@ class TermsAndConditionsRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return TermsAndConditions[] Returns an array of TermsAndConditions objects
+     * @return TermsAndConditions|null Returns TermsAndConditions object
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findLatest()
