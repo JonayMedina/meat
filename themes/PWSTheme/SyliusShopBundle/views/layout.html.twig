@@ -114,8 +114,9 @@
 
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
 
-    <script src="{{ asset('bundles/syliusshop/js/bootstrap.min.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="{{ asset('bundles/syliusshop/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}
