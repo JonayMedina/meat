@@ -6,8 +6,10 @@ use App\Entity\Promotion\Promotion;
 use App\Entity\Promotion\PromotionAction;
 use App\Entity\Promotion\PromotionCoupon;
 use App\Form\Admin\PromotionType;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -150,9 +152,10 @@ class CouponController extends AbstractController
      * @Route("/coupon/{id}", name="coupons_show", methods={"GET"})
      * @param Request $request
      * @param ChannelContextInterface $channelContext
+     * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    public function showAction(Request $request, ChannelContextInterface $channelContext)
+    public function showAction(Request $request, ChannelContextInterface $channelContext, EntityManagerInterface $entityManager)
     {
         $id = $request->get('id');
 
@@ -160,9 +163,12 @@ class CouponController extends AbstractController
         /** @var PromotionCoupon $coupon */
         $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
 
+        $totalOfDiscounts = $this->calculateTotalOfDiscounts($coupon, $channelContext, $entityManager);
+
         return $this->render('/admin/coupon/show.html.twig', [
             'coupon' => $coupon,
-            'channel' => $channelContext->getChannel()->getCode()
+            'channel' => $channelContext->getChannel()->getCode(),
+            'totalOfDiscounts' => $totalOfDiscounts
         ]);
     }
 
@@ -347,5 +353,51 @@ class CouponController extends AbstractController
 
             return null;
         }
+    }
+
+    /**
+     * @param PromotionCoupon $coupon
+     * @param ChannelContextInterface $channelContext
+     * @param EntityManagerInterface $entityManager
+     * @return string
+     */
+    private function calculateTotalOfDiscounts(PromotionCoupon $coupon, ChannelContextInterface $channelContext, EntityManagerInterface $entityManager)
+    {
+        $discounts = 0;
+        $channel = $channelContext->getChannel()->getCode();
+        $value = $coupon->getValue($channel);
+
+        // TODO: Maybe a better way to find how much money has been saved by this coupon, maybe using Gedmo\Version on coupon action configuration field...
+        $totalOfOrders = $entityManager->getRepository('App:Order\Order')
+            ->createQueryBuilder('o')
+            ->leftJoin('o.promotions', 'p')
+            ->select('SUM(o)')
+            ->andWhere('p.id = :promotionId')
+            ->andWhere('o.paymentState = :paymentState')
+            ->setParameter('promotionId', $coupon->getPromotion()->getId())
+            ->setParameter('paymentState', PaymentInterface::STATE_COMPLETED)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalOnOrders = $entityManager->getRepository('App:Order\Order')
+            ->createQueryBuilder('o')
+            ->leftJoin('o.promotions', 'p')
+            ->select('SUM(o.total)')
+            ->andWhere('p.id = :promotionId')
+            ->andWhere('o.paymentState = :paymentState')
+            ->setParameter('promotionId', $coupon->getPromotion()->getId())
+            ->setParameter('paymentState', PaymentInterface::STATE_COMPLETED)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($coupon->getTypeSlug($channel) == PromotionCoupon::TYPE_PERCENTAGE) {
+            $discounts = $totalOnOrders * ($value / 100);
+        }
+
+        if ($coupon->getTypeSlug($channelContext->getChannel()->getCode()) == PromotionCoupon::TYPE_FIXED_AMOUNT) {
+            $discounts = $totalOfOrders * $value;
+        }
+
+        return number_format($discounts, 2);
     }
 }
