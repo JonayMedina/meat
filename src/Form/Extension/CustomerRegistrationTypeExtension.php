@@ -39,7 +39,7 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
             ->add('termsAccepted', CheckboxType::class, array(
                 'label' => 'app.ui.accept_the',
                 'mapped' => false,
-                'constraints' => new IsTrue(),
+                'constraints' => new IsTrue()
             ));
     }
 

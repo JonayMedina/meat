@@ -27,14 +27,14 @@
 
                     <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
                         <label class="d-flex align-items-center checkbox">
-                            <input type="checkbox" id="sylius_customer_registration_termsAccepted" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
+                            <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
                             <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
                             <span class="check-mark"></span>
                         </label>
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn-rounded">
+                        <button id="create-btn" type="submit" class="btn-rounded">
                             {{ 'app.ui.create_an_account'|trans }}
                         </button>
                     </div>
@@ -70,8 +70,8 @@
                     {{ render(url('store_terms')) }}
                 </div>
                 <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'app.ui.not_accept' | trans }}</button>
-                    <button type="button" class="btn-rounded">{{ 'app.ui.accept' | trans }}</button>
+                    <button id="not-accept" type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'app.ui.not_accept' | trans }}</button>
+                    <button id="accept" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept' | trans }}</button>
                 </div>
             </div>
         </div>
@@ -83,10 +83,38 @@
 
     <script>
         jQuery(document).ready(function ($) {
+            let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
+
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            checkTerms();
+
+            $('#not-accept').click(function () {
+                $terms.prop('checked', false).change();
+            });
+
+            $('#accept').click(function () {
+                $terms.prop('checked', true).change();
+            });
+
+            $terms.on('change', function () {
+                checkTerms(true);
+            });
+
+            function checkTerms(changed = false) {
+                if (changed) {
+                    $terms.prop('checked', !$terms.prop('checked'));
+                }
+
+                if (!$terms.prop('checked')) {
+                    $('#create-btn').prop('disabled', true).change();
+                } else {
+                    $('#create-btn').prop('disabled', false).change();
+                }
+            }
         });
     </script>
 {% endblock %}
