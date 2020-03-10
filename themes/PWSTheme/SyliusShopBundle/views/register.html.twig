@@ -25,6 +25,14 @@
 
                     <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
 
+                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
+                        <label class="d-flex align-items-center checkbox">
+                            <input type="checkbox" id="sylius_customer_registration_termsAccepted" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
+                            <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                            <span class="check-mark"></span>
+                        </label>
+                    </div>
+
                     <div class="text-center">
                         <button type="submit" class="btn-rounded">
                             {{ 'app.ui.create_an_account'|trans }}

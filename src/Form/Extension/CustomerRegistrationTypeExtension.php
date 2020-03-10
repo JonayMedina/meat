@@ -8,13 +8,13 @@ use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use function Sodium\add;
+use Symfony\Component\Validator\Constraints\IsTrue;
 
-final class CustomerRegistrationTypeExtension extends AbstractTypeExtension
+class CustomerRegistrationTypeExtension extends AbstractTypeExtension
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -35,7 +35,12 @@ final class CustomerRegistrationTypeExtension extends AbstractTypeExtension
                 'label' => 'sylius.form.customer.birthday',
                 'widget' => 'single_text',
                 'required' => false,
-            ]);
+            ])
+            ->add('termsAccepted', CheckboxType::class, array(
+                'label' => 'app.ui.accept_the',
+                'mapped' => false,
+                'constraints' => new IsTrue(),
+            ));
     }
 
     public static function getExtendedTypes(): iterable

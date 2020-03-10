@@ -317,6 +317,7 @@ app:
         sign_in_here: ingresa aquí
         forgot_password: Olvidé mi contraseña
         create_here: creala aquí.
+        accept_the: 'Acepto los '
 
 sylius:
     form:
