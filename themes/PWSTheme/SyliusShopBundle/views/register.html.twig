@@ -82,9 +82,11 @@
     {{ parent() }}
 
     <script>
-        // jQuery(document).ready(function ($) {
-        //     $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
-        //     $('input[type="radio"]').closest('div.toggle').removeClass("checkbox");
-        // });
+        jQuery(document).ready(function ($) {
+            $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
+            $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
+            $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
+            $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+        });
     </script>
 {% endblock %}
