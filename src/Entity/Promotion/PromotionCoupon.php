@@ -21,9 +21,15 @@ class PromotionCoupon extends BasePromotionCoupon
 
     /**
      * @var bool $enabled
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $enabled;
+
+    /**
+     * @var string $disabledReason
+     * @ORM\Column(name="disabled_reason", type="string", length=100, nullable=true)
+     */
+    private $disabledReason;
 
     /**
      * @var string $createdBy
@@ -146,5 +152,24 @@ class PromotionCoupon extends BasePromotionCoupon
         }
 
         return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisabledReason(): ?string
+    {
+        return $this->disabledReason;
+    }
+
+    /**
+     * @param string $disabledReason
+     * @return PromotionCoupon
+     */
+    public function setDisabledReason(?string $disabledReason): self
+    {
+        $this->disabledReason = $disabledReason;
+
+        return $this;
     }
 }

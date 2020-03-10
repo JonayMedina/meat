@@ -169,7 +169,7 @@ app:
             request_new_password: Solicitar nueva contraseña
             logged_in_as_%user%_message: Ya has ingresado como %user%
         save_changes: Guardar cambios
-        terms_and_conditions_text: Este es el texto deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.
+        terms_and_conditions_text: Este es el texto que deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.
         terms_and_conditions_success_message: Se ha guardaro la nueva versión de los términos y condiciones.
         success_default_title: ¡Felicidades!
         error_default_title: ¡Error!
@@ -180,3 +180,5 @@ app:
         about_us: Sobre nosotros
         about_store_success_message: Se han guardado las configuraciones de la tienda.
         about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.
+        coupon_enable_outdated_coupon_message: Para habilitar este cupón, primero debes editar la fecha y hora de inicio y fin
+        coupon_enable_no_quota_coupon_message: Para habilitar este cupón, primero debes editar el límite de usuarios/el límite de usos

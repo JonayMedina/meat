@@ -168,7 +168,7 @@ class CouponController extends AbstractController
 
     /**
      * Edit promotion code
-     * @Route("/coupon/{id}/edit", name="coupons_edit")
+     * @Route("/coupon/{id}/edit", name="coupons_edit", options={"expose" = "true"})
      * @param Request $request
      * @param ChannelContextInterface $channelContext
      * @return Response
@@ -251,8 +251,10 @@ class CouponController extends AbstractController
         $id = $request->get('id');
 
         $manager = $this->get('doctrine')->getManager();
+        /** @var PromotionCoupon $coupon */
         $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
         $coupon->setEnabled(!$coupon->isEnabled());
+        $coupon->setDisabledReason('');
 
         try {
             $manager->flush();

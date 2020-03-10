@@ -66,7 +66,7 @@ class DisableExpiredCouponsCommand extends Command
             ->getQuery()
             ->getResult();
 
-        $counter += $this->disablePromotions($promotions);
+        $counter += $this->disablePromotions($promotions, 'outdated');
 
         $promotions = $this->promotionRepository
             ->createQueryBuilder('promotion')
@@ -79,7 +79,7 @@ class DisableExpiredCouponsCommand extends Command
             ->getQuery()
             ->getResult();
 
-        $counter += $this->disablePromotions($promotions);
+        $counter += $this->disablePromotions($promotions, 'no-quota');
 
         $io->success('Coupons expired: ' . $counter);
 
@@ -89,9 +89,10 @@ class DisableExpiredCouponsCommand extends Command
     /**
      * Disable given promotions array.
      * @param array $promotions
+     * @param string $reason
      * @return int
      */
-    private function disablePromotions(array $promotions): int
+    private function disablePromotions(array $promotions, $reason = ''): int
     {
         /** @var Promotion[] $promotions */
         $counter = 0;
@@ -101,6 +102,7 @@ class DisableExpiredCouponsCommand extends Command
 
             foreach ($coupons as $coupon) {
                 $coupon->setEnabled(false);
+                $coupon->setDisabledReason($reason);
                 $counter++;
             }
         }
