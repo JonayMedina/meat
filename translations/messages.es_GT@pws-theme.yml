@@ -301,6 +301,7 @@ app:
         about_us: Sobre nosotros
         about_store_success_message: Se han guardado las configuraciones de la tienda.
         about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.
+        powered_by: Powered by
         login:
             title: Ingresar
             welcome_message: ¡Bienvenido al Administrador de Procasa!
@@ -309,6 +310,15 @@ app:
             password: Contraseña
             request_new_password: Solicitar nueva contraseña
             logged_in_as_%user%_message: Ya has ingresado como %user%
+        register: Regístrate
+        save_changes: Guardar cambios
+        create_an_account: Crear una cuenta
+        frontend:
+            about_procasa: Acerca de Procasa
+            login: Iniciar sesión
+        sign_in_here: ingresa aquí
+        forgot_password: Olvidé mi contraseña
+        create_here: creala aquí.
 
 sylius:
     form:
