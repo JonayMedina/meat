@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6 border-right">
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.user.plainPassword.first) }}
+        {{ form_row(form.user.plainPassword.second) }}
+
+        <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center">
+            <label class="d-flex align-items-center checkbox">
+                {{ form_widget(form.termsAccepted) }}
+                <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                <span class="check-mark"></span>
+            </label>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <p class="small">{{ 'app.ui.optional_fields_to_offers' | trans }}</p>
+        {{ form_row(form.birthday) }}
+        {{ form_row(form.gender) }}
+        {#{{ form_row(form.phoneNumber) }}#}
+        {#{{ form_row(form.subscribedToNewsletter) }}#}
+    </div>
+</div>

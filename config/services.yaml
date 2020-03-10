@@ -48,3 +48,8 @@ services:
     App\EventSubscriber\CouponSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+                
+    app.form.extension.type.customer_registration:
+        class: App\Form\Extension\CustomerRegistrationTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType }
