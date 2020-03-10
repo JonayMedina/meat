@@ -46,7 +46,7 @@
                                 <tbody>
                                 {% for coupon in pagination %}
                                     {% set promotion = coupon.promotion %}
-                                    <tr>
+                                    <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }}">
                                         <td>{{ coupon.id }}</td>
                                         <td>{{ coupon.code }}</td>
                                         <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
@@ -102,21 +102,49 @@ $(document).ready(function() {
     var $switch = $('.switch-input');
 
     $switch.on('change', function() {
+        var message = '';
         var id = $(this).data('id');
-        blockUI();
+        var isOutdated = $(this).closest('tr').hasClass('out-dated');
+        var hasNoQuota = $(this).closest('tr').hasClass('no-quota');
 
-        $.ajax({
-            type: 'GET',
-            url: Routing.generate('coupons_toggle_status', {'id': id}),
-            success: function() {
-                success('{{ 'app.ui.coupon_has_been_updated'|trans }}', '{{ 'app.ui.saved'|trans }}');
-                unblockUI();
-            },
-            error: function() {
-                error('{{ 'app.ui.standard_error_message'|trans }}', '{{ 'app.ui.error'|trans }}');
-                unblockUI();
-            }
-        });
+        if (isOutdated) {
+            message = '{{ 'app.ui.coupon_enable_outdated_coupon_message'|trans }}';
+        } else if (hasNoQuota) {
+            message = '{{ 'app.ui.coupon_enable_no_quota_coupon_message'|trans }}';
+        }
+
+        if (message) {
+            swal({
+              title: '',
+              text: message,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#AB162B",
+              confirmButtonText: '{{ 'app.ui.edit_coupon'|trans }}',
+              cancelButtonText: '{{ 'app.ui.cancel'|trans }}',
+              closeOnConfirm: true
+            }, function () {
+                blockUI();
+                window.location = Routing.generate('coupons_edit', {id: id});
+            });
+
+            $(this).prop('checked', false);
+        } else {
+            blockUI();
+
+            $.ajax({
+                type: 'GET',
+                url: Routing.generate('coupons_toggle_status', {'id': id}),
+                success: function() {
+                    success('{{ 'app.ui.coupon_has_been_updated'|trans }}', '{{ 'app.ui.saved'|trans }}');
+                    unblockUI();
+                },
+                error: function() {
+                    error('{{ 'app.ui.standard_error_message'|trans }}', '{{ 'app.ui.error'|trans }}');
+                    unblockUI();
+                }
+            });
+        }
     });
 });
 </script>

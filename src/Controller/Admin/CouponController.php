@@ -23,7 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CouponController extends AbstractController
 {
-    // TODO: Cron para deshabilitar cupon cuando 1) Haya pasado su fecha de funcionamiento 2) Cuando haya alcanzado el máximo de usos posibles.
     const PAGINATOR_LIMIT = 10;
 
     /**
@@ -169,7 +168,7 @@ class CouponController extends AbstractController
 
     /**
      * Edit promotion code
-     * @Route("/coupon/{id}/edit", name="coupons_edit")
+     * @Route("/coupon/{id}/edit", name="coupons_edit", options={"expose" = "true"})
      * @param Request $request
      * @param ChannelContextInterface $channelContext
      * @return Response
@@ -252,6 +251,7 @@ class CouponController extends AbstractController
         $id = $request->get('id');
 
         $manager = $this->get('doctrine')->getManager();
+        /** @var PromotionCoupon $coupon */
         $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
         $coupon->setEnabled(!$coupon->isEnabled());
 

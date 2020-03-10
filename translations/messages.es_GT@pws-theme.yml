@@ -8,12 +8,8 @@ app:
         login_with_apple: Apple
         gender: 
             label: Género
-            female: 
-                label: Femenino
-                initial: F
-            male:
-                label: Masculino
-                initial: M
+            female: Femenino
+            male: Masculino
             undefined: No definido
         total: Total
         n/a: N/A
@@ -301,6 +297,8 @@ app:
         about_us: Sobre nosotros
         about_store_success_message: Se han guardado las configuraciones de la tienda.
         about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.
+        coupon_enable_outdated_coupon_message: Para habilitar este cupón, primero debes editar la fecha y hora de inicio y fin
+        coupon_enable_no_quota_coupon_message: Para habilitar este cupón, primero debes editar el límite de usuarios/el límite de usos
         powered_by: Powered by
         login:
             title: Ingresar
