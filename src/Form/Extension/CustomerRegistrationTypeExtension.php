@@ -23,13 +23,10 @@ final class CustomerRegistrationTypeExtension extends AbstractTypeExtension
                 'required' => false,
                 'label' => 'sylius.form.customer.gender',
                 'choices' => [
-                    'app.gender.female.initial' => CustomerInterface::FEMALE_GENDER,
-                    'app.gender.male.initial' => CustomerInterface::MALE_GENDER,
+                    CustomerInterface::FEMALE_GENDER => CustomerInterface::FEMALE_GENDER,
+                    CustomerInterface::MALE_GENDER => CustomerInterface::MALE_GENDER,
                 ],
                 'empty_data' => CustomerInterface::UNKNOWN_GENDER,
-                'choice_attr' => function($choice, $key, $value) {
-                    return ['class' => $choice];
-                },
                 'data' => 'sylius.gender.female',
                 'multiple' => false,
                 'expanded' => true

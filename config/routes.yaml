@@ -17,3 +17,8 @@ meathouse_admin:
     resource: "Controller/Admin"
     type:     annotation
     prefix:   /admin
+    
+meathouse_frontend:
+    resource: "Controller/Frontend"
+    type:     annotation
+    prefix:   /frontend
