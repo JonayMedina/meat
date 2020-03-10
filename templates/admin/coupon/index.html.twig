@@ -46,7 +46,7 @@
                                 <tbody>
                                 {% for coupon in pagination %}
                                     {% set promotion = coupon.promotion %}
-                                    <tr class="{{ coupon.disabledReason }}">
+                                    <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }}">
                                         <td>{{ coupon.id }}</td>
                                         <td>{{ coupon.code }}</td>
                                         <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
@@ -102,30 +102,21 @@ $(document).ready(function() {
     var $switch = $('.switch-input');
 
     $switch.on('change', function() {
+        var message = '';
         var id = $(this).data('id');
-        var isOutdated = $(this).closest('tr').hasClass('outdated');
+        var isOutdated = $(this).closest('tr').hasClass('out-dated');
         var hasNoQuota = $(this).closest('tr').hasClass('no-quota');
 
         if (isOutdated) {
+            message = '{{ 'app.ui.coupon_enable_outdated_coupon_message'|trans }}';
+        } else if (hasNoQuota) {
+            message = '{{ 'app.ui.coupon_enable_no_quota_coupon_message'|trans }}';
+        }
+
+        if (message) {
             swal({
               title: '',
-              text: '{{ 'app.ui.coupon_enable_outdated_coupon_message'|trans }}',
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#AB162B",
-              confirmButtonText: '{{ 'app.ui.edit_coupon'|trans }}',
-              cancelButtonText: '{{ 'app.ui.cancel'|trans }}',
-              closeOnConfirm: true
-            }, function () {
-                blockUI();
-                window.location = Routing.generate('coupons_edit', {id: id});
-            });
-
-            $(this).prop('checked', false);
-        } else if (hasNoQuota) {
-            wal({
-              title: '',
-              text: '{{ 'app.ui.coupon_enable_no_quota_coupon_message'|trans }}',
+              text: message,
               type: "warning",
               showCancelButton: true,
               confirmButtonColor: "#AB162B",

@@ -254,7 +254,6 @@ class CouponController extends AbstractController
         /** @var PromotionCoupon $coupon */
         $coupon = $manager->getRepository('App:Promotion\PromotionCoupon')->find($id);
         $coupon->setEnabled(!$coupon->isEnabled());
-        $coupon->setDisabledReason('');
 
         try {
             $manager->flush();

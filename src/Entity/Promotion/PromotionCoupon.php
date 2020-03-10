@@ -6,6 +6,7 @@ namespace App\Entity\Promotion;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\PromotionCoupon as BasePromotionCoupon;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @ORM\Entity
@@ -24,12 +25,6 @@ class PromotionCoupon extends BasePromotionCoupon
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enabled;
-
-    /**
-     * @var string $disabledReason
-     * @ORM\Column(name="disabled_reason", type="string", length=100, nullable=true)
-     */
-    private $disabledReason;
 
     /**
      * @var string $createdBy
@@ -155,21 +150,29 @@ class PromotionCoupon extends BasePromotionCoupon
     }
 
     /**
-     * @return string
+     * Return true if coupon is out dated.
+     * @return bool
      */
-    public function getDisabledReason(): ?string
+    public function isOutdated()
     {
-        return $this->disabledReason;
+        $now = time();
+        $promotion = $this->getPromotion();
+
+        if (!$promotion->getEndsAt()) {
+            return false;
+        }
+
+        return ($promotion->getEndsAt()->format('U') <= $now);
     }
 
     /**
-     * @param string $disabledReason
-     * @return PromotionCoupon
+     * Return true if user has no quota available.
+     * @return bool
      */
-    public function setDisabledReason(?string $disabledReason): self
+    public function hasNoQuota()
     {
-        $this->disabledReason = $disabledReason;
+        $promotion = $this->getPromotion();
 
-        return $this;
+        return ($promotion->getUsed() >= $promotion->getUsageLimit());
     }
 }

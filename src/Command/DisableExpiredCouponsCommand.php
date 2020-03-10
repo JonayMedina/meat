@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Promotion\Promotion;
+use App\Entity\Promotion\PromotionCoupon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -66,7 +67,7 @@ class DisableExpiredCouponsCommand extends Command
             ->getQuery()
             ->getResult();
 
-        $counter += $this->disablePromotions($promotions, 'outdated');
+        $counter += $this->disablePromotions($promotions);
 
         $promotions = $this->promotionRepository
             ->createQueryBuilder('promotion')
@@ -79,7 +80,7 @@ class DisableExpiredCouponsCommand extends Command
             ->getQuery()
             ->getResult();
 
-        $counter += $this->disablePromotions($promotions, 'no-quota');
+        $counter += $this->disablePromotions($promotions);
 
         $io->success('Coupons expired: ' . $counter);
 
@@ -92,7 +93,7 @@ class DisableExpiredCouponsCommand extends Command
      * @param string $reason
      * @return int
      */
-    private function disablePromotions(array $promotions, $reason = ''): int
+    private function disablePromotions(array $promotions): int
     {
         /** @var Promotion[] $promotions */
         $counter = 0;
@@ -102,7 +103,6 @@ class DisableExpiredCouponsCommand extends Command
 
             foreach ($coupons as $coupon) {
                 $coupon->setEnabled(false);
-                $coupon->setDisabledReason($reason);
                 $counter++;
             }
         }

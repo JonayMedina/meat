@@ -23,7 +23,6 @@ final class Version20200310024520 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE sylius_promotion_coupon CHANGE enabled enabled TINYINT(1) DEFAULT NULL');
-        $this->addSql('ALTER TABLE sylius_promotion_coupon ADD disabled_reason VARCHAR(100) DEFAULT NULL');
     }
 
     public function down(Schema $schema) : void
@@ -32,6 +31,5 @@ final class Version20200310024520 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE sylius_promotion_coupon CHANGE enabled enabled INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE sylius_promotion_coupon DROP disabled_reason');
     }
 }
