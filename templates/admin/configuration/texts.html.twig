@@ -54,21 +54,10 @@
 
 {% block styles %}
     {{ parent() }}
-    <style>
-        textarea.input-counter {
-            height: 200px !important;
-        }
-
-        .counter-label {
-            float: right;
-            margin-top: 5px;
-        }
-    </style>
 {% endblock %}
 
 {% block javascript %}
 {{ parent() }}
-<script src="{{ asset('meathouse/js/plugins/summernote/summernote-bs4.js') }}"></script>
 <script>
     $(document).ready(function () {
         initCounter();

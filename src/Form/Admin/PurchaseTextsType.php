@@ -17,7 +17,7 @@ class PurchaseTextsType extends AbstractType
             ->add('firstPurchaseMessage', null, [
                 'label' => false,
                 'attr' => [
-                    'class' => 'input-counter',
+                    'class' => 'input-counter height-200',
                     'maxlength' => 90,
                 ],
                 'constraints' => [
@@ -29,7 +29,7 @@ class PurchaseTextsType extends AbstractType
             ->add('newAddressMessage', null, [
                 'label' => false,
                 'attr' => [
-                    'class' => 'input-counter',
+                    'class' => 'input-counter height-200',
                     'maxlength' => 90
                 ],
                 'constraints' => [
