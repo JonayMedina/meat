@@ -71,6 +71,12 @@ class AboutStore implements ResourceInterface
      */
     private $daysToChooseInAdvanceToPurchase;
 
+    /**
+     * @var bool
+     * @ORM\Column(name="show_product_search_box", type="boolean")
+     */
+    private $showProductSearchBox = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -228,4 +234,22 @@ class AboutStore implements ResourceInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isShowProductSearchBox(): bool
+    {
+        return $this->showProductSearchBox;
+    }
+
+    /**
+     * @param bool $showProductSearchBox
+     * @return AboutStore
+     */
+    public function setShowProductSearchBox(bool $showProductSearchBox): self
+    {
+        $this->showProductSearchBox = $showProductSearchBox;
+
+        return $this;
+    }
 }

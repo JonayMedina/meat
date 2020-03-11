@@ -1,6 +1,3 @@
-# This file is part of the Sylius package.
-# (c) Paweł Jędrzejewski
-
 app:
     ui:
         dashboard: Dashboard
@@ -325,6 +322,10 @@ app:
         forgot_password: Olvidé mi contraseña
         create_here: creala aquí.
         accept_the: 'Acepto los '
+        show_searcher: 
+            title: Mostrar buscador
+            text: Esta opción habilitará o deshabilitará el buscador del catálogo y favoritos en la página web y App de Procasa.
+            help: El buscador se está mostrando actualmente en el catálogo y favoritos.
 
 sylius:
     form:

@@ -7,6 +7,7 @@ use App\Form\Admin\PurchaseTextsType;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -84,13 +85,26 @@ class SettingsController extends AbstractController
     }
 
     /**
-     *
-     * @Route("/searcher", name="searcher")
+     * Show search box setting page.
+     * @Route("/search-box", name="searcher")
+     * @param AboutStoreRepository $repository
+     * @param EntityManagerInterface $entityManager
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function searcherAction()
+    public function searcherAction(AboutStoreRepository $repository, EntityManagerInterface $entityManager)
     {
-        return $this->render('/admin/configuration/searcher.html.twig');
+        $aboutStore = $repository->findLatest();
+
+        if (!$aboutStore instanceof AboutStore) {
+            $aboutStore = new AboutStore();
+            $entityManager->persist($aboutStore);
+            $entityManager->flush();
+        }
+
+        return $this->render('/admin/configuration/searcher.html.twig', [
+            'about' => $aboutStore
+        ]);
     }
 
     /**
@@ -101,5 +115,29 @@ class SettingsController extends AbstractController
     public function categoryColorAction()
     {
         return $this->render('/admin/configuration/category_color.html.twig');
+    }
+
+    /**
+     * Toggle status of search box setting.
+     * @Route("/search-box/toggle", name="toggle_searcher", options={"expose" = "true"})
+     *
+     * @param AboutStoreRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function toggleSearchBoxStatus(AboutStoreRepository $repository, EntityManagerInterface $entityManager)
+    {
+        $aboutStore = $repository->findLatest();
+
+        $aboutStore->setShowProductSearchBox(!$aboutStore->isShowProductSearchBox());
+
+        try {
+            $entityManager->flush();
+
+            return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            return new JsonResponse(['type' => 'error', 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
