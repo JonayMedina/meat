@@ -4,11 +4,74 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.purchase_texts'|trans }}</h1>
-            <br><br>
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                <h1>{{ 'app.ui.purchase_texts'|trans }}</h1>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        <h2>{{ 'app.ui.settings.first_purchase_title'|trans }}</h2>
+                        <hr>
+                        <p>{{ 'app.ui.settings.first_purchase_text'|trans }}</p>
 
+                        {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+                        <div class="form-group">
+                            {{ form_label(form.firstPurchaseMessage) }}
+                            {{ form_widget(form.firstPurchaseMessage) }}
+                            <div class="counter-label"></div>
+                        </div>
+
+                        <br><br>
+                        <h2>{{ 'app.ui.settings.new_address_title'|trans }}</h2>
+                        <hr>
+                        <p>{{ 'app.ui.settings.new_address_text'|trans }}</p>
+
+                        <div class="form-group">
+                            {{ form_label(form.newAddressMessage) }}
+                            {{ form_widget(form.newAddressMessage) }}
+                            <div class="counter-label"></div>
+                        </div>
+
+                        <br><br>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <style>
+        textarea.input-counter {
+            height: 200px !important;
+        }
+
+        .counter-label {
+            float: right;
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script src="{{ asset('meathouse/js/plugins/summernote/summernote-bs4.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        initCounter();
+    });
+</script>
 {% endblock %}
