@@ -43,9 +43,15 @@
                 font-family: "Raleway Light";
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
             }
+
+            @font-face {
+                font-family: "Raleway Italic";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Italic.ttf') }}");
+            }
         </style>
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-sylius.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
@@ -108,7 +114,9 @@
 
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="{{ asset('bundles/syliusshop/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

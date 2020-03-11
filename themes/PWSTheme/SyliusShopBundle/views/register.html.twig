@@ -1,12 +1,120 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{#
-
-    Available variables:
-
-    * "form" - Customer registration form.
-
-#}
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block content %}
+    {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
+
+    <div class="row register">
+        <div class="col-12 segment">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <h1 class="text-center">{{ 'app.ui.create_your_account' | trans }}</h1>
+                    <div class="instructions margin-0-auto">
+                        <p>{{ 'app.ui.register_page_message' | trans }}</p>
+                        <p>{{ 'app.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'app.ui.sign_in_here'|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    {{ sonata_block_render_event('sylius.shop.register.before_form') }}
+
+                    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
+                    {% include '@SyliusShop/Register/_form.html.twig' %}
+
+                    {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
+
+                    <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
+
+                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
+                        <label class="d-flex align-items-center checkbox">
+                            <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
+                            <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                            <span class="check-mark"></span>
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="create-btn" type="submit" class="btn-rounded">
+                            {{ 'app.ui.create_an_account'|trans }}
+                        </button>
+                    </div>
+                    {{ form_row(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+
+                    <div class="text-center">
+                        <h3 class="text-center mt-3">{{ 'app.ui.create_an_account_using_social_networks' | trans }}</h3>
+
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
+                            <i class="fab fa-facebook-square"></i>
+                            {{ 'app.ui.register_with'|trans }} Facebook
+                        </a>
+                    </div>
+
+                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">{{ 'app.ui.terms_and_conditions' | trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ render(url('store_terms')) }}
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button id="not-accept" type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'app.ui.not_accept' | trans }}</button>
+                    <button id="accept" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept' | trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        jQuery(document).ready(function ($) {
+            let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
+
+            $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
+            $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
+            $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
+            $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            checkTerms();
+
+            $('#not-accept').click(function () {
+                $terms.prop('checked', false).change();
+            });
+
+            $('#accept').click(function () {
+                $terms.prop('checked', true).change();
+            });
+
+            $terms.on('change', function () {
+                checkTerms(true);
+            });
+
+            function checkTerms(changed = false) {
+                if (changed) {
+                    $terms.prop('checked', !$terms.prop('checked'));
+                }
+
+                if (!$terms.prop('checked')) {
+                    $('#create-btn').prop('disabled', true).change();
+                } else {
+                    $('#create-btn').prop('disabled', false).change();
+                }
+            }
+        });
+    </script>
 {% endblock %}

@@ -43,7 +43,7 @@ app:
         purchase_admin: Admin de compra
         locations: Ubicaciones
         faqs: FAQ's
-        about_procasa: Acerca de Procasa
+        about_procasa: Sobre Procasa
         terms_and_conditions: Términos y condiciones
         today: Hoy
         clear: Limpiar
@@ -159,7 +159,133 @@ app:
         created_at: Fecha de creación
         created_by: Creado por
         updated_at: Última actualización
-        coupon_limit_to_%x%_users: Limitar el uso del cupón a %x% usuarios
+        coupon_limit_to_%x%_users: Limitar el uso del cupón a %x% usuarios 
+        abandoned: Abandonado
+        about: Sobre nosotros
+        accept: Sí acepto
+        not_accept: No acepto
+        accepted: Aceptado
+        access_token: Token de acceso
+        access_your_store_account_or_create_a_new_one: 'Escribe tus credenciales para ingresar a tu cuenta. Si no tienes una, '
+        account_credentials: Credenciales de la cuenta
+        account_panel_outline: Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos
+        action: Acción
+        add: Añadir
+        add_action: Añadir acción
+        add_address: Añadir dirección
+        add_association: Añadir asociación
+        add_attribute: Añadir atributo
+        add_attributes: Agregar atributos
+        add_channel: Añadir canal
+        add_choice: Añadir opción
+        add_coupon: Añadir cupón
+        add_image: Añadir imagen
+        add_member: Añadir miembro
+        add_menu_element: Agregar elemento al menú
+        add_new_email: Agregar nuevo correo electrónico
+        add_new_permission: Añadir nuevo permiso
+        add_new_role: Añadir nuevo rol
+        add_province: Añadir provincia
+        add_rule: Añadir regla
+        add_to_cart: Añadir al carrito
+        add_value: Añadir valor
+        add_your_review: Agregue su reseña
+        adding_new_customer_groups: Agregar nuevo grupo de clientes
+        adding_new_email: Añadiendo nuevo correo electrónico
+        adding_new_locale: Añadiendo nuevo idioma
+        additional_information: Información adicional
+        address: Dirección
+        address_book: Libreta de direcciones
+        addressing: Dirección
+        addressing_step: Dirección de entrega
+        adjustments: Ajustes
+        administration: Administración
+        administration_dashboard: Panel de administración
+        administration_panel_login: Panel de administración
+        admin_users: Administradores
+        all: Todos
+        all_your_addresses: Todas tus direcciones
+        amount: Cantidad
+        an_error_occurred: Se ha producido un error
+        api: Api
+        apply_coupon: Aplicar cupón
+        archival: Archivo
+        archive: Archivar
+        are_your_sure_you_want_to_perform_this_action: ¿Está seguro que quiere realizar esta acción?
+        association: Asociación
+        association_types: Tipos de asociación
+        associations: Asociaciones
+        assortment: Varios
+        attributes: Atributos
+        author: Autor
+        authorized: Autorizado
+        availability: Disponibilidad
+        available_for_channels: Disponible para canales
+        available_on: Disponible el
+        available_on_hand: Existencias disponibles
+        available_until: Disponible hasta
+        average_order_value: Valor de pedido promedio
+        awaiting_payment: Esperando pago
+        back_to_store: Volver a la tienda
+        back_to_details: Volver a detalles
+        backorder: En espera
+        backordered: Pendientes de entrega
+        balance_due: Saldo
+        base_currency: Moneda base
+        bill_to: Facturar a
+        billing_address: Dirección de facturación
+        billing_address_changes_history: Historia de cambios de dirección de facturación
+        blocks: Bloques
+        body: Cuerpo
+        browse_products: Ver los productos
+        browse_all_products: Ver todos los productos
+        browse_your_addresses: Ver sus direcciones
+        browse_your_orders_from_the_past: Ver sus pedidos anteriores
+        build: Construir
+        by_position: Por posición
+        calculator: Calculadora
+        call_us: ¡Llámanos!
+        cancelled: Cancelado
+        cart: Carrito
+        cart_locked: Carrito bloqueado
+        cart_summary: Resumen del carrito
+        categorization: Categorización
+        users_list_of_all_users_registered_in_store: Usuarios <small>Lista de todos los usuarios registrados en la tienda</small>
+        value: Valor
+        values: Valores
+        variant: Variante
+        variant_choice: Opción tipo variante
+        variant_selection_method: Método de selección variante
+        variants: Variantes
+        verified: Verificado
+        verify: Verificar
+        view_and_edit_cart: Ver y modificar carrito
+        view_more: Ver más
+        view_product_details: 'Ver detalles de %product%'
+        view_your_order_or_change_payment_method: Ver pedido o cambiar forma de pago
+        view_your_store: Ver su tienda
+        void: Vacío
+        volume_based_pricing: Precio por volumen
+        warning: Advertencia
+        welcome: ¡Bienvenido!
+        wholesalers: Mayoristas
+        catalogue: Catálogo
+        work_with_us: Trabaja con nosotros
+        download_app: 'Simplifícate y descarga el app de '
+        register_page_message: Completa los campos para crear una cuenta en Meat House.
+        have_account_already: 'Si ya tienes una cuenta, '
+        create_your_account: Crea tu cuenta
+        optional_fields_to_offers: Campos opcionales para promociones optimizadas.
+        required_fields: Los campos con un asterisco (*) son obligatorios para registrarte.
+        by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '
+        login_with: 'Ingresar con '
+        register_with: 'Regístrame con '
+        create_an_account_using_social_networks: Crea tu cuenta usando redes sociales
+        enter_email_to_reset_password: Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.
+        send_instructions: Enviar instrucciones
+        purchase_history: Historial de compras
+        my_favorites: Mis favoritos
+        view_my_profile: Ver mi perfil
         login:
             title: Ingresar
             welcome_message: ¡Bienvenido al Administrador de Procasa!
@@ -189,3 +315,34 @@ app:
             new_address_text: Este texto es el que se muestra en el checkout cuando un usuario ya ha realizado compras con el App pero eligió una dirección que no se había validado.
             purchase_texts_success_message: Se han actualizado los textos de compra.
             purchase_texts_error_while_saving_message: Hubo un error al guardar los textos de compra, por favor vuelta a intentarlo más tarde.
+        powered_by: Powered by
+        register: Regístrate
+        create_an_account: Crear una cuenta
+        frontend:
+            about_procasa: Acerca de Procasa
+            login: Iniciar sesión
+        sign_in_here: ingresa aquí
+        forgot_password: Olvidé mi contraseña
+        create_here: creala aquí.
+        accept_the: 'Acepto los '
+
+sylius:
+    form:
+        login:
+            username: Correo
+            password: Contraseña
+            remember_me: Recordarme
+        option:
+            name: Nombre
+        notes: Notas adicionales
+        variant:
+            tracked: Con seguimiento
+        customer:
+            gender: Género
+            email: Correo
+        user:
+            password:
+                label: Contraseña
+            email: Correo
+    email:
+        label: Correo     
