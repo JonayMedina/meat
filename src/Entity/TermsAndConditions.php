@@ -9,7 +9,7 @@ use App\Model\TimestampableTrait;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
- * @ORM\Table(name="terms_and_conditions")
+ * @ORM\Table(name="app_terms_and_conditions")
  * @ORM\Entity(repositoryClass="App\Repository\TermsAndConditionsRepository")
  */
 class TermsAndConditions implements ResourceInterface

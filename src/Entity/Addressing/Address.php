@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Addressing;
 
+use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Address as BaseAddress;
 
@@ -13,4 +14,5 @@ use Sylius\Component\Core\Model\Address as BaseAddress;
  */
 class Address extends BaseAddress
 {
+    use BlameableTrait;
 }

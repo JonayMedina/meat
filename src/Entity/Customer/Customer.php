@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Customer;
 
+use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Customer as BaseCustomer;
@@ -15,4 +16,5 @@ use Sylius\Component\Core\Model\Customer as BaseCustomer;
  */
 class Customer extends BaseCustomer
 {
+    use BlameableTrait;
 }

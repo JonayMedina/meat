@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Promotion;
 
+use App\Model\BlameableTrait;
+use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\PromotionCoupon as BasePromotionCoupon;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @ORM\Entity
@@ -14,6 +15,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class PromotionCoupon extends BasePromotionCoupon
 {
+    use BlameableTrait, IpTraceableTrait;
+
     const TYPE_PERCENTAGE = 'order_percentage_discount';
 
     const TYPE_FIXED_AMOUNT = 'order_fixed_discount';
@@ -25,20 +28,6 @@ class PromotionCoupon extends BasePromotionCoupon
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enabled;
-
-    /**
-     * @var string $createdBy
-     *
-     * @ORM\Column(name="created_by", type="string", nullable=true)
-     */
-    private $createdBy;
-
-    /**
-     * @var string $updatedBy
-     *
-     * @ORM\Column(name="updated_by", type="string", nullable=true)
-     */
-    private $updatedBy;
 
     /**
      * @return bool
@@ -57,38 +46,6 @@ class PromotionCoupon extends BasePromotionCoupon
         $this->enabled = $enabled;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * @param string $createdBy
-     */
-    public function setCreatedBy(?string $createdBy): void
-    {
-        $this->createdBy = $createdBy;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
-    }
-
-    /**
-     * @param string $updatedBy
-     */
-    public function setUpdatedBy(?string $updatedBy): void
-    {
-        $this->updatedBy = $updatedBy;
     }
 
     /**

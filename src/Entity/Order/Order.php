@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
+use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Order as BaseOrder;
@@ -16,6 +17,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  */
 class Order extends BaseOrder
 {
+    use BlameableTrait;
+
     const MIN_RATING = 0;
 
     const MAX_RATING = 5;

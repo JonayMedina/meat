@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
- * @ORM\Table(name="about_store")
+ * @ORM\Table(name="app_about_store")
  * @ORM\Entity(repositoryClass="App\Repository\AboutStoreRepository")
  */
 class AboutStore implements ResourceInterface
