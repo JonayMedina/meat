@@ -21,4 +21,17 @@ meathouse_admin:
 meathouse_frontend:
     resource: "Controller/Frontend"
     type:     annotation
-    prefix:   /frontend
+    prefix:   /store
+    
+sylius_shop_register:
+    path: /register
+    methods: [GET, POST]
+    defaults:
+        _controller: sylius.controller.customer:createAction
+        _sylius:
+            template: "@SyliusShop/register.html.twig"
+            form: Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType
+            event: register
+            redirect:
+                route: store_welcome
+            flash: sylius.customer.register

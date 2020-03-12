@@ -18,10 +18,16 @@ class ResourcesController extends AbstractController
      */
     public function termsAndConditionsAction()
     {
-
         $repository = $this->getDoctrine()->getManager()->getRepository('App:TermsAndConditions');
 
-        $terms = $repository->findLatest();
-        return $this->render('/frontend/terms/_terms.html.twig', ['terms' => $terms]);
+        return $this->render('/frontend/terms/_terms.html.twig', ['terms' => $repository->findLatest()]);
+    }
+
+    /**
+     * @Route("/welcome", name="store_welcome")
+     * @return Response
+     */
+    public function welcomeAction() {
+        return $this->render('/frontend/welcome.html.twig');
     }
 }

@@ -277,9 +277,9 @@ app:
         create_your_account: Crea tu cuenta
         optional_fields_to_offers: Campos opcionales para promociones optimizadas.
         required_fields: Los campos con un asterisco (*) son obligatorios para registrarte.
-        by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '
-        login_with: 'Ingresar con '
-        register_with: 'Regístrame con '
+        by_registering_you_are_accepting_%link%: Al registrarte, estás aceptando los%link%
+        login_with_%name%: Ingresar con %name%
+        register_with_%name%: Regístrame con %name%
         create_an_account_using_social_networks: Crea tu cuenta usando redes sociales
         enter_email_to_reset_password: Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.
         send_instructions: Enviar instrucciones
@@ -299,7 +299,7 @@ app:
         about_store_error_while_saving_message: Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.
         coupon_enable_outdated_coupon_message: Para habilitar este cupón, primero debes editar la fecha y hora de inicio y fin
         coupon_enable_no_quota_coupon_message: Para habilitar este cupón, primero debes editar el límite de usuarios/el límite de usos
-        powered_by: Powered by
+        powered_by_%name%: Powered by %name%
         login:
             title: Ingresar
             welcome_message: ¡Bienvenido al Administrador de Procasa!
@@ -317,7 +317,7 @@ app:
         sign_in_here: ingresa aquí
         forgot_password: Olvidé mi contraseña
         create_here: creala aquí.
-        accept_the: 'Acepto los '
+        accept_the_%link%: Acepto los%link%
 
 sylius:
     form:

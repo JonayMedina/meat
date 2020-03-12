@@ -48,6 +48,10 @@ services:
     App\EventSubscriber\CouponSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+
+    App\EventSubscriber\ShopUserSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
                 
     app.form.extension.type.customer_registration:
         class: App\Form\Extension\CustomerRegistrationTypeExtension
