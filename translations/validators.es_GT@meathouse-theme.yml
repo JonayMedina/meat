@@ -1,3 +1,0 @@
-app:
-    ui:
-        coupon_code_is_already_in_use: Ya existe un cupón con este código, por favor ingrese uno diferente

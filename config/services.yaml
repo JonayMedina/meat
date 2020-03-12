@@ -44,10 +44,6 @@ services:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
-                
-    App\EventSubscriber\CouponSubscriber:
-        tags:
-            - { name: doctrine.event_subscriber }
 
     App\EventSubscriber\ShopUserSubscriber:
         tags:

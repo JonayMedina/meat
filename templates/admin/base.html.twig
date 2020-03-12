@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -334,8 +334,25 @@
             padding-bottom: 35px;
         }
 
+        .padding-top-35 {
+            padding-top: 35px;
+        }
+
+        .padding-left-100 {
+            padding-left: 100px;
+        }
+
         .padding-55 {
             padding: 55px;
+        }
+
+        .counter-label {
+            float: right;
+            margin-top: 5px;
+        }
+
+        textarea.height-200 {
+            height: 200px !important;
         }
 
         @media (min-width: 768px) {

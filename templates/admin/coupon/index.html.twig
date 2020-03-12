@@ -46,7 +46,7 @@
                                 <tbody>
                                 {% for coupon in pagination %}
                                     {% set promotion = coupon.promotion %}
-                                    <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }}">
+                                    <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }} {{ (not coupon.enabled) ? 'disabled' : '' }}">
                                         <td>{{ coupon.id }}</td>
                                         <td>{{ coupon.code }}</td>
                                         <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
@@ -101,15 +101,28 @@
 $(document).ready(function() {
     var $switch = $('.switch-input');
 
+    function updateCouponCounter() {
+        $.ajax({
+            type: 'GET',
+            url: Routing.generate('coupons_counter'),
+            success: function(response) {
+                var $label = $('h1 small');
+                $label.html(response['message']);
+            },
+        });
+    }
+
     $switch.on('change', function() {
         var message = '';
         var id = $(this).data('id');
-        var isOutdated = $(this).closest('tr').hasClass('out-dated');
-        var hasNoQuota = $(this).closest('tr').hasClass('no-quota');
+        var $tr = $(this).closest('tr');
+        var isOutdated = $tr.hasClass('out-dated');
+        var hasNoQuota = $tr.hasClass('no-quota');
+        var isDisabled = $tr.hasClass('disabled');
 
-        if (isOutdated) {
+        if (isOutdated && isDisabled) {
             message = '{{ 'app.ui.coupon_enable_outdated_coupon_message'|trans }}';
-        } else if (hasNoQuota) {
+        } else if (hasNoQuota && isDisabled) {
             message = '{{ 'app.ui.coupon_enable_no_quota_coupon_message'|trans }}';
         }
 
@@ -136,8 +149,10 @@ $(document).ready(function() {
                 type: 'GET',
                 url: Routing.generate('coupons_toggle_status', {'id': id}),
                 success: function() {
+                    updateCouponCounter();
                     success('{{ 'app.ui.coupon_has_been_updated'|trans }}', '{{ 'app.ui.saved'|trans }}');
                     unblockUI();
+                    $tr.addClass('disabled');
                 },
                 error: function() {
                     error('{{ 'app.ui.standard_error_message'|trans }}', '{{ 'app.ui.error'|trans }}');

@@ -32,6 +32,20 @@ function unblockUI() {
   $.unblockUI();
 }
 
+function initCounter() {
+  $('.input-counter').each(function() {
+    var $input = $(this);
+    var max = $input.attr('maxlength');
+
+    $input.on('keyup change', function() {
+      var length = $(this).val().length;
+      var label = $(this).parent('.form-group').find('.counter-label');
+
+      label.html(length + "/" + max);
+    }).change();
+  });
+}
+
 $(document).ready(function () {
   var $deleteButton = $('.btn-delete');
 

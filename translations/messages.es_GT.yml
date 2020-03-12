@@ -1,0 +1,326 @@
+app.ui.dashboard: Dashboard
+app.ui.login_with_facebook: Facebook
+app.ui.login_with_apple: Apple
+app.ui.gender.label: Género
+app.ui.gender.female: Femenino
+app.ui.gender.male: Masculino
+app.ui.gender.undefined: 'No definido'
+app.ui.total: Total
+app.ui.n/a: N/A
+app.ui.user_age: 'Edades de usuario'
+app.ui.purchases_per_user: 'Compras por usuario'
+app.ui.start_date: 'Fecha de inicio'
+app.ui.end_date: 'Fecha de fin'
+app.ui.filter: Filtrar
+app.ui.purchases_in_date_range: 'Compras en rango de fechas'
+app.ui.number_of_orders: 'Cantidad de pedidos'
+app.ui.average_rating: 'Rating promedio'
+app.ui.product: Producto
+app.ui.current_price: 'Precio actual'
+app.ui.quantity: Cantidad
+app.ui.top_%x%_most_purchased_products: 'Top %x% productos más comprados'
+app.ui.users_with_purchases: 'Usuarios con compras'
+app.ui.users_without_purchases: 'Usuarios sin compras'
+app.ui.order.label: Orden
+app.ui.order.status.label: Estado
+app.ui.order.status.delivered: Entregado
+app.ui.order.status.cancelled: Cancelado
+app.ui.order.status.pending: Pendiente
+app.ui.order_history: 'Histórico de órdenes'
+app.ui.news_banner: 'Banner de noticias'
+app.ui.coupons: Cupones
+app.ui.send_push: 'Envío push'
+app.ui.users: Users
+app.ui.ratings: Calificaciones
+app.ui.purchase_admin: 'Admin de compra'
+app.ui.locations: Ubicaciones
+app.ui.faqs: 'FAQ''s'
+app.ui.about_procasa: 'Sobre Procasa'
+app.ui.terms_and_conditions: 'Términos y condiciones'
+app.ui.today: Hoy
+app.ui.clear: Limpiar
+app.ui.dates.sunday: Domingo
+app.ui.dates.monday: Lunes
+app.ui.dates.tuesday: Martes
+app.ui.dates.wednesday: Miércoles
+app.ui.dates.thursday: Jueves
+app.ui.dates.friday: Viernes
+app.ui.dates.saturday: Sábado
+app.ui.dates.sun: Dom
+app.ui.dates.mon: Lun
+app.ui.dates.tue: Mar
+app.ui.dates.wed: Mie
+app.ui.dates.thu: Jue
+app.ui.dates.fri: Vie
+app.ui.dates.sat: Sab
+app.ui.dates.su: Do
+app.ui.dates.mo: Lu
+app.ui.dates.tu: Ma
+app.ui.dates.we: Mi
+app.ui.dates.th: Ju
+app.ui.dates.fr: Vi
+app.ui.dates.sa: Sa
+app.ui.dates.january: Enero
+app.ui.dates.february: Febrero
+app.ui.dates.march: Marzo
+app.ui.dates.april: Abil
+app.ui.dates.may: Mayo
+app.ui.dates.june: Junio
+app.ui.dates.july: Julio
+app.ui.dates.august: Agosto
+app.ui.dates.september: Septiembre
+app.ui.dates.october: Octubre
+app.ui.dates.november: Noviembre
+app.ui.dates.december: Diciembre
+app.ui.dates.jan: Ene
+app.ui.dates.feb: Feb
+app.ui.dates.mar: Mar
+app.ui.dates.apr: Abr
+app.ui.dates.ma_: May
+app.ui.dates.jun: Jun
+app.ui.dates.jul: Jul
+app.ui.dates.aug: Ago
+app.ui.dates.sep: Sep
+app.ui.dates.oct: Oct
+app.ui.dates.nov: Nov
+app.ui.dates.dec: Dic
+app.ui.no_products_found: 'No se encontraron productos para mostrar en este listado.'
+app.ui.tables.header.number: No.
+app.ui.from_a_total_of_%orders%_orders: 'De un total de %orders% ordenes'
+app.ui.your_profile: 'Tu perfil'
+app.ui.logout: Salir
+app.ui.segments: Segmentos
+app.ui.purchase_texts: 'Textos de compras'
+app.ui.purchase_settings: 'Configuración de compra'
+app.ui.holidays: 'Días de feriado'
+app.ui.searcher: Buscador
+app.ui.category_color: 'Color en categorías'
+app.ui.qty_of_active_coupons_%total%: 'Cantidad de cupones activos: %total%'
+app.ui.new_coupon: 'Nuevo cupón'
+app.ui.coupon: Cupón
+app.ui.discount_type: 'Tipo de descuento'
+app.ui.actions: Acciones
+app.ui.duration: Duración
+app.ui.view: Ver
+app.ui.delete: Borrar
+app.ui.search_box.coupon: '¿Qué cupón buscas?'
+app.ui.no_coupons_found: 'No hay cupones existentes. Selecciona el botón "Nuevo cupón" para crear un nuevo cupón.'
+app.ui.coupon_has_been_updated: 'El cupón fue actualizado correctamente.'
+app.ui.saved: ¡Guardado!
+app.ui.standard_error_message: 'Hubo un error al intengar guardar el contenido, inténtelo de nuevo más tarde.'
+app.ui.error: Error
+app.ui.yes: Sí
+app.ui.no: 'No'
+app.ui.delete_title: '¿Está seguro?'
+app.ui.delete_text: 'Está a punto de eliminar este recurso, esta acción no podrá deshacerse.'
+app.ui.coupon_detail: 'Detalle del cupón'
+app.ui.edit_coupon: Editar
+app.ui.coupon_code_name: 'Nombre del código'
+app.ui.coupon_code_status: Estado
+app.ui.active: Activo
+app.ui.inactive: Inactivo
+app.ui.description: Descripción
+app.ui.block-ui-message: Cargando...
+app.ui.cancel: Cancelar
+app.ui.save: Guardar
+app.ui.coupon_code: 'Crea el código'
+app.ui.coupon_description: 'Descripción (opcional)'
+app.ui.coupon_starts_at: 'Fecha de inicio'
+app.ui.coupon_ends_at: 'Fecha fin'
+app.ui.coupon_type: 'Tipo de descuento'
+app.ui.coupon_amount: 'Cantidad de descuento'
+app.ui.coupon_one_usage_per_user: 'Un uso por usuario unicamente'
+app.ui.limit_usage_to_x_quantity_of_users: 'Limitar el uso del cupón a x cantidad de usuarios'
+app.ui.back: Regresar
+app.ui.coupon_order_percentage_discount: 'Porcentaje de descuento'
+app.ui.coupon_order_fixed_discount: 'Cantidad de descuento'
+app.ui.usage_limit: 'Cantidad de usos'
+app.ui.coupon_error_on_remove_message: 'Hubo un error al eliminar el cupón, es posible que esta ya haya sido usado en una orden anterior y por lo tanto, no puede eliminarse.'
+app.ui.fixed_discount_input_placeholder: 'Escribe la cantidad de quetzales de descuento'
+app.ui.percentage_input_placeholder: 'Escribe el % de descuento'
+app.ui.hide_main_menu: 'Esconder menú'
+app.ui.show_main_menu: 'Mostrar menú'
+app.ui.quantiy_of_usages: 'Cantidad de usos'
+app.ui.total_of_discounts: 'Cantidad total descontada'
+app.ui.coupon_duration: Duración
+app.ui.coupon_usage_limit: 'Límite de uso'
+app.ui.created_at: 'Fecha de creación'
+app.ui.created_by: 'Creado por'
+app.ui.updated_at: 'Última actualización'
+app.ui.coupon_limit_to_%x%_users: 'Limitar el uso del cupón a %x% usuarios'
+app.ui.abandoned: Abandonado
+app.ui.about: 'Sobre nosotros'
+app.ui.accept: 'Sí acepto'
+app.ui.not_accept: 'No acepto'
+app.ui.accepted: Aceptado
+app.ui.access_token: 'Token de acceso'
+app.ui.access_your_store_account_or_create_a_new_one: 'Escribe tus credenciales para ingresar a tu cuenta. Si no tienes una, '
+app.ui.account_credentials: 'Credenciales de la cuenta'
+app.ui.account_panel_outline: 'Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos'
+app.ui.action: Acción
+app.ui.add: Añadir
+app.ui.add_action: 'Añadir acción'
+app.ui.add_address: 'Añadir dirección'
+app.ui.add_association: 'Añadir asociación'
+app.ui.add_attribute: 'Añadir atributo'
+app.ui.add_attributes: 'Agregar atributos'
+app.ui.add_channel: 'Añadir canal'
+app.ui.add_choice: 'Añadir opción'
+app.ui.add_coupon: 'Añadir cupón'
+app.ui.add_image: 'Añadir imagen'
+app.ui.add_member: 'Añadir miembro'
+app.ui.add_menu_element: 'Agregar elemento al menú'
+app.ui.add_new_email: 'Agregar nuevo correo electrónico'
+app.ui.add_new_permission: 'Añadir nuevo permiso'
+app.ui.add_new_role: 'Añadir nuevo rol'
+app.ui.add_province: 'Añadir provincia'
+app.ui.add_rule: 'Añadir regla'
+app.ui.add_to_cart: 'Añadir al carrito'
+app.ui.add_value: 'Añadir valor'
+app.ui.add_your_review: 'Agregue su reseña'
+app.ui.adding_new_customer_groups: 'Agregar nuevo grupo de clientes'
+app.ui.adding_new_email: 'Añadiendo nuevo correo electrónico'
+app.ui.adding_new_locale: 'Añadiendo nuevo idioma'
+app.ui.additional_information: 'Información adicional'
+app.ui.address: Dirección
+app.ui.address_book: 'Libreta de direcciones'
+app.ui.addressing: Dirección
+app.ui.addressing_step: 'Dirección de entrega'
+app.ui.adjustments: Ajustes
+app.ui.administration: Administración
+app.ui.administration_dashboard: 'Panel de administración'
+app.ui.administration_panel_login: 'Panel de administración'
+app.ui.admin_users: Administradores
+app.ui.all: Todos
+app.ui.all_your_addresses: 'Todas tus direcciones'
+app.ui.amount: Cantidad
+app.ui.an_error_occurred: 'Se ha producido un error'
+app.ui.api: Api
+app.ui.apply_coupon: 'Aplicar cupón'
+app.ui.archival: Archivo
+app.ui.archive: Archivar
+app.ui.are_your_sure_you_want_to_perform_this_action: '¿Está seguro que quiere realizar esta acción?'
+app.ui.association: Asociación
+app.ui.association_types: 'Tipos de asociación'
+app.ui.associations: Asociaciones
+app.ui.assortment: Varios
+app.ui.attributes: Atributos
+app.ui.author: Autor
+app.ui.authorized: Autorizado
+app.ui.availability: Disponibilidad
+app.ui.available_for_channels: 'Disponible para canales'
+app.ui.available_on: 'Disponible el'
+app.ui.available_on_hand: 'Existencias disponibles'
+app.ui.available_until: 'Disponible hasta'
+app.ui.average_order_value: 'Valor de pedido promedio'
+app.ui.awaiting_payment: 'Esperando pago'
+app.ui.back_to_store: 'Volver a la tienda'
+app.ui.back_to_details: 'Volver a detalles'
+app.ui.backorder: 'En espera'
+app.ui.backordered: 'Pendientes de entrega'
+app.ui.balance_due: Saldo
+app.ui.base_currency: 'Moneda base'
+app.ui.bill_to: 'Facturar a'
+app.ui.billing_address: 'Dirección de facturación'
+app.ui.billing_address_changes_history: 'Historia de cambios de dirección de facturación'
+app.ui.blocks: Bloques
+app.ui.body: Cuerpo
+app.ui.browse_products: 'Ver los productos'
+app.ui.browse_all_products: 'Ver todos los productos'
+app.ui.browse_your_addresses: 'Ver sus direcciones'
+app.ui.browse_your_orders_from_the_past: 'Ver sus pedidos anteriores'
+app.ui.build: Construir
+app.ui.by_position: 'Por posición'
+app.ui.calculator: Calculadora
+app.ui.call_us: ¡Llámanos!
+app.ui.cancelled: Cancelado
+app.ui.cart: Carrito
+app.ui.cart_locked: 'Carrito bloqueado'
+app.ui.cart_summary: 'Resumen del carrito'
+app.ui.categorization: Categorización
+app.ui.users_list_of_all_users_registered_in_store: 'Usuarios <small>Lista de todos los usuarios registrados en la tienda</small>'
+app.ui.value: Valor
+app.ui.values: Valores
+app.ui.variant: Variante
+app.ui.variant_choice: 'Opción tipo variante'
+app.ui.variant_selection_method: 'Método de selección variante'
+app.ui.variants: Variantes
+app.ui.verified: Verificado
+app.ui.verify: Verificar
+app.ui.view_and_edit_cart: 'Ver y modificar carrito'
+app.ui.view_more: 'Ver más'
+app.ui.view_product_details: 'Ver detalles de %product%'
+app.ui.view_your_order_or_change_payment_method: 'Ver pedido o cambiar forma de pago'
+app.ui.view_your_store: 'Ver su tienda'
+app.ui.void: Vacío
+app.ui.volume_based_pricing: 'Precio por volumen'
+app.ui.warning: Advertencia
+app.ui.welcome: ¡Bienvenido!
+app.ui.wholesalers: Mayoristas
+app.ui.catalogue: Catálogo
+app.ui.work_with_us: 'Trabaja con nosotros'
+app.ui.download_app: 'Simplifícate y descarga el app de '
+app.ui.register_page_message: 'Completa los campos para crear una cuenta en Meat House.'
+app.ui.have_account_already: 'Si ya tienes una cuenta, '
+app.ui.create_your_account: 'Crea tu cuenta'
+app.ui.optional_fields_to_offers: 'Campos opcionales para promociones optimizadas.'
+app.ui.required_fields: 'Los campos con un asterisco (*) son obligatorios para registrarte.'
+app.ui.by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '
+app.ui.login_with: 'Ingresar con '
+app.ui.register_with: 'Regístrame con '
+app.ui.create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
+app.ui.enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
+app.ui.send_instructions: 'Enviar instrucciones'
+app.ui.purchase_history: 'Historial de compras'
+app.ui.my_favorites: 'Mis favoritos'
+app.ui.view_my_profile: 'Ver mi perfil'
+app.ui.login.title: Ingresar
+app.ui.login.welcome_message: '¡Bienvenido al Administrador de Procasa!'
+app.ui.login.motd: 'Escribe tus credenciales para ingresar a tu cuenta.'
+app.ui.login.email: Correo
+app.ui.login.password: Contraseña
+app.ui.login.request_new_password: 'Solicitar nueva contraseña'
+app.ui.login.logged_in_as_%user%_message: 'Ya has ingresado como %user%'
+app.ui.save_changes: 'Guardar cambios'
+app.ui.terms_and_conditions_text: 'Este es el texto que deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.'
+app.ui.terms_and_conditions_success_message: 'Se ha guardaro la nueva versión de los términos y condiciones.'
+app.ui.success_default_title: ¡Felicidades!
+app.ui.error_default_title: ¡Error!
+app.ui.terms_and_conditions_error_while_saving_message: 'Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.'
+app.ui.about_procasa_text: 'Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.'
+app.ui.about_procasa_phrase: Frase
+app.ui.about_procasa_phrase_author: Author
+app.ui.about_us: 'Sobre nosotros'
+app.ui.about_store_success_message: 'Se han guardado las configuraciones de la tienda.'
+app.ui.about_store_error_while_saving_message: 'Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.'
+app.ui.coupon_enable_outdated_coupon_message: 'Para habilitar este cupón, primero debes editar la fecha y hora de inicio y fin'
+app.ui.coupon_enable_no_quota_coupon_message: 'Para habilitar este cupón, primero debes editar el límite de usuarios/el límite de usos'
+app.ui.settings.first_purchase_title: 'Primera compra'
+app.ui.settings.first_purchase_text: 'Este texto es el que se muestra en el checkout para lo usuarios que ya están registrados y están ralizando su primera compra.'
+app.ui.settings.new_address_title: 'Nueva dirección'
+app.ui.settings.new_address_text: 'Este texto es el que se muestra en el checkout cuando un usuario ya ha realizado compras con el App pero eligió una dirección que no se había validado.'
+app.ui.settings.purchase_texts_success_message: 'Se han actualizado los textos de compra.'
+app.ui.settings.purchase_texts_error_while_saving_message: 'Hubo un error al guardar los textos de compra, por favor vuelta a intentarlo más tarde.'
+app.ui.powered_by: 'Powered by'
+app.ui.register: Regístrate
+app.ui.create_an_account: 'Crear una cuenta'
+app.ui.frontend.about_procasa: 'Acerca de Procasa'
+app.ui.frontend.login: 'Iniciar sesión'
+app.ui.sign_in_here: 'ingresa aquí'
+app.ui.forgot_password: 'Olvidé mi contraseña'
+app.ui.create_here: 'creala aquí.'
+app.ui.accept_the: 'Acepto los '
+app.ui.show_searcher.title: 'Mostrar buscador'
+app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscador del catálogo y favoritos en la página web y App de Procasa.'
+app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
+sylius.form.login.username: Correo
+sylius.form.login.password: Contraseña
+sylius.form.login.remember_me: Recordarme
+sylius.form.option.name: Nombre
+sylius.form.notes: 'Notas adicionales'
+sylius.form.variant.tracked: 'Con seguimiento'
+sylius.form.customer.gender: Género
+sylius.form.customer.email: Correo
+sylius.form.user.password.label: Contraseña
+sylius.form.user.email: Correo
+sylius.email.label: Correo

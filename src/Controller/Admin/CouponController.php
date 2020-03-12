@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CouponController
@@ -145,6 +146,20 @@ class CouponController extends AbstractController
         return $this->render('/admin/coupon/new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Coupon counter.
+     * @Route("/coupon/counter", name="coupons_counter", methods={"GET"}, options={"expose" = "true"})
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
+    public function asyncCouponCounter(TranslatorInterface $translator)
+    {
+        $total = $this->countActiveCoupons();
+        $message = $translator->trans('app.ui.qty_of_active_coupons_%total%', ['%total%' => $total]);
+
+        return new JsonResponse(['type' => 'info', 'message' => $message]);
     }
 
     /**
@@ -302,16 +317,11 @@ class CouponController extends AbstractController
      */
     private function countActiveCoupons(): ?int
     {
-        $now = date('Y-m-d H:i:s');
-
         try {
             return $queryBuilder = $this->get('doctrine')->getManager()->getRepository('App:Promotion\PromotionCoupon')
                 ->createQueryBuilder('coupon')
                 ->select('COUNT(coupon)')
-                ->andWhere('coupon.expiresAt IS NULL')
-                ->andWhere('coupon.expiresAt > :now')
                 ->andWhere('coupon.enabled = :enabled')
-                ->setParameter('now', $now)
                 ->setParameter('enabled', true)
                 ->getQuery()
                 ->getSingleScalarResult();
