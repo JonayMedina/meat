@@ -21,6 +21,10 @@ p {
     text-align: left;
 }
 
+.segment p {
+    color: #404040;
+}
+
 p.small {
     font-family: "Raleway Italic", sans-serif !important;
     font-size: 14px !important;
@@ -70,11 +74,22 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     -webkit-appearance: none;
     font-family: "Raleway Medium", sans-serif;
     font-size: 16px;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.9) !important;
     background: #AB162B;
     border-radius: 10em;
     padding: 10px 30px;
     margin-top: 20px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-rounded:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    text-decoration: none;
+}
+
+.welcome .btn-rounded {
+    margin-top: 0;
 }
 
 .bg-gray {
@@ -196,11 +211,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border: 1px solid rgba(34,36,38,.15);
 }
 
-.login, .register, .forgot-password {
-    color: #404040;
-}
-
-.login h1, .register h1, .forgot-password h1 {
+.login h1, .register h1, .forgot-password h1, .welcome h1 {
     font-size: 32px;
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B;
@@ -212,6 +223,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 20px 0 25px 0;
     border-bottom: 1px solid #917171;
     text-align: center;
+}
+
+.mh-border-b {
+    border-bottom: 1px solid #917171;
 }
 
 .forgot-password form {
@@ -360,6 +375,18 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     margin-left: 10px;
 }
 
+.welcome .information > .row > div:not(.separator) {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.separator {
+    width: calc(100% - 30px);
+    height: 1px;
+    margin: 0 auto;
+    background: #917171;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -382,6 +409,19 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 @media (min-width: 992px) {
     .modal-dialog {
         max-width: 50% !important;
+    }
+
+    .welcome .information > .row {
+        max-width: 70%;
+        margin: 0 auto;
+    }
+
+    .welcome .information > .row > div.separator {
+        width: 100%;
+    }
+
+    .welcome .information > .row > div:not(.separator) {
+        padding: 50px 0;
     }
 }
 
@@ -540,6 +580,11 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
         top: 5px;
         font-size: 50px;
     }
+
+    .welcome .information > .row > div > div > div a.btn-rounded {
+        max-width: 60%;
+        margin: 20px auto 0 auto;
+    }
 }
 
 @media (max-width: 575px) {
@@ -608,6 +653,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     #termsModal .modal-footer button:first-of-type {
         margin-right: .25rem !important;
         margin-bottom: 20px;
+    }
+
+    .welcome .information > .row > div > div > div a.btn-rounded {
+        max-width: 80%;
     }
 }
 

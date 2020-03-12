@@ -265,9 +265,9 @@ app.ui.have_account_already: 'Si ya tienes una cuenta, '
 app.ui.create_your_account: 'Crea tu cuenta'
 app.ui.optional_fields_to_offers: 'Campos opcionales para promociones optimizadas.'
 app.ui.required_fields: 'Los campos con un asterisco (*) son obligatorios para registrarte.'
-app.ui.by_registering_you_are_accepting: 'Al registrarte, estás aceptando los '
+app.ui.by_registering_you_are_accepting_%link%: Al registrarte, estás aceptando los%link%
 app.ui.login_with: 'Ingresar con '
-app.ui.register_with: 'Regístrame con '
+app.ui.register_with_%name%: Regístrame con %name%
 app.ui.create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
 app.ui.enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
 app.ui.send_instructions: 'Enviar instrucciones'
@@ -301,7 +301,7 @@ app.ui.settings.new_address_title: 'Nueva dirección'
 app.ui.settings.new_address_text: 'Este texto es el que se muestra en el checkout cuando un usuario ya ha realizado compras con el App pero eligió una dirección que no se había validado.'
 app.ui.settings.purchase_texts_success_message: 'Se han actualizado los textos de compra.'
 app.ui.settings.purchase_texts_error_while_saving_message: 'Hubo un error al guardar los textos de compra, por favor vuelta a intentarlo más tarde.'
-app.ui.powered_by: 'Powered by'
+app.ui.powered_by_%name%: Powered by %name%
 app.ui.register: Regístrate
 app.ui.create_an_account: 'Crear una cuenta'
 app.ui.frontend.about_procasa: 'Acerca de Procasa'
@@ -309,7 +309,7 @@ app.ui.frontend.login: 'Iniciar sesión'
 app.ui.sign_in_here: 'ingresa aquí'
 app.ui.forgot_password: 'Olvidé mi contraseña'
 app.ui.create_here: 'creala aquí.'
-app.ui.accept_the: 'Acepto los '
+app.ui.accept_the_%link%: Acepto los%link%
 app.ui.show_searcher.title: 'Mostrar buscador'
 app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscador del catálogo y favoritos en la página web y App de Procasa.'
 app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
@@ -324,3 +324,8 @@ sylius.form.customer.email: Correo
 sylius.form.user.password.label: Contraseña
 sylius.form.user.email: Correo
 sylius.email.label: Correo
+app.ui.welcome_to_%name%: ¡Bienvenido a %name%!
+app.ui.view_your_profile: Ver tu perfil
+app.ui.view_products: Ver productos
+app.ui.welcome.first_text: Actualiza tu información, agrega tus datos de facturación y agregar direcciones de entrega.
+app.ui.welcome.second_text: Empieza una compra, busca productos y agrégalos a tu carrito.

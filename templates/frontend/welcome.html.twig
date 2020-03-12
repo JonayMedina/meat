@@ -1,5 +1,42 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <h1>Hola pvtas</h1>
+    <div class="row welcome">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <h1 class="text-center">{{ 'app.ui.welcome_to_%name%'|trans({'%name%': 'Meat House'}) }}</h1>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 information">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-8 col-lg-8 d-flex align-items-center">
+                                    <p>{{ 'app.ui.welcome.first_text'|trans }}</p>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                    <a href="#" class="btn-rounded d-block text-center">
+                                        {{ 'app.ui.view_your_profile'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-8 col-lg-8 d-flex align-items-center">
+                                    <p>{{ 'app.ui.welcome.second_text'|trans }}</p>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                    <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-block text-center">
+                                        {{ 'app.ui.view_products'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
