@@ -7,4 +7,3 @@ framework:
     templating: { engines: ["twig"] }
     session:
         handler_id: ~
-    ide: 'phpstorm://open?file=%%f&line=%%l'
