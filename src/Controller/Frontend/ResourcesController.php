@@ -28,6 +28,8 @@ class ResourcesController extends AbstractController
      * @return Response
      */
     public function welcomeAction() {
+        $this->get('session')->getFlashBag()->clear();
+
         return $this->render('/frontend/welcome.html.twig');
     }
 }
