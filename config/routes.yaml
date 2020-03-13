@@ -34,4 +34,3 @@ sylius_shop_register:
             event: register
             redirect:
                 route: store_welcome
-            flash: sylius.customer.register

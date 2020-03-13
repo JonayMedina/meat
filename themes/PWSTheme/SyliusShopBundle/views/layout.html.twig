@@ -94,7 +94,9 @@
             </header>
         {% endblock %}
 
-        {% include '@SyliusShop/_flashes.html.twig' %}
+        {% block flashes %}
+            {% include '@SyliusShop/_flashes.html.twig' %}
+        {% endblock %}
 
         {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
 

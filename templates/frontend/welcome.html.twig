@@ -1,5 +1,7 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
+{% block flashes %}{% endblock %}
+
 {% block content %}
     <div class="row welcome">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
@@ -15,7 +17,7 @@
                                     <p>{{ 'app.ui.welcome.first_text'|trans }}</p>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                    <a href="#" class="btn-rounded d-block text-center">
+                                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="btn-rounded d-block text-center">
                                         {{ 'app.ui.view_your_profile'|trans }}
                                     </a>
                                 </div>

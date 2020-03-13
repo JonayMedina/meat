@@ -48,7 +48,6 @@ class ShopUserSubscriber implements EventSubscriber
 
         if ($entity instanceof ShopUser) {
             $entity->setTermsAndConditionsAcceptedAt(new DateTime());
-            $entity->setEnabled(true);
 
             $this->container->get('doctrine')->getManager()->flush();
         }
