@@ -3,10 +3,12 @@
 namespace App\Controller\Admin;
 
 use App\Entity\AboutStore;
+use App\Form\Admin\PurchaseSettingsType;
 use App\Form\Admin\PurchaseTextsType;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,11 +69,67 @@ class SettingsController extends AbstractController
     /**
      *
      * @Route("/purchase/settings", name="purchase_settings")
+     * @param AboutStoreRepository $repository
+     * @param ChannelContextInterface $channelContext
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function settingsAction()
+    public function settingsAction(AboutStoreRepository $repository, ChannelContextInterface $channelContext)
     {
-        return $this->render('/admin/configuration/settings.html.twig');
+        $settings = $repository->findLatest();
+
+        if (!$settings instanceof AboutStore) {
+            $settings = new AboutStore();
+        }
+
+        return $this->render('/admin/configuration/settings.html.twig', [
+            'settings' => $settings,
+            'channel' => $channelContext->getChannel(),
+            'currency' => $channelContext->getChannel()->getBaseCurrency()
+        ]);
+    }
+
+    /**
+     * Update settings
+     * @param AboutStoreRepository $repository
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
+     * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @Route("/purchase/settings/edit", name="purchase_settings_edit")
+     */
+    public function updateSettingsAction(AboutStoreRepository $repository, Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator, LoggerInterface $logger)
+    {
+        $settings = $repository->findLatest();
+
+        if (!$settings instanceof AboutStore) {
+            $settings = new AboutStore();
+        }
+
+        $form = $this->createForm(PurchaseSettingsType::class, $settings);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($settings);
+
+            try {
+                $entityManager->flush();
+
+                $this->addFlash('success', $translator->trans('app.ui.settings.purchase_settings_success_message'));
+            } catch (\Exception $exception) {
+                $logger->error($exception->getMessage());
+                $this->addFlash('error', $translator->trans('app.ui.settings.purchase_settings_error_while_saving_message'));
+            }
+
+            return $this->redirectToRoute('purchase_settings');
+        }
+
+        return $this->render('/admin/configuration/settings_edit.html.twig', [
+            'settings' => $settings,
+            'form' => $form->createView()
+        ]);
     }
 
     /**
