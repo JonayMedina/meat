@@ -313,6 +313,13 @@ app.ui.accept_the: 'Acepto los '
 app.ui.show_searcher.title: 'Mostrar buscador'
 app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscador del catálogo y favoritos en la página web y App de Procasa.'
 app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
+app.ui.purchase_settings_edit: Editar
+app.ui.purchase_settings_max_purchase: Máximo de compra
+app.ui.purchase_settings_min_purchase: Minimo de compra
+app.ui.purchase_settings_days_to_choose_in_advance_to_purchase: Días a elegir con anticipación la compra
+app.ui.purchase_settings_delivery_hours: Horario de entrega
+app.ui.settings.purchase_settings_success_message: '¡Se actualizaron las configuraciones de compra!'
+app.ui.settings.purchase_settings_error_while_saving_message: 'Hubo un error al guardar las configuraciones de compra, inténtelo de nuevo más tarde'
 sylius.form.login.username: Correo
 sylius.form.login.password: Contraseña
 sylius.form.login.remember_me: Recordarme
