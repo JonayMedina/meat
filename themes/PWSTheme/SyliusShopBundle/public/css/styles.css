@@ -57,6 +57,10 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     outline: none !important;
 }
 
+strong {
+    font-family: "Raleway SemiBold", sans-serif !important;
+}
+
 /* Utilities */
 .margin-0-auto {
     top: 0;
@@ -88,8 +92,17 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     text-decoration: none;
 }
 
+.btn-rounded.inverted {
+    color: rgba(171, 22, 43, .9) !important;
+    background: #EBE7E7;
+}
+
 .welcome .btn-rounded {
     margin-top: 0;
+}
+
+.btn-rounded.inverted:hover {
+    color: rgba(171, 22, 43, 1) !important;
 }
 
 .bg-gray {
@@ -211,7 +224,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border: 1px solid rgba(34,36,38,.15);
 }
 
-.login h1, .register h1, .forgot-password h1, .welcome h1 {
+h1 {
     font-size: 32px;
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B;
@@ -385,6 +398,22 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     height: 1px;
     margin: 0 auto;
     background: #917171;
+}
+
+.profile h2 {
+    font-size: 24px;
+    color: #404040;
+    font-family: "Raleway Medium", sans-serif;
+    margin-bottom: 20px;
+}
+
+.profile .segment {
+    padding-bottom: 1em;
+    border-radius: 15px;
+}
+
+.profile .segment.h-100 {
+    height: calc(100% - 28px) !important;
 }
 
 /* Responsive */

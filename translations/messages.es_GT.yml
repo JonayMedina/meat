@@ -329,3 +329,15 @@ app.ui.view_your_profile: Ver tu perfil
 app.ui.view_products: Ver productos
 app.ui.welcome.first_text: Actualiza tu información, agrega tus datos de facturación y agregar direcciones de entrega.
 app.ui.welcome.second_text: Empieza una compra, busca productos y agrégalos a tu carrito.
+app.ui.profile.hello_%name%: ¡Hola %name%!
+app.ui.your_information: Tu información
+app.ui.profile.add: Agregar
+app.ui.profile.add_delivery_information: Ingresa tu información de entrega <br> para tu próxima compra.
+app.ui.login_with_%name%: Ingresar con %name%
+app.ui.connect_with_%name%: Conectar con %name%
+app.ui.your_account: Tu cuenta
+app.ui.profile.change_email: Cambiar de correo
+app.ui.you_dont_have_favorites: No tienes productos favoritos.<br>Agrega uno desde el catálogo.
+app.ui.to_catalog: Ir al catálogo
+app.ui.billing_data: Datos de facturación
+app.ui.you_dont_have_billing_data: Ingresa tu información de facturación<br>para tu próxima compra.
