@@ -93,6 +93,7 @@
 {% block javascript %}
     {{ parent() }}
     <script src="{{ asset('meathouse/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('meathouse/js/plugins/jquery-ui/jquery.ui.touch-punch.min.js') }}"></script>
     <script>
     $(document).ready(function() {
         var $wrapper = $('#wrapper');
@@ -127,6 +128,8 @@
                 });
             }
         });
+
+        $tbody.disableSelection();
 
     });
     </script>
