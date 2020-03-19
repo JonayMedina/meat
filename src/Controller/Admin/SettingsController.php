@@ -112,6 +112,9 @@ class SettingsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $deliveryHours = $request->get('deliveryHours');
+            $settings->setDeliveryHours($deliveryHours);
+
             $entityManager->persist($settings);
 
             try {
@@ -128,7 +131,7 @@ class SettingsController extends AbstractController
 
         return $this->render('/admin/configuration/settings_edit.html.twig', [
             'settings' => $settings,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 

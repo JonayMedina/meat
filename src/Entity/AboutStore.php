@@ -77,6 +77,12 @@ class AboutStore implements ResourceInterface
      */
     private $showProductSearchBox = true;
 
+    /**
+     * @var array
+     * @ORM\Column(name="delivery_hours", type="json", nullable=true)
+     */
+    private $deliveryHours = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -249,6 +255,38 @@ class AboutStore implements ResourceInterface
     public function setShowProductSearchBox(bool $showProductSearchBox): self
     {
         $this->showProductSearchBox = $showProductSearchBox;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $enabled
+     * @return array
+     */
+    public function getDeliveryHours($enabled = true): ?array
+    {
+        if ($enabled) {
+            $hours = [];
+
+            foreach ($this->deliveryHours as $schedule) {
+                if (isset($schedule['enabled']) && $schedule['enabled']) {
+                    $hours[] = $schedule;
+                }
+            }
+
+            return $hours;
+        }
+
+        return $this->deliveryHours;
+    }
+
+    /**
+     * @param array $deliveryHours
+     * @return AboutStore
+     */
+    public function setDeliveryHours(?array $deliveryHours): AboutStore
+    {
+        $this->deliveryHours = $deliveryHours;
 
         return $this;
     }

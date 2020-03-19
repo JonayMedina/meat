@@ -54,7 +54,20 @@
                             <div class="row border-bottom padding-bottom-35 padding-top-35">
                                 <div class="col-lg-12">
                                     <h3>{{ 'app.ui.purchase_settings_delivery_hours'|trans }}</h3>
-                                    {{ settings.deliveryHours|default('app.ui.n/a'|trans) }}
+                                    {% if settings.deliveryHours %}
+                                        {% for schedule in settings.deliveryHours %}
+                                            {{ 'app.ui.purchase_settings_schedule_between_shifts'|trans({'%name%': schedule['name'], '%start%': schedule['start'], '%end%': schedule['end']}) }}
+                                            {%- if loop.last -%}
+                                                .
+                                            {%- else -%}
+                                                ,
+                                            {% endif %}
+                                        {% else %}
+                                            {{ 'app.ui.purchase_settings_delivery_hours_default_schedule'|trans }}
+                                        {% endfor %}
+                                    {% else %}
+                                        {{ 'app.ui.purchase_settings_delivery_hours_default_schedule'|trans }}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
