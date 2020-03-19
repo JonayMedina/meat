@@ -355,3 +355,4 @@ app.ui.you_dont_have_favorites: No tienes productos favoritos.<br>Agrega uno des
 app.ui.to_catalog: Ir al catálogo
 app.ui.billing_data: Datos de facturación
 app.ui.you_dont_have_billing_data: Ingresa tu información de facturación<br>para tu próxima compra.
+Credenciales no válidas.: Este usuario no existe. Por favor revisa la información que ingresaste e inténtalo de nuevo.
