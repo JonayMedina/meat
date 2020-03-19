@@ -167,6 +167,7 @@ class MenuBuilder
             ->setExtras([
                 'routes' => [
                     'purchase_settings',
+                    'purchase_settings_edit',
                 ],
             ])
             ->setAttribute('second-level', 'true');
