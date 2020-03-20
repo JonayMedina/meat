@@ -81,19 +81,16 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-
+{% block extrajs %}
     <script>
         jQuery(document).ready(function ($) {
+            let $form = $("form");
             let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
 
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
-
-            checkTerms();
 
             $('#not-accept').click(function () {
                 $terms.prop('checked', false).change();
@@ -118,6 +115,14 @@
                 }
             });
 
+            $form.submit(function (e) {
+                if (!$terms.prop('checked')) {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                    checkTerms();
+                }
+            });
+
             function checkTerms(changed = false) {
                 if (changed) {
                     $terms.prop('checked', !$terms.prop('checked'));
@@ -125,8 +130,10 @@
 
                 if (!$terms.prop('checked')) {
                     $('#create-btn').prop('disabled', true).change();
+                    $terms.closest('label').addClass('error');
                 } else {
                     $('#create-btn').prop('disabled', false).change();
+                    $terms.closest('label').removeClass('error');
                 }
             }
         });

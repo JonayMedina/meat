@@ -1,3 +1,5 @@
+{% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+
 <div class="row">
     <div class="col-12 col-sm-12 col-md-6 col-lg-6 border-right">
         {{ form_row(form.firstName) }}
@@ -9,7 +11,7 @@
         <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center">
             <label class="d-flex align-items-center checkbox">
                 {{ form_widget(form.termsAccepted) }}
-                <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
                 <span class="check-mark"></span>
             </label>
         </div>
