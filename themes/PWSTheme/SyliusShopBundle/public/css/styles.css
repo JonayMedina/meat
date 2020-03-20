@@ -733,6 +733,10 @@ label.error:after {
     .welcome .information > .row > div > div > div a.btn-rounded {
         max-width: 80%;
     }
+
+    .terms .content {
+        padding: 15px 15px 0 15px !important;
+    }
 }
 
 @media (max-width: 345px) {
