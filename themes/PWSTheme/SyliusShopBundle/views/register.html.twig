@@ -4,7 +4,8 @@
 
 {% block content %}
     {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
-    {% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+    {% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+    {% set messageFB = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms fb">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
 
     <div class="row register">
         <div class="col-12 segment">
@@ -52,7 +53,7 @@
                         </a>
                     </div>
 
-                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting_%link%'|trans({'%link%': message})|raw }}</p>
+                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting_%link%'|trans({'%link%': messageFB})|raw }}</p>
                 </div>
             </div>
         </div>
@@ -104,6 +105,17 @@
 
             $terms.on('change', function () {
                 checkTerms(true);
+            });
+
+            $('a.show-terms').click(function () {
+                var $btn = $(this);
+                var $buttons = $('#termsModal .modal-footer button');
+
+                if ($btn.hasClass('fb')) {
+                    $buttons.hide();
+                } else {
+                    $buttons.show();
+                }
             });
 
             function checkTerms(changed = false) {
