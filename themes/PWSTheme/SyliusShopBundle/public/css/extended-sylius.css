@@ -52,6 +52,10 @@ div.field .radio {
     justify-content: center;
 }
 
+.error .check-mark {
+    background-color: rgba(205, 10, 10, .3);
+}
+
 .radio .check-mark {
     top: 5px;
 }

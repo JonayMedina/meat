@@ -5,5 +5,15 @@
 {% endif %}
 
 {{ form_row(form._username) }}
-{{ form_row(form._password) }}
+
+<div class="required field">
+    {{ form_label(form._password) }}
+    <div class="div-input">
+        {{ form_widget(form._password) }}
+        <span class="eye"><i class="fas fa-eye fa-2x"></i></span>
+    </div>
+    {{ form_errors(form._password) }}
+</div>
+
+{#{{ form_row(form._password) }}#}
 {#{{ form_row(form._remember_me) }}#}

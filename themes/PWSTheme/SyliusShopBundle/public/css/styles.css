@@ -21,6 +21,10 @@ p {
     text-align: left;
 }
 
+.segment p {
+    color: #404040;
+}
+
 p.small {
     font-family: "Raleway Italic", sans-serif !important;
     font-size: 14px !important;
@@ -53,6 +57,10 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     outline: none !important;
 }
 
+strong {
+    font-family: "Raleway SemiBold", sans-serif !important;
+}
+
 /* Utilities */
 .margin-0-auto {
     top: 0;
@@ -70,11 +78,31 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     -webkit-appearance: none;
     font-family: "Raleway Medium", sans-serif;
     font-size: 16px;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.9) !important;
     background: #AB162B;
     border-radius: 10em;
     padding: 10px 30px;
     margin-top: 20px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-rounded:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    text-decoration: none;
+}
+
+.btn-rounded.inverted {
+    color: rgba(171, 22, 43, .9) !important;
+    background: #EBE7E7;
+}
+
+.welcome .btn-rounded {
+    margin-top: 0;
+}
+
+.btn-rounded.inverted:hover {
+    color: rgba(171, 22, 43, 1) !important;
 }
 
 .bg-gray {
@@ -196,11 +224,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border: 1px solid rgba(34,36,38,.15);
 }
 
-.login, .register, .forgot-password {
-    color: #404040;
-}
-
-.login h1, .register h1, .forgot-password h1 {
+h1 {
     font-size: 32px;
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B;
@@ -214,6 +238,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     text-align: center;
 }
 
+.mh-border-b {
+    border-bottom: 1px solid #917171;
+}
+
 .forgot-password form {
     max-width: 400px !important;
     border-bottom: none;
@@ -225,7 +253,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     border-bottom: 1px solid #917171;
 }
 
-.login form div {
+.login form > div {
     padding: 0 80px;
 }
 
@@ -256,6 +284,37 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 
 .field .dropdown .grouped .field label {
     margin-left: 10px;
+}
+
+.div-input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.div-input input {
+    border-radius: 15px 0 0 15px !important;
+    border-right: none !important;
+    width: calc(100% - 56px) !important;
+    order: 1;
+}
+
+.div-input span {
+    display: flex;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+    background: #f5f5f5;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    max-width: 56px;
+    order: 2;
+    color: #917171;
+    cursor: pointer;
+}
+
+.div-input label.error {
+    width: 100%;
+    order: 3;
 }
 
 #footer .logo img {
@@ -360,6 +419,49 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     margin-left: 10px;
 }
 
+.welcome .information > .row > div:not(.separator) {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.separator {
+    width: calc(100% - 30px);
+    height: 1px;
+    margin: 0 auto;
+    background: #917171;
+}
+
+.profile h2 {
+    font-size: 24px;
+    color: #404040;
+    font-family: "Raleway Medium", sans-serif;
+    margin-bottom: 20px;
+}
+
+.profile .segment {
+    padding-bottom: 1em;
+    border-radius: 15px;
+}
+
+.profile .segment.h-100 {
+    height: calc(100% - 28px) !important;
+}
+
+/* form errors */
+div.error {
+    margin-bottom: 15px;
+}
+
+label.error, div.error span {
+    font-size: 12px !important;
+    margin: 10px 0 15px 0 !important;
+    color: #cd0a0a !important;
+}
+
+label.error:after {
+    content: none !important;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -382,6 +484,19 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 @media (min-width: 992px) {
     .modal-dialog {
         max-width: 50% !important;
+    }
+
+    .welcome .information > .row {
+        max-width: 70%;
+        margin: 0 auto;
+    }
+
+    .welcome .information > .row > div.separator {
+        width: 100%;
+    }
+
+    .welcome .information > .row > div:not(.separator) {
+        padding: 50px 0;
     }
 }
 
@@ -540,6 +655,27 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
         top: 5px;
         font-size: 50px;
     }
+
+    .welcome .information > .row > div > div > div a.btn-rounded {
+        max-width: 60%;
+        margin: 20px auto 0 auto;
+    }
+
+    .r-ml-0 {
+        margin-left: 0 !important;
+    }
+
+    .ml-3.r-ml-0 {
+        margin-left: 0 !important;
+    }
+
+    .r-pr-15 {
+        padding-right: 15px !important;
+    }
+
+    .pr-0.r-pr-15 {
+        padding-right: 15px !important;
+    }
 }
 
 @media (max-width: 575px) {
@@ -576,7 +712,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
         text-align: left !important;
     }
 
-    .login form div {
+    .login form > div {
         padding: initial;
     }
 
@@ -608,6 +744,14 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     #termsModal .modal-footer button:first-of-type {
         margin-right: .25rem !important;
         margin-bottom: 20px;
+    }
+
+    .welcome .information > .row > div > div > div a.btn-rounded {
+        max-width: 80%;
+    }
+
+    .terms .content {
+        padding: 15px 15px 0 15px !important;
     }
 }
 

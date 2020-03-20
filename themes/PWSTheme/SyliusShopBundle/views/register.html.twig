@@ -4,6 +4,8 @@
 
 {% block content %}
     {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
+    {% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+    {% set messageFB = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms fb">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
 
     <div class="row register">
         <div class="col-12 segment">
@@ -28,7 +30,7 @@
                     <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
                         <label class="d-flex align-items-center checkbox">
                             <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
-                            <p>{{ 'app.ui.accept_the'|trans }} <a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                            <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
                             <span class="check-mark"></span>
                         </label>
                     </div>
@@ -46,11 +48,12 @@
 
                         <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
                             <i class="fab fa-facebook-square"></i>
-                            {{ 'app.ui.register_with'|trans }} Facebook
+
+                            {{ 'app.ui.register_with_%name%'|trans({'%name%': "Facebook"}) }}
                         </a>
                     </div>
 
-                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting' | trans }}<a data-toggle="modal" data-target="#termsModal" class="text-lowercase">{{ 'app.ui.terms_and_conditions' | trans }}</a></p>
+                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting_%link%'|trans({'%link%': messageFB})|raw }}</p>
                 </div>
             </div>
         </div>
@@ -78,19 +81,16 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-
+{% block extrajs %}
     <script>
         jQuery(document).ready(function ($) {
+            let $form = $("form");
             let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
 
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
-
-            checkTerms();
 
             $('#not-accept').click(function () {
                 $terms.prop('checked', false).change();
@@ -104,6 +104,25 @@
                 checkTerms(true);
             });
 
+            $('a.show-terms').click(function () {
+                var $btn = $(this);
+                var $buttons = $('#termsModal .modal-footer button');
+
+                if ($btn.hasClass('fb')) {
+                    $buttons.hide();
+                } else {
+                    $buttons.show();
+                }
+            });
+
+            $form.submit(function (e) {
+                if (!$terms.prop('checked')) {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                    checkTerms();
+                }
+            });
+
             function checkTerms(changed = false) {
                 if (changed) {
                     $terms.prop('checked', !$terms.prop('checked'));
@@ -111,8 +130,10 @@
 
                 if (!$terms.prop('checked')) {
                     $('#create-btn').prop('disabled', true).change();
+                    $terms.closest('label').addClass('error');
                 } else {
                     $('#create-btn').prop('disabled', false).change();
+                    $terms.closest('label').removeClass('error');
                 }
             }
         });
