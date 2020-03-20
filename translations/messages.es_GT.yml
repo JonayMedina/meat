@@ -369,3 +369,7 @@ app.ui.billing_data: Datos de facturación
 app.ui.you_dont_have_billing_data: Ingresa tu información de facturación<br>para tu próxima compra.
 Credenciales no válidas.: Este usuario no existe. Por favor revisa la información que ingresaste e inténtalo de nuevo.
 app.ui.login.form.error: Debes ingresar ambos campos para continuar.
+app.ui.error.required: El campo no puede estar vacío.
+app.ui.error.must_be_email: Deber ser un correo electrónico.
+app.ui.error.not_greater_than_%x%: No puede ser mayor a %x% caracteres.
+app.ui.error.not_less_than_%x%: No puede ser menor a %x% caracteres.

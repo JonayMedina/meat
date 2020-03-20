@@ -50,15 +50,24 @@
                     _username: {
                         required: true,
                         email: true,
-                        maxlength: 50,
-                        messages: {
-                            required: '',
-                        }
+                        maxlength: 50
                     },
                     _password: {
                         required: true,
                         minlength: 8,
                         maxlength: 20
+                    }
+                },
+                messages: {
+                    _username: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        email: '{{ 'app.ui.error.must_be_email'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_greater_than_%x%'|trans({'%x%': 50}) }}'
+                    },
+                    _password: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        minlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 8}) }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 20}) }}'
                     }
                 },
                 invalidHandler: function(event, validator) {
