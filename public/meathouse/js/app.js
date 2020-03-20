@@ -55,13 +55,13 @@ $(document).ready(function () {
     var url = $button.attr('href');
 
     swal({
-      title: $('#ui-delete-title').html(),
-      text: $('#ui-delete-text').html(),
-      type: "warning",
+      title: $button.data('title') || $('#ui-delete-title').html(),
+      text: $button.data('text'),
+      type: null,
       showCancelButton: true,
       confirmButtonColor: "#AB162B",
-      confirmButtonText: $('#ui-yes').html(),
-      cancelButtonText: $('#ui-no').html(),
+      confirmButtonText: $('#ui-delete').html(),
+      cancelButtonText: $('#ui-cancel').html(),
       closeOnConfirm: true
     }, function () {
       $.ajax({

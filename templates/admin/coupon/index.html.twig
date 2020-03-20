@@ -62,7 +62,7 @@
                                                 {{ 'app.ui.view'|trans }}
                                             </a>
                                             &nbsp;
-                                            <a href="{{ path('coupons_delete', {id: coupon.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.coupon_error_on_remove_message'|trans }}">
+                                            <a href="{{ path('coupons_delete', {id: coupon.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.coupon_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.coupon_remove_title'|trans }}" data-text="{{ 'app.ui.coupon_remove_text'|trans({'%code%': coupon.code}) }}">
                                                 {{ 'app.ui.delete'|trans }}
                                             </a>
                                         </td>

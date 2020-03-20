@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/sweetalert/sweetalert.css') }}">
 
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
     <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
     <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
 
@@ -24,6 +26,7 @@
     <style>
         body {
             background-color: #404040;
+            font-family: 'Raleway', sans-serif;
         }
 
         .pace .pace-progress {
@@ -166,6 +169,10 @@
             width: 400px;
         }
 
+        .ibox-content .search-box.search-box-fullwidth {
+            width: 100%;
+        }
+
         .ibox-content .search-box .search-box-input {
             border-radius: 15px;
             height: 41px;
@@ -208,6 +215,88 @@
 
         h3 {
             color: #AB162B;
+        }
+
+        h4 {
+            color: #AB162B;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .width-80 {
+            width: 80px;
+        }
+
+        .min-height-40 {
+            min-height: 40px;
+        }
+
+        .min-height-48 {
+            min-height: 48px;
+        }
+
+        .ui-sortable-helper {
+            background-color: #FAF5F6;
+        }
+
+        .sweet-alert {
+            width: 720px;
+            height: 290px;
+            margin-left: -335px;
+        }
+
+        .sweet-alert h2 {
+            color: #AB162B;
+            font-size: 24px;
+            margin-top: 40px;
+        }
+
+        .sweet-alert button {
+            width: 224px;
+            height: 48px;
+            border-radius: 43px;
+            margin-top: 70px;
+        }
+
+        .sweet-alert button.cancel {
+            background-color: #D0D0D0;
+        }
+
+        .sweet-alert button.confirm {
+            background-color: #AB162B;
+        }
+
+        .sweet-overlay {
+            background-color: #baa8a8;
+            opacity: 0.8 !important;
+        }
+
+        @media all and (max-width: 540px) {
+            .sweet-alert {
+                width: auto;
+                margin-left: 0;
+                margin-right: 0;
+                left: 15px;
+                right: 15px;
+            }
+
+            .sweet-alert h2 {
+                font-size: 17px;
+            }
+
+            .sweet-alert button {
+                width: 224px;
+                height: 48px;
+                border-radius: 43px;
+                margin-top: 6px;
+            }
+
+            .sweet-alert p {
+                margin-top: -10px;
+                margin-bottom: 15px;
+            }
         }
 
         #blockUIMessage {
