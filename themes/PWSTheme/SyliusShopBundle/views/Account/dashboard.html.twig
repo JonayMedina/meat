@@ -10,86 +10,74 @@
 
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <div class="row">
-                <div class="col-7 segment">
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7">
                     <div class="row">
-                        <div class="col-12">
-                            <h2>{{ 'app.ui.your_information'|trans }}</h2>
-                        </div>
+                        <div class="col-12 segment">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2>{{ 'app.ui.your_information'|trans }}</h2>
+                                </div>
 
 
-                        <div class="col-12">
-                            {% if customer.fullName %}
-                            <div class="row mb-2">
-                                <div class="col-4">
-                                    <p><strong>{{ 'sylius.form.option.name'|trans }}</strong></p>
-                                </div>
-                                <div class="col-8">
-                                    <p>{{ customer.fullName }}</p>
-                                </div>
-                            </div>
-                            {% endif %}
+                                <div class="col-12">
+                                    {% if customer.fullName %}
+                                        <div class="row mb-2">
+                                            <div class="col-4">
+                                                <p><strong>{{ 'sylius.form.option.name'|trans }}</strong></p>
+                                            </div>
+                                            <div class="col-8">
+                                                <p>{{ customer.fullName }}</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
 
-                            {% if customer.birthday %}
-                            <div class="row mb-2">
-                                <div class="col-4">
-                                    <p><strong>{{ 'sylius.form.customer.birthday'|trans }}</strong></p>
-                                </div>
-                                <div class="col-8">
-                                    <p>{{ customer.birthday|date('d-m-Y') }}</p>
-                                </div>
-                            </div>
-                            {% endif %}
+                                    {% if customer.birthday %}
+                                        <div class="row mb-2">
+                                            <div class="col-4">
+                                                <p><strong>{{ 'sylius.form.customer.birthday'|trans }}</strong></p>
+                                            </div>
+                                            <div class="col-8">
+                                                <p>{{ customer.birthday|date('d-m-Y') }}</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
 
-                            {% if customer.gender %}
-                                {% if customer.gender != 'u' %}
-                                <div class="row mb-2">
-                                    <div class="col-4">
-                                        <p><strong>{{ 'sylius.form.customer.gender'|trans }}</strong></p>
-                                    </div>
-                                    <div class="col-8">
-                                        {% set gender = customer.gender == 'f' ? 'app.ui.gender.female'|trans : 'app.ui.gender.male'|trans %}
-                                        <p>{{ gender }}</p>
-                                    </div>
+                                    {% if customer.gender %}
+                                        {% if customer.gender != 'u' %}
+                                            <div class="row mb-2">
+                                                <div class="col-4">
+                                                    <p><strong>{{ 'sylius.form.customer.gender'|trans }}</strong></p>
+                                                </div>
+                                                <div class="col-8">
+                                                    {% set gender = customer.gender == 'f' ? 'app.ui.gender.female'|trans : 'app.ui.gender.male'|trans %}
+                                                    <p>{{ gender }}</p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                        <div class="col-12 text-center mb-5 mt-5">
-                            <p class="text-center">{{ 'app.ui.profile.add_delivery_information'|trans|raw }}</p>
-                            <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-5 pr-0">
-                    <div class="segment ml-3 d-flex h-100">
-                        <div class="row">
-                            <div class="col-12"><h2>{{ 'app.ui.my_favorites'|trans }}</h2></div>
-                            <div class="col-12 text-center">
-                                <p class="text-center">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
-                                <a href="#" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                <div class="col-12 text-center mb-5 mt-5">
+                                    <p class="text-center">{{ 'app.ui.profile.add_delivery_information'|trans|raw }}</p>
+                                    <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-7 segment">
                     <div class="row">
-                        <div class="col-12"><h2>{{ 'app.ui.billing_data'|trans }}</h2></div>
-                        <div class="col-12 text-center mt-5 mb-5">
-                            <p class="text-center">{{ 'app.ui.you_dont_have_billing_data'|trans|raw }}</p>
-                            <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                        <div class="col-12 segment">
+                            <div class="row">
+                                <div class="col-12"><h2>{{ 'app.ui.billing_data'|trans }}</h2></div>
+                                <div class="col-12 text-center mt-5 mb-5">
+                                    <p class="text-center">{{ 'app.ui.you_dont_have_billing_data'|trans|raw }}</p>
+                                    <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-7 segment">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 segment">
                             <h2>{{ 'app.ui.your_account'|trans }}</h2>
 
                             <div class="row mb-4">
@@ -125,21 +113,36 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 r-pr-15 pr-0">
+                    <div class="row">
+                        <div class="segment ml-3 r-ml-0 w-100">
+                            <div class="row">
+                                <div class="col-12"><h2>{{ 'app.ui.my_favorites'|trans }}</h2></div>
+                                <div class="col-12 text-center mt-5 mb-5">
+                                    <p class="text-center">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
+                                    <a href="#" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
 
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_information', {'customer': customer}) }}
 
-    <div class="ui text menu">
-        <a href="{{ path('sylius_shop_account_profile_update') }}" class="item"><i class="pencil icon"></i> {{ 'sylius.ui.edit'|trans }}</a>
-        <a href="{{ path('sylius_shop_account_change_password') }}" class="item"><i class="lock icon"></i> {{ 'sylius.ui.change_password'|trans }}</a>
-        {% if not customer.user.verified %}
-            <form class="item" id="verification-form" action="{{ path('sylius_shop_user_request_verification_token') }}" method="post">
-                <button type="submit" class="ui basic icon mini button">
-                    <i class="checkmark icon"></i> {{ 'sylius.ui.verify'|trans }}
-                </button>
-            </form>
-        {% endif %}
-    </div>
+{#    <div class="ui text menu">#}
+{#        <a href="{{ path('sylius_shop_account_profile_update') }}" class="item"><i class="pencil icon"></i> {{ 'sylius.ui.edit'|trans }}</a>#}
+{#        <a href="{{ path('sylius_shop_account_change_password') }}" class="item"><i class="lock icon"></i> {{ 'sylius.ui.change_password'|trans }}</a>#}
+{#        {% if not customer.user.verified %}#}
+{#            <form class="item" id="verification-form" action="{{ path('sylius_shop_user_request_verification_token') }}" method="post">#}
+{#                <button type="submit" class="ui basic icon mini button">#}
+{#                    <i class="checkmark icon"></i> {{ 'sylius.ui.verify'|trans }}#}
+{#                </button>#}
+{#            </form>#}
+{#        {% endif %}#}
+{#    </div>#}
 {% endblock %}

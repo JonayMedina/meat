@@ -660,6 +660,22 @@ label.error:after {
         max-width: 60%;
         margin: 20px auto 0 auto;
     }
+
+    .r-ml-0 {
+        margin-left: 0 !important;
+    }
+
+    .ml-3.r-ml-0 {
+        margin-left: 0 !important;
+    }
+
+    .r-pr-15 {
+        padding-right: 15px !important;
+    }
+
+    .pr-0.r-pr-15 {
+        padding-right: 15px !important;
+    }
 }
 
 @media (max-width: 575px) {
