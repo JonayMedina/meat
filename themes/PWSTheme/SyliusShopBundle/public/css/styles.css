@@ -253,7 +253,7 @@ h1 {
     border-bottom: 1px solid #917171;
 }
 
-.login form div {
+.login form > div {
     padding: 0 80px;
 }
 
@@ -284,6 +284,37 @@ h1 {
 
 .field .dropdown .grouped .field label {
     margin-left: 10px;
+}
+
+.div-input {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.div-input input {
+    border-radius: 15px 0 0 15px !important;
+    border-right: none !important;
+    width: calc(100% - 56px) !important;
+    order: 1;
+}
+
+.div-input span {
+    display: flex;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+    background: #f5f5f5;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    max-width: 56px;
+    order: 2;
+    color: #917171;
+    cursor: pointer;
+}
+
+.div-input label.error {
+    width: 100%;
+    order: 3;
 }
 
 #footer .logo img {
@@ -414,6 +445,21 @@ h1 {
 
 .profile .segment.h-100 {
     height: calc(100% - 28px) !important;
+}
+
+/* form errors */
+div.error {
+    margin-bottom: 15px;
+}
+
+label.error, div.error span {
+    font-size: 12px !important;
+    margin: 10px 0 15px 0 !important;
+    color: #cd0a0a !important;
+}
+
+label.error:after {
+    content: none !important;
 }
 
 /* Responsive */
@@ -650,7 +696,7 @@ h1 {
         text-align: left !important;
     }
 
-    .login form div {
+    .login form > div {
         padding: initial;
     }
 

@@ -121,6 +121,8 @@
     <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}"></script>
+
+    {% block extrajs %}{% endblock %}
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

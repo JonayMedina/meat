@@ -20,8 +20,10 @@
 
                     {{ sonata_block_render_event('sylius.shop.login.form', {'form': form}) }}
 
+                    <div class="error"><span></span></div>
+
                     <a class="d-block text-center" href="{{ path('sylius_shop_request_password_reset_token') }}">{{ 'app.ui.forgot_password'|trans }}</a>
-                    <button type="submit" class="btn-rounded margin-0-auto">{{ 'app.ui.login.title'|trans }}</button>
+                    <button id="send" type="submit" class="btn-rounded margin-0-auto">{{ 'app.ui.login.title'|trans }}</button>
                     <input type="hidden" name="_csrf_shop_security_token" value="{{ csrf_token('shop_authenticate') }}">
                     {{ form_end(form, {'render_rest': false}) }}
 
@@ -37,4 +39,61 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            let $form = $("form");
+
+            $form.validate({
+                rules: {
+                    _username: {
+                        required: true,
+                        email: true,
+                        maxlength: 50,
+                        messages: {
+                            required: '',
+                        }
+                    },
+                    _password: {
+                        required: true,
+                        minlength: 8,
+                        maxlength: 20
+                    }
+                },
+                invalidHandler: function(event, validator) {
+                    // 'this' refers to the form
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        $("div.error span").html('{{ 'app.ui.login.form.error'|trans }}');
+                        $("div.error").show();
+                    } else {
+                        $("div.error").hide();
+                    }
+                }
+            });
+
+            $form.submit(function (e) {
+                if (!$form.valid()) {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                }
+            });
+
+            $form.find('span.eye').click(function () {
+                var $i = $(this).find('i');
+                var $password = $('input[name="_password"]');
+
+                if ($i.hasClass('fa-eye')) {
+                    $password.attr('type', 'text');
+                    $i.removeClass('fa-eye');
+                    $i.addClass('fa-eye-slash');
+                } else {
+                    $password.attr('type', 'password');
+                    $i.removeClass('fa-eye-slash');
+                    $i.addClass('fa-eye');
+                }
+            });
+        });
+    </script>
 {% endblock %}
