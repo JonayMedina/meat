@@ -15,6 +15,12 @@
                         &nbsp;
                         {{'app.ui.new_faq'|trans}}
                     </a>
+
+                    <br>
+
+                    <a href="{{ path('faqs_new', {type: 'schedule'}) }}" class="btn btn-link btn-lg btn-standard-width">
+                        {{'app.ui.new_schedule_faq'|trans}}
+                    </a>
                 </div>
             </div>
         </div>
@@ -64,7 +70,39 @@
                                             </div>
 
                                             <div>
-                                                {{ faq.answer }}
+                                                {% if faq.type == constant('App\\Entity\\FAQ::TYPE_QUESTION') %}
+                                                    {{ faq.answer }}
+                                                {% endif %}
+
+                                                {% if faq.type == constant('App\\Entity\\FAQ::TYPE_SCHEDULE') %}
+
+                                                    <strong>{{ 'app.ui.faq_time_to_order'|trans }}</strong>
+                                                    <br>
+                                                    {% if faq.timeToPlaceAnOrder %}
+                                                        {% for time in faq.timeToPlaceAnOrder %}
+                                                            {% if time['start'] is defined and time['end'] is defined and time['start'] and time['end'] %}
+                                                                {{ time['start'] }} - {{ time['end'] }}
+                                                                <br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {{ 'app.ui.n/a'|trans }}
+                                                    {% endif %}
+
+                                                    <br>
+                                                    <strong>{{ 'app.ui.faq_order_delivery_time'|trans }}</strong>
+                                                    <br>
+                                                    {% if faq.orderDeliveryTime %}
+                                                        {% for time in faq.orderDeliveryTime %}
+                                                            {% if time['name'] is defined and time['start'] is defined and time['end'] is defined and time['name'] and time['start'] and time['end'] %}
+                                                                {{ time['name'] }}: {{ time['start'] }} - {{ time['end'] }}
+                                                                <br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {{ 'app.ui.n/a'|trans }}
+                                                    {% endif %}
+                                                {% endif %}
                                             </div>
                                         </td>
                                         <td>

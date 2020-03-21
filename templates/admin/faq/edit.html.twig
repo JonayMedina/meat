@@ -30,8 +30,11 @@
 
 {% block javascript %}
 {{ parent() }}
+<script src="{{ asset('meathouse/js/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
 <script>
     $(document).ready(function () {
+        $('.inputmask').inputmask("9{1,2}:99 aa");
+
         initCounter();
     });
 </script>

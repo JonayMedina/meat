@@ -128,12 +128,26 @@ class FAQController extends AbstractController
     public function newAction(Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
+        $type = $request->get('type');
 
         $faq = new FAQ();
         $faq->setPosition($this->guessNextPosition());
 
+        if ($type == FAQ::TYPE_SCHEDULE) {
+            $faq->setType(FAQ::TYPE_SCHEDULE);
+        }
+
         $form = $this->createForm(FAQType::class, $faq);
         $form->handleRequest($request);
+
+        /** Only for Schedule type. */
+        if ($faq->getType() == FAQ::TYPE_SCHEDULE) {
+            $order = $request->get('order');
+            $delivery = $request->get('delivery');
+
+            $faq->setOrderDeliveryTime($delivery);
+            $faq->setTimeToPlaceAnOrder($order);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($faq);
@@ -151,6 +165,7 @@ class FAQController extends AbstractController
         }
 
         return $this->render('/admin/faq/new.html.twig', [
+            'faq' =>  $faq,
             'form' => $form->createView(),
         ]);
     }
@@ -169,6 +184,15 @@ class FAQController extends AbstractController
         $form = $this->createForm(FAQType::class, $faq);
         $form->handleRequest($request);
 
+        /** Only for Schedule type. */
+        if ($faq->getType() == FAQ::TYPE_SCHEDULE) {
+            $order = $request->get('order');
+            $delivery = $request->get('delivery');
+
+            $faq->setOrderDeliveryTime($delivery);
+            $faq->setTimeToPlaceAnOrder($order);
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $entityManager->flush();
@@ -183,6 +207,7 @@ class FAQController extends AbstractController
         }
 
         return $this->render('/admin/faq/edit.html.twig', [
+            'faq' =>  $faq,
             'form' => $form->createView(),
         ]);
     }

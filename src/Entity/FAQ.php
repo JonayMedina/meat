@@ -46,6 +46,18 @@ class FAQ implements ResourceInterface
     private $answer;
 
     /**
+     * @var array
+     * @ORM\Column(name="time_to_place_an_order", type="json", nullable=true)
+     */
+    private $timeToPlaceAnOrder;
+
+    /**
+     * @var array
+     * @ORM\Column(name="order_delivery_time", type="json", nullable=true)
+     */
+    private $orderDeliveryTime;
+
+    /**
      * @var string
      * @ORM\Column(name="type", type="string", length=50, nullable=false)
      */
@@ -132,6 +144,44 @@ class FAQ implements ResourceInterface
         }
 
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTimeToPlaceAnOrder(): ?array
+    {
+        return $this->timeToPlaceAnOrder;
+    }
+
+    /**
+     * @param array $timeToPlaceAnOrder
+     * @return FAQ
+     */
+    public function setTimeToPlaceAnOrder(?array $timeToPlaceAnOrder): FAQ
+    {
+        $this->timeToPlaceAnOrder = $timeToPlaceAnOrder;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderDeliveryTime(): ?array
+    {
+        return $this->orderDeliveryTime;
+    }
+
+    /**
+     * @param array $orderDeliveryTime
+     * @return FAQ
+     */
+    public function setOrderDeliveryTime(?array $orderDeliveryTime): FAQ
+    {
+        $this->orderDeliveryTime = $orderDeliveryTime;
 
         return $this;
     }

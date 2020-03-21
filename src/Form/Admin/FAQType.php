@@ -14,6 +14,9 @@ class FAQType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var FAQ $faq */
+        $faq = $options['data'];
+
         $builder
             ->add('question', null, [
                 'label' => 'app.ui.question',
@@ -26,7 +29,11 @@ class FAQType extends AbstractType
                     'class' => 'input-counter'
                 ]
             ])
-            ->add('answer', TextareaType::class, [
+        ;
+
+        /** Only for question type FAQ */
+        if ($faq->getType() == FAQ::TYPE_QUESTION) {
+            $builder->add('answer', TextareaType::class, [
                 'label' => 'app.ui.answer',
                 'constraints' => [
                     new NotBlank(),
@@ -36,8 +43,8 @@ class FAQType extends AbstractType
                     'maxlength' => 200,
                     'class' => 'input-counter'
                 ]
-            ])
-        ;
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
