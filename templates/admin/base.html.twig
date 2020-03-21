@@ -518,7 +518,9 @@
 
             <ul class="nav metismenu">
                 <li class="nav-header text-center">
-                    <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
+                    <a href="{{ path('dashboard_index') }}">
+                        <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
+                    </a>
                 </li>
             </ul>
             {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
