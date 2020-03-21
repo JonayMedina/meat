@@ -1,5 +1,5 @@
 {
-  "name": "pws/theme",
+  "name": "meathouse/theme",
   "authors": [
     {
       "name": "Hafid Roca",
@@ -8,7 +8,7 @@
   ],
   "extra": {
     "sylius-theme": {
-      "title": "PWS Theme"
+      "title": "Meathouse Theme"
     }
   }
 }

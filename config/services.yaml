@@ -44,6 +44,10 @@ services:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
+
+    App\EventSubscriber\ShopUserSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
                 
     app.form.extension.type.customer_registration:
         class: App\Form\Extension\CustomerRegistrationTypeExtension
