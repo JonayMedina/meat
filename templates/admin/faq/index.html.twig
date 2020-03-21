@@ -1,16 +1,16 @@
 {% extends "/admin/base.html.twig" %}
 
-{% block title %}{{ 'app.ui.faqs'|trans }}{% endblock %}
+{% block title %}{{ 'app.ui.faqs_list'|trans }}{% endblock %}
 
 {% block content %}
     <div class="col-lg-12">
         <div class="row wrapper page-heading">
             <div class="col-sm-4">
-                <h1>{{ 'app.ui.faqs'|trans }} <small>{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_faqs_%total%{% endtrans %}</small></h1>
+                <h1>{{ 'app.ui.faqs_list'|trans }} <small>{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_faqs_%total%{% endtrans %}</small></h1>
             </div>
             <div class="col-sm-8">
                 <div class="title-action">
-                    <a href="{{ path('faqs_index') }}" class="btn btn-primary btn-lg btn-standard-width">
+                    <a href="{{ path('faqs_new') }}" class="btn btn-primary btn-lg btn-standard-width">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;
                         {{'app.ui.new_faq'|trans}}
@@ -68,12 +68,12 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-default btn-action-button">
+                                            <a href="{{ path('faqs_edit', {id: faq.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.edit'|trans }}
                                             </a>
                                             {% if faq.type == constant('App\\Entity\\FAQ::TYPE_QUESTION') %}
                                             &nbsp;
-                                            <a href="#" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.faq_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.faq_remove_title'|trans }}" data-text="">
+                                            <a href="{{ path('faqs_delete', {id: faq.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-reload="true" data-error-message="{{ 'app.ui.faq_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.faq_remove_title'|trans }}" data-text="">
                                                 {{ 'app.ui.delete'|trans }}
                                             </a>
                                             {% endif %}

@@ -3,15 +3,17 @@
 namespace App\Controller\Admin;
 
 use App\Entity\FAQ;
+use App\Form\Admin\FAQType;
+use Doctrine\ORM\Query;
+use Psr\Log\LoggerInterface;
 use App\Repository\FAQRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class FAQController
@@ -36,16 +38,22 @@ class FAQController extends AbstractController
     private $repository;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * CouponController constructor.
      * @param LoggerInterface $logger
      * @param EntityManagerInterface $entityManager
      * @param FAQRepository $repository
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, FAQRepository $repository)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, FAQRepository $repository, TranslatorInterface $translator)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
+        $this->translator = $translator;
     }
 
     /**
@@ -111,6 +119,99 @@ class FAQController extends AbstractController
     }
 
     /**
+     * New FAQ.
+     * @Route("/faq/new", name="faqs_new")
+     * @param Request $request
+     * @return Response
+     */
+    public function newAction(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $faq = new FAQ();
+        $faq->setPosition($this->guessNextPosition());
+
+        $form = $this->createForm(FAQType::class, $faq);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($faq);
+
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.faq_new_success_message'));
+
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.faq_new_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
+
+            return $this->redirectToRoute('faqs_index');
+        }
+
+        return $this->render('/admin/faq/new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * New FAQ.
+     * @Route("/faq/{id}/edit", name="faqs_edit")
+     * @param Request $request
+     * @return Response
+     */
+    public function editAction(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $faq = $this->repository->find($request->get('id'));
+
+        $form = $this->createForm(FAQType::class, $faq);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.faq_edit_success_message'));
+
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.faq_edit_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
+
+            return $this->redirectToRoute('faqs_index');
+        }
+
+        return $this->render('/admin/faq/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Delete FAQ
+     * @Route("/faq/{id}", name="faqs_delete", methods={"DELETE"})
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteAction(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $faq = $this->repository->find($request->get('id'));
+
+        $entityManager->remove($faq);
+
+        try {
+            $entityManager->flush();
+            $this->addFlash('danger', $this->translator->trans('app.ui.faq_remove_success_message'));
+
+            return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
+        } catch (\Exception $exception) {
+            $this->addFlash('warning', $this->translator->trans('app.ui.faq_remove_error_message'));
+
+            return new JsonResponse(['type' => 'error', 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    /**
      * Return FAQs number.
      * @return mixed|null
      */
@@ -126,6 +227,34 @@ class FAQController extends AbstractController
             $this->logger->error($exception->getMessage());
 
             return null;
+        }
+    }
+
+    /**
+     * Guess next position.
+     * @return mixed|null
+     */
+    private function guessNextPosition(): ?int
+    {
+        try {
+            $lastFaq = $this->repository
+                ->createQueryBuilder('faq')
+                ->select('faq.position')
+                ->setMaxResults(1)
+                ->orderBy('faq.position', 'DESC')
+                ->getQuery()
+                ->getSingleResult(Query::HYDRATE_ARRAY);
+
+            if (isset($lastFaq['position'])) {
+                return $lastFaq['position'] + 1;
+            }
+
+            return 1;
+
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+
+            return 1;
         }
     }
 }

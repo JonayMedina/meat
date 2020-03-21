@@ -220,6 +220,9 @@ class MenuBuilder
             'icon' => 'faqs',
             'routes' => [
                 'faqs_index',
+                'faqs_new',
+                'faqs_edit',
+                'faqs_show',
             ],
         ]);
 

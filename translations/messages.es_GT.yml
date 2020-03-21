@@ -35,6 +35,7 @@ app.ui.ratings: Calificaciones
 app.ui.purchase_admin: 'Admin de compra'
 app.ui.locations: Ubicaciones
 app.ui.faqs: 'FAQ''s'
+app.ui.faqs_list: 'Preguntas frecuentes'
 app.ui.about_procasa: 'Sobre Procasa'
 app.ui.terms_and_conditions: 'Términos y condiciones'
 app.ui.today: Hoy
@@ -332,13 +333,20 @@ app.ui.delivery_hours.between: Entre
 app.ui.purchase_settings_delivery_hours_default_schedule: 'Sin preferencia'
 app.ui.purchase_settings_schedule_between_shifts: '%name% (entre %start% - %end%)'
 app.ui.purchase_settings_empty_schedule_message: 'Debes llenar todos los campos de todos los horarios habilitados'
-app.ui.new_faq: 'Nueva pregunta'
+app.ui.new_faq: 'Nueva pregunta frecuente'
+app.ui.edit_faq: 'Editar pregunta frecuente'
 app.ui.qty_of_faqs_%total%: 'Cantidad de preguntas: %total%'
 app.ui.search_label: Buscar
 app.ui.faq_reorder: Reordena
 app.ui.faq_content: Contenido
 app.ui.faq_remove_title: '¿Estás seguro de que deseas borrar esta pregunta?'
 app.ui.faq_error_on_remove_message: 'Hubo un error al borrar esta pregunta, por favor intentelo de nuevo más tarde.'
+app.ui.faq_new_success_message: 'Se ha guardado la nueva pregunta.'
+app.ui.faq_new_error_message: 'Hubo un error al crear la pregunta, intentelo de nuevo más tarde.'
+app.ui.faq_edit_success_message: 'Se ha actualizado la pregunta'
+app.ui.faq_edit_error_message: 'Hubo un error al actualizar la pregunta, intentelo de nuevo más tarde.'
+app.ui.faq_remove_success_message: 'Se ha eliminado la pregunta'
+app.ui.faq_remove_error_message: 'Hubo un error al eliminar la pregunta, intentelo de nuevo más tarde.'
 sylius.form.login.username: Correo
 sylius.form.login.password: Contraseña
 sylius.form.login.remember_me: Recordarme

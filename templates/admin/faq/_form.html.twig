@@ -1,0 +1,22 @@
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+<div class="form-group padding-bottom-25">
+    {{ form_label(form.question) }}
+    {{ form_widget(form.question) }}
+    <div class="counter-label"></div>
+</div>
+
+<hr>
+<div class="form-group">
+    {{ form_label(form.answer) }}
+    {{ form_widget(form.answer) }}
+    <div class="counter-label"></div>
+</div>
+
+<div class="form-group">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

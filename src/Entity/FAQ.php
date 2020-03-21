@@ -59,7 +59,7 @@ class FAQ implements ResourceInterface
     /**
      * @return int
      */
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
     }
@@ -68,7 +68,7 @@ class FAQ implements ResourceInterface
      * @param int $position
      * @return FAQ
      */
-    public function setPosition(int $position): FAQ
+    public function setPosition(?int $position): FAQ
     {
         $this->position = $position;
 
@@ -78,7 +78,7 @@ class FAQ implements ResourceInterface
     /**
      * @return string
      */
-    public function getQuestion(): string
+    public function getQuestion(): ?string
     {
         return $this->question;
     }
@@ -87,7 +87,7 @@ class FAQ implements ResourceInterface
      * @param string $question
      * @return FAQ
      */
-    public function setQuestion(string $question): FAQ
+    public function setQuestion(?string $question): FAQ
     {
         $this->question = $question;
 
@@ -97,7 +97,7 @@ class FAQ implements ResourceInterface
     /**
      * @return string
      */
-    public function getAnswer(): string
+    public function getAnswer(): ?string
     {
         return $this->answer;
     }
@@ -106,7 +106,7 @@ class FAQ implements ResourceInterface
      * @param string $answer
      * @return FAQ
      */
-    public function setAnswer(string $answer): FAQ
+    public function setAnswer(?string $answer): FAQ
     {
         $this->answer = $answer;
 
@@ -116,7 +116,7 @@ class FAQ implements ResourceInterface
     /**
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -125,7 +125,7 @@ class FAQ implements ResourceInterface
      * @param string $type
      * @return FAQ
      */
-    public function setType(string $type): FAQ
+    public function setType(?string $type): FAQ
     {
         if (!in_array($type, [self::TYPE_QUESTION, self::TYPE_SCHEDULE])) {
             throw new BadRequestHttpException('Invalid FAQ type.');

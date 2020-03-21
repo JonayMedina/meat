@@ -46,6 +46,10 @@ function initCounter() {
   });
 }
 
+function reload() {
+  window.location = window.location;
+}
+
 $(document).ready(function () {
   var $deleteButton = $('.btn-delete');
 
@@ -72,6 +76,7 @@ $(document).ready(function () {
 
           $tr.slideUp('fast', function () {
             $tr.remove();
+            reload();
           });
 
         },

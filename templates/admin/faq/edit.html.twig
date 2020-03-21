@@ -1,0 +1,38 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.edit_faq'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('faqs_index')) }}
+                <br>
+                <h1>{{ 'app.ui.edit_faq'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        {{ include('/admin/faq/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+{{ parent() }}
+<script>
+    $(document).ready(function () {
+        initCounter();
+    });
+</script>
+{% endblock %}
