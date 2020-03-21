@@ -47,6 +47,7 @@ class FAQController extends AbstractController
      * @param LoggerInterface $logger
      * @param EntityManagerInterface $entityManager
      * @param FAQRepository $repository
+     * @param TranslatorInterface $translator
      */
     public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, FAQRepository $repository, TranslatorInterface $translator)
     {
@@ -201,11 +202,9 @@ class FAQController extends AbstractController
 
         try {
             $entityManager->flush();
-            $this->addFlash('danger', $this->translator->trans('app.ui.faq_remove_success_message'));
 
             return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
         } catch (\Exception $exception) {
-            $this->addFlash('warning', $this->translator->trans('app.ui.faq_remove_error_message'));
 
             return new JsonResponse(['type' => 'error', 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }

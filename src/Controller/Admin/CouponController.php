@@ -39,14 +39,21 @@ class CouponController extends AbstractController
     private $paginator;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * CouponController constructor.
      * @param LoggerInterface $logger
      * @param PaginatorInterface $paginator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(LoggerInterface $logger, PaginatorInterface $paginator)
+    public function __construct(LoggerInterface $logger, PaginatorInterface $paginator, TranslatorInterface $translator)
     {
         $this->logger = $logger;
         $this->paginator = $paginator;
+        $this->translator = $translator;
     }
 
     /**
@@ -138,7 +145,13 @@ class CouponController extends AbstractController
 
             $entityManager->persist($coupon);
 
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.coupon_new_success_message'));
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.coupon_new_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
 
             return $this->redirectToRoute('coupons_index');
         }
@@ -250,7 +263,13 @@ class CouponController extends AbstractController
             $coupon->setPerCustomerUsageLimit($perCustomerUsageLimit);
             $coupon->setReusableFromCancelledOrders(true);
 
-            $entityManager->flush();
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.coupon_edit_success_message'));
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.coupon_edit_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
 
             return $this->redirectToRoute('coupons_index');
         }
