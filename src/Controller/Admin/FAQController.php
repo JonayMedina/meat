@@ -141,7 +141,7 @@ class FAQController extends AbstractController
         $form->handleRequest($request);
 
         /** Only for Schedule type. */
-        if ($faq->getType() == FAQ::TYPE_SCHEDULE) {
+        if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
             $order = $request->get('order');
             $delivery = $request->get('delivery');
 
@@ -185,7 +185,7 @@ class FAQController extends AbstractController
         $form->handleRequest($request);
 
         /** Only for Schedule type. */
-        if ($faq->getType() == FAQ::TYPE_SCHEDULE) {
+        if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
             $order = $request->get('order');
             $delivery = $request->get('delivery');
 

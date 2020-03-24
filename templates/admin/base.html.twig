@@ -309,9 +309,17 @@
             width: 120px;
         }
 
-        .form-control {
+        .form-control, .custom-file-label {
             border-radius: 10px;
             background-color: #F5F5F5;
+        }
+
+        .custom-file-label::after {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            background-color: #404040;
+            color: #FFFFFF;
+            content: "{{ 'app.ui.browse'|trans }}"
         }
 
         input.form-control, select.form-control {
@@ -456,6 +464,28 @@
             height: 200px !important;
         }
 
+        .alert-success {
+            color: #ffffff;
+            background-color: #404040;
+            border-color: #232222;
+        }
+
+        .alert-danger {
+            color: #ffffff;
+            background-color: #AB172C;
+            border-color: #910E21;
+        }
+
+        .alert-warning {
+            color: #FFF;
+            background-color: #A56A1F;
+            border-color: #86500B;
+        }
+
+        .alert-success .close, .alert-danger .close, .alert-warning .close  {
+            color: #ffffff;
+        }
+
         @media (min-width: 768px) {
             .navbar-static-side {
                 width: 300px;
@@ -566,6 +596,29 @@
         </div>
         <div class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
+                <div class="col-lg-12">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('warning') %}
+                        <div class="alert alert-warning alert-dismissable">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+
                 {% block content %}{% endblock %}
             </div>
         </div>
@@ -612,14 +665,6 @@
             $ul.attr('aria-expanded', 'true');
             $ul.addClass('in');
         }
-
-        {% for message in app.flashes('success') %}
-            success('{{ message }}');
-        {% endfor %}
-
-        {% for message in app.flashes('error') %}
-            error('{{ message }}');
-        {% endfor %}
 
         setTimeout(function () {
             $mainMenuToggle.fadeIn('fast');
