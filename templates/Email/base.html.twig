@@ -30,6 +30,13 @@
                 vertical-align: top;
             }
 
+            code {
+                padding: 13px;
+                border-radius: 15px;
+                background: #404040;
+                color: #ffffff;
+            }
+
             /* -------------------------------------
                 BODY & CONTAINER
             ------------------------------------- */
@@ -134,15 +141,15 @@
                 LINKS & BUTTONS
             ------------------------------------- */
             a {
-                color: #1ab394;
+                color: #ab162b;
                 text-decoration: underline;
             }
 
             .btn-primary {
                 text-decoration: none;
                 color: #FFF;
-                background-color: #1ab394;
-                border: solid #1ab394;
+                background-color: #ab162b;
+                border: solid #ab162b;
                 border-width: 5px 10px;
                 line-height: 2;
                 font-weight: bold;
@@ -273,8 +280,8 @@
                     <td class="content-wrap">
                         <table cellpadding="0" cellspacing="0">
                             <tbody><tr>
-                                <td>
-                                    <img class="img-fluid" src="{% block image %}{{ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}">
+                                <td class="text-center">
+                                    <img class="img-fluid" style="max-width: 130px;" src="{% block image %}{{ getUrl() ~ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}" alt="Logo">
                                 </td>
                             </tr>
                             <tr>
@@ -291,7 +298,7 @@
                             </tr>
                             <tr>
                                 <td class="content-block text-center">
-                                    {% block button %} }
+                                    {% block button %}
                                         <a href="#" class="btn-primary">Confirm email address</a>
                                     {% endblock %}
                                 </td>

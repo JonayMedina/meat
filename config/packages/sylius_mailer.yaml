@@ -14,13 +14,13 @@ sylius_mailer:
             template: "Email/userRegistration.html.twig"
         password_reset:
             subject: sylius.emails.user.password_reset.subject
-            template: "@SyliusShop/Email/passwordReset.html.twig"
+            template: "Email/passwordReset.html.twig"
         reset_password_token:
             subject: sylius.emails.user.password_reset.subject
-            template: "@SyliusShop/Email/passwordReset.html.twig"
+            template: "Email/passwordResetToken.html.twig"
         reset_password_pin:
             subject: sylius.emails.user.password_reset.subject
-            template: "@SyliusShop/Email/passwordReset.html.twig"
+            template: "Email/passwordReset.html.twig"
         verification_token:
             subject: sylius.emails.user.verification_token.subject
             template: "@SyliusShop/Email/verification.html.twig"
