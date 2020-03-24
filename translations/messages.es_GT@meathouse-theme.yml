@@ -388,3 +388,23 @@ app.ui.error.not_less_than_%x%: 'No puede ser menor a %x% caracteres.'
 app.ui.faq_time_to_order: 'Horario para realizar pedido'
 app.ui.faq_order_delivery_time: 'Horario de entrega de pedido'
 app.ui.new_schedule_faq: 'Nueva pregunta de horario'
+app.ui.qty_of_locations_%total%: 'Cantidad de ubicaciónes: %total%'
+app.ui.new_location: 'Nueva ubicación'
+app.ui.name: Nombre
+app.ui.phone_number: Teléfono
+app.ui.phone_number_extension: Extensión
+app.ui.location_error_on_remove_message: 'Hubo un error al borrar la ubiación, inténtelo de nuevo más tarde.'
+app.ui.location_remove_text: ''
+app.ui.location_remove_title: '¿Estas seguro que deseas borrar esta ubicación?'
+app.ui.choose_file: 'Sin archivo'
+app.ui.image: Imagen
+app.ui.browse: Examinar
+app.ui.location.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 296 x 216 px.'
+app.ui.edit_location: 'Editar ubicacicón'
+app.ui.location_schedule: Horario
+app.ui.saturday: Sábados
+app.ui.location_monday_to_friday: 'Lunes a viernes'
+app.ui.location_new_success_message: 'Se ha creado la nueva ubicación.'
+app.ui.location_new_error_message: 'Hubo un error al guardar la ubiación, intentelo de nuevo más tarde.'
+app.ui.location_edit_success_message: 'Se ha actualizado la ubicación.'
+app.ui.location_edit_error_message: 'Hubo un error al guardar los cambios de la ubicación, por favor intentelo de nuevo más tarde.'

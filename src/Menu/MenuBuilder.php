@@ -208,6 +208,8 @@ class MenuBuilder
             'icon' => 'locations',
             'routes' => [
                 'locations_index',
+                'locations_edit',
+                'locations_new',
             ],
         ]);
 

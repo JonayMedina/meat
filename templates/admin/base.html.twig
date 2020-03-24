@@ -309,9 +309,17 @@
             width: 120px;
         }
 
-        .form-control {
+        .form-control, .custom-file-label {
             border-radius: 10px;
             background-color: #F5F5F5;
+        }
+
+        .custom-file-label::after {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            background-color: #404040;
+            color: #FFFFFF;
+            content: "{{ 'app.ui.browse'|trans }}"
         }
 
         input.form-control, select.form-control {

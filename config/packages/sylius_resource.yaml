@@ -15,3 +15,8 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\FAQ
+                
+        app.location:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Location

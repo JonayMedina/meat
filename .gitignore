@@ -18,6 +18,9 @@
 /docker-compose.override.yml
 /docker/mysql/data/
 
+/public/uploads/*
+!/public/uploads/.gitignore
+
 ###> symfony/framework-bundle ###
 /.env.*.local
 /.env.local
