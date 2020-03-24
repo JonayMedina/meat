@@ -1,0 +1,17 @@
+{% extends 'Email/base.html.twig' %}
+
+{% block subject %}
+    User registration
+{% endblock %}
+
+{% block title %}
+    {{ 'app.email.welcome_to_%company%_%user%'|trans({'%company%': 'Meat House', '%user%': user.customer.firstName }) }}
+{% endblock %}
+
+{% block content %}
+    <td class="content-block">
+        {{ 'app.email.register_message'|trans }}
+    </td>
+{% endblock %}
+
+{% block button %}{% endblock %}
