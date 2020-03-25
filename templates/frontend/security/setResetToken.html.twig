@@ -1,0 +1,33 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+    {% set message = '&ensp;<br><a href="' ~ path('sylius_shop_request_password_reset_token') ~ '" class="text-lowercase show-terms">' ~ ('app.ui.resend_code_here'|trans) ~ '</a>' %}
+    <div class="row forgot-password">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <a href="{{ path('sylius_shop_request_password_reset_token') }}"><i class="fas fa-chevron-left"></i> {{ 'sylius.ui.back'|trans }}</a>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <h1 class="text-center">{{ 'app.ui.enter_the_token'|trans }}</h1>
+                    <p class="text-center">{{ 'app.ui.reset_instructions'|trans|raw }}</p>
+
+                    {{ sonata_block_render_event('sylius.shop.request_password_reset_token.after_content_header') }}
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <form name="sylius_user_request_password_reset" method="post" action="{{ path('store_set_token') }}" class="ui large loadable form margin-0-auto" novalidate="novalidate">
+                        <div class="required field">
+                            <label for="sylius_user_request_password_reset_token" class="required">{{ 'app.ui.code'|trans }}</label>
+                            <input type="text" id="sylius_user_request_password_reset_token" name="sylius_user_request_password_reset_token" required="required">
+                        </div>
+
+                        <input type="hidden" id="sylius_user_request_password_reset__token" name="sylius_user_request_password_reset[_token]" value="post">
+                        <button type="submit" class="btn-rounded">{{ 'app.ui.recover'|trans }}</button>
+
+                        <p class="text-center mt-4">{{ 'app.ui.did_not_get_your_code?_%link%'|trans({'%link%': message})|raw }}</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
