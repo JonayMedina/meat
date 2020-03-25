@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block title %}
-    {{ 'app.email.welcome_to_%company%_%user%'|trans({'%company%': 'Meat House', '%user%': user.customer.firstName }) }}
+    {{ 'app.email.welcome_to_%company%_%user%'|trans({'%company%': app_name, '%user%': user.customer.firstName }) }}
 {% endblock %}
 
 {% block content %}
