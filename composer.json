@@ -28,6 +28,8 @@
         "ext-intl": "*",
         "ext-json": "*",
         "cron/cron-bundle": "^2.3",
+        "deployer/deployer": "^6.7",
+        "deployer/recipes": "^6.2",
         "friendsofsymfony/jsrouting-bundle": "^2.5",
         "hwi/oauth-bundle": "^0.6.3",
         "knplabs/knp-paginator-bundle": "^5.1",
