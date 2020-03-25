@@ -43,7 +43,7 @@ set('keep_releases', 2);
 host('staging')
     ->hostname('172.105.152.192')
     ->user('tribal')
-    ->set('branch', 'staging')
+    ->set('branch', 'develop')
     ->port(22)
     ->identityFile('~/pem/procasa-dev.pem')
     ->stage('staging')
