@@ -5,6 +5,7 @@ namespace App\Controller\Frontend;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -44,5 +45,16 @@ class ResourcesController extends AbstractController
         $this->get('session')->getFlashBag()->clear();
 
         return $this->render('/frontend/welcome.html.twig');
+    }
+
+    /**
+     * @Route("/forgotten-password/token", name="store_set_token")
+     * @param Request $request
+     * @return Response
+     */
+    public function setResetTokenAction(Request $request) {
+        $this->get('session')->getFlashBag()->clear();
+
+        return $this->render('/frontend/security/setResetToken.html.twig');
     }
 }

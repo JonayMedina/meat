@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc9e2c551e3ff46e9766297bab10313b",
+    "content-hash": "53954bf864d99c9ba6ea3c10a76ccec8",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -16187,12 +16187,12 @@
             "version": "v4.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Symplify/CodingStandard.git",
+                "url": "https://github.com/symplify/coding-standard.git",
                 "reference": "3a4b432b821423478b3f097106255907979e4ee5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/CodingStandard/zipball/3a4b432b821423478b3f097106255907979e4ee5",
+                "url": "https://api.github.com/repos/symplify/coding-standard/zipball/3a4b432b821423478b3f097106255907979e4ee5",
                 "reference": "3a4b432b821423478b3f097106255907979e4ee5",
                 "shasum": ""
             },
@@ -16235,12 +16235,12 @@
             "version": "v4.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Symplify/EasyCodingStandard.git",
+                "url": "https://github.com/symplify/easy-coding-standard.git",
                 "reference": "f91cbb452676e627dfcabba7d31a0aef29b834fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/EasyCodingStandard/zipball/f91cbb452676e627dfcabba7d31a0aef29b834fc",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/f91cbb452676e627dfcabba7d31a0aef29b834fc",
                 "reference": "f91cbb452676e627dfcabba7d31a0aef29b834fc",
                 "shasum": ""
             },
@@ -16299,12 +16299,12 @@
             "version": "v4.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Symplify/PackageBuilder.git",
+                "url": "https://github.com/symplify/package-builder.git",
                 "reference": "b725936b7046852a9ab15e408ee4cd84c6be2faa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Symplify/PackageBuilder/zipball/b725936b7046852a9ab15e408ee4cd84c6be2faa",
+                "url": "https://api.github.com/repos/symplify/package-builder/zipball/b725936b7046852a9ab15e408ee4cd84c6be2faa",
                 "reference": "b725936b7046852a9ab15e408ee4cd84c6be2faa",
                 "shasum": ""
             },
