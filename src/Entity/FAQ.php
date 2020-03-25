@@ -41,7 +41,7 @@ class FAQ implements ResourceInterface
 
     /**
      * @var string
-     * @ORM\Column(name="answer", type="string", length=200, nullable=false)
+     * @ORM\Column(name="answer", type="string", length=200, nullable=true)
      */
     private $answer;
 
@@ -162,6 +162,12 @@ class FAQ implements ResourceInterface
      */
     public function setTimeToPlaceAnOrder(?array $timeToPlaceAnOrder): FAQ
     {
+        if ($timeToPlaceAnOrder[0]['start'] == ''  && $timeToPlaceAnOrder[0]['end'] == '' && $timeToPlaceAnOrder[1]['start'] == '' && $timeToPlaceAnOrder[1]['end'] == '' && $timeToPlaceAnOrder[2]['start'] == '' && $timeToPlaceAnOrder[2]['end'] == '') {
+            $this->timeToPlaceAnOrder = [];
+
+            return $this;
+        }
+
         $this->timeToPlaceAnOrder = $timeToPlaceAnOrder;
 
         return $this;
@@ -181,6 +187,12 @@ class FAQ implements ResourceInterface
      */
     public function setOrderDeliveryTime(?array $orderDeliveryTime): FAQ
     {
+        if ($orderDeliveryTime[0]['name'] == '' && $orderDeliveryTime[0]['start'] == ''  && $orderDeliveryTime[0]['end'] == '' && $orderDeliveryTime[1]['name'] == '' && $orderDeliveryTime[1]['start'] == '' && $orderDeliveryTime[1]['end'] == '') {
+            $this->orderDeliveryTime = [];
+
+            return $this;
+        }
+
         $this->orderDeliveryTime = $orderDeliveryTime;
 
         return $this;

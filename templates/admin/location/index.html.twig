@@ -65,6 +65,12 @@
                                             </a>
                                         </td>
                                     </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            {{ 'app.ui.locations_no_items_on_table'|trans }}
+                                        </td>
+                                    </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
