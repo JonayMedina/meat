@@ -177,6 +177,7 @@ class MenuBuilder
             ->setExtras([
                 'routes' => [
                     'holidays',
+                    'holidays_calendar',
                 ],
             ])
             ->setAttribute('second-level', 'true');

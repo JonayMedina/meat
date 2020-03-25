@@ -136,16 +136,6 @@ class SettingsController extends AbstractController
     }
 
     /**
-     *
-     * @Route("/holidays", name="holidays")
-     * @return Response
-     */
-    public function holidaysAction()
-    {
-        return $this->render('/admin/configuration/holidays.html.twig');
-    }
-
-    /**
      * Show search box setting page.
      * @Route("/search-box", name="searcher")
      * @param AboutStoreRepository $repository

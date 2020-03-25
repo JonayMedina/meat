@@ -20,3 +20,8 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\Location
+                
+        app.holiday:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Holiday

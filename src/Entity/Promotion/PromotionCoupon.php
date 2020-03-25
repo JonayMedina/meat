@@ -130,6 +130,6 @@ class PromotionCoupon extends BasePromotionCoupon
     {
         $promotion = $this->getPromotion();
 
-        return ($promotion->getUsed() >= $promotion->getUsageLimit());
+        return ($promotion->getUsageLimit() && $promotion->getUsed() >= $promotion->getUsageLimit());
     }
 }
