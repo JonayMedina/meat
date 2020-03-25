@@ -64,7 +64,7 @@ app.ui.dates.sa: Sa
 app.ui.dates.january: Enero
 app.ui.dates.february: Febrero
 app.ui.dates.march: Marzo
-app.ui.dates.april: Abil
+app.ui.dates.april: Abril
 app.ui.dates.may: Mayo
 app.ui.dates.june: Junio
 app.ui.dates.july: Julio
@@ -93,7 +93,7 @@ app.ui.logout: Salir
 app.ui.segments: Segmentos
 app.ui.purchase_texts: 'Textos de compras'
 app.ui.purchase_settings: 'Configuración de compra'
-app.ui.holidays: 'Días de feriado'
+app.ui.holidays: 'Días festivos'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
 app.ui.qty_of_active_coupons_%total%: 'Cantidad de cupones activos: %total%'
@@ -408,3 +408,20 @@ app.ui.location_new_success_message: 'Se ha creado la nueva ubicación.'
 app.ui.location_new_error_message: 'Hubo un error al guardar la ubiación, intentelo de nuevo más tarde.'
 app.ui.location_edit_success_message: 'Se ha actualizado la ubicación.'
 app.ui.location_edit_error_message: 'Hubo un error al guardar los cambios de la ubicación, por favor intentelo de nuevo más tarde.'
+app.ui.holiday_reason: Motivo
+app.ui.holiday_day: Día
+app.ui.holiday_month: Mes
+app.ui.calendar_holiday: Editar
+app.ui.qty_of_holiday_%total%: 'Cantidad de días festivos: %total%'
+app.ui.holiday_remove_text: '%name%'
+app.ui.holiday_error_on_remove_message: 'Hubo un error al eliminar el día festivo, por favor inténtelo de nuevo más tarde.'
+app.ui.holiday_remove_title: '¿Estás seguro de borrar este día festivo?'
+app.ui.filter_order_by_date: Cronológico
+app.ui.filter_order_by: 'Ordenar por'
+app.ui.filter_order_by_reason: ABC
+app.ui.filter_by_month: 'Filtrar por'
+app.ui.edit_holidays: 'Editar días festivos'
+app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
+app.ui.holidays_new: 'Nuevo día festivo'
+app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
+app.ui.this_field_cannot_be_blank: 'Este campo no puede ir vacío.'
