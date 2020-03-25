@@ -28,7 +28,7 @@
                     {{ form_end(form, {'render_rest': false}) }}
 
                     <div class="text-center">
-                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook" target="_blank">
                             <i class="fab fa-facebook-square"></i>
                             {% trans with {'%name%': 'Facebook'} %} app.ui.login_with_%name% {% endtrans %}
                         </a>
