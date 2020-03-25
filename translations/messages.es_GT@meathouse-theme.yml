@@ -443,3 +443,4 @@ app.ui.create_new_password: Crea una nueva contraseña
 app.ui.new_password_instructions: Escribe la contraseña que ahora usarás para ingresar a tu cuenta.
 app.ui.reset: Recuperar
 app.form.user_reset_password.confirmation: Reescribe tu nueva contraseña
+app.ui.back_to_profile: Regresa a tu perfil
