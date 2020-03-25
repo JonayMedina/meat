@@ -53,6 +53,15 @@
     "cron/cron-bundle": {
         "version": "2.3.0"
     },
+    "deployer/deployer": {
+        "version": "v6.7.3"
+    },
+    "deployer/phar-update": {
+        "version": "v2.2.0"
+    },
+    "deployer/recipes": {
+        "version": "6.2.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -511,6 +520,9 @@
     },
     "phpunit/phpunit-mock-objects": {
         "version": "5.0.10"
+    },
+    "pimple/pimple": {
+        "version": "v3.2.3"
     },
     "polishsymfonycommunity/symfony-mocker-container": {
         "version": "v1.0.2"
