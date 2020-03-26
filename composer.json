@@ -91,6 +91,7 @@
         },
         "post-install-cmd": [
             "@auto-scripts",
+            "@php bin/console sylius:theme:assets:install",
             "@php bin/console app:welcome"
         ],
         "post-update-cmd": [
