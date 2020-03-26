@@ -453,3 +453,10 @@ app.ui.pinterest_url: 'URL de Pinterest'
 app.ui.instagram_url: 'URL de Instagram'
 app.ui.twitter_url: 'URL de Twitter'
 app.ui.facebook_url: 'URL de Facebook'
+app.ui.category_color_not_sure_title: '¿No estás seguro cómo se verá la imagen?'
+app.ui.category_color_not_sure_text: 'Sube una imagen y observa cómo se ve mejor. Esto no afecta a ninguna de las plataformas ya que es solo una prueba.'
+app.ui.category_color_light_theme: 'Tema claro'
+app.ui.category_color_dark_theme: 'Tema oscuro'
+app.ui.theme_subtitle_text: 'Muestra en app'
+app.ui.category_color_seafood: Mariscos
+app.ui.category_color_chicken: Pollo
