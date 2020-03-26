@@ -11,22 +11,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package App\Service
  * @author Rodmar Zavala <rzavala@praga.ws>
  *
- * @method string getFacebookUrl()
- * @method string getTwitterUrl()
- * @method string getPinterestUrl()
- * @method string getInstagramUrl()
- * @method string getAppStoreUrl()
- * @method string getPlayStoreUrl()
- * @method string getDeliveryHours()
- * @method string getShowProductSearchBox()
- * @method string getDaysToChooseInAdvanceToPurchase()
- * @method string getAboutUs()
- * @method string getPhrase()
- * @method string getAuthor()
- * @method string getFirstPurchaseMessage()
- * @method string getNewAddressMessage()
- * @method string getMaximumPurchaseValue()
- * @method string getMinimumPurchaseValue()
+ * @method string|null getFacebookUrl()
+ * @method string|null getTwitterUrl()
+ * @method string|null getPinterestUrl()
+ * @method string|null getInstagramUrl()
+ * @method string|null getAppStoreUrl()
+ * @method string|null getPlayStoreUrl()
+ * @method string|null getDeliveryHours()
+ * @method string|null getShowProductSearchBox()
+ * @method string|null getDaysToChooseInAdvanceToPurchase()
+ * @method string|null getAboutUs()
+ * @method string|null getPhrase()
+ * @method string|null getAuthor()
+ * @method string|null getFirstPurchaseMessage()
+ * @method string|null getNewAddressMessage()
+ * @method string|null getMaximumPurchaseValue()
+ * @method string|null getMinimumPurchaseValue()
  */
 class SettingsService
 {
