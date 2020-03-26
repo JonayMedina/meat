@@ -1,4 +1,5 @@
 {% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
 
 {% block title %}{{ 'app.ui.about_procasa'|trans }}{% endblock %}
 
@@ -39,6 +40,25 @@
                             {{ form_widget(form.author) }}
                             <div class="counter-label"></div>
                         </div>
+
+                        <br><br>
+                        <h2>{{ 'app.ui.about_procasa_links'|trans }}</h2>
+                        <hr>
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.facebookUrl},
+                            {'span': 6, 'field': form.twitterUrl}
+                        ]) }}
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.instagramUrl},
+                            {'span': 6, 'field': form.pinterestUrl}
+                        ]) }}
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.appStoreUrl},
+                            {'span': 6, 'field': form.playStoreUrl}
+                        ]) }}
 
                         <br><br>
                         <div class="form-group">
