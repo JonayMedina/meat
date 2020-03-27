@@ -84,7 +84,7 @@ class AppExtension extends AbstractExtension
      * @param string $option
      * @return string|null
      */
-    public function aboutStore($option = 'about-us') {
+    public function aboutStore($option = 'author') {
         switch ($option) {
             case 'facebook': return $this->settingsService->getFacebookUrl();
             case 'instagram': return $this->settingsService->getInstagramUrl();
@@ -93,7 +93,6 @@ class AppExtension extends AbstractExtension
             case 'app-store': return $this->settingsService->getAppStoreUrl();
             case 'play-store': return $this->settingsService->getPlayStoreUrl();
             case 'phrase': return $this->settingsService->getPhrase();
-            case 'author': return $this->settingsService->getAuthor();
             case 'about-us': return $this->settingsService->getAboutUs();
             case 'delivery-hours': return $this->settingsService->getDeliveryHours();
             case 'show-search': return $this->settingsService->getShowProductSearchBox();
@@ -103,7 +102,7 @@ class AppExtension extends AbstractExtension
             case 'max-purchase': return $this->settingsService->getMaximumPurchaseValue();
             case 'min-purchase': return $this->settingsService->getMinimumPurchaseValue();
             default:
-                return $this->settingsService->getAboutUs();
+                return $this->settingsService->getAuthor();
         }
     }
 }
