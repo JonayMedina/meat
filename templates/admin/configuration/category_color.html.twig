@@ -53,7 +53,7 @@
             max-width: 100%;
         }
 
-        .dark-theme .theme-img {
+        .theme-img {
             background-position: center !important;
             background-size: cover !important;
             background-repeat: no-repeat !important;
@@ -153,7 +153,7 @@
 
                                 <div class="img-wrapper">
                                     <p class="sample-text">{{ 'app.ui.category_color_chicken'|trans }}</p>
-                                    <img src="{{ asset('meathouse/img/assets/chicken.png') }}" alt="{{ 'app.ui.category_color_light_theme'|trans }}" class="theme-img">
+                                    <div class="theme-img" style="background: url({{ asset('meathouse/img/assets/chicken.png') }})"></div>
                                 </div>
 
                                 <p class="theme-subtitle">
@@ -220,7 +220,8 @@
               var reader = new FileReader();
 
               reader.onload = function (e) {
-                  $('.theme-img').attr('src', e.target.result);
+                  $('.dark-theme .theme-img').css('background', 'linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url(' + e.target.result + ')');
+                  $('.light-theme .theme-img').css('background', 'url(' + e.target.result + ')');
               };
 
               reader.readAsDataURL(input.files[0]);
