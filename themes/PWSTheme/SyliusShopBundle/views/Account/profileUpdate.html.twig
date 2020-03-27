@@ -31,7 +31,7 @@
         {{ form_row(form.phoneNumber) }}
         {{ form_row(form.subscribedToNewsletter) }}
 
-{#        {{ form_row(form.termsAccepted) }}#}
+        {{ form_row(form.defaultAddress) }}
 
         {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
 
