@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 
 class AboutStoreType extends AbstractType
 {
@@ -42,6 +43,43 @@ class AboutStoreType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'input-counter'
+                ]
+            ])
+
+            ->add('facebookUrl', null, [
+                'label' => 'app.ui.facebook_url',
+                'constraints' => [
+                    new Url()
+                ]
+            ])
+            ->add('twitterUrl', null, [
+                'label' => 'app.ui.twitter_url',
+                'constraints' => [
+                    new Url()
+                ]
+            ])
+            ->add('instagramUrl', null, [
+                'label' => 'app.ui.instagram_url',
+                'constraints' => [
+                    new Url()
+                ]
+            ])
+            ->add('pinterestUrl', null, [
+                'label' => 'app.ui.pinterest_url',
+                'constraints' => [
+                    new Url()
+                ]
+            ])
+            ->add('appStoreUrl', null, [
+                'label' => 'app.ui.app_store_url',
+                'constraints' => [
+                    new Url()
+                ]
+            ])
+            ->add('playStoreUrl', null, [
+                'label' => 'app.ui.play_store_url',
+                'constraints' => [
+                    new Url()
                 ]
             ])
         ;

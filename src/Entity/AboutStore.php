@@ -7,6 +7,7 @@ use App\Model\IpTraceableTrait;
 use App\Model\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @ORM\Table(name="app_about_store")
@@ -14,6 +15,10 @@ use Sylius\Component\Resource\Model\ResourceInterface;
  */
 class AboutStore implements ResourceInterface
 {
+    const THEME_DARK = 'dark';
+
+    const THEME_LIGHT = 'light';
+
     use TimestampableTrait, BlameableTrait, IpTraceableTrait;
 
     /**
@@ -82,6 +87,48 @@ class AboutStore implements ResourceInterface
      * @ORM\Column(name="delivery_hours", type="json", nullable=true)
      */
     private $deliveryHours = [];
+
+    /**
+     * @var string
+     * @ORM\Column(name="facebook_url", type="string", length=255, nullable=true)
+     */
+    private $facebookUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="twitter_url", type="string", length=255, nullable=true)
+     */
+    private $twitterUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="instagram_url", type="string", length=255, nullable=true)
+     */
+    private $instagramUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="pinterest_url", type="string", length=255, nullable=true)
+     */
+    private $pinterestUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="app_store_url", type="string", length=255, nullable=true)
+     */
+    private $appStoreUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="play_store_url", type="string", length=255, nullable=true)
+     */
+    private $playStoreUrl;
+
+    /**
+     * @var string
+     * @ORM\Column(name="theme", type="string", length=100, nullable=true)
+     */
+    private $theme = self::THEME_DARK;
 
     public function getId(): ?int
     {
@@ -287,6 +334,147 @@ class AboutStore implements ResourceInterface
     public function setDeliveryHours(?array $deliveryHours): AboutStore
     {
         $this->deliveryHours = $deliveryHours;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacebookUrl(): ?string
+    {
+        return $this->facebookUrl;
+    }
+
+    /**
+     * @param string $facebookUrl
+     * @return AboutStore
+     */
+    public function setFacebookUrl(?string $facebookUrl): AboutStore
+    {
+        $this->facebookUrl = $facebookUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTwitterUrl(): ?string
+    {
+        return $this->twitterUrl;
+    }
+
+    /**
+     * @param string $twitterUrl
+     * @return AboutStore
+     */
+    public function setTwitterUrl(?string $twitterUrl): AboutStore
+    {
+        $this->twitterUrl = $twitterUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInstagramUrl(): ?string
+    {
+        return $this->instagramUrl;
+    }
+
+    /**
+     * @param string $instagramUrl
+     * @return AboutStore
+     */
+    public function setInstagramUrl(?string $instagramUrl): AboutStore
+    {
+        $this->instagramUrl = $instagramUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPinterestUrl(): ?string
+    {
+        return $this->pinterestUrl;
+    }
+
+    /**
+     * @param string $pinterestUrl
+     * @return AboutStore
+     */
+    public function setPinterestUrl(?string $pinterestUrl): AboutStore
+    {
+        $this->pinterestUrl = $pinterestUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppStoreUrl(): ?string
+    {
+        return $this->appStoreUrl;
+    }
+
+    /**
+     * @param string $appStoreUrl
+     * @return AboutStore
+     */
+    public function setAppStoreUrl(?string $appStoreUrl): AboutStore
+    {
+        $this->appStoreUrl = $appStoreUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlayStoreUrl(): ?string
+    {
+        return $this->playStoreUrl;
+    }
+
+    /**
+     * @param string $playStoreUrl
+     * @return AboutStore
+     */
+    public function setPlayStoreUrl(?string $playStoreUrl): AboutStore
+    {
+        $this->playStoreUrl = $playStoreUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTheme(): ?string
+    {
+        if (!$this->theme) {
+            return self::THEME_DARK;
+        }
+
+        return $this->theme;
+    }
+
+    /**
+     * @param string $theme
+     * @return AboutStore
+     */
+    public function setTheme(?string $theme): AboutStore
+    {
+        if (!in_array($theme, [self::THEME_DARK, self::THEME_LIGHT])) {
+            throw new BadRequestHttpException('Invalid theme selection.');
+        }
+
+        $this->theme = $theme;
 
         return $this;
     }

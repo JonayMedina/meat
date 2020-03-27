@@ -11,7 +11,7 @@ require 'recipe/telegram.php';
 set('application', 'Meat House');
 
 /** Symfony shared dirs */
-set('shared_dirs', ['var/logs', 'public/uploads', 'public/media', 'public/assets', 'public/bundles', 'node_modules']);
+set('shared_dirs', ['var/logs', 'public/uploads', 'public/media', 'public/assets', 'public/bundles', 'node_modules', 'config/jwt']);
 
 /** Symfony shared files */
 set('shared_files', ['.env.local']);

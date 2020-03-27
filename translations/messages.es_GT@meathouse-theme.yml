@@ -426,22 +426,37 @@ app.ui.holidays_new: 'Nuevo día festivo'
 app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
 app.ui.this_field_cannot_be_blank: 'Este campo no puede ir vacío.'
 app.email.follow_us_on_%social_meadia%: 'Siguenos en %social_media%'
-app.email.default_message: Mensaje por defecto
-app.email.welcome_to_%company%_%user%: ¡Bienvenido a %company%, %user%!
-app.email.register_message: Bienvenido a nuestra tienda, es un gusto tenerte con nosotros. ¡Disfruta de todos nuestros productos al mejor precio!
+app.email.default_message: 'Mensaje por defecto'
+app.email.welcome_to_%company%_%user%: '¡Bienvenido a %company%, %user%!'
+app.email.register_message: 'Bienvenido a nuestra tienda, es un gusto tenerte con nosotros. ¡Disfruta de todos nuestros productos al mejor precio!'
 app.email.user_registration: '¡Te has registrado con éxito!'
 app.email.password_reset: '¡Restablecimiento de contraseña!'
 app.email.hello_%name%: '¡Hola %name%!'
 app.email.to_reset_password: 'Para restablecer tu contraseña por favor ingresa el siguiente código en el sitio:'
-app.ui.enter_the_token: Ingresa el código
-app.ui.reset_instructions: Te enviamos un código a tu correo. Por favor revista tu correo y escribe abajo el código que te enviamos.
+app.ui.enter_the_token: 'Ingresa el código'
+app.ui.reset_instructions: 'Te enviamos un código a tu correo. Por favor revista tu correo y escribe abajo el código que te enviamos.'
 app.ui.recover: Recuperar
-app.ui.did_not_get_your_code?_%link%: '¿No te llegó tu código? %link%'
-app.ui.resend_code_here: Reenvíalo haciendo click aquí.
+'app.ui.did_not_get_your_code?_%link%': '¿No te llegó tu código? %link%'
+app.ui.resend_code_here: 'Reenvíalo haciendo click aquí.'
 app.ui.code: Código
-app.ui.create_new_password: Crea una nueva contraseña
-app.ui.new_password_instructions: Escribe la contraseña que ahora usarás para ingresar a tu cuenta.
+app.ui.create_new_password: 'Crea una nueva contraseña'
+app.ui.new_password_instructions: 'Escribe la contraseña que ahora usarás para ingresar a tu cuenta.'
 app.ui.reset: Recuperar
-app.form.user_reset_password.confirmation: Reescribe tu nueva contraseña
+app.form.user_reset_password.confirmation: 'Reescribe tu nueva contraseña'
 app.ui.locations_no_items_on_table: 'No se encontraron ubicaciones, puede crear una pulsando sobre el botón "Nueva ubicación"'
-app.ui.back_to_profile: Regresa a tu perfil
+app.ui.back_to_profile: 'Regresa a tu perfil'
+app.ui.category_color_text: 'Selecciona el tema que deseas aplicar en las categorías. (NOTA: Al seleccionarlo, afectará a ambas plataformas, web y app.)'
+app.ui.about_procasa_links: Links
+app.ui.app_store_url: 'URL a la AppStore'
+app.ui.play_store_url: 'URL a la PlayStore'
+app.ui.pinterest_url: 'URL de Pinterest'
+app.ui.instagram_url: 'URL de Instagram'
+app.ui.twitter_url: 'URL de Twitter'
+app.ui.facebook_url: 'URL de Facebook'
+app.ui.category_color_not_sure_title: '¿No estás seguro cómo se verá la imagen?'
+app.ui.category_color_not_sure_text: 'Sube una imagen y observa cómo se ve mejor. Esto no afecta a ninguna de las plataformas ya que es solo una prueba.'
+app.ui.category_color_light_theme: 'Tema claro'
+app.ui.category_color_dark_theme: 'Tema oscuro'
+app.ui.theme_subtitle_text: 'Muestra en app'
+app.ui.category_color_seafood: Mariscos
+app.ui.category_color_chicken: Pollo

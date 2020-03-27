@@ -4,11 +4,256 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.category_color'|trans }}</h1>
-            <br><br>
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                <h1>{{ 'app.ui.category_color'|trans }}</h1>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
 
+                        <div class="row border-bottom padding-bottom-35">
+                            <div class="col-lg-12">
+                                <p>{{ 'app.ui.category_color_text'|trans }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row padding-bottom-15 padding-top-15">
+                            <div class="theme-wrapper dark-theme">
+                                <label class="radio">
+                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_DARK') }}" {% if settings.theme == constant('App\\Entity\\AboutStore::THEME_DARK') %}checked{% endif %} class="theme-selector">
+                                    <span class="check-mark"></span>
+                                </label>
+
+                                <p class="theme-title">
+                                    {{ 'app.ui.category_color_dark_theme'|trans }}
+                                </p>
+
+                                <div class="img-wrapper">
+                                    <p class="sample-text">{{ 'app.ui.category_color_seafood'|trans }}</p>
+                                    <img src="{{ asset('meathouse/img/assets/seafood.png') }}" alt="{{ 'app.ui.category_color_dark_theme'|trans }}" class="theme-img">
+                                </div>
+
+                                <p class="theme-subtitle">
+                                    {{ 'app.ui.theme_subtitle_text'|trans }}
+                                </p>
+                            </div>
+
+                            <div class="theme-wrapper light-theme">
+                                <label class="radio">
+                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_LIGHT') }}" {% if settings.theme == constant('App\\Entity\\AboutStore::THEME_LIGHT') %}checked{% endif %} class="theme-selector">
+                                    <span class="check-mark"></span>
+                                </label>
+
+                                <p class="theme-title">
+                                    {{ 'app.ui.category_color_light_theme'|trans }}
+                                </p>
+
+                                <div class="img-wrapper">
+                                    <p class="sample-text">{{ 'app.ui.category_color_chicken'|trans }}</p>
+                                    <img src="{{ asset('meathouse/img/assets/chicken.png') }}" alt="{{ 'app.ui.category_color_light_theme'|trans }}" class="theme-img">
+                                </div>
+
+                                <p class="theme-subtitle">
+                                    {{ 'app.ui.theme_subtitle_text'|trans }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row padding-top-35 padding-bottom-35">
+                            <div class="col-lg-12">
+                                <h4>{{ 'app.ui.category_color_not_sure_title'|trans }}</h4>
+                                <p>{{ 'app.ui.category_color_not_sure_text'|trans }}</p>
+                            </div>
+
+                            <div class="col-lg-6 margin-top-25">
+                                <div class="custom-file">
+                                    <input type="file" id="image-picker" accept="image/x-png,image/jpeg" placeholder="{{ 'app.ui.choose_file'|trans }}" class="custom-file-input" />
+                                    <label for="image-picker"  class="custom-file-label">{{ 'app.ui.choose_file'|trans }}</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+  {{ parent() }}
+  <script>
+  $(document).ready(function() {
+      var $wrapper = $('#wrapper');
+      var $imagePicker = $wrapper.find('#image-picker');
+      var $themeSelector = $wrapper.find('.theme-selector');
+
+      $themeSelector.on('change', function() {
+          var value = $(this).val();
+          blockUI();
+
+          $.ajax({
+              type: 'POST',
+              url: Routing.generate('category_color'),
+              data: { theme: value },
+              success: function() {
+                  unblockUI();
+              },
+              error: function() {
+                  unblockUI();
+              }
+          });
+      });
+
+      $imagePicker.on('change', function() {
+          var $input = $(this)[0];
+          readURL($input);
+      });
+
+      function readURL(input) {
+          var url = input.value;
+          var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+          if (input.files && input.files[0]&& (ext == "png" || ext == "jpeg" || ext == "jpg")) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                  $('.theme-img').attr('src', e.target.result);
+              };
+
+              reader.readAsDataURL(input.files[0]);
+          } else{
+               $('#img').attr('src', '/assets/no_preview.png');
+          }
+        }
+  });
+  </script>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        h4 {
+            color: #404040 !important;
+            font-weight: 600;
+        }
+        .theme-wrapper {
+            height: 290px;
+            width: 376px;
+            border-radius: 28px;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 7px 0 rgba(145,113,113,0.35);
+            margin-right: 30px;
+        }
+
+        .theme-wrapper label.radio {
+            float: right;
+            margin-right: 45px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .theme-title {
+            color: #404040;
+            font-size: 24px;
+            font-weight: 500;
+            letter-spacing: 0;
+            line-height: 29px;
+            margin-top: 55px;
+            margin-left: 34px;
+        }
+
+        .theme-subtitle {
+            height: 22px;
+            width: 248px;
+            color: #404040;
+            font-size: 14px;
+            letter-spacing: 1px;
+            line-height: 21px;
+            margin-left: 50px;
+            margin-top: 10px;
+        }
+
+        .theme-img {
+            height: 87px;
+            width: 274px;
+            border-radius: 5px;
+        }
+
+        .img-wrapper {
+            position: relative;
+            margin-left: 52px;
+            margin-top: 10px;
+            margin-right: 52px;
+        }
+
+        .dark-theme .sample-text {
+            color: #FFFFFF;
+        }
+
+        .light-theme .sample-text {
+            color: #404040;
+        }
+
+        .sample-text {
+            left: 12px;
+            top: 3px;
+            position: absolute;
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        /* Hide the browser's default checkbox */
+        .checkbox input, .radio input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* Create a custom checkbox */
+        .check-mark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error .check-mark {
+            background-color: rgba(205, 10, 10, .3);
+        }
+
+        .radio .check-mark {
+            top: 5px;
+        }
+
+        .radio .check-mark, .radio input:checked ~ .check-mark:before {
+            border-radius: 50px !important;
+        }
+
+        /* On mouse-over, add a grey background color */
+        .checkbox:hover input ~ .check-mark, .radio:hover input ~ .check-mark {
+            background-color: #ccc;
+        }
+
+        /* When the checkbox is checked, add a blue background */
+        .checkbox input:checked ~ .check-mark:before, .radio input:checked ~ .check-mark:before {
+            content: " ";
+            margin: 4px;
+            width: 15px;
+            height: 15px;
+            display: block;
+            border-radius: 10px;
+            background-color: rgba(145, 113, 113, 1);
+        }
+    </style>
 {% endblock %}
