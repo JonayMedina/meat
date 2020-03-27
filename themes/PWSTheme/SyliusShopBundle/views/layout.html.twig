@@ -112,8 +112,6 @@
 </div>
 
 {% block javascripts %}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
-
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -121,6 +119,7 @@
     <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}"></script>
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
 
     {% block extrajs %}{% endblock %}
 {% endblock %}
