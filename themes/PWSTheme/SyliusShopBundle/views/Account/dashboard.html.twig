@@ -56,9 +56,10 @@
                                     {% endif %}
                                 </div>
                                 <div class="col-12 text-center mb-5 mt-5">
-                                    {% if customer.addresses|length <= 0 %}
-                                    <p class="text-center">{{ 'app.ui.profile.add_delivery_information'|trans|raw }}</p>
-                                    <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                                    {% if customer.addresses|length > 0 %}
+                                    {% else %}
+                                        <p class="text-center">{{ 'app.ui.profile.add_delivery_information'|trans|raw }}</p>
+                                        <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
                                     {% endif %}
                                 </div>
                             </div>

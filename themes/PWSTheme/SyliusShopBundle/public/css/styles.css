@@ -41,13 +41,43 @@ form label {
     text-align: left;
 }
 
-form input {
+form input, form textarea {
     font-family: "Raleway Light", sans-serif !important;
     font-size: 16px !important;
     border-radius: 15px !important;
 }
 
-form input, form input:-webkit-autofill {
+form textarea {
+    resize: none !important;
+    max-height: 80px !important;
+    overflow-y: scroll !important;
+}
+
+form textarea::-webkit-scrollbar {
+    display: none;
+}
+
+form textarea::-webkit-input-placeholder {
+    color: #917171 !important;
+}
+
+form textarea:-moz-placeholder {
+    color: #917171 !important;
+}
+
+form textarea::-moz-placeholder {
+    color: #917171 !important;
+}
+
+form textarea:-ms-input-placeholder {
+    color: #917171 !important;
+}
+
+form textarea::placeholder {
+    color: #917171 !important;
+}
+
+form input, form input:-webkit-autofill, form textarea, form textarea:-webkit-autofill {
     background: #F5F5F5 !important;
     background-color: #F5F5F5 !important;
     border-color: #F5F5F5 !important;
@@ -130,6 +160,12 @@ strong {
 
 .max-w-mx-content {
     max-width: max-content;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: #917171;
 }
 
 /* Custom */
@@ -246,6 +282,14 @@ h1 {
     border-bottom: 1px solid #917171;
 }
 
+.mh-color {
+    color: #917171 !important;
+}
+
+.f-rl-light {
+    font-family: "Raleway Light", sans-serif !important;
+}
+
 .forgot-password form {
     max-width: 400px !important;
     border-bottom: none;
@@ -255,6 +299,10 @@ h1 {
     max-width: 650px !important;
     padding: 20px 0 25px 0;
     border-bottom: 1px solid #917171;
+}
+
+.register.profile form {
+    border-bottom: none;
 }
 
 .login form > div {
@@ -268,6 +316,10 @@ h1 {
 .login a:not(.btn-login-with), .login  a:not(.btn-login-with):hover, .register a:not(.btn-login-with), .register  a:not(.btn-login-with):hover,
 .forgot-password a:not(.btn-login-with), .forgot-password  a:not(.btn-login-with):hover {
     text-decoration: underline !important;
+}
+
+.register.profile a:not(.btn-login-with).btn-rounded {
+    text-decoration: none !important;
 }
 
 .register .form .row > div:first-of-type {

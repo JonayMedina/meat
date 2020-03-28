@@ -17,6 +17,8 @@ class ShopUser extends BaseShopUser
 {
     use BlameableTrait, IpTraceableTrait;
 
+    const ADDRESS_LIMIT = 3;
+
     /**
      * @var \DateTime
      * @ORM\Column(name="terms_and_conditions_accepted_at", type="datetime", nullable=true)

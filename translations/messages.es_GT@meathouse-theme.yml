@@ -460,3 +460,10 @@ app.ui.category_color_dark_theme: 'Tema oscuro'
 app.ui.theme_subtitle_text: 'Muestra en app'
 app.ui.category_color_seafood: Mariscos
 app.ui.category_color_chicken: Pollo
+app.ui.add_your_information: Agrega tu información
+app.ui.profile.update.optional_fields_to_offers: Agrega tu fecha de nacimiento y género para recibir promociones especiales.
+app.form.address.full_address: Dirección de entrega
+app.form.address.annotations: Pregunta por
+app.form.address.phone_number: Teléfono de contacto
+app.ui.address.full_address.instructions: Ingresa tu dirección exacta, códigos de accesso y/o indicaciones para encontrarla.
+app.ui.add_another_address: Agregar otra dirección
