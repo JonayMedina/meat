@@ -2,6 +2,9 @@
     "akeneo/phpspec-skip-example-extension": {
         "version": "v3.0.0"
     },
+    "aws/aws-sdk-php": {
+        "version": "3.133.45"
+    },
     "behat/behat": {
         "version": "v3.5.0"
     },
@@ -269,6 +272,12 @@
     "lcobucci/jwt": {
         "version": "3.3.1"
     },
+    "league/flysystem": {
+        "version": "1.0.66"
+    },
+    "league/flysystem-aws-s3-v3": {
+        "version": "1.0.24"
+    },
     "league/uri": {
         "version": "5.3.0"
     },
@@ -326,6 +335,9 @@
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "mtdowling/jmespath.php": {
+        "version": "2.5.0"
+    },
     "myclabs/deep-copy": {
         "version": "1.8.1"
     },
@@ -358,6 +370,18 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.0"
+    },
+    "oneup/flysystem-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "0eb87bba411c227da027fe5f7c1dc7954b02f242"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
     },
     "openlss/lib-array2xml": {
         "version": "0.0.10"

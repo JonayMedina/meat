@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Location;
 use App\Form\Admin\LocationType;
 use App\Repository\LocationRepository;
+use App\Service\UploaderHelper;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -99,9 +100,11 @@ class LocationController extends AbstractController
      * New location.
      * @Route("/location/new", name="locations_new")
      * @param Request $request
+     * @param UploaderHelper $uploaderHelper
      * @return Response
+     * @throws \League\Flysystem\FileExistsException
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, UploaderHelper $uploaderHelper)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -115,7 +118,13 @@ class LocationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleUpload($form, $location);
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['photoType']->getData();
+            if ($uploadedFile) {
+                $newFilename = $uploaderHelper->uploadLocationImage($uploadedFile, $location->getPhoto());
+                $location->setPhoto($newFilename);
+            }
+
             $entityManager->persist($location);
 
             try {
@@ -140,9 +149,10 @@ class LocationController extends AbstractController
      * Edit location.
      * @Route("/location/{id}/edit", name="locations_edit")
      * @param Request $request
+     * @param UploaderHelper $uploaderHelper
      * @return Response
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, UploaderHelper $uploaderHelper)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $location = $this->repository->find($request->get('id'));
@@ -155,7 +165,16 @@ class LocationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->handleUpload($form, $location);
+            /** @var UploadedFile $uploadedFile */
+            $uploadedFile = $form['photoType']->getData();
+            if ($uploadedFile) {
+                try {
+                    $newFilename = $uploaderHelper->uploadLocationImage($uploadedFile, $location->getPhoto());
+                    $location->setPhoto($newFilename);
+                } catch (\Exception $exception) {
+                    $this->addFlash('danger', $exception->getMessage());
+                }
+            }
 
             try {
                 $entityManager->flush();
@@ -214,31 +233,6 @@ class LocationController extends AbstractController
             $this->logger->error($exception->getMessage());
 
             return null;
-        }
-    }
-
-    /**
-     * Handle form upload.
-     * @param FormInterface $form
-     * @param Location $location
-     */
-    private function handleUpload(FormInterface $form, Location $location)
-    {
-        /** @var UploadedFile $locationFile */
-        $locationFile = $form->get('photoType')->getData();
-
-        if ($locationFile) {
-            $originalFilename = pathinfo($locationFile->getClientOriginalName(), PATHINFO_FILENAME);
-            // this is needed to safely include the file name as part of the URL
-            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$locationFile->guessExtension();
-
-            // Move the file to the directory where brochures are stored
-            $locationFile->move( $this->getParameter('location_directory'), $newFilename);
-
-            // updates the 'brochureFilename' property to store the PDF file name
-            // instead of its contents
-            $location->setPhoto($newFilename);
         }
     }
 }

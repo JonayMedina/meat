@@ -478,4 +478,14 @@ class AboutStore implements ResourceInterface
 
         return $this;
     }
+
+
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return 'MH Settings';
+    }
 }

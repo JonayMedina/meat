@@ -4,11 +4,11 @@ namespace App\Twig;
 
 use App\Service\SettingsService;
 use Exception;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig\TwigFilter;
-use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Function;
+use App\Service\UploaderHelper;
+use Twig\Extension\AbstractExtension;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AppExtension
@@ -20,15 +20,30 @@ class AppExtension extends AbstractExtension
     /** @var ContainerInterface $container */
     private $container;
 
+    /**
+     * @var UploaderHelper $uploaderHelper
+     */
+    private $uploaderHelper;
+
     /** @var SettingsService $settingsService */
     private $settingsService;
 
-    public function __construct(ContainerInterface $serviceContainer, SettingsService $settingsService)
+    /**
+     * AppExtension constructor.
+     * @param ContainerInterface $container
+     * @param UploaderHelper $uploaderHelper
+     * @param SettingsService $settingsService
+     */
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService)
     {
-        $this->container = $serviceContainer;
+        $this->container = $container;
+        $this->uploaderHelper = $uploaderHelper;
         $this->settingsService = $settingsService;
     }
 
+    /**
+     * @return array|TwigFilter[]
+     */
     public function getFilters()
     {
         return [
@@ -38,16 +53,43 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * @return array|Twig_Function[]
+     * @return array|TwigFunction[]
      */
     public function getFunctions()
     {
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
+            new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('aboutStore', [$this, 'AboutStore'])
         ];
     }
 
+    /**
+     * @param $path
+     * @return string
+     */
+    public function getUploadedLocationAssetPath($path)
+    {
+        return $this->getUploadedAssetPath( UploaderHelper::LOCATION_IMAGE . '/' . $path);
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public function getUploadedAssetPath(string $path): string
+    {
+        return $this->uploaderHelper
+            ->getPublicPath($path);
+    }
+
+    /**
+     * @param $number
+     * @param int $decimals
+     * @param string $decPoint
+     * @param string $thousandsSep
+     * @return float|int|string
+     */
     public function formatPrice($number, $decimals = 2, $decPoint = '.', $thousandsSep = ',')
     {
         $price = $number / 100;
@@ -56,6 +98,10 @@ class AppExtension extends AbstractExtension
         return $price;
     }
 
+    /**
+     * @param $url
+     * @return string
+     */
     public function imageToBase64($url) {
         $arrContextOptions=array(
             "ssl"=>array(
