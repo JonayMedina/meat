@@ -49,4 +49,14 @@ class TermsAndConditions implements ResourceInterface
     {
         $this->text = $text;
     }
+
+
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->text;
+    }
 }

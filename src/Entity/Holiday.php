@@ -110,7 +110,4 @@ class Holiday implements ResourceInterface
     {
         return $this->name;
     }
-
-
-    // TODO: Implement __toString()
 }

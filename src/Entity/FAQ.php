@@ -197,4 +197,12 @@ class FAQ implements ResourceInterface
 
         return $this;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->question;
+    }
 }

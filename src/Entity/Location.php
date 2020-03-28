@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
 use App\Model\TimestampableTrait;
+use App\Service\UploaderHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
@@ -176,5 +177,18 @@ class Location implements ResourceInterface
         $this->photo = $photo;
 
         return $this;
+    }
+
+    public function getFilePath(): string
+    {
+        return UploaderHelper::LOCATION_IMAGE.'/'.$this->getPhoto();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }
