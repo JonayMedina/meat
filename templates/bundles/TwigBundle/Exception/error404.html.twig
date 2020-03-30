@@ -1,1 +1,20 @@
-{% include '@SyliusShop/error404.html.twig' %}
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 pt-5 pb-5 mb-5 mt-5">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 sm-text-center sm-pl-0-i sm-pr-0-i">
+                    <img src="{{ asset('bundles/syliusshop/img/404.png') }}" alt="404" title="404" width="auto" height="auto">
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-center sm-mt-4">
+                    <div class="text-center">
+                        <h1>{{ 'app.error.tasty_ham'|trans }}</h1>
+                        <p class="text-center">{{ 'app.error.404.message'|trans }}</p>
+                        <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.got_to_home'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

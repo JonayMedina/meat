@@ -30,6 +30,13 @@ p.small {
     font-size: 14px !important;
 }
 
+h1 {
+    font-size: 32px !important;
+    font-family: "Raleway Medium", sans-serif;
+    color: #AB162B;
+    padding: 20px 0;
+}
+
 h3 {
     font-family: "Raleway Medium", sans-serif;
     font-size: 24px;
@@ -168,6 +175,10 @@ strong {
     background: #917171;
 }
 
+.txt-decoration-none {
+    text-decoration: none !important;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -262,13 +273,6 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 1em 1em 50px;
     border-radius: .28571429rem;
     border: 1px solid rgba(34,36,38,.15);
-}
-
-h1 {
-    font-size: 32px;
-    font-family: "Raleway Medium", sans-serif;
-    color: #AB162B;
-    padding: 20px 0;
 }
 
 .login form, .forgot-password form {
@@ -795,6 +799,46 @@ label.error:after {
 
     .pr-0.r-pr-15 {
         padding-right: 15px !important;
+    }
+
+    .sm-text-center {
+        text-align: center;
+    }
+
+    .sm-mt-1 {
+        margin-top: 1rem;
+    }
+
+    .sm-mt-2 {
+        margin-top: 2rem;
+    }
+
+    .sm-mt-3 {
+        margin-top: 3rem;
+    }
+
+    .sm-mt-4 {
+        margin-top: 4rem;
+    }
+
+    .sm-mt-5 {
+        margin-top: 5rem;
+    }
+
+    .sm-pl-0 {
+        padding-left: 0;
+    }
+
+    .sm-pr-0 {
+        padding-right: 0;
+    }
+
+    .sm-pl-0-i {
+        padding-left: 0 !important;
+    }
+
+    .sm-pr-0-i {
+        padding-right: 0 !important;
     }
 }
 
