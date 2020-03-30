@@ -2,7 +2,7 @@ imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
 
     #- { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
-    - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
+    #- { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
 
     - { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
 
@@ -27,20 +27,20 @@ sylius_addressing:
             classes:
                 model: App\Entity\Addressing\ZoneMember
 
-sylius_admin_api:
-    resources:
-        api_client:
-            classes:
-                model: App\Entity\AdminApi\Client
-        api_access_token:
-            classes:
-                model: App\Entity\AdminApi\AccessToken
-        api_refresh_token:
-            classes:
-                model: App\Entity\AdminApi\RefreshToken
-        api_auth_code:
-            classes:
-                model: App\Entity\AdminApi\AuthCode
+#sylius_admin_api:
+#    resources:
+#        api_client:
+#            classes:
+#                model: App\Entity\AdminApi\Client
+#        api_access_token:
+#            classes:
+#                model: App\Entity\AdminApi\AccessToken
+#        api_refresh_token:
+#            classes:
+#                model: App\Entity\AdminApi\RefreshToken
+#        api_auth_code:
+#            classes:
+#                model: App\Entity\AdminApi\AuthCode
 
 sylius_attribute:
     resources:
