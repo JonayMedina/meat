@@ -57,4 +57,14 @@ class ResourcesController extends AbstractController
 
         return $this->render('/frontend/security/setResetToken.html.twig');
     }
+
+    /**
+     * @Route("/work-with-us", name="store_work_with_us")
+     * @return Response
+     */
+    public function workWithUsAction() {
+        $this->get('session')->getFlashBag()->clear();
+
+        return $this->render('/frontend/pages/workWithUs.html.twig');
+    }
 }

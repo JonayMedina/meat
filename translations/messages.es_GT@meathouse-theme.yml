@@ -472,3 +472,4 @@ app.error.404.message: 'Pero no era donde querías llegar ¿cierto? Lo más segu
 app.ui.got_to_home: Ir al catálogo
 app.error.oops: '¡Oops!'
 app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un poco mientras lo arreglamos e inténtalo nuevamente.'
+app.ui.work_with_us.message_%email%: Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.

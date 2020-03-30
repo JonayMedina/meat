@@ -885,6 +885,42 @@ label.error:after {
     #footer>div>div>div.app-btns div a:first-of-type {
         margin-right: 10px;
     }
+
+    .xs-text-left {
+        text-align: left;
+    }
+
+    .xs-text-left-i, .text-center.xs-text-left-i {
+        text-align: left !important;
+    }
+
+    .xs-segment {
+        background: #ffffff;
+    }
+
+    .mt-1.xs-mt-0, .mt-2.xs-mt-0, .mt-3.xs-mt-0, .mt-3.xs-mt-0, .mt-5.xs-mt-0 {
+        margin-top: 0 !important;
+    }
+
+    .xs-mt-1 {
+        margin-top: 1rem;
+    }
+
+    .xs-mt-2 {
+        margin-top: 2rem;
+    }
+
+    .xs-mt-3 {
+        margin-top: 3rem;
+    }
+
+    .xs-mt-4 {
+        margin-top: 4rem;
+    }
+
+    .xs-mt-5 {
+        margin-top: 5rem;
+    }
 }
 
 @media (max-width: 480px) {
