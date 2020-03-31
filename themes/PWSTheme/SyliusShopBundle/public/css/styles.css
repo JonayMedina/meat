@@ -895,7 +895,10 @@ label.error:after {
 
     #footer .bottom-footer > div > div > div:nth-of-type(2) {
         order: 1;
-        justify-content: space-around !important;
+    }
+
+    #footer .bottom-footer > div > div > div:nth-of-type(2) a:last-of-type {
+        margin-right: 0 !important;
     }
 
     #footer .bottom-footer > div > div > div:nth-of-type(3) {
