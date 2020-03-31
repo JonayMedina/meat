@@ -68,6 +68,11 @@ services:
         class: App\Form\Extension\CustomerProfileTypeExtension
         tags:
             - { name: form.type_extension, extended_types: Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType }
+                
+    app.form.extension.type.address:
+        class: App\Form\Extension\AddressTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\AddressingBundle\Form\Type\AddressType }
             
     Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'
                 

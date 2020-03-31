@@ -39,6 +39,17 @@
                     <a href="{{ path('sylius_shop_register') }}" class="nav-link">{{ 'app.ui.register'|trans }}</a>
                 </li>
             {% endif %}
+
+            {% if sylius.channel.currencies|length > 1 or sylius.channel.locales|length > 1 %}
+                <button class="btn text-white" type="button" data-toggle="collapse" data-target="#settings-collapse" aria-expanded="false" aria-controls="settings-collapse">
+                    <i class="fas fa-cog fa-2x"></i>
+                </button>
+
+                <div class="collapse extra-actions text-white" id="settings-collapse">
+                    {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
+                    {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
+                </div>
+            {% endif %}
         </ul>
     </div>
     <div class="sub-navbar-nav bg-white">
@@ -63,6 +74,17 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="first-navbar">
+                    {% if sylius.channel.currencies|length > 1 or sylius.channel.locales|length > 1 %}
+                        <div class="settings">
+                            <div class="collapse extra-actions text-white" id="settings-collapse">
+                                {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
+                                {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
+                            </div>
+                            <button class="btn text-white" type="button" data-toggle="collapse" data-target="#settings-collapse" aria-expanded="false" aria-controls="settings-collapse">
+                                <i class="fas fa-cog fa-2x"></i>
+                            </button>
+                        </div>
+                    {% endif %}
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

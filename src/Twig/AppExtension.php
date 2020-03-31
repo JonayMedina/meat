@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Service\SettingsService;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -24,15 +25,20 @@ class AppExtension extends AbstractExtension
      */
     private $uploaderHelper;
 
+    /** @var SettingsService $settingsService */
+    private $settingsService;
+
     /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
+     * @param SettingsService $settingsService
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -53,7 +59,8 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
-            new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath'])
+            new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
+            new TwigFunction('aboutStore', [$this, 'AboutStore'])
         ];
     }
 
@@ -117,5 +124,31 @@ class AppExtension extends AbstractExtension
     public function getUrl()
     {
         return getenv('APP_URL');
+    }
+
+    /**
+     * @param string $option
+     * @return string|null
+     */
+    public function aboutStore($option = 'about-us') {
+        switch ($option) {
+            case 'facebook': return $this->settingsService->getFacebookUrl();
+            case 'instagram': return $this->settingsService->getInstagramUrl();
+            case 'twitter': return $this->settingsService->getTwitterUrl();
+            case 'pinterest': return $this->settingsService->getPinterestUrl();
+            case 'app-store': return $this->settingsService->getAppStoreUrl();
+            case 'play-store': return $this->settingsService->getPlayStoreUrl();
+            case 'phrase': return $this->settingsService->getPhrase();
+            case 'author': return $this->settingsService->getAuthor();
+            case 'delivery-hours': return $this->settingsService->getDeliveryHours();
+            case 'show-search': return $this->settingsService->getShowProductSearchBox();
+            case 'days-to-choose': return $this->settingsService->getDaysToChooseInAdvanceToPurchase();
+            case 'first-purchase-ms': return $this->settingsService->getFirstPurchaseMessage();
+            case 'new-address-ms': return $this->settingsService->getNewAddressMessage();
+            case 'max-purchase': return $this->settingsService->getMaximumPurchaseValue();
+            case 'min-purchase': return $this->settingsService->getMinimumPurchaseValue();
+            default:
+                return $this->settingsService->getAboutUs();
+        }
     }
 }

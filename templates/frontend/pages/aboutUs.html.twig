@@ -1,0 +1,126 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .container.first {
+            display: none;
+        }
+
+        .phrase {
+            position: relative;
+            background: linear-gradient(rgba(145, 113, 113, .58), rgba(145, 113, 113, .58)), url("{{ asset('bundles/syliusshop/img/about-us.png') }}"), no-repeat, center !important;
+            background-size: cover !important;
+        }
+
+        .phrase img {
+            visibility: hidden;
+        }
+
+        .phrase .content {
+            position: absolute;
+            top: 43%;
+            left: 25%;
+            width: 50%;
+        }
+
+        .phrase .content p {
+            font-family: "Raleway Medium", sans-serif;
+            color: #ffffff;
+            font-size: 24px;
+        }
+
+        .phrase .content p.text-right {
+            margin-right: 20px;
+        }
+
+        #footer {
+            margin-top: 0;
+        }
+
+        @media (max-width: 991px) {
+            .phrase .content {
+                top: 35%;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .phrase .content {
+                top: 30%;
+                left: 20%;
+                width: 60%;
+            }
+        }
+
+        @media (max-width: 479px) {
+            .phrase .content {
+                top: 15%;
+                left: 17%;
+                width: 60%;
+            }
+        }
+
+        @media (max-width: 454px) {
+            .phrase .content {
+                top: 21%;
+                left: 10%;
+                width: 80%;
+            }
+
+            .phrase .content p {
+                font-size: 5vw;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block contentFluid %}
+<div class="container-fluid about-us">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-center pt-4 pb-5 about sm-order-2">
+                    <div>
+                        <h1>{{ 'app.ui.frontend.about_procasa'|trans }}</h1>
+                        {% set email = '<a href="mailto:' ~ (sylius.channel.contactEmail)|default('example@mnc.com') ~ '">' ~ (sylius.channel.contactEmail)|default('example@mnc.com') ~ '</a>' %}
+                        <p>{{ aboutStore()|raw }}</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 pr-0 phrase sm-order-1">
+                    <img class="w-100" src="{{ asset('bundles/syliusshop/img/about-us.png') }}" alt="{{ 'app.ui.frontend.about_procasa'|trans }}" title="{{ 'app.ui.frontend.about_procasa'|trans }}" width="auto" height="auto">
+                    <div class="content">
+                        <p>"{{ aboutStore('phrase') }}"</p>
+                        <p class="text-right">- {{ aboutStore('author') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            calcPL();
+
+            $(window).resize(function () {
+                calcPL();
+            });
+
+            function calcPL () {
+                var $container =  $('.container');
+                var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+                if (window.innerWidth < 992) {
+                    marg = 15;
+                }
+
+                $('.container-fluid .about').attr('style', 'padding-left: ' + marg + 'px');
+            }
+        });
+    </script>
+{% endblock %}
