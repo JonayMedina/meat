@@ -179,6 +179,14 @@ strong {
     text-decoration: none !important;
 }
 
+.mw-30 {
+    max-width: 30%;
+}
+
+.mw-30-i {
+    max-width: 30% !important;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
