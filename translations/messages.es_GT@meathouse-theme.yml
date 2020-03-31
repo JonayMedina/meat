@@ -460,3 +460,16 @@ app.ui.category_color_dark_theme: 'Tema oscuro'
 app.ui.theme_subtitle_text: 'Muestra en app'
 app.ui.category_color_seafood: Mariscos
 app.ui.category_color_chicken: Pollo
+app.ui.add_your_information: Agrega tu información
+app.ui.profile.update.optional_fields_to_offers: Agrega tu fecha de nacimiento y género para recibir promociones especiales.
+app.form.address.full_address: Dirección de entrega
+app.form.address.annotations: Pregunta por
+app.form.address.phone_number: Teléfono de contacto
+app.ui.address.full_address.instructions: Ingresa tu dirección exacta, códigos de accesso y/o indicaciones para encontrarla.
+app.ui.add_another_address: Agregar otra dirección
+app.error.tasty_ham: '¡Qué rico jamón!'
+app.error.404.message: 'Pero no era donde querías llegar ¿cierto? Lo más seguro es que llegaste por error, para volver al catálogo de nuestros productos presiona el botón.'
+app.ui.got_to_home: Ir al catálogo
+app.error.oops: '¡Oops!'
+app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un poco mientras lo arreglamos e inténtalo nuevamente.'
+app.ui.work_with_us.message_%email%: Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.

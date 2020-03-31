@@ -7,15 +7,19 @@
             </div>
             <div class="col-12 col-sm-12 col-md-5 col-lg-5 links">
                 <a href="#" class="d-block">{{ 'app.ui.frontend.about_procasa'|trans }}</a>
-                <a href="#" class="d-block">{{ 'app.ui.work_with_us'|trans }}</a>
+                <a href="{{ path('store_work_with_us') }}" class="d-block">{{ 'app.ui.work_with_us'|trans }}</a>
                 <a href="#" class="d-block">{{ 'app.ui.faqs'|trans  }}</a>
                 <a href="{{ path('store_terms_page') }}" class="d-block">{{ 'app.ui.terms_and_conditions'|trans }}</a>
             </div>
             <div class="col-12 col-sm-12 col-md-5 col-lg-5 app-btns">
                 <p class="text-right">{{ 'app.ui.download_app'|trans  }} {{ app_name }}</p>
                 <div class="text-right">
-                    <a href="#"><img src="{{ asset('bundles/syliusshop/img/app/app_store.png') }}" alt="App Store logo" title="App Store logo" width="auto" height="auto"></a>
-                    <a href="#"><img src="{{ asset('bundles/syliusshop/img/app/google_play.png') }}" alt="Google Play logo" title="Google Play logo" width="auto" height="auto"></a>
+                    {% if aboutStore('app-store') %}
+                    <a href="{{ aboutStore('app-store') }}"><img src="{{ asset('bundles/syliusshop/img/app/app_store.png') }}" alt="App Store logo" title="App Store logo" width="auto" height="auto"></a>
+                    {% endif %}
+                    {% if aboutStore('play-store') %}
+                    <a href="{{ aboutStore('play-store') }}"><img src="{{ asset('bundles/syliusshop/img/app/google_play.png') }}" alt="Google Play logo" title="Google Play logo" width="auto" height="auto"></a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -29,10 +33,18 @@
                     <p>Procasa &copy; 2019</p>
                 </div>
                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 d-flex justify-content-between">
-                    <a href="#" title="Facebook link"><i class="fab fa-facebook"></i></a>
-                    <a href="#" title="Twitter link" class="opposite"><i class="fab fa-twitter"></i></a>
-                    <a href="#" title="Instagram link" class="opposite"><i class="fab fa-instagram"></i></a>
-                    <a href="#" title="Pinterest link"><i class="fab fa-pinterest"></i></a>
+                    {% if aboutStore('facebook') %}
+                    <a href="{{ aboutStore('facebook') }}" title="Facebook link"><i class="fab fa-facebook"></i></a>
+                    {% endif %}
+                    {% if aboutStore('twitter') %}
+                    <a href="{{ aboutStore('twitter') }}" title="Twitter link" class="opposite"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+                    {% if aboutStore('instagram') %}
+                    <a href="{{ aboutStore('instagram') }}" title="Instagram link" class="opposite"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if aboutStore('pinterest') %}
+                    <a href="{{ aboutStore('pinterest') }}" title="Pinterest link"><i class="fab fa-pinterest"></i></a>
+                    {% endif %}
                 </div>
                 <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                     <p class="text-right">{% trans with {"%name%": dev_name } %}app.ui.powered_by_%name% {% endtrans %} </p>

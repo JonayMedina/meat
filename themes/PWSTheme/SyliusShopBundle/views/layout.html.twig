@@ -71,9 +71,6 @@
                 <nav class="navbar navbar-expand-lg navbar-light">
                     {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
 
-                    {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
-                    {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
-
                     {{ sonata_block_render_event('sylius.shop.layout.before_security_widget') }}
                     {{ render(controller('sylius.controller.shop.security_widget:renderAction')) }}
 
@@ -83,7 +80,7 @@
         </div>
     {% endblock %}
 
-    <div class="container">
+    <div class="container first">
         {% block header %}
             <header>
                 {% include '@SyliusShop/_header.html.twig' %}
@@ -105,6 +102,9 @@
 
         {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
     </div>
+
+    {% block contentFluid %}
+    {% endblock %}
 
     {% block footer %}
         {% include '@SyliusShop/_footer.html.twig' %}

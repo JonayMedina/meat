@@ -3,40 +3,59 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block subcontent %}
-
-    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-        <a href="{{ path('sylius_shop_account_dashboard') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_profile'|trans }}</a>
-    </div>
-
-    <div class="ui segment">
-        {{ form_start(form, {'action': path('sylius_shop_account_profile_update'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-        <h1 class="ui dividing header">
-            {{ 'sylius.ui.your_profile'|trans }}
-            <div class="sub header">{{ 'sylius.ui.edit_your_personal_information'|trans }}</div>
-        </h1>
-
-        {{ sonata_block_render_event('sylius.shop.account.profile.update.after_content_header', {'customer': customer, 'form': form}) }}
-
-        <input type="hidden" name="_method" value="PUT" />
-
-        <div class="two fields">
-            <div class="field">{{ form_row(form.firstName) }}</div>
-            <div class="field">{{ form_row(form.lastName) }}</div>
+    <div class="row register profile">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <a href="{{ path('sylius_shop_account_dashboard') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_profile'|trans }}</a>
         </div>
-        {{ form_row(form.email) }}
-        <div class="two fields">
-            <div class="field">{{ form_row(form.birthday) }}</div>
-            <div class="field">{{ form_row(form.gender) }}</div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <h1 class="text-center">{{ 'app.ui.add_your_information' | trans }}</h1>
         </div>
-        {{ form_row(form.phoneNumber) }}
-        {{ form_row(form.subscribedToNewsletter) }}
 
-{#        {{ form_row(form.termsAccepted) }}#}
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
+            {{ form_start(form, {'action': path('sylius_shop_account_profile_update'), 'attr': {'class': 'ui loadable form margin-0-auto pt-5', 'novalidate': 'novalidate'}}) }}
+            {{ sonata_block_render_event('sylius.shop.account.profile.update.after_content_header', {'customer': customer, 'form': form}) }}
 
-        {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
+            <div class="two fields mb-5">
+                <div class="field">{{ form_row(form.firstName) }}</div>
+                <div class="field">{{ form_row(form.lastName) }}</div>
+            </div>
 
-        <button type="submit" class="ui large primary button">{{ 'sylius.ui.save_changes'|trans }}</button>
-        {{ form_row(form._token) }}
-        {{ form_end(form, {'render_rest': false}) }}
+            <div class="two fields flex-wrap">
+                <p class="w-100 mh-color f-rl-light">{{ 'app.ui.profile.update.optional_fields_to_offers' | trans }}</p>
+                <div class="field">{{ form_row(form.birthday) }}</div>
+                <div class="field">{{ form_row(form.gender) }}</div>
+            </div>
+
+            <div class="divider mt-5 mb-5"></div>
+
+            <div class="address">
+                {{ form_row(form.defaultAddress) }}
+
+                <div class="text-right">
+                    <a class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
+                </div>
+            </div>
+
+            {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
+            <input type="hidden" name="_method" value="PUT" />
+            <div class="divider mt-5 mb-3"></div>
+            <div class="text-center">
+                <button type="submit" class="btn-rounded pl-5 pr-5">{{ 'app.ui.save'|trans }}</button>
+            </div>
+            {{ form_row(form._token) }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        jQuery(document).ready(function ($) {
+            $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
+            $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
+            $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
+            $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+        });
+    </script>
 {% endblock %}
