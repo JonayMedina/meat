@@ -96,21 +96,21 @@
             <div class="row">
                 <div class="col-lg-12">
                     {% for message in app.flashes('success') %}
-                        <div class="alert alert-success alert-dismissable">
+                        <div class="alert alert-success alert-dismissable fade show">
                             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                             {{ message }}
                         </div>
                     {% endfor %}
 
                     {% for message in app.flashes('danger') %}
-                        <div class="alert alert-danger alert-dismissable">
+                        <div class="alert alert-danger alert-dismissable fade show">
                             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                             {{ message }}
                         </div>
                     {% endfor %}
 
                     {% for message in app.flashes('warning') %}
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-warning alert-dismissable fade show">
                             <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
                             {{ message }}
                         </div>
