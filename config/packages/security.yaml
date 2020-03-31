@@ -63,6 +63,14 @@ security:
 #            fos_oauth: true
 #            stateless: true
 #            anonymous: true
+        
+        api:
+            pattern: ^/api
+            stateless: true
+            #provider: sylius_admin_user_provider
+            #http_basic:
+            #    realm: Secured Area
+            anonymous: true
 
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }

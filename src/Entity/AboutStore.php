@@ -130,6 +130,24 @@ class AboutStore implements ResourceInterface
      */
     private $theme = self::THEME_DARK;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $productsUpdatedAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $categoriesUpdatedAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $couponsUpdatedAt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -479,7 +497,62 @@ class AboutStore implements ResourceInterface
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getProductsUpdatedAt(): ?\DateTime
+    {
+        return $this->productsUpdatedAt;
+    }
 
+    /**
+     * @param \DateTime $productsUpdatedAt
+     * @return AboutStore
+     */
+    public function setProductsUpdatedAt(?\DateTime $productsUpdatedAt): AboutStore
+    {
+        $this->productsUpdatedAt = $productsUpdatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCategoriesUpdatedAt(): ?\DateTime
+    {
+        return $this->categoriesUpdatedAt;
+    }
+
+    /**
+     * @param \DateTime $categoriesUpdatedAt
+     * @return AboutStore
+     */
+    public function setCategoriesUpdatedAt(?\DateTime $categoriesUpdatedAt): AboutStore
+    {
+        $this->categoriesUpdatedAt = $categoriesUpdatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCouponsUpdatedAt(): ?\DateTime
+    {
+        return $this->couponsUpdatedAt;
+    }
+
+    /**
+     * @param \DateTime $couponsUpdatedAt
+     * @return AboutStore
+     */
+    public function setCouponsUpdatedAt(?\DateTime $couponsUpdatedAt): AboutStore
+    {
+        $this->couponsUpdatedAt = $couponsUpdatedAt;
+
+        return $this;
+    }
 
     /**
      * @inheritDoc

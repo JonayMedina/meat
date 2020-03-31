@@ -23,6 +23,11 @@ meathouse_frontend:
     type:     annotation
     prefix:   /store
     
+meathouse_admin_api:
+    resource: "Controller/AdminApi"
+    type:     annotation
+    prefix:   /api/v{version}
+    
 sylius_shop_register:
     path: /register
     methods: [GET, POST]
