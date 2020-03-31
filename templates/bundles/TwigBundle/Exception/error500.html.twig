@@ -1,15 +1,15 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-12 pt-5 pb-5 mb-5 mt-5">
+    <div class="row error-500">
+        <div class="col-12 pt-5 pb-5">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-text-center sm-mt-5 sm-pl-0-i sm-pr-0-i sm-order-2">
                     <img class="w-75 sm-w-100-i" src="{{ asset('bundles/syliusshop/img/500.png') }}" alt="500" title="500" width="auto" height="auto">
                 </div>
-                <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex align-items-center sm-order-1">
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex sm-order-1">
                     <div class="text-center">
-                        <h1>{{ 'app.error.oops'|trans }}</h1>
+                        <h1 class="pb-4 mb-4">{{ 'app.error.oops'|trans }}</h1>
                         <p class="text-center">{{ 'app.error.500.message'|trans }}</p>
                     </div>
                 </div>

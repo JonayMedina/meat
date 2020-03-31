@@ -535,6 +535,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     flex-direction: column;
 }
 
+.error-500 h1 {
+    margin-top: 105px;
+}
+
 /* form errors */
 div.error {
     margin-bottom: 15px;
@@ -863,6 +867,10 @@ label.error:after {
 
     .sm-w-100-i, .w-75.sm-w-100-i {
         width: 100% !important;
+    }
+
+    .error-500 h1 {
+        margin-top: 0;
     }
 }
 
