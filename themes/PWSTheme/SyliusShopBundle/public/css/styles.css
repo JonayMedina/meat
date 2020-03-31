@@ -539,6 +539,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     margin-top: 105px;
 }
 
+.work-with-us h1 {
+    margin-top: 50px;
+}
+
 /* form errors */
 div.error {
     margin-bottom: 15px;
@@ -869,7 +873,7 @@ label.error:after {
         width: 100% !important;
     }
 
-    .error-500 h1 {
+    .error-500 h1, .work-with-us h1 {
         margin-top: 0;
     }
 }

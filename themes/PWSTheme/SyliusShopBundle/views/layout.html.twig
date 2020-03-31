@@ -82,13 +82,11 @@
 
     <div class="container first">
         {% block header %}
-            <header>
-                {% include '@SyliusShop/_header.html.twig' %}
-
-                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
-
+{#            <header>#}
+{#                {% include '@SyliusShop/_header.html.twig' %}#}
+{#                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}#}
 {#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
-            </header>
+{#            </header>#}
         {% endblock %}
 
         {% block flashes %}
