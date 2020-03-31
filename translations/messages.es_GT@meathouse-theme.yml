@@ -475,3 +475,5 @@ app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un p
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
 app.ui.contact_info: 'Información de contacto'
+app.ui.google_play_logo: Google Play Logo
+app.ui.app_store_logo: App Store Logo
