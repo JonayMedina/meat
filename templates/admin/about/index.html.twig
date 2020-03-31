@@ -61,6 +61,14 @@
                         ]) }}
 
                         <br><br>
+                        <h2>{{ 'app.ui.contact_info'|trans }}</h2>
+                        <hr>
+
+                        {{ UI.row([
+                            {'span': 12, 'field': form.email},
+                        ]) }}
+
+                        <br><br>
                         <div class="form-group">
                             <div class="text-center">
                                 <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>

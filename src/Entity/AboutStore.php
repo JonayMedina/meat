@@ -148,6 +148,12 @@ class AboutStore implements ResourceInterface
      */
     private $couponsUpdatedAt;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -550,6 +556,25 @@ class AboutStore implements ResourceInterface
     public function setCouponsUpdatedAt(?\DateTime $couponsUpdatedAt): AboutStore
     {
         $this->couponsUpdatedAt = $couponsUpdatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return AboutStore
+     */
+    public function setEmail(?string $email): AboutStore
+    {
+        $this->email = $email;
 
         return $this;
     }
