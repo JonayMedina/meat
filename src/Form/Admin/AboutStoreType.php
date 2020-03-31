@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
@@ -80,6 +81,13 @@ class AboutStoreType extends AbstractType
                 'label' => 'app.ui.play_store_url',
                 'constraints' => [
                     new Url()
+                ]
+            ])
+            ->add('email', null, [
+                'label' => 'app.ui.email',
+                'constraints' => [
+                    new Email(),
+                    new NotBlank()
                 ]
             ])
         ;
