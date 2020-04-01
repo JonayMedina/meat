@@ -10,10 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 
 /**
- * SyncController
+ * QueueController
  * @Route("/queue")
  */
-class SyncController extends AbstractFOSRestController
+class QueueController extends AbstractFOSRestController
 {
     /**
      * @var EntityManagerInterface
@@ -21,7 +21,7 @@ class SyncController extends AbstractFOSRestController
     private $entityManager;
 
     /**
-     * SyncController constructor.
+     * QueueController constructor.
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
