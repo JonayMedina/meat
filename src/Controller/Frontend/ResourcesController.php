@@ -100,4 +100,14 @@ class ResourcesController extends AbstractController
             'faqs' => $faqs
         ]);
     }
+
+    /**
+     * @Route("/wholesalers", name="store_wholesalers")
+     * @return Response
+     */
+    public function wholesalersAction() {
+        $this->get('session')->getFlashBag()->clear();
+
+        return $this->render('/frontend/pages/wholesalers.html.twig');
+    }
 }

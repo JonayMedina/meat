@@ -1,0 +1,21 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+    <div class="row wholesalers pt-4">
+        <div class="col-12 pt-5 pb-5">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-text-center sm-mt-5 sm-pl-0-i sm-pr-0-i sm-order-2 xs-mt-2">
+                    <img class="w-75 sm-w-100-i" src="{{ asset('bundles/syliusshop/img/wholesalers.png') }}" alt="500" title="500" width="auto" height="auto">
+                </div>
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex sm-order-1 xs-mb-1">
+                    <div class="text-center">
+                        <h1>{{ 'app.ui.wholesalers'|trans }}</h1>
+{#                        {% set phone = '<a href="tel:' ~ aboutStore('phone')|default('0000-0000') ~ '">' ~ aboutStore('phone')|default('0000-0000') ~ '</a>' %}#}
+                        {% set phone = '<a class="ff-rw-bold" href="tel:0000-0000">0000-0000</a>' %}
+                        <p class="xs-text-center">{{ 'app.ui.wholesalers.message_%phone%'|trans({'%phone%': phone})|raw }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
