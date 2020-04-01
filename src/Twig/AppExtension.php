@@ -148,6 +148,7 @@ class AppExtension extends AbstractExtension
             case 'new-address-ms': return $this->settingsService->getNewAddressMessage();
             case 'max-purchase': return $this->settingsService->getMaximumPurchaseValue();
             case 'min-purchase': return $this->settingsService->getMinimumPurchaseValue();
+            case 'phone': return $this->settingsService->getPhoneNumber();
             default:
                 return $this->settingsService->getAboutUs();
         }
