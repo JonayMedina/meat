@@ -27,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @method string|null getNewAddressMessage()
  * @method string|null getMaximumPurchaseValue()
  * @method string|null getMinimumPurchaseValue()
+ * @method string|null getPhoneNumber()
  */
 class SettingsService
 {
