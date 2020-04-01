@@ -21,7 +21,7 @@ class ResourcesController extends AbstractController
     {
         $repository = $this->getDoctrine()->getManager()->getRepository('App:TermsAndConditions');
 
-        return $this->render('/frontend/terms/_terms.html.twig', ['terms' => $repository->findLatest()]);
+        return $this->render('/frontend/pages/widgets/_terms.html.twig', ['terms' => $repository->findLatest()]);
     }
 
     /**
@@ -34,7 +34,7 @@ class ResourcesController extends AbstractController
     {
         $repository = $this->getDoctrine()->getManager()->getRepository('App:TermsAndConditions');
 
-        return $this->render('/frontend/terms/page.html.twig', ['terms' => $repository->findLatest()]);
+        return $this->render('/frontend/pages/terms.html.twig', ['terms' => $repository->findLatest()]);
     }
 
     /**
@@ -76,5 +76,28 @@ class ResourcesController extends AbstractController
         $this->get('session')->getFlashBag()->clear();
 
         return $this->render('/frontend/pages/aboutUs.html.twig');
+    }
+
+    /**
+     * @Route("/faqs", name="store_faqs")
+     * @return Response
+     */
+    public function faqsAction() {
+        $this->get('session')->getFlashBag()->clear();
+        $repository = $this->getDoctrine()->getManager()->getRepository('App:FAQ');
+
+        $queryBuilder = $repository
+            ->createQueryBuilder('faq');
+
+        $queryBuilder
+            ->orderBy('faq.position', 'ASC');
+
+        $faqs = $queryBuilder
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('/frontend/pages/faqs.html.twig', [
+            'faqs' => $faqs
+        ]);
     }
 }

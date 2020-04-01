@@ -3,7 +3,7 @@
 {% block subcontent %}
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_content_header', {'customer': customer}) }}
 
-    <div class="row profile">
+    <div class="row profile pt-4">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <h1 class="text-center">{{ 'app.ui.profile.hello_%name%'|trans({'%name%': customer.firstName}) }}</h1>
         </div>

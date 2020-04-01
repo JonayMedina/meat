@@ -95,8 +95,22 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     box-shadow: none !important;
 }
 
-strong {
+strong, .table thead th {
     font-family: "Raleway SemiBold", sans-serif !important;
+}
+
+.table-striped tbody tr, .table th, .table td, .table thead th {
+    border: none !important;
+}
+
+.table th, .table td {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+    color: #404040;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #FAF5F6 !important;
 }
 
 /* Utilities */
@@ -543,6 +557,24 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     margin-top: 50px;
 }
 
+.faqs .segment {
+    padding: 50px 55px;
+}
+
+.faqs h4, .faqs a, .faqs a:hover {
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 24px;
+    color: #404040;
+}
+
+.faqs a.collapsed i.fa-chevron-down, .faqs a:not(.collapsed) i.fa-chevron-up {
+    display: initial;
+}
+
+.faqs a.collapsed i.fa-chevron-up, .faqs a:not(.collapsed) i.fa-chevron-down {
+    display: none;
+}
+
 /* form errors */
 div.error {
     margin-bottom: 15px;
@@ -875,6 +907,10 @@ label.error:after {
 
     .error-500 h1, .work-with-us h1 {
         margin-top: 0;
+    }
+
+    .faqs .segment {
+        padding: 20px;
     }
 }
 
