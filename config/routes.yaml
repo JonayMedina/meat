@@ -27,6 +27,8 @@ meathouse_admin_api:
     resource: "Controller/AdminApi"
     type:     annotation
     prefix:   /api/v{version}
+    defaults:
+      _format: json
     
 sylius_shop_register:
     path: /register

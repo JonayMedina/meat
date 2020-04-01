@@ -30,6 +30,29 @@ class Sync
     const MODEL_ORDER = 'order';
 
     /**
+     * Taxon model.
+     */
+    const MODEL_CATEGORY = 'category';
+
+    /**
+     * Product/pricing model
+     */
+    const MODEL_PRODUCT = 'product';
+
+    /**
+     * Coupon model.
+     */
+    const MODEL_COUPON = 'coupon';
+
+    /**
+     * Customer model.
+     */
+    const MODEL_CUSTOMER = 'customer';
+
+    /** @var int $id */
+    private $id;
+
+    /**
      * @var string
      */
     private $type;
@@ -40,28 +63,32 @@ class Sync
     private $model;
 
     /**
-     * @var array
+     * @var string
      */
-    private $content;
-
-    /**
-     * @var array
-     */
-    private $diff;
+    private $url;
 
     /**
      * Sync constructor.
      * @param string $type
      * @param string $model
-     * @param array $content
-     * @param array $diff
+     * @param int $id
      */
-    public function __construct(string $type, string $model, array $content, array $diff = [])
+    public function __construct(string $type, string $model, int $id)
     {
+        $this->id = $id;
         $this->type = $type;
         $this->model = $model;
-        $this->content = $content;
-        $this->diff = $diff;
+
+        // TODO: figure out how to add API URL here...
+    }
+
+    /**
+     * Return model id
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     /**
@@ -83,20 +110,10 @@ class Sync
     }
 
     /**
-     * Return content.
-     * @return array
+     * @return string
      */
-    public function getContent(): array
+    public function getUrl(): ?string
     {
-        return $this->content;
-    }
-
-    /**
-     * Return diff.
-     * @return array
-     */
-    public function getDiff(): array
-    {
-        return $this->diff;
+        return $this->url;
     }
 }
