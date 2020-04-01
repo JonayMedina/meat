@@ -34,7 +34,6 @@ class SyncController extends AbstractFOSRestController
      * @Route(
      *     ".{_format}",
      *     name="api_queue_index",
-     *     defaults={"_format": "json"},
      *     methods={"GET"}
      * )
      *
@@ -51,6 +50,7 @@ class SyncController extends AbstractFOSRestController
           ORDER BY created_at ASC LIMIT " . $limit;
 
         try {
+            $list = [];
             $statusCode = Response::HTTP_OK;
 
             $stmt = $this->entityManager->getConnection()->prepare($sql);
@@ -58,10 +58,15 @@ class SyncController extends AbstractFOSRestController
             $data = $stmt->fetchAll();
 
             foreach ($data as $index => $datum) {
-                $data[$index]['body'] = json_decode($datum['body'], true);
+                $body = json_decode($datum['body'], true);
+                $url = $body['url'] ?? null;
+
+                $responseBody = new \App\Model\Queue\Body($body['id'], $body['model'], $body['type'], $url);
+
+                $list[] = new \App\Model\Queue\Response($datum['id'], $responseBody, $datum['created_at']);
             }
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Sync queue', $data);
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Sync queue', $list);
         } catch (\Exception $exception) {
             $statusCode = Response::HTTP_BAD_REQUEST;
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage(), []);
@@ -76,7 +81,6 @@ class SyncController extends AbstractFOSRestController
      * @Route(
      *     "/{id}.{_format}",
      *     name="api_queue_deliver",
-     *     defaults={"_format": "json"},
      *     methods={"POST"}
      * )
      *

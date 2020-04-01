@@ -30,6 +30,12 @@ class Order extends BaseOrder
     private $rating;
 
     /**
+     * @var string $ratingComment
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $ratingComment;
+
+    /**
      * @return int
      */
     public function getRating(): ?int
@@ -39,10 +45,32 @@ class Order extends BaseOrder
 
     /**
      * @param int $rating
+     * @return Order
      */
-    public function setRating(?int $rating): void
+    public function setRating(?int $rating): self
     {
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRatingComment(): ?string
+    {
+        return $this->ratingComment;
+    }
+
+    /**
+     * @param string $ratingComment
+     * @return Order
+     */
+    public function setRatingComment(?string $ratingComment): self
+    {
+        $this->ratingComment = $ratingComment;
+
+        return $this;
     }
 
     /**

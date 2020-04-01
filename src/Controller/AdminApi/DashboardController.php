@@ -32,7 +32,6 @@ class DashboardController extends AbstractFOSRestController
      * @Route(
      *     ".{_format}",
      *     name="api_index",
-     *     defaults={"_format": "json"},
      *     methods={"GET"}
      * )
      *
@@ -49,6 +48,7 @@ class DashboardController extends AbstractFOSRestController
             'products_updated_at' => ($aboutStore && $aboutStore->getProductsUpdatedAt()) ? $aboutStore->getProductsUpdatedAt()->format('c') : null,
             'coupons_updated_at' => ($aboutStore && $aboutStore->getCouponsUpdatedAt()) ? $aboutStore->getCouponsUpdatedAt()->format('c') : null,
         ]);
+
         $view = $this->view($data, $statusCode);
 
         return $this->handleView($view);

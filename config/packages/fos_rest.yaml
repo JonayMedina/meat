@@ -10,6 +10,7 @@ fos_rest:
     exception: true
     view:
         formats:
+            xml: true
             json: true
         empty_content: 204
         failed_validation: HTTP_BAD_REQUEST
@@ -21,9 +22,10 @@ fos_rest:
         serialize_null:       true
     format_listener:
         rules:
-            - { path: '^/shop-api', priorities: ['json'], fallback_format: json, prefer_extension: true }
-            - { path: '^/api', priorities: ['json'], fallback_format: json, prefer_extension: true }
             - { path: '^/', stop: true }
+            - { path: '^/shop-api', priorities: ['json'], fallback_format: json, prefer_extension: true }
+            - { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: true }
     param_fetcher_listener: true
     access_denied_listener:
         json: true
+        xml: true
