@@ -90,6 +90,13 @@ class AboutStoreType extends AbstractType
                     new NotBlank()
                 ]
             ])
+            ->add('phoneNumber', null, [
+                'label' => 'app.ui.phone_number',
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 8, 'max' => 12])
+                ]
+            ])
         ;
     }
 
