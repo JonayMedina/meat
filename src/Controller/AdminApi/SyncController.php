@@ -63,7 +63,7 @@ class SyncController extends AbstractFOSRestController
 
                 $responseBody = new \App\Model\Queue\Body($body['id'], $body['model'], $body['type'], $url);
 
-                $list[] = new \App\Model\Queue\Response($datum['id'], $responseBody, $datum['created_at']);
+                $list[] = new \App\Model\Queue\Response((int)$datum['id'], $responseBody, $datum['created_at']);
             }
 
             $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Sync queue', $list);
