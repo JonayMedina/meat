@@ -479,3 +479,5 @@ app.ui.google_play_logo: Google Play Logo
 app.ui.app_store_logo: App Store Logo
 app.ui.frequent_questions: Preguntas frecuentes
 app.ui.wholesalers.message_%phone%: Comunícate al %phone% si deseas comprar nuestros productos por caja.
+app.ui.change_password: Cambio de contraseña
+app.form.user_change_password.confirmation: Reescribe tu nueva contraseña

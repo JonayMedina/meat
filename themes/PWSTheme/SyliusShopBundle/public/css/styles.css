@@ -339,6 +339,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 0 80px;
 }
 
+.pass-change form > div {
+    padding: 0 20px;
+}
+
 .register .instructions {
     width: 45%;
 }
@@ -458,6 +462,12 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 
 #footer .bottom-footer .opposite i {
     font-size: 17px;
+}
+
+.pass-change form {
+    border-bottom: none !important;
+    max-width: 570px !important;
+    padding-bottom: 0 !important;
 }
 
 /* Modal */
@@ -1015,7 +1025,7 @@ label.error:after {
         text-align: left !important;
     }
 
-    .login form > div {
+    .login form > div, .pass-change form > div {
         padding: initial;
     }
 
