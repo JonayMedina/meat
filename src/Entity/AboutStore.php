@@ -154,6 +154,12 @@ class AboutStore implements ResourceInterface
      */
     private $email;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $phoneNumber;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -575,6 +581,25 @@ class AboutStore implements ResourceInterface
     public function setEmail(?string $email): AboutStore
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     * @return AboutStore
+     */
+    public function setPhoneNumber(?string $phoneNumber): AboutStore
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }
