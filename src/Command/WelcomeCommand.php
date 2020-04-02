@@ -43,7 +43,7 @@ class WelcomeCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->bus->dispatch(new Sync(Sync::TYPE_UPDATE, Sync::MODEL_ORDER , random_int(1,25)));
+        //$this->bus->dispatch(new Sync(Sync::TYPE_UPDATE, Sync::MODEL_ORDER , random_int(1,25)));
 
         $milk = '
  _________________________
