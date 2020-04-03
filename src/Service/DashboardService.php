@@ -150,7 +150,9 @@ class DashboardService
     {
         $queryBuilder = $this->container->get('sylius.repository.order')
             ->createQueryBuilder('o')
-            ->select('COUNT(o)');
+            ->select('COUNT(o)')
+            ->andWhere('o.checkoutState = :checkoutState')
+            ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
 
         try {
             if ($returnQueryBuilder) {
@@ -432,6 +434,8 @@ class DashboardService
             foreach ($dates as $index => $date) {
                 $counter = $this->orderCount(true)
                     ->andWhere('o.createdAt BETWEEN :start AND :end')
+                    ->andWhere('o.checkoutState = :checkoutState')
+                    ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED)
                     ->setParameter('start', $date['start'])
                     ->setParameter('end', $date['end'])
                     ->getQuery()
