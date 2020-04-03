@@ -164,10 +164,12 @@ class SettingsController extends AbstractController
      * @param Request $request
      * @param AboutStoreRepository $repository
      * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
      * @return Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function categoryColorAction(Request $request, AboutStoreRepository $repository, EntityManagerInterface $entityManager)
+    public function categoryColorAction(Request $request, AboutStoreRepository $repository, EntityManagerInterface $entityManager, LoggerInterface $logger, TranslatorInterface $translator)
     {
         $aboutStore = $repository->findLatest();
 
@@ -180,8 +182,23 @@ class SettingsController extends AbstractController
         if ($request->isMethod(Request::METHOD_POST)) {
             $theme = $request->get('theme');
 
+            $type = 'info';
+            $statusCode = Response::HTTP_OK;
+
             $aboutStore->setTheme($theme);
-            $entityManager->flush();
+
+            try {
+                $entityManager->flush();
+                $this->addFlash('success', $translator->trans('app.ui.category_color_saved'));
+            } catch (\Exception $exception) {
+                $type = 'error';
+                $statusCode = Response::HTTP_BAD_REQUEST;
+
+                $this->addFlash('success', $translator->trans('app.ui.category_color_error'));
+                $logger->error($exception->getMessage());
+            }
+
+            return new JsonResponse(['type' => $type, 'code' => $statusCode], $statusCode);
         }
 
         return $this->render('/admin/configuration/category_color.html.twig', [

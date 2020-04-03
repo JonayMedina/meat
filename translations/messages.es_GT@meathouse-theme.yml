@@ -96,6 +96,8 @@ app.ui.purchase_settings: 'Configuración de compra'
 app.ui.holidays: 'Días festivos'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
+app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
+app.ui.category_color_error: 'Hubo un error al guardar los cambios de color de categoría, inténtelo de nuevo más tarde'
 app.ui.qty_of_active_coupons_%total%: 'Cantidad de cupones activos: %total%'
 app.ui.new_coupon: 'Nuevo cupón'
 app.ui.coupon: Cupón
