@@ -477,3 +477,21 @@ app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un p
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
 app.ui.contact_info: 'Información de contacto'
+app.ui.comments: Comentarios
+app.ui.date_and_time: 'Fecha y hora'
+app.ui.order_number: 'Número de orden'
+app.ui.score: Calificación
+app.ui.show_comments: 'Mostrar comentario'
+app.ui.comment: Comentario
+app.ui.rating_comments_sort_desc: 'Calificación de mayor a menor'
+app.ui.rating_comments_sort_asc: 'Calificación de menor a mayor'
+app.ui.rating_comments_2_stars: 'Calificación 2'
+app.ui.rating_comments_3_stars: 'Calificación 3'
+app.ui.rating_comments_sort_recent: Recientes
+app.ui.rating_comments_5_stars: 'Calificación 5'
+app.ui.rating_comments_4_stars: 'Calificación 4'
+app.ui.rating_comments_with_comment: 'Con comentario'
+app.ui.rating_comments_all_stars: Calificación
+app.ui.rating_comments_1_stars: 'Calificación 1'
+app.ui.comments_no_results_found: 'No hay resultados. Intentálo de nuevo con otra búsqueda.'
+app.ui.average_rating_%avg%: 'Rating promedio: %avg%'

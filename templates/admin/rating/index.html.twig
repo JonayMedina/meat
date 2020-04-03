@@ -4,11 +4,158 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.ratings'|trans }}</h1>
-            <br><br>
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                <h1>{{ 'app.ui.ratings'|trans }} <small>{% trans with {'%avg%': dashboard.averageRating|default('0')} %}app.ui.average_rating_%avg%{% endtrans %}</small></h1>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
 
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="search-box search-box-fullwidth" style="width: 100%;">
+                                    <input type="search" name="filter" class="search-box-input form-control" placeholder="{{ 'app.ui.search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 search-box">
+                                <select class="search-box-input stars-filter form-control">
+                                    <option value="5" {% if '5' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_5_stars'|trans }}</option>
+                                    <option value="4" {% if '4' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_4_stars'|trans }}</option>
+                                    <option value="3" {% if '3' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_3_stars'|trans }}</option>
+                                    <option value="2" {% if '2' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_2_stars'|trans }}</option>
+                                    <option value="1" {% if '1' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_1_stars'|trans }}</option>
+                                    <option value="" {% if '' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_all_stars'|trans }}</option>
+                                    <option value="comments" {% if 'comments' == app.request.get('stars') %}selected{% endif %}>{{ 'app.ui.rating_comments_with_comment'|trans }}</option>
+
+                                </select>
+                            </div>
+                            <div class="col-lg-2 search-box text-right">
+                                <label for="order-by-control">{{ 'app.ui.filter_order_by'|trans }}</label>
+                            </div>
+                            <div class="col-lg-1 search-box">
+                                <select id="order-by-control" class="search-box-input order-filter form-control">
+                                    <option value="{{ constant('App\\Controller\\Admin\\RatingController::ORDER_RECENT') }}" {% if constant('App\\Controller\\Admin\\RatingController::ORDER_RECENT')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.rating_comments_sort_recent'|trans }}</option>
+                                    <option value="{{ constant('App\\Controller\\Admin\\RatingController::ORDER_ASC') }}" {% if constant('App\\Controller\\Admin\\RatingController::ORDER_ASC')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.rating_comments_sort_asc'|trans }}</option>
+                                    <option value="{{ constant('App\\Controller\\Admin\\RatingController::ORDER_DESC') }}" {% if constant('App\\Controller\\Admin\\RatingController::ORDER_DESC')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.rating_comments_sort_desc'|trans }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table id="faq-table" class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th>{{ 'app.ui.score'|trans }}</th>
+                                    <th>{{ 'app.ui.name'|trans }}</th>
+                                    <th>{{ 'app.ui.order_number'|trans }}</th>
+                                    <th>{{ 'app.ui.date_and_time'|trans }}</th>
+                                    <th>{{ 'app.ui.total'|trans }}</th>
+                                    <th>{{ 'app.ui.comments'|trans }}</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for order in pagination %}
+                                    <tr>
+                                        <td>
+                                            {% for i in 1..constant('App\\Entity\\Order\\Order::MAX_RATING') %}
+                                                <i class="fa fa-star {% if i <= order.rating %}yellow{% endif %}"></i>
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ order.customer.fullName }}</td>
+                                        <td>{{ order.number }}</td>
+                                        <td>{{ order.updatedAt|localizeddate("medium", "medium") }}</td>
+                                        <td>
+                                            {{ order.total|price|number_format_currency(currency.currencyCode) }}
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-default btn-comment" data-comment="{{ order.ratingComment|raw }}">
+                                                {{ 'app.ui.show_comments'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            {{ 'app.ui.comments_no_results_found'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .yellow{color:#fdd039}
+    </style>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script>
+$(document).ready(function() {
+    var $wrapper = $('#wrapper');
+    var $btnComment = $wrapper.find('.btn-comment');
+    var $searchBox = $wrapper.find('.search-box .search-box-input');
+    var $starsFilter = $wrapper.find('.search-box .stars-filter');
+    var $orderFilter = $wrapper.find('.search-box .order-filter');
+
+    $btnComment.on('click', function(e) {
+        e.preventDefault();
+        var comment = $(this).data('comment');
+
+        swal({
+            "title":  "{{ 'app.ui.comment'|trans }}",
+            "text": comment,
+            "type": "",
+            "showCancelButton": true,
+            "showConfirmButton": false,
+        });
+    });
+
+    function filter() {
+        var searchText = $searchBox.val();
+        var stars = $starsFilter.val();
+        var order = $orderFilter.val();
+
+        window.location = Routing.generate('ratings_index', {
+            filter: searchText,
+            stars: stars,
+            order: order
+        });
+    }
+
+    $searchBox.on('keypress', function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+
+        if (keycode === '13') {
+            filter();
+        }
+    });
+
+    $searchBox.on('change', function() {
+        filter();
+    });
+
+    $starsFilter.on('change', function() {
+        filter();
+    });
+
+    $orderFilter.on('change', function() {
+        filter();
+    });
+});
+</script>
 {% endblock %}

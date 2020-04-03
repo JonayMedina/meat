@@ -144,8 +144,7 @@
                                         <td>{{ loop.index }}</td>
                                         <td>{{product['name']}}</td>
                                         <td>
-                                            {{ dashboard.currency }}
-                                            {{ product['price']|price }}
+                                            {{ product['price']|price|number_format_currency(dashboard.currency) }}
                                         </td>
                                         <td>{{product['quantity']}}</td>
                                     </tr>
