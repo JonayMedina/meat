@@ -73,6 +73,10 @@ services:
         class: App\Form\Extension\AddressTypeExtension
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\AddressingBundle\Form\Type\AddressType }
+                
+    app.controller.shop.extender:
+        class: App\Controller\Shop\ExtenderController
+        tags: ['controller.service_arguments']
             
     Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'
                 

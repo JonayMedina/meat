@@ -877,6 +877,14 @@ label.error:after {
         background: #ffffff;
     }
 
+    .pt-5.xs-pt-2 {
+        padding-top: 2rem !important;
+    }
+
+    .mb-4.xs-mb-0 {
+        margin-bottom: 0 !important;
+    }
+
     .pr-5.xs-pr-2 {
         padding-right: 2rem !important;
     }
