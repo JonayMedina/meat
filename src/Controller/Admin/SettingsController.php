@@ -160,12 +160,33 @@ class SettingsController extends AbstractController
 
     /**
      *
-     * @Route("/caregory-color", name="category_color", methods={"GET"})
+     * @Route("/caregory-color", name="category_color", options={"expose"="true"}, methods={"GET", "POST"})
+     * @param Request $request
+     * @param AboutStoreRepository $repository
+     * @param EntityManagerInterface $entityManager
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function categoryColorAction()
+    public function categoryColorAction(Request $request, AboutStoreRepository $repository, EntityManagerInterface $entityManager)
     {
-        return $this->render('/admin/configuration/category_color.html.twig');
+        $aboutStore = $repository->findLatest();
+
+        if (!$aboutStore instanceof AboutStore) {
+            $aboutStore = new AboutStore();
+            $entityManager->persist($aboutStore);
+            $entityManager->flush();
+        }
+
+        if ($request->isMethod(Request::METHOD_POST)) {
+            $theme = $request->get('theme');
+
+            $aboutStore->setTheme($theme);
+            $entityManager->flush();
+        }
+
+        return $this->render('/admin/configuration/category_color.html.twig', [
+            'settings' => $aboutStore
+        ]);
     }
 
     /**

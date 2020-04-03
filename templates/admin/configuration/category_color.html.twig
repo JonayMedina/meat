@@ -123,7 +123,7 @@
                         <div class="row padding-bottom-15 padding-top-15">
                             <div class="theme-wrapper dark-theme mb-5">
                                 <label class="radio">
-                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_DARK') }}" checked class="theme-selector">
+                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_DARK') }}" {% if settings.theme == constant('App\\Entity\\AboutStore::THEME_DARK') %}checked{% endif %} class="theme-selector">
                                     <span class="check-mark"></span>
                                 </label>
 
@@ -143,7 +143,7 @@
 
                             <div class="theme-wrapper light-theme mb-5">
                                 <label class="radio">
-                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_LIGHT') }}" class="theme-selector">
+                                    <input type="radio" name="theme-selector" value="{{ constant('App\\Entity\\AboutStore::THEME_LIGHT') }}" {% if settings.theme == constant('App\\Entity\\AboutStore::THEME_LIGHT') %}checked{% endif %} class="theme-selector">
                                     <span class="check-mark"></span>
                                 </label>
 
@@ -189,6 +189,24 @@
   $(document).ready(function() {
       var $wrapper = $('#wrapper');
       var $imagePicker = $wrapper.find('#image-picker');
+      var $themeSelector = $wrapper.find('.theme-selector');
+
+      $themeSelector.on('change', function() {
+          var value = $(this).val();
+          blockUI();
+
+          $.ajax({
+              type: 'POST',
+              url: Routing.generate('category_color'),
+              data: { theme: value },
+              success: function() {
+                  unblockUI();
+              },
+              error: function() {
+                  unblockUI();
+              }
+          });
+      });
 
       $imagePicker.on('change', function() {
           var $input = $(this)[0];
@@ -198,7 +216,7 @@
       function readURL(input) {
           var url = input.value;
           var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-          if (input.files && input.files[0]&& (ext === "png" || ext === "jpeg" || ext === "jpg")) {
+          if (input.files && input.files[0]&& (ext == "png" || ext == "jpeg" || ext == "jpg")) {
               var reader = new FileReader();
 
               reader.onload = function (e) {
