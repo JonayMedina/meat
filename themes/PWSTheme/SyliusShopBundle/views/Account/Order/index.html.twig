@@ -1,15 +1,26 @@
-{% extends '@SyliusShop/Account/layout.html.twig' %}
+{% extends '@SyliusShop/layout.html.twig' %}
 
-{% block breadcrumb %}
-    {% include '@SyliusShop/Account/Order/Index/_breadcrumb.html.twig' %}
-{% endblock %}
-
-{% block subcontent %}
-    {% include '@SyliusShop/Account/Order/Index/_header.html.twig' %}
-
+{% block content %}
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_content_header', {'orders': orders}) }}
 
-    {{ sylius_grid_render(resources, '@SyliusShop/Grid/_default.html.twig') }}
+    <div class="row profile pt-4">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 xs-mb-0">
+            <h1 class="text-center">{{ 'app.ui.purchase_history'|trans }}</h1>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 segment">
+            <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-2">
+                <img src="{{ asset('bundles/syliusshop/img/icons/empty-history.png') }}" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto">
+                <h2 class="mt-4">{{ 'app.ui.order_history.empty'|trans }}</h2>
+                <p class="text-center xs-text-left mb-0 mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.order_history.empty_instructions'|trans|raw }}</p>
+                <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+            </div>
+        </div>
+    </div>
+
+
+{#    {{ sylius_grid_render(resources, '@SyliusShop/Grid/_default.html.twig') }}#}
 
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_grid', {'orders': orders}) }}
 {% endblock %}
+
