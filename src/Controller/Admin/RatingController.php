@@ -34,6 +34,7 @@ class RatingController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @param CurrencyContextInterface $currency
      * @param PaginatorInterface $paginator
+     * @param DashboardService $dashboardService
      * @return Response
      */
     public function indexAction(Request $request, EntityManagerInterface $entityManager, CurrencyContextInterface $currency, PaginatorInterface $paginator, DashboardService $dashboardService)

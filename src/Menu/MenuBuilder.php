@@ -2,7 +2,9 @@
 
 namespace App\Menu;
 
+use App\Entity\User\AdminUser;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Class MenuBuilder
@@ -11,16 +13,27 @@ use Knp\Menu\FactoryInterface;
  */
 class MenuBuilder
 {
+
+    /**
+     * @var FactoryInterface
+     */
     private $factory;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
 
     /**
      * @param FactoryInterface $factory
      *
      * Add any other dependency you need
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->factory = $factory;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function createSidebarMenu()
@@ -116,16 +129,21 @@ class MenuBuilder
             ->setAttribute('second-level', 'true');
 
         /**
-         * Users
+         * Users: Only if has role admin
          */
-        $menu->addChild('app.ui.users', [
-            'route' => 'users_index',
-        ])->setExtras([
-            'icon' => 'users',
-            'routes' => [
-                'users_index',
-            ],
-        ]);
+        if ($this->authorizationChecker->isGranted(AdminUser::ROLE_ADMIN)) {
+            $menu->addChild('app.ui.users', [
+                'route' => 'users_index',
+            ])->setExtras([
+                'icon' => 'users',
+                'routes' => [
+                    'users_index',
+                    'users_edit',
+                    'users_new',
+                    'users_show',
+                ],
+            ]);
+        }
 
         /**
          * Ratings

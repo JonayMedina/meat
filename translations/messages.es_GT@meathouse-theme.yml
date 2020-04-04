@@ -30,7 +30,7 @@ app.ui.order_history: 'Histórico de órdenes'
 app.ui.news_banner: 'Banner de noticias'
 app.ui.coupons: Cupones
 app.ui.send_push: 'Envío push'
-app.ui.users: Users
+app.ui.users: Usuarios
 app.ui.ratings: Calificaciones
 app.ui.purchase_admin: 'Admin de compra'
 app.ui.locations: Ubicaciones
@@ -495,3 +495,18 @@ app.ui.rating_comments_all_stars: Calificación
 app.ui.rating_comments_1_stars: 'Calificación 1'
 app.ui.comments_no_results_found: 'No hay resultados. Intentálo de nuevo con otra búsqueda.'
 app.ui.average_rating_%avg%: 'Rating promedio: %avg%'
+app.ui.total_of_users_%total%: 'Cantidad de usuarios: %total%'
+app.ui.users_search_label: '¿A quién buscas?'
+app.ui.users_filter_by_role: 'Filtrar por'
+app.ui.roles.role_admin: Administrador
+app.ui.roles.role_editor: Editor
+app.ui.first_name: Nombre
+app.ui.last_name: Apellido
+app.ui.role: Rol
+app.ui.user_error_on_remove_message: 'Hubo un error al eliminar este usuario, puede que esté en uso.'
+app.ui.user_remove_title: 'Se ha eliminado este usuario.'
+app.ui.user_remove_text: '%name%'
+app.ui.users_sort_recent: Reciente
+app.ui.users_sort_asc: ABC
+app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda. Intentálo de nuevo con otra búsqueda.'
+app.ui.new_user: 'Nuevo usuario'
