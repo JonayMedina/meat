@@ -160,6 +160,7 @@ class AppExtension extends AbstractExtension
             case 'play-store': return $this->settingsService->getPlayStoreUrl();
             case 'phrase': return $this->settingsService->getPhrase();
             case 'author': return $this->settingsService->getAuthor();
+            case 'email': return $this->settingsService->getEmail();
             case 'delivery-hours': return $this->settingsService->getDeliveryHours();
             case 'show-search': return $this->settingsService->getShowProductSearchBox();
             case 'days-to-choose': return $this->settingsService->getDaysToChooseInAdvanceToPurchase();
@@ -167,6 +168,7 @@ class AppExtension extends AbstractExtension
             case 'new-address-ms': return $this->settingsService->getNewAddressMessage();
             case 'max-purchase': return $this->settingsService->getMaximumPurchaseValue();
             case 'min-purchase': return $this->settingsService->getMinimumPurchaseValue();
+            case 'phone': return $this->settingsService->getPhoneNumber();
             default:
                 return $this->settingsService->getAboutUs();
         }

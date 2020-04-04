@@ -3,7 +3,7 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block subcontent %}
-    <div class="row register profile">
+    <div class="row register profile pt-5">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <a href="{{ path('sylius_shop_account_dashboard') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_profile'|trans }}</a>
         </div>
@@ -38,6 +38,9 @@
             </div>
 
             {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
+            <div class="d-none">
+                {{ form_row(form.email) }}
+            </div>
             <input type="hidden" name="_method" value="PUT" />
             <div class="divider mt-5 mb-3"></div>
             <div class="text-center">

@@ -40,6 +40,16 @@
             }
 
             @font-face {
+                font-family: "Raleway Bold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Bold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway ExtraBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-ExtraBold.ttf') }}");
+            }
+
+            @font-face {
                 font-family: "Raleway Light";
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
             }
@@ -52,6 +62,7 @@
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-sylius.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
@@ -82,17 +93,15 @@
 
     <div class="container first">
         {% block header %}
-            <header>
-                {% include '@SyliusShop/_header.html.twig' %}
-
-                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
-
+{#            <header>#}
+{#                {% include '@SyliusShop/_header.html.twig' %}#}
+{#                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}#}
 {#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
-            </header>
+{#            </header>#}
         {% endblock %}
 
         {% block flashes %}
-            {% include '@SyliusShop/_flashes.html.twig' %}
+{#            {% include '@SyliusShop/_flashes.html.twig' %}#}
         {% endblock %}
 
         {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
