@@ -4,6 +4,9 @@ parameters:
     sylius_shop_api.security.regex: "^/shop-api"
 
 security:
+    role_hierarchy:
+        ROLE_ADMIN:  [ROLE_ADMIN, ROLE_ADMINISTRATION_ACCESS]
+        ROLE_EDITOR: [ROLE_EDITOR, ROLE_ADMINISTRATION_ACCESS]
     always_authenticate_before_granting: true
     providers:
         sylius_admin_user_provider:

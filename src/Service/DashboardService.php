@@ -6,6 +6,7 @@ use Doctrine\ORM\Cache;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product\Product;
+use Sylius\Component\Core\OrderCheckoutStates;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
@@ -149,7 +150,9 @@ class DashboardService
     {
         $queryBuilder = $this->container->get('sylius.repository.order')
             ->createQueryBuilder('o')
-            ->select('COUNT(o)');
+            ->select('COUNT(o)')
+            ->andWhere('o.checkoutState = :checkoutState')
+            ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
 
         try {
             if ($returnQueryBuilder) {
@@ -346,15 +349,23 @@ class DashboardService
     /**
      * Calculate order average rating.
      */
-    private function calculateAverageRating(): self
+    public function calculateAverageRating(): self
     {
         try {
             $averageRating = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('AVG(o.rating)')
-                ->andWhere('o.createdAt BETWEEN :start AND :end')
-                ->setParameter('start', $this->getStartDate() . ' 00:00:00')
-                ->setParameter('end', $this->getEndDate() . ' 23:59:59')
+                ->andWhere('o.checkoutState = :checkoutState')
+                ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
+
+            if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
+                $averageRating
+                    ->andWhere('o.createdAt BETWEEN :start AND :end')
+                    ->setParameter('start', $this->getStartDate() . ' 00:00:00')
+                    ->setParameter('end', $this->getEndDate() . ' 23:59:59');
+            }
+
+            $averageRating = $averageRating
                 ->getQuery()
                 ->setCacheable(true)
                 ->setCacheMode(Cache::MODE_NORMAL)
@@ -364,13 +375,23 @@ class DashboardService
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
                 ->andWhere('o.rating IS NOT NULL')
-                ->andWhere('o.createdAt BETWEEN :start AND :end')
-                ->setParameter('start', $this->getStartDate() . ' 00:00:00')
-                ->setParameter('end', $this->getEndDate() . ' 23:59:59')
+                ->andWhere('o.checkoutState = :checkoutState')
+                ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
+
+            if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
+                $averageRatingCounter
+                    ->andWhere('o.createdAt BETWEEN :start AND :end')
+                    ->setParameter('start', $this->getStartDate() . ' 00:00:00')
+                    ->setParameter('end', $this->getEndDate() . ' 23:59:59');
+            }
+
+            $averageRatingCounter = $averageRatingCounter
                 ->getQuery()
                 ->setCacheable(true)
                 ->setCacheMode(Cache::MODE_NORMAL)
                 ->getSingleScalarResult();
+
+
         } catch (\Exception $exception) {
             $averageRating = null;
             $averageRatingCounter = null;
@@ -413,6 +434,8 @@ class DashboardService
             foreach ($dates as $index => $date) {
                 $counter = $this->orderCount(true)
                     ->andWhere('o.createdAt BETWEEN :start AND :end')
+                    ->andWhere('o.checkoutState = :checkoutState')
+                    ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED)
                     ->setParameter('start', $date['start'])
                     ->setParameter('end', $date['end'])
                     ->getQuery()

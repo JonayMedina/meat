@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Service\SettingsService;
 use Exception;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Service\UploaderHelper;
@@ -29,16 +30,23 @@ class AppExtension extends AbstractExtension
     private $settingsService;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
      * @param SettingsService $settingsService
+     * @param TranslatorInterface $translator
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
         $this->settingsService = $settingsService;
+        $this->translator = $translator;
     }
 
     /**
@@ -48,7 +56,8 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('price', [$this, 'formatPrice']),
-            new TwigFilter('base64', [$this, 'imageToBase64'])
+            new TwigFilter('base64', [$this, 'imageToBase64']),
+            new TwigFilter('translated_roles', [$this, 'translatedRoles'])
         ];
     }
 
@@ -62,6 +71,17 @@ class AppExtension extends AbstractExtension
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('aboutStore', [$this, 'AboutStore'])
         ];
+    }
+
+    public function translatedRoles($roles)
+    {
+        $string = '';
+
+        foreach ($roles as $role) {
+            $string .= $this->translator->trans('app.ui.roles.' . strtolower($role)) . ', ';
+        }
+
+        return substr_replace($string ,"", -2);
     }
 
     /**

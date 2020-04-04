@@ -108,7 +108,7 @@
                         <div class="ibox-content">
                             <h2 class="rating-title">{{ 'app.ui.average_rating'|trans }}</h2>
 
-                            <div class="rating-stars" data-toggle="tooltip" data-placement="top" title="{% trans with {'%orders%': dashboard.averageRatingCounter} %}app.ui.from_a_total_of_%orders%_orders{% endtrans %}">
+                            <div class="rating-stars" {% if dashboard.averageRatingCounter %}data-toggle="tooltip" data-placement="top" title="{% trans with {'%orders%': dashboard.averageRatingCounter} %}app.ui.from_a_total_of_%orders%_orders{% endtrans %}" {% endif %}>
                                 {% for i in 1..constant('App\\Entity\\Order\\Order::MAX_RATING') %}
                                     <i class="fa fa-star {% if i <= dashboard.averageRating %}yellow{% endif %}"></i>
                                 {% endfor %}
@@ -144,8 +144,7 @@
                                         <td>{{ loop.index }}</td>
                                         <td>{{product['name']}}</td>
                                         <td>
-                                            {{ dashboard.currency }}
-                                            {{ product['price']|price }}
+                                            {{ product['price']|price|number_format_currency(dashboard.currency) }}
                                         </td>
                                         <td>{{product['quantity']}}</td>
                                     </tr>

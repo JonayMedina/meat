@@ -18,9 +18,16 @@ class AdminUser extends BaseAdminUser
     use BlameableTrait, IpTraceableTrait;
 
     /**
-     * @inheritDoc
+     * Can create new users.
      */
-    public function __toString(): string
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    /**
+     * Cannot create new users.
+     */
+    const ROLE_EDITOR = 'ROLE_EDITOR';
+
+    public function getFullName()
     {
         if (!empty($this->getFirstName())) {
             $fullName = $this->getFirstName() . ' ' . $this->getLastName();
@@ -28,6 +35,14 @@ class AdminUser extends BaseAdminUser
         }
 
         return $this->getUsername();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string
+    {
+        return $this->getFullName();
     }
 
 }

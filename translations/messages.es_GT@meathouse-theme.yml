@@ -30,7 +30,7 @@ app.ui.order_history: 'Histórico de órdenes'
 app.ui.news_banner: 'Banner de noticias'
 app.ui.coupons: Cupones
 app.ui.send_push: 'Envío push'
-app.ui.users: Users
+app.ui.users: Usuarios
 app.ui.ratings: Calificaciones
 app.ui.purchase_admin: 'Admin de compra'
 app.ui.locations: Ubicaciones
@@ -96,6 +96,8 @@ app.ui.purchase_settings: 'Configuración de compra'
 app.ui.holidays: 'Días festivos'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
+app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
+app.ui.category_color_error: 'Hubo un error al guardar los cambios de color de categoría, inténtelo de nuevo más tarde'
 app.ui.qty_of_active_coupons_%total%: 'Cantidad de cupones activos: %total%'
 app.ui.new_coupon: 'Nuevo cupón'
 app.ui.coupon: Cupón
@@ -475,6 +477,39 @@ app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un p
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
 app.ui.contact_info: 'Información de contacto'
+app.ui.comments: Comentarios
+app.ui.date_and_time: 'Fecha y hora'
+app.ui.order_number: 'Número de orden'
+app.ui.score: Calificación
+app.ui.show_comments: 'Mostrar comentario'
+app.ui.comment: Comentario
+app.ui.rating_comments_sort_desc: 'Calificación de mayor a menor'
+app.ui.rating_comments_sort_asc: 'Calificación de menor a mayor'
+app.ui.rating_comments_2_stars: 'Calificación 2'
+app.ui.rating_comments_3_stars: 'Calificación 3'
+app.ui.rating_comments_sort_recent: Recientes
+app.ui.rating_comments_5_stars: 'Calificación 5'
+app.ui.rating_comments_4_stars: 'Calificación 4'
+app.ui.rating_comments_with_comment: 'Con comentario'
+app.ui.rating_comments_all_stars: Calificación
+app.ui.rating_comments_1_stars: 'Calificación 1'
+app.ui.comments_no_results_found: 'No hay resultados. Intentálo de nuevo con otra búsqueda.'
+app.ui.average_rating_%avg%: 'Rating promedio: %avg%'
+app.ui.total_of_users_%total%: 'Cantidad de usuarios: %total%'
+app.ui.users_search_label: '¿A quién buscas?'
+app.ui.users_filter_by_role: 'Filtrar por'
+app.ui.roles.role_admin: Administrador
+app.ui.roles.role_editor: Editor
+app.ui.first_name: Nombre
+app.ui.last_name: Apellido
+app.ui.role: Rol
+app.ui.user_error_on_remove_message: 'Hubo un error al eliminar este usuario, puede que esté en uso.'
+app.ui.user_remove_title: 'Se ha eliminado este usuario.'
+app.ui.user_remove_text: '%name%'
+app.ui.users_sort_recent: Reciente
+app.ui.users_sort_asc: ABC
+app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda. Intentálo de nuevo con otra búsqueda.'
+app.ui.new_user: 'Nuevo usuario'
 app.ui.google_play_logo: Google Play Logo
 app.ui.app_store_logo: App Store Logo
 app.ui.frequent_questions: Preguntas frecuentes
