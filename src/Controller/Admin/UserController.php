@@ -18,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class UserController extends AbstractController
 {
-    const PAGINATOR_LIMIT = 10;
+    const PAGINATOR_LIMIT = 20;
 
     const ORDER_ABC = 'abc';
 
