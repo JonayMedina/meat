@@ -110,4 +110,15 @@ class ResourcesController extends AbstractController
 
         return $this->render('/frontend/pages/wholesalers.html.twig');
     }
+
+    /**
+     * @Route("/locations", name="store_locations")
+     * @return Response
+     */
+    public function locationsAction() {
+        $this->get('session')->getFlashBag()->clear();
+        $repository = $this->getDoctrine()->getManager()->getRepository('App:Location');
+
+        return $this->render('/frontend/pages/locations.html.twig', ['locations' => $repository->findAll()]);
+    }
 }

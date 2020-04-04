@@ -489,3 +489,5 @@ app.ui.favorites.empty: No tienes favoritos aún
 app.ui.favorites.empty_instructions: Puedes agregar tus personalizaciones de compra por producto y no volver a configurarla para tu siguiente compra.
 app.ui.order_history.empty: No tienes compras recientes
 app.ui.order_history.empty_instructions: 'Actualmente no cuentas con algúna compra reciente.<br>Empieza una ahora:'
+app.ui.contact_us: Contáctanos
+app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
