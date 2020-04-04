@@ -9,6 +9,10 @@ img, iframe {
     height: auto;
 }
 
+.ff-rw-bold {
+    font-family: "Raleway Bold", sans-serif;
+}
+
 a, a:hover {
     font-family: "Raleway Medium", sans-serif;
     color: #AB162B !important;
@@ -95,8 +99,22 @@ button, button:hover, button:focus, a, a:hover, a:focus {
     box-shadow: none !important;
 }
 
-strong {
+strong, .table thead th {
     font-family: "Raleway SemiBold", sans-serif !important;
+}
+
+.table-striped tbody tr, .table th, .table td, .table thead th {
+    border: none !important;
+}
+
+.table th, .table td {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+    color: #404040;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #FAF5F6 !important;
 }
 
 /* Utilities */
@@ -321,6 +339,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 0 80px;
 }
 
+.pass-change form > div {
+    padding: 0 20px;
+}
+
 .register .instructions {
     width: 45%;
 }
@@ -442,6 +464,12 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     font-size: 17px;
 }
 
+.pass-change form {
+    border-bottom: none !important;
+    max-width: 570px !important;
+    padding-bottom: 0 !important;
+}
+
 /* Modal */
 .modal-content {
     padding: 40px 0 !important;
@@ -535,6 +563,32 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     flex-direction: column;
 }
 
+.error-500 h1 {
+    margin-top: 105px;
+}
+
+.work-with-us h1, .wholesalers h1 {
+    margin-top: 50px;
+}
+
+.faqs .segment {
+    padding: 50px 55px;
+}
+
+.faqs h4, .faqs a, .faqs a:hover {
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 24px;
+    color: #404040;
+}
+
+.faqs a.collapsed i.fa-chevron-down, .faqs a:not(.collapsed) i.fa-chevron-up {
+    display: initial;
+}
+
+.faqs a.collapsed i.fa-chevron-up, .faqs a:not(.collapsed) i.fa-chevron-down {
+    display: none;
+}
+
 /* form errors */
 div.error {
     margin-bottom: 15px;
@@ -566,36 +620,6 @@ label.error:after {
 
 .mobile-menu .navbar-toggler-icon img {
     width: 33px;
-    height: auto;
-}
-
-/* Custom Collapse */
-.c-collapse:not(.show) {
-    visibility: hidden;
-    display: none;
-}
-
-.c-collapse.show {
-    visibility: visible;
-    display: block;
-}
-
-.c-collapse.collapsing {
-    position: relative;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition-property: height, visibility;
-    transition-property: height, visibility;
-    -webkit-transition-duration: 0.35s;
-    transition-duration: 0.35s;
-    -webkit-transition-timing-function: ease;
-    transition-timing-function: ease;
-}
-
-.c-collapse.collapsing.width {
-    -webkit-transition-property: width, visibility;
-    transition-property: width, visibility;
-    width: 0;
     height: auto;
 }
 
@@ -793,6 +817,14 @@ label.error:after {
         margin: 20px auto 0 auto;
     }
 
+    .error-500 h1, .work-with-us h1, .wholesalers h1 {
+        margin-top: 0;
+    }
+
+    .faqs .segment {
+        padding: 20px;
+    }
+
     .r-ml-0 {
         margin-left: 0 !important;
     }
@@ -807,62 +839,6 @@ label.error:after {
 
     .pr-0.r-pr-15 {
         padding-right: 15px !important;
-    }
-
-    .sm-text-center {
-        text-align: center;
-    }
-
-    .sm-mt-1 {
-        margin-top: 1rem;
-    }
-
-    .sm-mt-2 {
-        margin-top: 2rem;
-    }
-
-    .sm-mt-3 {
-        margin-top: 3rem;
-    }
-
-    .sm-mt-4 {
-        margin-top: 4rem;
-    }
-
-    .sm-mt-5 {
-        margin-top: 5rem;
-    }
-
-    .sm-pl-0 {
-        padding-left: 0;
-    }
-
-    .sm-pr-0 {
-        padding-right: 0;
-    }
-
-    .sm-pl-0-i {
-        padding-left: 0 !important;
-    }
-
-    .sm-pr-0-i {
-        padding-right: 0 !important;
-    }
-
-    .sm-order-1 {
-        order: 1;
-    }
-
-    .sm-order-2 {
-        order: 2;
-    }
-
-    .sm-w-100 {
-        width: 100%;
-    }
-
-    .sm-w-100-i, .w-75.sm-w-100-i {
-        width: 100% !important;
     }
 }
 
@@ -883,7 +859,10 @@ label.error:after {
 
     #footer .bottom-footer > div > div > div:nth-of-type(2) {
         order: 1;
-        justify-content: space-around !important;
+    }
+
+    #footer .bottom-footer > div > div > div:nth-of-type(2) a:last-of-type {
+        margin-right: 0 !important;
     }
 
     #footer .bottom-footer > div > div > div:nth-of-type(3) {
@@ -894,40 +873,24 @@ label.error:after {
         margin-right: 10px;
     }
 
-    .xs-text-left {
-        text-align: left;
-    }
-
-    .xs-text-left-i, .text-center.xs-text-left-i {
-        text-align: left !important;
-    }
-
     .xs-segment {
         background: #ffffff;
     }
 
-    .mt-1.xs-mt-0, .mt-2.xs-mt-0, .mt-3.xs-mt-0, .mt-3.xs-mt-0, .mt-5.xs-mt-0 {
-        margin-top: 0 !important;
+    .pt-5.xs-pt-2 {
+        padding-top: 2rem !important;
     }
 
-    .xs-mt-1 {
-        margin-top: 1rem;
+    .mb-4.xs-mb-0 {
+        margin-bottom: 0 !important;
     }
 
-    .xs-mt-2 {
-        margin-top: 2rem;
+    .pr-5.xs-pr-2 {
+        padding-right: 2rem !important;
     }
 
-    .xs-mt-3 {
-        margin-top: 3rem;
-    }
-
-    .xs-mt-4 {
-        margin-top: 4rem;
-    }
-
-    .xs-mt-5 {
-        margin-top: 5rem;
+    .pl-5.xs-pl-2 {
+        padding-left: 2rem !important;
     }
 }
 
@@ -936,7 +899,7 @@ label.error:after {
         text-align: left !important;
     }
 
-    .login form > div {
+    .login form > div, .pass-change form > div {
         padding: initial;
     }
 
@@ -976,6 +939,10 @@ label.error:after {
 
     .terms .content {
         padding: 15px 15px 0 15px !important;
+    }
+
+    .cart-summary h2 {
+        font-size: 5vw;
     }
 }
 

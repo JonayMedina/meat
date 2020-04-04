@@ -3,7 +3,7 @@
 {% block subcontent %}
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_content_header', {'customer': customer}) }}
 
-    <div class="row profile">
+    <div class="row profile pt-4">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <h1 class="text-center">{{ 'app.ui.profile.hello_%name%'|trans({'%name%': customer.firstName}) }}</h1>
         </div>
@@ -123,7 +123,7 @@
                                 <div class="col-12"><h2>{{ 'app.ui.my_favorites'|trans }}</h2></div>
                                 <div class="col-12 text-center mt-5 mb-5">
                                     <p class="text-center">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
-                                    <a href="#" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                    <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
                                 </div>
                             </div>
                         </div>

@@ -59,9 +59,9 @@ body.mini-navbar #main-logo {
 }
 
 .btn-primary:hover, .btn-primary:visited, .btn-primary:active, .btn-primary:focus {
-    color: #fff;
-    background-color: #AB162B;
-    border-color: #B03143;
+    color: #fff !important;
+    background-color: #AB162B !important;
+    border-color: #B03143 !important;
 }
 
 .text-primary {
