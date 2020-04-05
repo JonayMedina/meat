@@ -477,6 +477,20 @@ app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un p
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
 app.ui.contact_info: 'Información de contacto'
+app.ui.google_play_logo: Google Play Logo
+app.ui.app_store_logo: App Store Logo
+app.ui.frequent_questions: Preguntas frecuentes
+app.ui.wholesalers.message_%phone%: Comunícate al %phone% si deseas comprar nuestros productos por caja.
+app.ui.change_password: Cambio de contraseña
+app.form.user_change_password.confirmation: Reescribe tu nueva contraseña
+app.ui.my_cart: Mi carrito
+app.ui.minimum_purchase_price_message_%price%: Recuerda que el mínimo de compra es de Q.%price%.00.
+app.ui.cart.empty_instructions: No tienes productos en tu carrito. Para agregar productos, ve al catálogo y agrega el producto que quieras comprar.
+app.ui.cart.empty: Carrito vacío
+app.ui.favorites.empty: No tienes favoritos aún
+app.ui.favorites.empty_instructions: Puedes agregar tus personalizaciones de compra por producto y no volver a configurarla para tu siguiente compra.
+app.ui.order_history.empty: No tienes compras recientes
+app.ui.order_history.empty_instructions: 'Actualmente no cuentas con algúna compra reciente.<br>Empieza una ahora:'
 app.ui.comments: Comentarios
 app.ui.date_and_time: 'Fecha y hora'
 app.ui.order_number: 'Número de orden'
@@ -510,19 +524,5 @@ app.ui.users_sort_recent: Reciente
 app.ui.users_sort_asc: ABC
 app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda. Intentálo de nuevo con otra búsqueda.'
 app.ui.new_user: 'Nuevo usuario'
-app.ui.google_play_logo: Google Play Logo
-app.ui.app_store_logo: App Store Logo
-app.ui.frequent_questions: Preguntas frecuentes
-app.ui.wholesalers.message_%phone%: Comunícate al %phone% si deseas comprar nuestros productos por caja.
-app.ui.change_password: Cambio de contraseña
-app.form.user_change_password.confirmation: Reescribe tu nueva contraseña
-app.ui.my_cart: Mi carrito
-app.ui.minimum_purchase_price_message_%price%: Recuerda que el mínimo de compra es de Q.%price%.00.
-app.ui.cart.empty_instructions: No tienes productos en tu carrito. Para agregar productos, ve al catálogo y agrega el producto que quieras comprar.
-app.ui.cart.empty: Carrito vacío
-app.ui.favorites.empty: No tienes favoritos aún
-app.ui.favorites.empty_instructions: Puedes agregar tus personalizaciones de compra por producto y no volver a configurarla para tu siguiente compra.
-app.ui.order_history.empty: No tienes compras recientes
-app.ui.order_history.empty_instructions: 'Actualmente no cuentas con algúna compra reciente.<br>Empieza una ahora:'
 app.ui.contact_us: Contáctanos
 app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
