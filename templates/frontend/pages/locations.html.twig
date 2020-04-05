@@ -14,23 +14,69 @@
         <div class="col-12 text-center">
             <h1>{{ 'app.ui.locations'|trans }}</h1>
 
-            <div class="row">
+            <div class="row locations">
                 {% for location in locations %}
-                <div class="col-4">
-                    <div class="collapse" id="collapse-{{ location.id }}">
-                        <div class="card card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
+                        <div class="content custom-overlay-container">
+                            <div>
+                                {# <img src="{{ location.filePath }}">#}
+                                <img src="{{ asset('bundles/syliusshop/img/dev/location.png') }}" alt="{{ location.name }}" title="{{ location.name }}" width="100%" height="100%">
+                                <a class="d-flex justify-content-between trigger-overlay">
+                                    <h4>{{ location.name }}</h4><i class="fas fa-chevron-up"></i>
+                                </a>
+                            </div>
+                            <div class="custom-overlay text-white">
+                                <div>
+                                    <button type="button" class="close">
+                                        <img src="{{ asset('bundles/syliusshop/img/icons/close.svg') }}" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                                    </button>
+                                    <p class="mb-4">{{ location.address }}</p>
+                                    <p class="mb-4"><strong>{{ 'app.ui.phone_number'|trans }}:</strong> {{ location.phoneNumber }} {% if location.extension %} {{ 'app.ui.phone_number_extension.short'|trans }} {{ location.extension }}{% endif %}</p>
+                                    <p class="mb-4 schedule"><strong>{{ 'app.ui.location_schedule'|trans }}:</strong>
+                                        {% if location.schedule %}
+                                            {% for schedule in location.schedule  %}
+                                                {% set key = loop.index %}
+                                                {% if key == 1 %}
+                                                    {{ 'app.ui.location_monday_to_friday'|trans }}
+                                                {% else %}
+                                                    {{ 'app.ui.saturday'|trans }}
+                                                {% endif %}
+                                                {% if schedule['start'] is defined and schedule['end'] is defined and schedule['start'] and schedule['end'] %}
+                                                    {{ schedule['start'] }} - {{ schedule['end'] }}{% if key == 1 %}, {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <img src="{{ location.filePath }}" >
-                        <a class="d-flex justify-content-between collapsed" data-toggle="collapse" data-target="#collapse-{{ location.id }}" aria-expanded="false" aria-controls="collapse-{{ location.id }}">
-                            <h4>{{ location.name }}</h4><i class="fas fa-chevron-up"></i>
-                        </a>
-                    </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(document).ready(function () {
+            $('a.trigger-overlay').click(function () {
+                let $div = $(this).closest('div.content');
+                $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                setTimeout(function () {
+                    $div.addClass('show');
+                }, 150);
+            });
+
+            $('button.close').click(function () {
+                let $div = $(this).closest('div.content');
+                $div.removeClass('show');
+
+                setTimeout(function () {
+                    $div.find('div.custom-overlay').attr('style', 'display: none;');
+                }, 150);
+            });
+        });
+    </script>
 {% endblock %}

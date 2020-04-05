@@ -589,7 +589,46 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     display: none;
 }
 
-/* form errors */
+.locations .content {
+    height: 100%;
+    background: #ffffff;
+    box-shadow: 0 3px 9px -6px #917171 !important;
+}
+
+.locations div a {
+    padding: 24px 24px 40px 24px;
+}
+
+.locations div a h4 {
+    font-family: "Raleway", sans-serif;
+    font-size: 24px;
+    color: #404040;
+}
+
+.locations > div:nth-child(3n -2) {
+    padding-left: 0;
+}
+
+.locations > div:nth-child(3n -1) {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+}
+
+.locations > div:nth-child(3n +0) {
+    padding-right: 0;
+}
+
+.locations .custom-overlay div {
+    padding: 45px 24px 24px 24px;
+    height: 100%;
+}
+
+.locations .custom-overlay .close {
+    opacity: 1;
+    position: relative;
+    top: -30px;
+}
+    /* form errors */
 div.error {
     margin-bottom: 15px;
 }
@@ -752,6 +791,16 @@ label.error:after {
     #mobile-menu .sub-navbar-nav ul li:first-of-type a {
         margin-left: 0;
     }
+
+    .locations > div:nth-child(2n -1) {
+        padding-left: 0;
+        padding-right: 15px;
+    }
+
+    .locations > div:nth-child(2n +0) {
+        padding-left: 15px;
+        padding-right: 0;
+    }
 }
 
 @media (max-width: 767px) {
@@ -840,6 +889,10 @@ label.error:after {
     .pr-0.r-pr-15 {
         padding-right: 15px !important;
     }
+
+    .locations .custom-overlay p {
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -891,6 +944,15 @@ label.error:after {
 
     .pl-5.xs-pl-2 {
         padding-left: 2rem !important;
+    }
+
+    .locations .custom-overlay p {
+        font-size: 16px;
+    }
+
+    .locations > div {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
     }
 }
 

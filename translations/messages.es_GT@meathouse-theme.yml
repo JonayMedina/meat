@@ -395,6 +395,7 @@ app.ui.new_location: 'Nueva ubicación'
 app.ui.name: Nombre
 app.ui.phone_number: Teléfono
 app.ui.phone_number_extension: Extensión
+app.ui.phone_number_extension.short: Ext.
 app.ui.location_error_on_remove_message: 'Hubo un error al borrar la ubiación, inténtelo de nuevo más tarde.'
 app.ui.location_remove_text: ''
 app.ui.location_remove_title: '¿Estas seguro que deseas borrar esta ubicación?'
@@ -526,3 +527,4 @@ app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda
 app.ui.new_user: 'Nuevo usuario'
 app.ui.contact_us: Contáctanos
 app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
+app.ui.close: Cerrar

@@ -1,3 +1,29 @@
+/* Custom Overlay */
+.custom-overlay-container {
+    position: relative;
+}
+
+.custom-overlay-container:not(.show) .custom-overlay {
+    display: none;
+}
+
+.custom-overlay-container.show .custom-overlay {
+    opacity: .97;
+}
+
+.custom-overlay{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .5s ease;
+    background-color: #917171;
+}
+
 @media (max-width: 991px) {
     /* Margin */
     .md-mt-1 {
