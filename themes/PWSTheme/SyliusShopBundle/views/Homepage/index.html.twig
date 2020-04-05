@@ -1,9 +1,19 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <h2 class="ui horizontal section divider header">
-        {{ 'sylius.ui.latest_products'|trans }}
-    </h2>
+    <div class="row home pt-5">
+        {% if aboutStore('show-search') %}
+        <div class="col-12 mb-4">
+            <form class="search-box form d-flex" role="search" method="get" action="">
+                <label>
+                    <img src="{{ asset('bundles/syliusshop/img/icons/search.svg') }}" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
+                    <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.search.placeholder'|trans }}">
+                </label>
+                <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block">{{ 'app.ui.search'|trans }}</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
 
     {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
 {% endblock %}

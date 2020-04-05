@@ -528,3 +528,5 @@ app.ui.new_user: 'Nuevo usuario'
 app.ui.contact_us: Contáctanos
 app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
 app.ui.close: Cerrar
+app.ui.search: Buscar
+app.ui.search.placeholder: '¿Qué estás buscando hoy?'

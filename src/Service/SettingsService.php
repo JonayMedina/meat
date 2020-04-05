@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @method string|null getAppStoreUrl()
  * @method string|null getPlayStoreUrl()
  * @method string|null getDeliveryHours()
- * @method string|null getShowProductSearchBox()
+ * @method Boolean|null isShowProductSearchBox()
  * @method string|null getDaysToChooseInAdvanceToPurchase()
  * @method string|null getAboutUs()
  * @method string|null getPhrase()

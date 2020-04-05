@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class AboutStore implements ResourceInterface
 {
     const THEME_DARK = 'dark';
-
     const THEME_LIGHT = 'light';
 
     use TimestampableTrait, BlameableTrait, IpTraceableTrait;

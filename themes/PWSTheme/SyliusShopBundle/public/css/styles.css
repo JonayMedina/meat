@@ -628,7 +628,8 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     position: relative;
     top: -30px;
 }
-    /* form errors */
+
+/* form errors */
 div.error {
     margin-bottom: 15px;
 }
@@ -641,6 +642,38 @@ label.error, div.error span {
 
 label.error:after {
     content: none !important;
+}
+
+/* search-box */
+.search-box label, .search-box input {
+    background: #EBE7E7 !important;
+    border: none;
+}
+
+.search-box input, .search-box input:hover, .search-box input:active, .search-box input:focus {
+    width: calc(100% - 50px);
+    outline: none;
+}
+
+.search-box input::placeholder {
+    font-family: "Raleway Regular", sans-serif;
+    color: #917171;
+}
+
+.search-box label {
+    border-radius: 64px 0 0 64px;
+    margin-bottom: 0;
+    padding: 12px 24px;
+    margin-right: -30px;
+}
+
+.search-box label img {
+    opacity: .57;
+    margin-right: 15px;
+}
+
+.search-box button {
+    width: 20%;
 }
 
 /* Responsive */
@@ -892,6 +925,11 @@ label.error:after {
 
     .locations .custom-overlay p {
         font-size: 14px;
+    }
+
+    .search-box label {
+        width: 100%;
+        border-radius: 64px;
     }
 }
 
