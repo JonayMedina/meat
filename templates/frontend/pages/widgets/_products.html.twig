@@ -1,0 +1,17 @@
+<div class="owl-carousel taxons-carousel owl-theme mb-4">
+{#    {% for category in products %}#}
+{#        <div class="item {% if category.code == 'pro' %}current{% endif %} {{ category.code }}">#}
+{#            <a class="{{ aboutStore('theme') }}" style="background: {% if aboutStore('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% endif %}">#}
+{#                <p>{{ category.translation.name }}</p>#}
+{#            </a>#}
+{#            <style>#}
+{#                .taxons-carousel .item.current.{{ category.code }} a {#}
+{#                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') !important;#}
+{#                    background-position: center !important;#}
+{#                    background-repeat: no-repeat !important;#}
+{#                    background-size: cover !important;#}
+{#                }#}
+{#            </style>#}
+{#        </div>#}
+{#    {% endfor %}#}
+</div>

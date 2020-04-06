@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @method string|null getPhrase()
  * @method string|null getAuthor()
  * @method string|null getEmail()
+ * @method string|null getTheme()
  * @method string|null getFirstPurchaseMessage()
  * @method string|null getNewAddressMessage()
  * @method string|null getMaximumPurchaseValue()

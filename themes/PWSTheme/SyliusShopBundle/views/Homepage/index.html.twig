@@ -1,47 +1,114 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <div class="row home pt-5">
-        {% if aboutStore('show-search') %}
-        <div class="col-12 mb-4">
-            <form class="search-box form d-flex" role="search" method="get" action="">
-                <label>
-                    <img src="{{ asset('bundles/syliusshop/img/icons/search.svg') }}" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
-                    <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.search.placeholder'|trans }}">
-                </label>
-                <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block">{{ 'app.ui.search'|trans }}</button>
-            </form>
+    <div class="container first">
+        {% block header %}{% endblock %}
+        {% block flashes %}{% endblock %}
+
+        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+
+        <div class="row home pt-5">
+            {% if aboutStore('show-search') %}
+                <div class="col-12 mb-4">
+                    <form class="search-box form d-flex" role="search" method="get" action="">
+                        <label>
+                            <img src="{{ asset('bundles/syliusshop/img/icons/search.svg') }}" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
+                            <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.search.placeholder'|trans }}">
+                        </label>
+                        <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block">{{ 'app.ui.search'|trans }}</button>
+                    </form>
+                </div>
+            {% endif %}
         </div>
-        {% endif %}
+
+        {{ render(url('store_categories')) }}
+
+        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
     </div>
-
-    {{ render(url('store_categories')) }}
-
-    {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div id="banners-carousel" class="carousel slide carousel-fade w-100 mb-4" data-ride="carousel">
+                <ol class="carousel-indicators mb-5">
+                    <li data-target="#banners-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#banners-carousel" data-slide-to="1"></li>
+                    <li data-target="#banners-carousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-flex">
+                            <a><h5>¡Un corte para un día!</h5></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-flex">
+                            <a><h5>¡Un corte para otro día!</h5></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-flex">
+                            <a><h5>¡Un corte para otro día diferente al anterior!</h5></a>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#banners-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
+                <a class="carousel-control-next" href="#banners-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
+    </div>
 {% endblock %}
 
 {% block extrajs %}
     <script>
         jQuery(document).ready(function () {
             (function ($) {
-                $('.owl-carousel').owlCarousel({
+                $('.taxons-carousel').owlCarousel({
                     loop: false,
-                    margin: 10,
+                    margin: 15,
                     nav: true,
                     dots: false,
+                    autoWidth: true,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
                     responsive:{
                         0:{
-                            items:1
+                            items: 1
                         },
                         600:{
-                            items:3
+                            items: 3
                         },
                         1000:{
-                            items:5
+                            items: 5
                         }
                     }
                 });
             })(jQuery);
         });
+
+        calcPL();
+
+        $(window).resize(function () {
+            calcPL();
+        });
+
+        function calcPL () {
+            var $container =  $('.container');
+            var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+            if (window.innerWidth < 992) {
+                marg = 15;
+            }
+
+            $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
+            $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
+        }
     </script>
 {% endblock %}

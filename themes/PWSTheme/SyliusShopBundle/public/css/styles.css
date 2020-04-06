@@ -644,6 +644,116 @@ label.error:after {
     content: none !important;
 }
 
+/* Taxons Carousel */
+.taxons-carousel {
+    position: relative;
+    top: 35%;
+}
+
+.taxons-carousel .owl-nav {
+    position: relative;
+    top: -52px;
+}
+
+.taxons-carousel .owl-nav .owl-next, .taxons-carousel .owl-nav .owl-prev {
+    position: absolute;
+    width: 41px;
+    height: 41px;
+    color: #ffffff !important;
+    background: #ab162b !important;
+    border-radius: 50px;
+}
+
+.taxons-carousel .owl-nav .owl-next.disabled, .taxons-carousel .owl-nav .owl-prev.disabled {
+    opacity: .5;
+}
+
+.taxons-carousel .owl-nav .owl-next i, .taxons-carousel .owl-nav .owl-prev i {
+    font-size: 20px;
+    line-height: 2.2;
+}
+
+.taxons-carousel .owl-nav .owl-next {
+    right: 0;
+}
+
+.taxons-carousel .owl-nav .owl-next i {
+    margin-left: 4px;
+}
+
+.taxons-carousel .owl-stage-outer {
+    margin-right: 55px;
+    margin-left: 55px;
+}
+
+.taxons-carousel .item a, .taxons-carousel .item.current a {
+    display: flex;
+    min-width: 154px;
+    min-height: 64px;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.taxons-carousel .item a p {
+    font-family: "Raleway Medium", "Raleway", sans-serif;
+    color: #404040;
+    margin-bottom: 8px;
+}
+
+.taxons-carousel .item.current a:after {
+    content: " ";
+    border-color: #404040 transparent;
+    border-style: solid;
+    border-width: 0 8px 7px 8px;
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+
+.taxons-carousel .item.current a.dark:after {
+    border-color: #ffffff transparent;
+}
+
+.taxons-carousel .item.current a p {
+    font-family: "Raleway Bold", "Raleway", sans-serif;
+}
+
+.taxons-carousel .item a.dark p {
+    color: #ffffff;
+}
+
+/* Banners Carousel */
+#banners-carousel h5 {
+    font-family: "Raleway Bold", sans-serif;
+    font-size: 64px;
+    color: #EBE7E7;
+    text-align: left;
+}
+
+#banners-carousel .carousel-caption {
+    height: 100%;
+    align-items: center;
+}
+
+.carousel-indicators li {
+    width: 16px !important;
+    height: 16px !important;
+    border: none !important;
+    border-radius: 50px;
+    background-color: #EBE7E7 !important;
+    opacity: 1 !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.carousel-indicators li.active {
+    background-color: #917171 !important;
+}
+
 /* search-box */
 .search-box label, .search-box input {
     background: #EBE7E7 !important;

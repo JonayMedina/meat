@@ -1,6 +1,6 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{% block content %}
+{% block extracontent %}
     {% set message = '&ensp;<br><a href="' ~ path('sylius_shop_request_password_reset_token') ~ '" class="text-lowercase show-terms">' ~ ('app.ui.resend_code_here'|trans) ~ '</a>' %}
     <div class="row forgot-password">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">

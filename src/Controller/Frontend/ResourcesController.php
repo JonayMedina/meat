@@ -4,6 +4,7 @@
 namespace App\Controller\Frontend;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Sylius\Component\Taxonomy\Model\Taxon;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,5 +130,26 @@ class ResourcesController extends Controller
         $repository = $this->container->get('sylius.repository.taxon');
 
         return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $repository->findAll()]);
+    }
+
+    /**
+     * @Route("/{code}/products", name="store_products_by_taxon")
+     * @param String $code
+     * @return Response
+     */
+    public function productsByTaxonAction(String $code) {
+        $taxsRep = $this->container->get('sylius.repository.taxon');
+        $taxon = $taxsRep->findOneBy(['code' => $code]);
+        $products = [];
+
+        if ($taxon instanceof Taxon) {
+            $prodRep = $this->container->get('sylius.repository.product');
+            $products = $prodRep->findBy(['mainTaxon' => $taxon->getId()]);
+        }
+
+        dump($products);
+        exit;
+
+        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['products' => $products]);
     }
 }

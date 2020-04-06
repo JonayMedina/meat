@@ -100,26 +100,19 @@
         </div>
     {% endblock %}
 
-    <div class="container first">
-        {% block header %}
-{#            <header>#}
-{#                {% include '@SyliusShop/_header.html.twig' %}#}
-{#                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}#}
-{#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
-{#            </header>#}
-        {% endblock %}
+    {% block content %}
+        <div class="container first">
+            {% block header %}{% endblock %}
+            {% block flashes %}{% endblock %}
 
-        {% block flashes %}
-{#            {% include '@SyliusShop/_flashes.html.twig' %}#}
-        {% endblock %}
+            {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
 
-        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+            {% block extracontent %}
+            {% endblock %}
 
-        {% block content %}
-        {% endblock %}
-
-        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
-    </div>
+            {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+        </div>
+    {% endblock %}
 
     {% block contentFluid %}
     {% endblock %}
