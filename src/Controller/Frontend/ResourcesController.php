@@ -4,12 +4,12 @@
 namespace App\Controller\Frontend;
 
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ResourcesController extends AbstractController
+class ResourcesController extends Controller
 {
     /**
      *
@@ -120,5 +120,14 @@ class ResourcesController extends AbstractController
         $repository = $this->getDoctrine()->getManager()->getRepository('App:Location');
 
         return $this->render('/frontend/pages/locations.html.twig', ['locations' => $repository->findAll()]);
+    }
+
+    /**
+     * @Route("/categories", name="store_categories")
+     */
+    public function categoriesAction() {
+        $repository = $this->container->get('sylius.repository.taxon');
+
+        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $repository->findAll()]);
     }
 }

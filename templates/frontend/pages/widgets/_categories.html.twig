@@ -1,0 +1,10 @@
+<div class="owl-carousel owl-theme">
+    {% for category in categories %}
+        <div class="item {{ category.code }}">
+            <div>
+{#                <img src="{{ category.image}}">#}
+                <p>{{ category.translation.name }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
