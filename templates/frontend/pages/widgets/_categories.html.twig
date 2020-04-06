@@ -1,8 +1,7 @@
 <div class="owl-carousel owl-theme">
     {% for category in categories %}
         <div class="item {{ category.code }}">
-            <div>
-{#                <img src="{{ category.image}}">#}
+            <div style="background: url('{{ category.images[0].path|imagine_filter('sylius_medium') }}')">
                 <p>{{ category.translation.name }}</p>
             </div>
         </div>
