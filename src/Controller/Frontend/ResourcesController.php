@@ -150,19 +150,7 @@ class ResourcesController extends Controller
 
         if ($taxon instanceof Taxon) {
             $prodRep = $this->container->get('sylius.repository.product');
-            $qb = $prodRep->createQueryBuilder('product');
-            /**
-             * @var Product[] $products
-             */
-            $products = $qb->select('p')
-                ->from('App\Entity\Product\Product', 'p')
-                ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'p.id = pt.product')
-                ->where('p.enabled like :true')
-                ->andWhere('pt.taxon = :taxon')
-                ->setParameter('true', 1)
-                ->setParameter('taxon', $taxon->getId())
-                ->getQuery()
-                ->getResult();
+            $products = $prodRep->findByTaxon($taxon->getId());
         }
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
