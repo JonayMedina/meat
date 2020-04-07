@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="container">
-        {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
+        {{ render(url('store_products_by_taxon', {'code': 'pro'})) }}
     </div>
 {% endblock %}
 
@@ -91,24 +91,77 @@
                     }
                 });
             })(jQuery);
-        });
 
-        calcPL();
-
-        $(window).resize(function () {
             calcPL();
-        });
 
-        function calcPL () {
-            var $container =  $('.container');
-            var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+            $(window).resize(function () {
+                calcPL();
+            });
 
-            if (window.innerWidth < 992) {
-                marg = 15;
+            function calcPL () {
+                var $container =  $('.container');
+                var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+                if (window.innerWidth < 992) {
+                    marg = 15;
+                }
+
+                $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
+                $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
             }
 
-            $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
-            $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
-        }
+            $('.xpress-button').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                setTimeout(function () {
+                    $div.addClass('show');
+                }, 150);
+            });
+
+            $('button.close').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.removeClass('show');
+
+                setTimeout(function () {
+                    $div.find('div.custom-overlay').attr('style', 'display: none;');
+                }, 150);
+            });
+
+
+            jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
+            jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
+            jQuery('.quantity').each(function() {
+                var spinner = jQuery(this),
+                    input = spinner.find('input[type="number"]'),
+                    btnUp = spinner.find('.quantity-up'),
+                    btnDown = spinner.find('.quantity-down'),
+                    min = input.attr('min'),
+                    max = input.attr('max');
+
+                btnUp.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue >= max) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue + 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+                btnDown.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue <= min) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue - 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+            });
+        });
     </script>
 {% endblock %}

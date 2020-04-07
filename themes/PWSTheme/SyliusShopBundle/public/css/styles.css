@@ -786,6 +786,180 @@ label.error:after {
     width: 20%;
 }
 
+/* Products */
+.products .image {
+    position: relative;
+}
+
+.products .image a {
+    background-position: center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+}
+
+.products .image img {
+    visibility: hidden;
+    width: 100%;
+    max-height: 216px;
+}
+
+.products .image .xpress-button {
+    background: #ffffff;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 50px;
+    padding: 3px 15px;
+    cursor: pointer;
+    color: rgba(171, 22, 43, .8);
+    font-size: 12px;
+    font-family: "Helvetica Neue", sans-serif;
+    letter-spacing: 0.53px;
+    line-height: 21px;
+}
+
+.products .image .xpress-button:hover {
+    color: rgba(171, 22, 43, 1);
+}
+
+.products .content {
+    padding: 15px;
+}
+
+.products .content p {
+    font-family: "Raleway", sans-serif;
+    letter-spacing: 0.7px;
+    color: #404040 !important;
+    margin-bottom: 35px;
+}
+
+.products .btn-rounded {
+    padding: 5px 10px;
+    border: none;
+}
+
+.products .btn-rounded img {
+    margin-right: 12px;
+}
+
+.products .content .price {
+    text-align: right;
+    letter-spacing: 0.7px;
+}
+
+.products .content .price span.offer {
+    font-family: "Raleway SemiBold", sans-serif;
+    letter-spacing: 0;
+    color: #ab162b;
+    font-size: 17px;
+}
+
+.products .custom-overlay {
+    background: #ffffff;
+}
+
+.products .custom-overlay-container.show .custom-overlay {
+    opacity: 1;
+}
+
+.products .custom-overlay > div {
+    height: 100%;
+    position: relative;
+}
+
+.products .custom-overlay .close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    max-width: 16px;
+    max-height: 16px;
+    opacity: 1;
+}
+
+.products .custom-overlay .add-to-cart {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.products .custom-overlay form {
+    width: calc(100% - 60px);
+}
+
+.products .custom-overlay form label {
+    text-align: center;
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b !important;
+}
+
+.products .custom-overlay form label:after {
+    content: none !important;
+}
+
+.products .custom-overlay p {
+    font-family: "Raleway Regular", sans-serif;
+    color: #404040;
+}
+
+.products .custom-overlay p.type {
+    text-align: center;
+    color: #ab162b;
+    margin: 5px 0;
+}
+
+/* Custom input number */
+.quantity input[type=number]::-webkit-inner-spin-button,
+.quantity input[type=number]::-webkit-outer-spin-button
+{
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity input[type=number]
+{
+    -moz-appearance: textfield;
+}
+
+.quantity {
+    display: flex;
+    width: calc(100% - 120px);
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.quantity .quantity-button {
+    color: #917171;
+    background: #FAF5F6;
+    width: 45px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 22px;
+    user-select: none;
+}
+
+.quantity .quantity-button.quantity-down {
+    border-radius: 16px 0 0 16px;
+    margin-right: -15px;
+    padding-right: 10px;
+}
+
+.quantity .quantity-button.quantity-up {
+    border-radius: 0 16px 16px 0;
+    margin-left: -15px;
+    padding-left: 10px;
+}
+
+.quantity input {
+    width: calc(100% - 90px) !important;
+    border-radius: 16px !important;
+    z-index: 1;
+    text-align: center;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

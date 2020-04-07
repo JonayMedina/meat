@@ -1,17 +1,57 @@
-<div class="owl-carousel taxons-carousel owl-theme mb-4">
-{#    {% for category in products %}#}
-{#        <div class="item {% if category.code == 'pro' %}current{% endif %} {{ category.code }}">#}
-{#            <a class="{{ aboutStore('theme') }}" style="background: {% if aboutStore('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% endif %}">#}
-{#                <p>{{ category.translation.name }}</p>#}
-{#            </a>#}
-{#            <style>#}
-{#                .taxons-carousel .item.current.{{ category.code }} a {#}
-{#                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') !important;#}
-{#                    background-position: center !important;#}
-{#                    background-repeat: no-repeat !important;#}
-{#                    background-size: cover !important;#}
-{#                }#}
-{#            </style>#}
-{#        </div>#}
-{#    {% endfor %}#}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row products">
+            {% for product in products %}
+                <div class="col-12 col-sm-6 col-md-6 col-lg-4 {{ product.code }} mb-4">
+                    <div class="custom-overlay-container">
+                        <div class="bg-white">
+                            <div class="image">
+                                <a class="d-block" href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                                    <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                </a>
+                                <span class="xpress-button">{{ 'app.ui.express_buy'|trans }}</span>
+                            </div>
+                            <div class="content">
+                                <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">
+                                    <p>{{ product.name }}</p>
+                                </a>
+                                {% if not product.variants.empty() %}
+                                    <div class="price offer">
+                                        {{ 'app.ui.produc.%price%_peer_pound'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>'})|raw }}
+                                    </div>
+                                {% endif %}
+                                <div class="text-right mt-4">
+                                    <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="custom-overlay text-white">
+                            <div>
+                                <button type="button" class="close">
+                                    <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                                </button>
+
+                                {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCart.html.twig', 'productId': product.id})) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{#                <div class="item {% if category.code == 'pro' %}current{% endif %} {{ category.code }}">#}
+{#                    <a class="{{ aboutStore('theme') }}" style="background: {% if aboutStore('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images[0].path|imagine_filter('sylius_small') }}') {% endif %}">#}
+{#                        <p>{{ category.translation.name }}</p>#}
+{#                    </a>#}
+{#                    <style>#}
+{#                        .taxons-carousel .item.current.{{ category.code }} a {#}
+{#                            background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{{ category.images[0].path|imagine_filter('sylius_small') }}') !important;#}
+{#                            background-position: center !important;#}
+{#                            background-repeat: no-repeat !important;#}
+{#                            background-size: cover !important;#}
+{#                        }#}
+{#                    </style>#}
+{#                </div>#}
+            {% endfor %}
+        </div>
+    </div>
 </div>

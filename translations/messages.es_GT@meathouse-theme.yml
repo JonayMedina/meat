@@ -530,3 +530,7 @@ app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de 
 app.ui.close: Cerrar
 app.ui.search: Buscar
 app.ui.search.placeholder: '¿Qué estás buscando hoy?'
+app.ui.produc.%price%_peer_pound: '%price% por libra'
+app.ui.express_buy: Xpress Buy
+app.ui.cart.icon: Icono del carrito
+app.ui.express_buy.package: Paquete

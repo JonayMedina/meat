@@ -3,8 +3,9 @@
 
 namespace App\Controller\Frontend;
 
+use App\Entity\Product\Product;
+use App\Entity\Taxonomy\Taxon;
 use Doctrine\ORM\NonUniqueResultException;
-use Sylius\Component\Taxonomy\Model\Taxon;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,7 +130,12 @@ class ResourcesController extends Controller
     public function categoriesAction() {
         $repository = $this->container->get('sylius.repository.taxon');
 
-        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $repository->findAll()]);
+        /**
+         * @var Taxon[] $categories
+         */
+        $categories = $repository->findAll();
+
+        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories]);
     }
 
     /**
@@ -144,12 +150,21 @@ class ResourcesController extends Controller
 
         if ($taxon instanceof Taxon) {
             $prodRep = $this->container->get('sylius.repository.product');
-            $products = $prodRep->findBy(['mainTaxon' => $taxon->getId()]);
+            $qb = $prodRep->createQueryBuilder('product');
+            /**
+             * @var Product[] $products
+             */
+            $products = $qb->select('p')
+                ->from('App\Entity\Product\Product', 'p')
+                ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'p.id = pt.product')
+                ->where('p.enabled like :true')
+                ->andWhere('pt.taxon = :taxon')
+                ->setParameter('true', 1)
+                ->setParameter('taxon', $taxon->getId())
+                ->getQuery()
+                ->getResult();
         }
 
-        dump($products);
-        exit;
-
-        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['products' => $products]);
+        return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
     }
 }
