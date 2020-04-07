@@ -737,6 +737,7 @@ label.error:after {
 #banners-carousel .carousel-caption {
     height: 100%;
     align-items: center;
+    bottom: 0;
 }
 
 .carousel-indicators li {
@@ -908,6 +909,10 @@ label.error:after {
     margin: 5px 0;
 }
 
+.products .custom-overlay-container {
+    box-shadow: 0 3px 9px -6px #917171 !important;
+}
+
 /* Custom input number */
 .quantity input[type=number]::-webkit-inner-spin-button,
 .quantity input[type=number]::-webkit-outer-spin-button
@@ -995,6 +1000,13 @@ label.error:after {
 
     .welcome .information > .row > div:not(.separator) {
         padding: 50px 0;
+    }
+}
+
+@media (max-width: 1199px) {
+    .taxons-carousel .owl-stage-outer {
+        margin-left: 50px;
+        margin-right: 50px;
     }
 }
 
@@ -1118,6 +1130,15 @@ label.error:after {
         padding-left: 15px;
         padding-right: 0;
     }
+
+    #banners-carousel h5 {
+        font-size: 5vw;
+    }
+
+    .taxons-carousel .owl-stage-outer {
+        margin-left: 98px;
+        margin-right: 98px;
+    }
 }
 
 @media (max-width: 767px) {
@@ -1215,6 +1236,11 @@ label.error:after {
         width: 100%;
         border-radius: 64px;
     }
+
+    .taxons-carousel .owl-stage-outer {
+        margin-left: 93px;
+        margin-right: 93px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -1276,6 +1302,31 @@ label.error:after {
         padding-left: 15px !important;
         padding-right: 15px !important;
     }
+
+    .taxons-carousel .owl-stage-outer {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    #banners-carousel .carousel-item {
+        background-position: center !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+    }
+
+    #banners-carousel img {
+        min-height: 250px;
+        max-height: 270px;
+        visibility: hidden;
+    }
+
+    #banners-carousel .carousel-indicators.mb-5 {
+        margin-bottom: 1rem !important;
+    }
+
+    #banners-carousel h5 {
+        font-size: 7vw;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1328,10 +1379,28 @@ label.error:after {
     .cart-summary h2 {
         font-size: 5vw;
     }
+
+    #banners-carousel h5 {
+        font-size: 8.5vw;
+    }
+
+    .quantity {
+        display: flex;
+        width: calc(100% - 100px);
+        margin: 0 auto;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 345px) {
     .terms-conditions p {
         max-width: 190px;
+    }
+
+    .quantity {
+        display: flex;
+        width: calc(100% - 70px);
+        margin: 0 auto;
+        justify-content: center;
     }
 }
