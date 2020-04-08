@@ -3,11 +3,10 @@
 
 namespace App\Controller\Frontend;
 
-use App\Entity\Product\Product;
 use App\Entity\Taxonomy\Taxon;
-use App\Repository\ProductRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Sylius\Component\Product\Repository\ProductRepositoryInterface;
+use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,10 +127,10 @@ class ResourcesController extends AbstractController
 
     /**
      * @Route("/categories", name="store_categories")
-     * @param RepositoryInterface $taxonRepository
+     * @param TaxonRepositoryInterface $taxonRepository
      * @return Response
      */
-    public function categoriesAction(RepositoryInterface $taxonRepository) {
+    public function categoriesAction(TaxonRepositoryInterface $taxonRepository) {
         /**
          * @var Taxon[] $categories
          */
@@ -143,11 +142,11 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/{code}/products", name="store_products_by_taxon")
      * @param String $code
-     * @param RepositoryInterface $taxonRepository
-     * @param RepositoryInterface $productRepository
+     * @param TaxonRepositoryInterface $taxonRepository
+     * @param ProductRepositoryInterface $productRepository
      * @return Response
      */
-    public function productsByTaxonAction(String $code, RepositoryInterface $taxonRepository, RepositoryInterface $productRepository) {
+    public function productsByTaxonAction(String $code, TaxonRepositoryInterface $taxonRepository, ProductRepositoryInterface $productRepository) {
         $taxon = $taxonRepository->findOneBy(['code' => $code]);
         $products = [];
 
