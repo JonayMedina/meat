@@ -4,6 +4,7 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Taxonomy\Taxon;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
@@ -116,13 +117,13 @@ class ResourcesController extends AbstractController
 
     /**
      * @Route("/locations", name="store_locations")
+     * @param LocationRepository $locationRepository
      * @return Response
      */
-    public function locationsAction() {
+    public function locationsAction(LocationRepository $locationRepository) {
         $this->get('session')->getFlashBag()->clear();
-        $repository = $this->getDoctrine()->getManager()->getRepository('App:Location');
 
-        return $this->render('/frontend/pages/locations.html.twig', ['locations' => $repository->findAll()]);
+        return $this->render('/frontend/pages/locations.html.twig', ['locations' => $locationRepository->findAll()]);
     }
 
     /**
