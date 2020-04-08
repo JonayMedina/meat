@@ -137,6 +137,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "econea/nusoap": {
+        "version": "v0.9.7"
+    },
     "egulias/email-validator": {
         "version": "2.1.5"
     },

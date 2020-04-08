@@ -2,10 +2,14 @@
   <dictionary name="rodmarzavala">
     <words>
       <w>clearfix</w>
+      <w>expdate</w>
       <w>ibox</w>
       <w>inputmask</w>
       <w>meathouse</w>
       <w>metismenu</w>
+      <w>passwd</w>
+      <w>paymentgw</w>
+      <w>praga</w>
       <w>recordset</w>
       <w>summernote</w>
     </words>
