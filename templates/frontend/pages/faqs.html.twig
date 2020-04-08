@@ -1,0 +1,120 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block extracontent %}
+    <div class="row faqs pt-4">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <h1 class="text-center">{{ 'app.ui.frequent_questions'|trans }}</h1>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 pt-4">
+            <div class="row">
+                {% for faq in faqs %}
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
+                        <div class="mb-3">
+                            <a class="d-flex justify-content-between collapsed" data-toggle="collapse" data-target="#collapse-{{ faq.position }}" aria-expanded="false" aria-controls="collapse-{{ faq.position }}">
+                                <h4>{{ faq.question }}</h4><i class="fas fa-chevron-up"></i><i class="fas fa-chevron-down"></i>
+                            </a>
+                        </div>
+                        <div class="collapse" id="collapse-{{ faq.position }}">
+                            {% if faq.type == constant('App\\Entity\\FAQ::TYPE_SCHEDULE') %}
+                                <table class="table table-striped d-none d-sm-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="55%">{{ 'app.ui.faq_time_to_order'|trans }}</th>
+                                            <th>{{ 'app.ui.faq_order_delivery_time'|trans }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% set row1 = "" %}
+                                    {% set row2 = "" %}
+                                    {% set row3 = "" %}
+
+                                    {% if faq.timeToPlaceAnOrder %}
+                                        {% for time in faq.timeToPlaceAnOrder %}
+                                            {% set key = loop.index %}
+                                            {% if time['start'] is defined and time['end'] is defined and time['start'] and time['end'] %}
+                                                {% if loop.index == 1 %}
+                                                    {% set row1 = row1 ~ '<td class="pl-4">' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% elseif loop.index == 2 %}
+                                                    {% set row2 = row2 ~ '<td class="pl-4">' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% elseif loop.index == 3 %}
+                                                    {% set row3 = row3 ~ '<td class="pl-4">' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    {% if faq.orderDeliveryTime %}
+                                        {% for time in faq.orderDeliveryTime %}
+                                            {% set key = loop.index %}
+                                            {% if time['name'] is defined and time['start'] is defined and time['end'] is defined and time['name'] and time['start'] and time['end'] %}
+                                                {% if loop.index == 1 %}
+                                                    {% set row1 = row1 ~ '<td>' ~ time['name'] ~ ': ' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% elseif loop.index == 2 %}
+                                                    {% set row2 = row2 ~ '<td>' ~ time['name'] ~ ': ' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% elseif loop.index == 3 %}
+                                                    {% set row3 = row3 ~ '<td>' ~ time['name'] ~ ': ' ~ time['start'] ~ '-' ~ time['end'] ~ '</td>' %}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+
+                                        <tr>
+                                            {{ row1|raw }}
+                                        </tr>
+                                        <tr>
+                                            {{ row2|raw }}
+                                        </tr>
+                                        <tr>
+                                            {{ row3|raw }}
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped d-table d-sm-none">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'app.ui.faq_time_to_order'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if faq.timeToPlaceAnOrder %}
+                                        {% for time in faq.timeToPlaceAnOrder %}
+                                            {% set key = loop.index %}
+                                            {% if time['start'] is defined and time['end'] is defined and time['start'] and time['end'] %}
+                                                <tr>
+                                                    <td class="pl-4"> {{ time['start'] }} - {{ time['end'] }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped d-table d-sm-none mt-5">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ 'app.ui.faq_order_delivery_time'|trans }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if faq.orderDeliveryTime %}
+                                        {% for time in faq.orderDeliveryTime %}
+                                            {% set key = loop.index %}
+                                            {% if time['name'] is defined and time['start'] is defined and time['end'] is defined and time['name'] and time['start'] and time['end'] %}
+                                                <tr>
+                                                    <td class="pl-4">{{ time['name'] }}: {{ time['start'] }} - {{ time['end'] }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p>{{ faq.answer }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

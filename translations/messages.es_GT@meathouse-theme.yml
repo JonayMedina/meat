@@ -242,7 +242,7 @@ app.ui.browse_your_orders_from_the_past: 'Ver sus pedidos anteriores'
 app.ui.build: Construir
 app.ui.by_position: 'Por posición'
 app.ui.calculator: Calculadora
-app.ui.call_us: ¡Llámanos!
+app.ui.call_us: '¡Llámanos!'
 app.ui.cancelled: Cancelado
 app.ui.cart: Carrito
 app.ui.cart_locked: 'Carrito bloqueado'
@@ -265,7 +265,7 @@ app.ui.view_your_store: 'Ver su tienda'
 app.ui.void: Vacío
 app.ui.volume_based_pricing: 'Precio por volumen'
 app.ui.warning: Advertencia
-app.ui.welcome: ¡Bienvenido!
+app.ui.welcome: '¡Bienvenido!'
 app.ui.wholesalers: Mayoristas
 app.ui.catalogue: Catálogo
 app.ui.work_with_us: 'Trabaja con nosotros'
@@ -294,8 +294,8 @@ app.ui.login.logged_in_as_%user%_message: 'Ya has ingresado como %user%'
 app.ui.save_changes: 'Guardar cambios'
 app.ui.terms_and_conditions_text: 'Este es el texto que deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.'
 app.ui.terms_and_conditions_success_message: 'Se ha guardaro la nueva versión de los términos y condiciones.'
-app.ui.success_default_title: ¡Felicidades!
-app.ui.error_default_title: ¡Error!
+app.ui.success_default_title: '¡Felicidades!'
+app.ui.error_default_title: '¡Error!'
 app.ui.terms_and_conditions_error_while_saving_message: 'Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.'
 app.ui.about_procasa_text: 'Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.'
 app.ui.about_procasa_phrase: Frase
@@ -395,6 +395,7 @@ app.ui.new_location: 'Nueva ubicación'
 app.ui.name: Nombre
 app.ui.phone_number: Teléfono
 app.ui.phone_number_extension: Extensión
+app.ui.phone_number_extension.short: Ext.
 app.ui.location_error_on_remove_message: 'Hubo un error al borrar la ubiación, inténtelo de nuevo más tarde.'
 app.ui.location_remove_text: ''
 app.ui.location_remove_title: '¿Estas seguro que deseas borrar esta ubicación?'
@@ -427,7 +428,7 @@ app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
 app.ui.holidays_new: 'Nuevo día festivo'
 app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
 app.ui.this_field_cannot_be_blank: 'Este campo no puede ir vacío.'
-app.email.follow_us_on_%social_meadia%: 'Siguenos en %social_media%'
+app.email.follow_us_on_%social_media%: 'Siguenos en %social_media%'
 app.email.default_message: 'Mensaje por defecto'
 app.email.welcome_to_%company%_%user%: '¡Bienvenido a %company%, %user%!'
 app.email.register_message: 'Bienvenido a nuestra tienda, es un gusto tenerte con nosotros. ¡Disfruta de todos nuestros productos al mejor precio!'
@@ -471,12 +472,26 @@ app.ui.address.full_address.instructions: 'Ingresa tu dirección exacta, código
 app.ui.add_another_address: 'Agregar otra dirección'
 app.error.tasty_ham: '¡Qué rico jamón!'
 app.error.404.message: 'Pero no era donde querías llegar ¿cierto? Lo más seguro es que llegaste por error, para volver al catálogo de nuestros productos presiona el botón.'
-app.ui.got_to_home: 'Ir al catálogo'
-app.error.oops: ¡Oops!
+app.ui.go_to_home: 'Ir al catálogo'
+app.error.oops: '¡Oops!'
 app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un poco mientras lo arreglamos e inténtalo nuevamente.'
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
 app.ui.contact_info: 'Información de contacto'
+app.ui.google_play_logo: 'Google Play Logo'
+app.ui.app_store_logo: 'App Store Logo'
+app.ui.frequent_questions: 'Preguntas frecuentes'
+app.ui.wholesalers.message_%phone%: 'Comunícate al %phone% si deseas comprar nuestros productos por caja.'
+app.ui.change_password: 'Cambio de contraseña'
+app.form.user_change_password.confirmation: 'Reescribe tu nueva contraseña'
+app.ui.my_cart: 'Mi carrito'
+app.ui.minimum_purchase_price_message_%price%: 'Recuerda que el mínimo de compra es de Q.%price%.00.'
+app.ui.cart.empty_instructions: 'No tienes productos en tu carrito. Para agregar productos, ve al catálogo y agrega el producto que quieras comprar.'
+app.ui.cart.empty: 'Carrito vacío'
+app.ui.favorites.empty: 'No tienes favoritos aún'
+app.ui.favorites.empty_instructions: 'Puedes agregar tus personalizaciones de compra por producto y no volver a configurarla para tu siguiente compra.'
+app.ui.order_history.empty: 'No tienes compras recientes'
+app.ui.order_history.empty_instructions: 'Actualmente no cuentas con algúna compra reciente.<br>Empieza una ahora:'
 app.ui.comments: Comentarios
 app.ui.date_and_time: 'Fecha y hora'
 app.ui.order_number: 'Número de orden'
@@ -510,3 +525,12 @@ app.ui.users_sort_recent: Reciente
 app.ui.users_sort_asc: ABC
 app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda. Intentálo de nuevo con otra búsqueda.'
 app.ui.new_user: 'Nuevo usuario'
+app.ui.contact_us: Contáctanos
+app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
+app.ui.close: Cerrar
+app.ui.search: Buscar
+app.ui.search.placeholder: '¿Qué estás buscando hoy?'
+app.ui.produc.%price%_peer_pound: '%price% por libra'
+app.ui.express_buy: 'Xpress Buy'
+app.ui.cart.icon: 'Icono del carrito'
+app.ui.express_buy.package: Paquete

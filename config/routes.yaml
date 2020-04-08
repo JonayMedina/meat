@@ -29,6 +29,12 @@ meathouse_admin_api:
     prefix:   /api/v{version}
     defaults:
       _format: json
+      
+user_favorites:
+    path: /account/favorites
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:favoritesAction
     
 sylius_shop_register:
     path: /register
@@ -51,3 +57,13 @@ sylius_shop_request_password_reset_token:
         _sylius:
             template: "@SyliusShop/Account/requestPasswordReset.html.twig"
             redirect: store_set_token
+
+sylius_shop_account_change_password:
+    path: /account/change-password
+    methods: [GET, POST]
+    defaults:
+        _controller: sylius.controller.shop_user:changePasswordAction
+        _sylius:
+            template: "@SyliusShop/Account/changePassword.html.twig"
+            redirect:
+                method: GET

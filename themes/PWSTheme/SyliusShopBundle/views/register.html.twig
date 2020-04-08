@@ -2,12 +2,12 @@
 
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
-{% block content %}
+{% block extracontent %}
     {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
     {% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
     {% set messageFB = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms fb">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
 
-    <div class="row register">
+    <div class="row register pt-5">
         <div class="col-12 segment">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">

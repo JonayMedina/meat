@@ -25,6 +25,11 @@
         <style>
             /* Fonts */
             @font-face {
+                font-family: "Raleway";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Regular.ttf') }}");
+            }
+
+            @font-face {
                 font-family: "Raleway Medium";
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Medium.ttf') }}");
             }
@@ -40,6 +45,16 @@
             }
 
             @font-face {
+                font-family: "Raleway Bold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Bold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway ExtraBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-ExtraBold.ttf') }}");
+            }
+
+            @font-face {
                 font-family: "Raleway Light";
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
             }
@@ -48,13 +63,23 @@
                 font-family: "Raleway Italic";
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Italic.ttf') }}");
             }
+
+            {% if aboutStore('show-search') %}
+            .search-box label {
+                width: calc(80% + 30px);
+            }
+            {% endif %}
+
         </style>
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-sylius.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/owl-carousel/owl.carousel.min.css') }}">
+        {% block extracss %}{% endblock %}
     {% endblock %}
 
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
@@ -80,28 +105,19 @@
         </div>
     {% endblock %}
 
-    <div class="container first">
-        {% block header %}
-            <header>
-                {% include '@SyliusShop/_header.html.twig' %}
+    {% block content %}
+        <div class="container first">
+            {% block header %}{% endblock %}
+            {% block flashes %}{% endblock %}
 
-                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
+            {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
 
-{#                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}#}
-            </header>
-        {% endblock %}
+            {% block extracontent %}
+            {% endblock %}
 
-        {% block flashes %}
-            {% include '@SyliusShop/_flashes.html.twig' %}
-        {% endblock %}
-
-        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
-
-        {% block content %}
-        {% endblock %}
-
-        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
-    </div>
+            {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+        </div>
+    {% endblock %}
 
     {% block contentFluid %}
     {% endblock %}
@@ -119,6 +135,7 @@
     <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/owl-carousel/owl.carousel.min.js') }}" defer="defer"></script>
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
 
     {% block extrajs %}{% endblock %}

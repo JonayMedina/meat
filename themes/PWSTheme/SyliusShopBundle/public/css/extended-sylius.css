@@ -1,14 +1,33 @@
 .ui.circular.button {
     background: #AB162B;
-    color: #ffffff;
+    color: #ffffff !important;
     font-family: "Raleway Medium", sans-serif;
     font-size: 16px;
     padding-left: 15px;
     padding-right: 35px;
+    display: inline-flex;
+    align-items: center;
 }
 
-.ui.circular.button i {
+.ui.circular.button img {
     margin-right: 20px !important;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+}
+
+.ui.circular.button .cart-icon {
+    position: relative;
+}
+
+.ui.circular.button .cart-icon.not-empty:before {
+    content: " ";
+    background: #FFBFC8;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -4px;
+    right: 13px;
+    border-radius: 50px;
 }
 
 /* inputs */
