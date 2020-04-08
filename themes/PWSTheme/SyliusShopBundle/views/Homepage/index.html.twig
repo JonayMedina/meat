@@ -1,9 +1,181 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <h2 class="ui horizontal section divider header">
-        {{ 'sylius.ui.latest_products'|trans }}
-    </h2>
+    <div class="container first">
+        {% block header %}{% endblock %}
+        {% block flashes %}{% endblock %}
 
-    {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
+        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+
+        <div class="row home pt-5">
+            {% if aboutStore('show-search') %}
+                <div class="col-12 mb-4">
+                    <form class="search-box form d-flex" role="search" method="get" action="">
+                        <label>
+                            <img src="{{ asset('bundles/syliusshop/img/icons/search.svg') }}" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
+                            <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.search.placeholder'|trans }}">
+                        </label>
+                        <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block">{{ 'app.ui.search'|trans }}</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        {{ render(url('store_categories')) }}
+
+        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+    </div>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div id="banners-carousel" class="carousel slide carousel-fade w-100 mb-4" data-ride="carousel">
+                <ol class="carousel-indicators mb-5">
+                    <li data-target="#banners-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#banners-carousel" data-slide-to="1"></li>
+                    <li data-target="#banners-carousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-flex">
+                            <a><h5>¡Un corte para un día!</h5></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-flex">
+                            <a><h5>¡Un corte para otro día!</h5></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
+                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-flex">
+                            <a><h5>¡Un corte para otro día diferente al anterior!</h5></a>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#banners-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
+                <a class="carousel-control-next" href="#banners-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {{ render(url('store_products_by_taxon', {'code': 'pro'})) }}
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        jQuery(document).ready(function () {
+            (function ($) {
+                $('.taxons-carousel').owlCarousel({
+                    loop: false,
+                    margin: 15,
+                    nav: true,
+                    dots: false,
+                    items: 5,
+                    autoWidth: true,
+                    responsiveClass:true,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                    responsive:{
+                        0:{
+                            items: 2,
+                            autoWidth: true,
+                            nav: false
+                        },
+                        576:{
+                            items: 2,
+                            autoWidth: true
+                        },
+                        768:{
+                            items: 3,
+                            autoWidth: true
+                        },
+                        992:{
+                            items: 4,
+                            autoWidth: true
+                        },
+                        1200:{
+                            items: 5,
+                            autoWidth: true
+                        }
+                    }
+                });
+            })(jQuery);
+
+            calcPL();
+
+            $(window).resize(function () {
+                calcPL();
+            });
+
+            function calcPL () {
+                var $container =  $('.container');
+                var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+                if (window.innerWidth < 992) {
+                    marg = 15;
+                }
+
+                $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
+                $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
+            }
+
+            $('.xpress-button').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                setTimeout(function () {
+                    $div.addClass('show');
+                }, 150);
+            });
+
+            $('button.close').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.removeClass('show');
+
+                setTimeout(function () {
+                    $div.find('div.custom-overlay').attr('style', 'display: none;');
+                }, 150);
+            });
+
+
+            jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
+            jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
+            jQuery('.quantity').each(function() {
+                var spinner = jQuery(this),
+                    input = spinner.find('input[type="number"]'),
+                    btnUp = spinner.find('.quantity-up'),
+                    btnDown = spinner.find('.quantity-down'),
+                    min = input.attr('min'),
+                    max = input.attr('max');
+
+                btnUp.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue >= max) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue + 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+                btnDown.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue <= min) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue - 1;
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+            });
+        });
+    </script>
 {% endblock %}

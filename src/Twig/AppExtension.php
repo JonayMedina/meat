@@ -69,7 +69,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
-            new TwigFunction('aboutStore', [$this, 'AboutStore'])
+            new TwigFunction('aboutStore', [$this, 'aboutStore'])
         ];
     }
 
@@ -161,8 +161,9 @@ class AppExtension extends AbstractExtension
             case 'phrase': return $this->settingsService->getPhrase();
             case 'author': return $this->settingsService->getAuthor();
             case 'email': return $this->settingsService->getEmail();
+            case 'theme': return $this->settingsService->getTheme();
             case 'delivery-hours': return $this->settingsService->getDeliveryHours();
-            case 'show-search': return $this->settingsService->getShowProductSearchBox();
+            case 'show-search': return $this->settingsService->isShowProductSearchBox();
             case 'days-to-choose': return $this->settingsService->getDaysToChooseInAdvanceToPurchase();
             case 'first-purchase-ms': return $this->settingsService->getFirstPurchaseMessage();
             case 'new-address-ms': return $this->settingsService->getNewAddressMessage();
