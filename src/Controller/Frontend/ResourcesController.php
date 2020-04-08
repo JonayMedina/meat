@@ -5,13 +5,15 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Product\Product;
 use App\Entity\Taxonomy\Taxon;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ResourcesController extends Controller
+class ResourcesController extends AbstractController
 {
     /**
      *
@@ -126,14 +128,14 @@ class ResourcesController extends Controller
 
     /**
      * @Route("/categories", name="store_categories")
+     * @param RepositoryInterface $taxonRepository
+     * @return Response
      */
-    public function categoriesAction() {
-        $repository = $this->container->get('sylius.repository.taxon');
-
+    public function categoriesAction(RepositoryInterface $taxonRepository) {
         /**
          * @var Taxon[] $categories
          */
-        $categories = $repository->findAll();
+        $categories = $taxonRepository->findAll();
 
         return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories]);
     }
@@ -141,16 +143,16 @@ class ResourcesController extends Controller
     /**
      * @Route("/{code}/products", name="store_products_by_taxon")
      * @param String $code
+     * @param RepositoryInterface $taxonRepository
+     * @param RepositoryInterface $productRepository
      * @return Response
      */
-    public function productsByTaxonAction(String $code) {
-        $taxsRep = $this->container->get('sylius.repository.taxon');
-        $taxon = $taxsRep->findOneBy(['code' => $code]);
+    public function productsByTaxonAction(String $code, RepositoryInterface $taxonRepository, RepositoryInterface $productRepository) {
+        $taxon = $taxonRepository->findOneBy(['code' => $code]);
         $products = [];
 
         if ($taxon instanceof Taxon) {
-            $prodRep = $this->container->get('sylius.repository.product');
-            $products = $prodRep->findByTaxon($taxon->getId());
+            $products = $productRepository->findByTaxon($taxon->getId());
         }
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
