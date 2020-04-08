@@ -77,7 +77,7 @@ class UploaderHelper
 
         if ($existingFilename) {
             try {
-                $result = $this->filesystem->delete($this->prefix . self::LOCATION_IMAGE.'/'.$existingFilename);
+                $result = $this->deleteLocationImage($existingFilename);
 
                 if ($result === false) {
                     throw new \Exception(sprintf('Could not delete old uploaded file "%s"', $existingFilename));
@@ -88,6 +88,20 @@ class UploaderHelper
         }
 
         return $newFilename;
+    }
+
+    /**
+     * @param $existingFilename
+     * @return bool
+     * @throws FileNotFoundException
+     */
+    public function deleteLocationImage($existingFilename)
+    {
+        if (empty($existingFilename)) {
+            return false;
+        }
+
+        return $this->filesystem->delete($this->prefix . self::LOCATION_IMAGE.'/'.$existingFilename);
     }
 
     /**
