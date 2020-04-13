@@ -19,6 +19,8 @@
                                 </a>
                                 {% if not product.variants.empty() %}
                                     <div class="price offer">
+                                        {{ money.convertAndFormat(product.variants.first.channelPricings.first.price) }}
+                                        {{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}
                                         {{ 'app.ui.produc.%price%_peer_pound'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>'})|raw }}
                                     </div>
                                 {% endif %}

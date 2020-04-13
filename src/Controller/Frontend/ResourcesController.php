@@ -155,6 +155,9 @@ class ResourcesController extends AbstractController
             $products = $productRepository->findByTaxon($taxon->getId());
         }
 
+//        dump($products);
+//        exit;
+
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
     }
 }

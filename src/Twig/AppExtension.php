@@ -2,6 +2,8 @@
 
 namespace App\Twig;
 
+use App\Entity\Channel\ChannelPricing;
+use App\Entity\Product\Product;
 use App\Service\SettingsService;
 use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -69,7 +71,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
-            new TwigFunction('aboutStore', [$this, 'aboutStore'])
+            new TwigFunction('aboutStore', [$this, 'aboutStore']),
+            new TwigFunction('price', [$this, 'getPrice'])
         ];
     }
 
@@ -172,6 +175,23 @@ class AppExtension extends AbstractExtension
             case 'phone': return $this->settingsService->getPhoneNumber();
             default:
                 return $this->settingsService->getAboutUs();
+        }
+    }
+
+    /**
+     * @param Product $product
+     * @return array
+     */
+    public function getPrice(Product $product) {
+        /**
+         * @var ChannelPricing $channelPricing
+         */
+        $channelPricing = $product->getVariants()[0]->getChannelPricings()[0];
+
+        if ($channelPricing->getOriginalPrice() > $channelPricing->getPrice()) {
+            return ['isOffer' => true, 'price' => $channelPricing->getPrice(), 'originalPrice' => $channelPricing->getOriginalPrice()];
+        } else {
+            return ['isOffer' => false, 'price' => $channelPricing->getPrice()];
         }
     }
 }
