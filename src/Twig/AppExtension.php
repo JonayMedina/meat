@@ -72,7 +72,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('getUrl', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('aboutStore', [$this, 'aboutStore']),
-            new TwigFunction('price', [$this, 'getPrice'])
+            new TwigFunction('getPrice', [$this, 'getPrice'])
         ];
     }
 
@@ -186,7 +186,7 @@ class AppExtension extends AbstractExtension
         /**
          * @var ChannelPricing $channelPricing
          */
-        $channelPricing = $product->getVariants()[0]->getChannelPricings()[0];
+        $channelPricing = $product->getVariants()[0]->getChannelPricings()["FASHION_WEB"];
 
         if ($channelPricing->getOriginalPrice() > $channelPricing->getPrice()) {
             return ['isOffer' => true, 'price' => $channelPricing->getPrice(), 'originalPrice' => $channelPricing->getOriginalPrice()];

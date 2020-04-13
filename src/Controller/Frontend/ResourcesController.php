@@ -152,7 +152,7 @@ class ResourcesController extends AbstractController
         $products = [];
 
         if ($taxon instanceof Taxon) {
-            $products = $productRepository->findByTaxon($taxon->getId());
+            $products = $productRepository->findOffers();
         }
 
 //        dump($products);

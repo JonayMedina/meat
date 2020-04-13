@@ -804,7 +804,7 @@ label.error:after {
     max-height: 216px;
 }
 
-.products .image .xpress-button {
+.products .image .xpress-button, .products .image .xpress-button-disabled {
     background: #ffffff;
     position: absolute;
     top: 15px;
@@ -817,9 +817,14 @@ label.error:after {
     font-family: "Helvetica Neue", sans-serif;
     letter-spacing: 0.53px;
     line-height: 21px;
+    user-select: none;
 }
 
-.products .image .xpress-button:hover {
+.products .image .xpress-button-disabled {
+    cursor: not-allowed;
+}
+
+.products .image .xpress-button:hover, .products .image .xpress-button-disabled:hover {
     color: rgba(171, 22, 43, 1);
 }
 
@@ -848,24 +853,51 @@ label.error:after {
     letter-spacing: 0.7px;
 }
 
-.products .content .price span.offer {
+.products .content .price span {
     font-family: "Raleway SemiBold", sans-serif;
     letter-spacing: 0;
-    color: #ab162b;
+    color: #404040;
     font-size: 17px;
+}
+
+.products .content .price span.offer {
+    color: #ab162b;
+}
+
+.products .content .price span.original {
+    text-decoration: line-through;
 }
 
 .products .custom-overlay {
     background: #ffffff;
 }
 
+.products .custom-overlay-container.sold-out .custom-overlay {
+    background: rgba(145, 113, 113, .6);
+    color: #ffffff !important;
+}
+
 .products .custom-overlay-container.show .custom-overlay {
     opacity: 1;
+}
+
+.products .custom-overlay-container.sold-out {
+    user-select: none;
 }
 
 .products .custom-overlay > div {
     height: 100%;
     position: relative;
+}
+
+.products .custom-overlay-container.sold-out .custom-overlay > div {
+    display: flex;
+    justify-content: center;
+}
+
+.products .custom-overlay-container.sold-out .custom-overlay h3 {
+    font-size: 32px;
+    margin-top: 90px;
 }
 
 .products .custom-overlay .close {
@@ -911,6 +943,10 @@ label.error:after {
 
 .products .custom-overlay-container {
     box-shadow: 0 3px 9px -6px #917171 !important;
+}
+
+.products .custom-overlay-container, .products .custom-overlay-container > div {
+    height: 100%;
 }
 
 /* Custom input number */
