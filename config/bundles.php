@@ -65,4 +65,5 @@ return [
     Cron\CronBundle\CronCronBundle::class => ['all' => true],
     Translation\Bundle\TranslationBundle::class => ['all' => true],
     Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
+    Sentry\SentryBundle\SentryBundle::class => ['all' => true],
 ];

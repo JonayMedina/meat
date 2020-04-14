@@ -6,6 +6,7 @@ $TELEGRAM_CHATID_HERE = -469107537;
 
 require 'recipe/symfony4.php';
 require 'recipe/telegram.php';
+require 'recipe/sentry.php';
 
 /** Project name */
 set('application', 'Meat House');
@@ -37,6 +38,15 @@ set('telegram_chat_id', $TELEGRAM_CHATID_HERE);
 set('telegram_text', '_{{user}}_ deploying `{{branch}}` to *{{target}}*');
 set('telegram_success_text', '_{{user}}_ has correctly deployed the `{{branch}}` branch to *{{target}}*');
 
+/** Set Sentry data */
+set('sentry', [
+    'organization' => 'praga-web-studio-jn',
+    'projects' => [
+        'meat-house'
+    ],
+    'token' => '9fc5435b49934c86a539c8002a3146762a72139530a94fd28873316a6fde14f1',
+]);
+
 set('keep_releases', 2);
 
 /** Hosts */
@@ -62,3 +72,6 @@ before('deploy:symlink', 'database:migrate');
 
 /** Notify via Telegram */
 after('success', 'telegram:notify:success');
+
+/** Notify to sentry */
+after('deploy', 'deploy:sentry');
