@@ -14,16 +14,6 @@ use Symfony\Component\Asset\Context\RequestStackContext;
 class UploaderHelper
 {
     /**
-     * Develop environment
-     */
-    const ENVIRONMENT_DEV = 'dev';
-
-    /**
-     * Prefix for testing folder
-     */
-    const DEV_PREFIX = 'staging/';
-
-    /**
      * Location folder.
      */
     const LOCATION_IMAGE = 'location_image';
@@ -45,23 +35,12 @@ class UploaderHelper
 
     private $publicAssetBaseUrl;
 
-    /** @var string $env */
-    private $env;
-
-    /** @var string */
-    private $prefix = 'production/';
-
-    public function __construct(FilesystemInterface $uploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl, $env)
+    public function __construct(FilesystemInterface $uploadsFilesystem, RequestStackContext $requestStackContext, LoggerInterface $logger, string $uploadedAssetsBaseUrl)
     {
         $this->filesystem = $uploadsFilesystem;
         $this->requestStackContext = $requestStackContext;
         $this->logger = $logger;
         $this->publicAssetBaseUrl = $uploadedAssetsBaseUrl;
-        $this->env = $env;
-
-        if ($this->env == self::ENVIRONMENT_DEV) {
-            $this->prefix = self::DEV_PREFIX;
-        }
     }
 
     /**
@@ -73,11 +52,11 @@ class UploaderHelper
      */
     public function uploadLocationImage(File $file, ?string $existingFilename): string
     {
-        $newFilename = $this->uploadFile($file, $this->prefix . self::LOCATION_IMAGE, true);
+        $newFilename = $this->uploadFile($file,  self::LOCATION_IMAGE, true);
 
         if ($existingFilename) {
             try {
-                $result = $this->filesystem->delete($this->prefix . self::LOCATION_IMAGE.'/'.$existingFilename);
+                $result = $this->deleteLocationImage($existingFilename);
 
                 if ($result === false) {
                     throw new \Exception(sprintf('Could not delete old uploaded file "%s"', $existingFilename));
@@ -91,12 +70,26 @@ class UploaderHelper
     }
 
     /**
+     * @param $existingFilename
+     * @return bool
+     * @throws FileNotFoundException
+     */
+    public function deleteLocationImage($existingFilename)
+    {
+        if (empty($existingFilename)) {
+            return false;
+        }
+
+        return $this->filesystem->delete( self::LOCATION_IMAGE.'/'.$existingFilename);
+    }
+
+    /**
      * @param string $path
      * @return string
      */
     public function getPublicPath(string $path): string
     {
-        $fullPath = $this->publicAssetBaseUrl.'/' . $this->prefix . $path;
+        $fullPath = $this->publicAssetBaseUrl.'/'  . $path;
         // if it's already absolute, just return
         if (strpos($fullPath, '://') !== false) {
             return $fullPath;

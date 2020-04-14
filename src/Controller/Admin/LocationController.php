@@ -198,17 +198,20 @@ class LocationController extends AbstractController
      * Delete location
      * @Route("/location/{id}", name="locations_delete", methods={"DELETE"})
      * @param Request $request
+     * @param UploaderHelper $uploaderHelper
      * @return Response
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, UploaderHelper $uploaderHelper)
     {
         $entityManager = $this->getDoctrine()->getManager();
         $location = $this->repository->find($request->get('id'));
 
+        $existingFilename = $location->getPhoto();
         $entityManager->remove($location);
 
         try {
             $entityManager->flush();
+            $uploaderHelper->deleteLocationImage($existingFilename);
 
             return new JsonResponse(['type' => 'info', 'message' => 'Ok'], Response::HTTP_OK);
         } catch (\Exception $exception) {
