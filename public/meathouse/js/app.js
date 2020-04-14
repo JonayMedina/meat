@@ -68,10 +68,14 @@ $(document).ready(function () {
       cancelButtonText: $('#ui-cancel').html(),
       closeOnConfirm: true
     }, function () {
+      blockUI();
+
       $.ajax({
         url: url,
         type: 'DELETE',
         success: function (data) {
+          unblockUI();
+
           var $tr = $button.closest('tr');
 
           $tr.slideUp('fast', function () {
@@ -81,6 +85,7 @@ $(document).ready(function () {
 
         },
         error(xhr) {
+          unblockUI();
           var errorMessage = $button.data('error-message') || "There was an error while trying to delete data.";
           swal("Error!", errorMessage, "error");
         }
