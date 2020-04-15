@@ -209,6 +209,9 @@
     "hamcrest/hamcrest-php": {
         "version": "v2.0.0"
     },
+    "http-interop/http-factory-guzzle": {
+        "version": "1.0.0"
+    },
     "hwi/oauth-bundle": {
         "version": "0.6",
         "recipe": {
@@ -560,6 +563,9 @@
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-factory": {
+        "version": "1.0.1"
+    },
     "psr/http-message": {
         "version": "1.0.1"
     },
@@ -616,6 +622,24 @@
             "version": "4.0",
             "ref": "421933bf8f0e75546ac8e00cb3eb12904fa2ac1a"
         }
+    },
+    "sentry/sdk": {
+        "version": "2.1.0"
+    },
+    "sentry/sentry": {
+        "version": "2.3.2"
+    },
+    "sentry/sentry-symfony": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "9746f0823302d7980e5273ef7a69ef3f5ac80914"
+        },
+        "files": [
+            "config/packages/sentry.yaml"
+        ]
     },
     "slam/php-cs-fixer-extensions": {
         "version": "v1.17.0"
@@ -871,6 +895,9 @@
     },
     "symfony/polyfill-util": {
         "version": "v1.13.1"
+    },
+    "symfony/polyfill-uuid": {
+        "version": "v1.15.0"
     },
     "symfony/process": {
         "version": "v4.1.3"
