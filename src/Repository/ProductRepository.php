@@ -14,17 +14,17 @@ class ProductRepository extends BaseProductRepository
      */
     public function findByTaxon(int $taxon): array
     {
-        $qb = $this->createQueryBuilder('product');
+        $qb = $this->createQueryBuilder('p');
 
         /**
          * @var Product[] $products
          */
         $products = $qb->select('p')
             ->from('App\Entity\Product\Product', 'p')
-            ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'p.id = pt.product')
+            ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'WITH', 'p.id = pt.product')
             ->where('p.enabled like :true')
             ->andWhere('pt.taxon = :taxon')
-            ->setParameter('true', 1)
+            ->setParameter('true', true)
             ->setParameter('taxon', $taxon)
             ->getQuery()
             ->getResult();
@@ -37,18 +37,17 @@ class ProductRepository extends BaseProductRepository
      */
     public function findOffers(): array
     {
-        $qb = $this->createQueryBuilder('product');
+        $qb = $this->createQueryBuilder('p');
 
         /**
          * @var Product[] $products
          */
         $products = $qb->select('p')
-            ->from('App\Entity\Product\Product', 'p')
-            ->innerJoin('App\Entity\Product\ProductVariant', 'pv', 'pv.product = p.id')
-            ->innerJoin('App\Entity\Channel\ChannelPricing', 'ch', 'ch.productVariant = pv.id')
+            ->innerJoin('App\Entity\Product\ProductVariant', 'pv', 'WITH','pv.product = p.id')
+            ->innerJoin('App\Entity\Channel\ChannelPricing', 'ch', 'WITH', 'ch.productVariant = pv.id')
             ->where('ch.originalPrice > ch.price')
             ->andWhere('p.enabled like :true')
-            ->setParameter('true', 1)
+            ->setParameter('true', true)
             ->getQuery()
             ->getResult();
 

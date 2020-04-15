@@ -19,7 +19,6 @@ class ResourcesController extends AbstractController
      *
      * @Route("/terms", name="store_terms")
      * @return Response
-     * @throws NonUniqueResultException
      */
     public function termsAndConditionsAction()
     {
@@ -32,7 +31,6 @@ class ResourcesController extends AbstractController
      *
      * @Route("/terms-and-conditions", name="store_terms_page")
      * @return Response
-     * @throws NonUniqueResultException
      */
     public function termsAndConditionsPageAction()
     {
@@ -152,11 +150,19 @@ class ResourcesController extends AbstractController
         $products = [];
 
         if ($taxon instanceof Taxon) {
-            $products = $productRepository->findOffers();
+            $products = $productRepository->findByTaxon($code);
         }
 
-//        dump($products);
-//        exit;
+        return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
+    }
+
+    /**
+     * @Route("/offers", name="store_offers")
+     * @param ProductRepositoryInterface $productRepository
+     * @return Response
+     */
+    public function offersAction(ProductRepositoryInterface $productRepository) {
+        $products = $productRepository->findOffers();
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
     }
