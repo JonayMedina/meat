@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-6">
                 <div class="title-action">
-                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                    <a href="{{ path('users_new') }}" class="btn btn-primary btn-lg btn-standard-width">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;
                         {{'app.ui.new_user'|trans}}
@@ -71,11 +71,11 @@
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.roles|translated_roles }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-default btn-action-button">
+                                            <a href="{{ path('users_show', {id: user.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.view'|trans }}
                                             </a>
                                             &nbsp;
-                                            <a href="#" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.user_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.user_remove_title'|trans }}" data-text="{{ 'app.ui.user_remove_text'|trans({'%name%': user.fullName}) }}">
+                                            <a href="{{ path('users_delete', {id: user.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.user_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.user_remove_title'|trans }}" data-text="{{ 'app.ui.user_remove_text'|trans({'%name%': user.fullName}) }}">
                                                 {{ 'app.ui.delete'|trans }}
                                             </a>
                                         </td>

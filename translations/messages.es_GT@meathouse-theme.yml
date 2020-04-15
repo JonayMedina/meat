@@ -242,7 +242,7 @@ app.ui.browse_your_orders_from_the_past: 'Ver sus pedidos anteriores'
 app.ui.build: Construir
 app.ui.by_position: 'Por posición'
 app.ui.calculator: Calculadora
-app.ui.call_us: '¡Llámanos!'
+app.ui.call_us: ¡Llámanos!
 app.ui.cancelled: Cancelado
 app.ui.cart: Carrito
 app.ui.cart_locked: 'Carrito bloqueado'
@@ -265,7 +265,7 @@ app.ui.view_your_store: 'Ver su tienda'
 app.ui.void: Vacío
 app.ui.volume_based_pricing: 'Precio por volumen'
 app.ui.warning: Advertencia
-app.ui.welcome: '¡Bienvenido!'
+app.ui.welcome: ¡Bienvenido!
 app.ui.wholesalers: Mayoristas
 app.ui.catalogue: Catálogo
 app.ui.work_with_us: 'Trabaja con nosotros'
@@ -294,8 +294,8 @@ app.ui.login.logged_in_as_%user%_message: 'Ya has ingresado como %user%'
 app.ui.save_changes: 'Guardar cambios'
 app.ui.terms_and_conditions_text: 'Este es el texto que deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.'
 app.ui.terms_and_conditions_success_message: 'Se ha guardaro la nueva versión de los términos y condiciones.'
-app.ui.success_default_title: '¡Felicidades!'
-app.ui.error_default_title: '¡Error!'
+app.ui.success_default_title: ¡Felicidades!
+app.ui.error_default_title: ¡Error!
 app.ui.terms_and_conditions_error_while_saving_message: 'Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.'
 app.ui.about_procasa_text: 'Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.'
 app.ui.about_procasa_phrase: Frase
@@ -473,7 +473,7 @@ app.ui.add_another_address: 'Agregar otra dirección'
 app.error.tasty_ham: '¡Qué rico jamón!'
 app.error.404.message: 'Pero no era donde querías llegar ¿cierto? Lo más seguro es que llegaste por error, para volver al catálogo de nuestros productos presiona el botón.'
 app.ui.go_to_home: 'Ir al catálogo'
-app.error.oops: '¡Oops!'
+app.error.oops: ¡Oops!
 app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un poco mientras lo arreglamos e inténtalo nuevamente.'
 app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
 app.ui.email: 'Correo electrónico '
@@ -534,3 +534,12 @@ app.ui.produc.%price%_peer_pound: '%price% por libra'
 app.ui.express_buy: 'Xpress Buy'
 app.ui.cart.icon: 'Icono del carrito'
 app.ui.express_buy.package: Paquete
+app.ui.temporal_password: 'Contraseña temporal'
+app.ui.back_to_users: 'Regresar a usuarios'
+app.ui.save_user: 'Guardar usuario'
+app.ui.user_new_success_message: 'Se ha creado el nuevo usuario'
+app.ui.user_new_error_message: 'Hubo un error al guardar este nuevo usuario, intentelo de nuevo más tarde.'
+app.ui.edit_user: Editar
+app.ui.user_detail: 'Detalle de usuario'
+app.ui.user_edit_success_message: 'Se ha actualizado el usuario'
+app.ui.user_edit_error_message: 'Hubo un error al actualizar este usuario, intentelo de nuevo más tarde.'

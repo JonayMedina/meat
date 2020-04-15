@@ -8,9 +8,12 @@ use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\AdminUser as BaseAdminUser;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  * @ORM\Table(name="sylius_admin_user")
  */
 class AdminUser extends BaseAdminUser
@@ -43,6 +46,17 @@ class AdminUser extends BaseAdminUser
     public function __toString(): string
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @param array $roles
+     * @return AdminUser
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
 }
