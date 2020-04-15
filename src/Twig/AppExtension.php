@@ -70,6 +70,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
+            new TwigFunction('getEnv', [$this, 'getEnv']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('aboutStore', [$this, 'aboutStore']),
             new TwigFunction('getPrice', [$this, 'getPrice'])
@@ -147,6 +148,16 @@ class AppExtension extends AbstractExtension
     public function getUrl()
     {
         return getenv('APP_URL');
+    }
+
+    /**
+     * Return env variable.
+     * @param $name
+     * @return string
+     */
+    public function getEnv($name)
+    {
+        return getenv($name);
     }
 
     /**

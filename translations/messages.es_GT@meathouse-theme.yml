@@ -550,3 +550,4 @@ app.email.contact_us.new_message_from_%name%_%email%: 'Nuevo mensaje de %name% (
 app.email.contact_us.message_received: '¡Se ha recibido un nuevo mensaje!'
 app.email.contact_us.message_sent: '¡Hemos recibido tu mensaje!'
 app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con nosotros, en breve estaremos respondiendo tu comentario.'
+app.ui.captcha.error.message: 'Por favor verifica el captcha para continuar.'

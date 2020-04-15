@@ -26,7 +26,10 @@
                             <span>{{ 'app.ui.contact_us.form.error'|trans }}</span>
                         </div>
 
+                        <div class="g-recaptcha d-flex justify-content-center overflow-hidden pt-3" data-callback="verifyCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="{{ getEnv('CAPTCHA_KEY') }}"></div>
+
                         <div class="text-center">
+                            <input id="contact-captcha" name="contact-captcha" type="hidden" required="required">
                             <button id="send" class="btn-rounded margin-0-auto">{{ 'app.ui.send_menssage'|trans }}</button>
                         </div>
                     </form>
@@ -42,7 +45,6 @@
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
                         <div class="content custom-overlay-container">
                             <div>
-                                {# <img src="{{ location.filePath }}">#}
                                 <img src="{{ uploaded_location_asset(location.photo) }}" alt="{{ location.name }}" title="{{ location.name }}" width="100%" height="100%">
                                 <a class="d-flex justify-content-between trigger-overlay">
                                     <h4>{{ location.name }}</h4><i class="fas fa-chevron-up"></i>
@@ -100,6 +102,16 @@
 
 {% block extrajs %}
     <script>
+        var $captchaCode = $('#contact-captcha');
+
+        var verifyCaptcha = function(response) {
+            $captchaCode.val(response);
+        };
+
+        var expiredCaptcha = function() {
+            $captchaCode.val('');
+        };
+
         $(document).ready(function () {
             let $send = $('#send');
             let $form = $("form");
@@ -178,7 +190,8 @@
                         data: JSON.stringify({
                             name: $form.find('#name').val(),
                             email: $form.find('#email').val(),
-                            message: $form.find('#message').val()
+                            message: $form.find('#message').val(),
+                            captcha_code: $captchaCode.val()
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -197,14 +210,17 @@
                             $form.find('#email').val("");
                             $form.find('#message').val("");
                         });
+
+                        grecaptcha.reset();
                     })
                     .fail(function (error) {
-                        let recordset = data['recordset'];
+                        let recordset = error['responseJSON']['recordset'];
                         $modal.find('.modal-title').html(recordset['title']);
                         $modal.find('.modal-body').html(recordset['message']);
 
                         unblockPage();
                         $('#triggerModal').trigger('click');
+                        grecaptcha.reset();
                     });
                 } else {
                     e.preventDefault();

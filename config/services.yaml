@@ -26,6 +26,7 @@ services:
             $uploadsFilesystem: '@oneup_flysystem.uploads_filesystem_filesystem'
             $uploadedAssetsBaseUrl: '%uploads_base_url%'
             $s3BucketName: '%env(AWS_S3_BUCKET_NAME)%'
+            $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:

@@ -1534,6 +1534,10 @@ body.blocked {
         left: 0 !important;
         right: 0 !important;
     }
+
+    .g-recaptcha {
+        transform: scale(.95);
+    }
 }
 
 @media (max-width: 345px) {
