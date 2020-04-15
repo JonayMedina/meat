@@ -3,10 +3,14 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/public/meathouse/js/plugins/blockUI/jquery.blockUI.min.js" />
+        <item url="file://$PROJECT_DIR$/themes/PWSTheme/SyliusShopBundle/public/js/app.min.js" />
+        <item url="file://$PROJECT_DIR$/themes/PWSTheme/SyliusShopBundle/public/js/blockUi/jquery.blockUi.min.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/public/meathouse/js/plugins/blockUI/jquery.blockUI.min.js" />
+      <root url="file://$PROJECT_DIR$/themes/PWSTheme/SyliusShopBundle/public/js/app.min.js" />
+      <root url="file://$PROJECT_DIR$/themes/PWSTheme/SyliusShopBundle/public/js/blockUi/jquery.blockUi.min.js" />
     </CLASSES>
     <SOURCES />
   </library>

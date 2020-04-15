@@ -37,6 +37,10 @@
                     vertical-align: top;
                 }
 
+                table {
+                    width: 100% !important;
+                }
+
                 code {
                     padding: 13px;
                     border-radius: 15px;
@@ -287,12 +291,13 @@
         <body>
             <div class="content">
                 <table class="main" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody><tr>
+                    <tbody>
+                    <tr>
                         <td class="content-wrap">
                             <table cellpadding="0" cellspacing="0">
                                 <tbody><tr>
                                     <td class="text-center">
-                                        <img class="img-fluid" style="max-width: 130px;" src="{% block image %}{{ getUrl() ~ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}" alt="Logo">
+                                        {% block image %}<img class="img-fluid" style="max-width: 130px;" src="{% block imgurl %}{{ getUrl() ~ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}" alt="Logo">{% endblock %}
                                     </td>
                                 </tr>
                                 <tr>

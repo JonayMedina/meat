@@ -9,7 +9,7 @@
                     <p class="text-center xs-text-right">{{ 'app.ui.contact_us.message'|trans }}</p>
                 </div>
                 <div class="col-12">
-                    <form method="post" class="ui loadable form margin-0-auto" novalidate="novalidate">
+                    <form class="ui loadable form margin-0-auto" novalidate="novalidate">
                         <div>
                             <div class="required field"><label for="name" class="required">{{ 'app.ui.name'|trans }}</label>
                                 <input type="text" id="name" name="name" required="required">
@@ -22,8 +22,12 @@
                             <textarea id="message" name="message" required="required"></textarea>
                         </div>
 
+                        <div class="error text-center" style="display: none">
+                            <span>{{ 'app.ui.contact_us.form.error'|trans }}</span>
+                        </div>
+
                         <div class="text-center">
-                            <button id="send" type="submit" class="btn-rounded margin-0-auto">{{ 'app.ui.send_menssage'|trans }}</button>
+                            <button id="send" class="btn-rounded margin-0-auto">{{ 'app.ui.send_menssage'|trans }}</button>
                         </div>
                     </form>
                 </div>
@@ -74,11 +78,33 @@
             </div>
         </div>
     </div>
+
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none">
+        <button id="triggerModal" type="button" data-toggle="modal" data-target="#showMessage"></button>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
     <script>
         $(document).ready(function () {
+            let $send = $('#send');
+            let $form = $("form");
+            let $modal = $('#showMessage');
+
             $('a.trigger-overlay').click(function () {
                 let $div = $(this).closest('div.content');
                 $div.find('div.custom-overlay').attr('style', 'display: block;');
@@ -95,6 +121,95 @@
                 setTimeout(function () {
                     $div.find('div.custom-overlay').attr('style', 'display: none;');
                 }, 150);
+            });
+
+            $form.validate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 40
+                    },
+                    email: {
+                        required: true,
+                        maxlength: 40,
+                        email: true,
+                    },
+                    message: {
+                        required: true,
+                        maxlength: 500
+                    }
+                },
+                messages: {
+                    name: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_greater_than_%x%'|trans({'%x%': 40}) }}'
+                    },
+                    email: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        email: '{{ 'app.ui.error.enter_valid_email'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 40}) }}'
+                    },
+                    message: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 500}) }}'
+                    }
+                },
+                invalidHandler: function(event, validator) {
+                    // 'this' refers to the form
+                    var errors = validator.numberOfInvalids();
+
+                    if (errors) {
+                        $("div.error").show();
+                    } else {
+                        $("div.error").hide();
+                    }
+                }
+            });
+
+            $send.click(function (e) {
+                e.preventDefault();
+
+                if ($form.valid()) {
+                    $("div.error").hide();
+                    blockPage();
+                    $.ajax({
+                        url: "{{ path('store_api_messages', {'version': 1}) }}",
+                        method: "POST",
+                        data: JSON.stringify({
+                            name: $form.find('#name').val(),
+                            email: $form.find('#email').val(),
+                            message: $form.find('#message').val()
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    })
+                    .done(function (data) {
+                        let recordset = data['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+                        $('#cleanForm').addClass('success');
+
+                        unblockPage();
+                        $('#triggerModal').trigger('click');
+
+                        $('#cleanForm.success').click(function () {
+                            $form.find('#name').val("");
+                            $form.find('#email').val("");
+                            $form.find('#message').val("");
+                        });
+                    })
+                    .fail(function (error) {
+                        let recordset = data['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+
+                        unblockPage();
+                        $('#triggerModal').trigger('click');
+                    });
+                } else {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                }
             });
         });
     </script>

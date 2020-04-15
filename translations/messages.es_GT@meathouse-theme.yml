@@ -537,5 +537,16 @@ app.ui.express_buy.package: Paquete
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
 app.ui.message: Mensaje
-app.ui.send_menssage: Enviar mensaje
+app.ui.send_menssage: 'Enviar mensaje'
 app.ui.email.short: Correo
+app.ui.error.enter_valid_email: 'Ingrese un correo válido'
+app.ui.contact_us.form.error: 'Debes ingresar todos los campos para continuar'
+app.ui.contact_us.success: '¡Tu mensaje fue enviado de manera exitosa!'
+app.ui.contact_us.success.message: 'Pronto nos pondremos en contacto para darle seguimiento a tu mensaje.'
+app.ui.contact_us.error: '¡Parece que hubo un error al enviar tu mensaje!'
+app.ui.contact_us.error.message: 'Un error detuvo la entrega de tu mensaje, intentalo nuevamente.'
+app.ui.accept.short: Aceptar
+app.email.contact_us.new_message_from_%name%_%email%: 'Nuevo mensaje de %name% (%email%)'
+app.email.contact_us.message_received: '¡Se ha recibido un nuevo mensaje!'
+app.email.contact_us.message_sent: '¡Hemos recibido tu mensaje!'
+app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con nosotros, en breve estaremos respondiendo tu comentario.'
