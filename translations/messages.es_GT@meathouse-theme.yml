@@ -519,7 +519,7 @@ app.ui.first_name: Nombre
 app.ui.last_name: Apellido
 app.ui.role: Rol
 app.ui.user_error_on_remove_message: 'Hubo un error al eliminar este usuario, puede que esté en uso.'
-app.ui.user_remove_title: 'Se ha eliminado este usuario.'
+app.ui.user_remove_title: '¿Estás seguro que deseas borrar este usuario?'
 app.ui.user_remove_text: '%name%'
 app.ui.users_sort_recent: Reciente
 app.ui.users_sort_asc: ABC
