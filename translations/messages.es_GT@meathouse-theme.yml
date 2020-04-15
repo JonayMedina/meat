@@ -536,3 +536,6 @@ app.ui.cart.icon: 'Icono del carrito'
 app.ui.express_buy.package: Paquete
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
+app.ui.message: Mensaje
+app.ui.send_menssage: Enviar mensaje
+app.ui.email.short: Correo

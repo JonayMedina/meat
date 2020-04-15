@@ -949,6 +949,34 @@ label.error:after {
     height: 100%;
 }
 
+/* Contact Us */
+.contact-us form {
+    max-width: calc(100% - 12vw) !important;
+    margin-top: 30px;
+}
+
+.contact-us form label:after {
+    content: none !important;
+}
+
+.contact-us form > div:first-of-type {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.contact-us form > div:first-of-type div.field {
+    width: calc(50% - 12px);
+}
+
+.contact-us form > div:first-of-type div.field:first-child {
+    margin-right: 12px;
+}
+
+.contact-us form > div:first-of-type div.field:last-child {
+    margin-left: 12px;
+}
+
 /* Custom input number */
 .quantity input[type=number]::-webkit-inner-spin-button,
 .quantity input[type=number]::-webkit-outer-spin-button

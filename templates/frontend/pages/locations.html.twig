@@ -2,11 +2,30 @@
 
 {% block extracontent %}
     <div class="row pt-5">
-        <div class="col-12 segment">
+        <div class="col-12 segment contact-us">
             <div class="row">
                 <div class="col-12 text-center">
                     <h1>{{ 'app.ui.contact_us'|trans }}</h1>
-                    <p class="text-center">{{ 'app.ui.contact_us.message'|trans }}</p>
+                    <p class="text-center xs-text-right">{{ 'app.ui.contact_us.message'|trans }}</p>
+                </div>
+                <div class="col-12">
+                    <form method="post" class="ui loadable form margin-0-auto" novalidate="novalidate">
+                        <div>
+                            <div class="required field"><label for="name" class="required">{{ 'app.ui.name'|trans }}</label>
+                                <input type="text" id="name" name="name" required="required">
+                            </div>
+                            <div class="required field"><label for="email" class="required">{{ 'app.ui.email.short'|trans }}</label>
+                                <input type="text" id="email" name="email" required="required">
+                            </div>
+                        </div>
+                        <div class="required field"><label for="message" class="required">{{ 'app.ui.message'|trans }}</label>
+                            <textarea id="message" name="message" required="required"></textarea>
+                        </div>
+
+                        <div class="text-center">
+                            <button id="send" type="submit" class="btn-rounded margin-0-auto">{{ 'app.ui.send_menssage'|trans }}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
