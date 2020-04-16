@@ -151,7 +151,13 @@ class AboutStore implements ResourceInterface
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $email;
+    private $complaintsEmail;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $contactEmail;
 
     /**
      * @var string
@@ -568,18 +574,37 @@ class AboutStore implements ResourceInterface
     /**
      * @return string
      */
-    public function getEmail(): ?string
+    public function getComplaintsEmail(): ?string
     {
-        return $this->email;
+        return $this->complaintsEmail;
     }
 
     /**
-     * @param string $email
+     * @param string $complaintsEmail
      * @return AboutStore
      */
-    public function setEmail(?string $email): AboutStore
+    public function setComplaintsEmail(?string $complaintsEmail): AboutStore
     {
-        $this->email = $email;
+        $this->complaintsEmail = $complaintsEmail;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContactEmail(): ?string
+    {
+        return $this->contactEmail;
+    }
+
+    /**
+     * @param string $contactEmail
+     * @return AboutStore
+     */
+    public function setContactEmail(?string $contactEmail): AboutStore
+    {
+        $this->contactEmail = $contactEmail;
 
         return $this;
     }
