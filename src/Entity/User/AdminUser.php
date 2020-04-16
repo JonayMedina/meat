@@ -30,6 +30,12 @@ class AdminUser extends BaseAdminUser
      */
     const ROLE_EDITOR = 'ROLE_EDITOR';
 
+    /**
+     * @var \DateTimeInterface|null
+     * @ORM\Column(name="last_password_update", type="datetime", nullable=true)
+     */
+    private $lastPasswordUpdate;
+
     public function getFullName()
     {
         if (!empty($this->getFirstName())) {
@@ -59,4 +65,22 @@ class AdminUser extends BaseAdminUser
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
+    public function getLastPasswordUpdate(): ?\DateTimeInterface
+    {
+        return $this->lastPasswordUpdate;
+    }
+
+    /**
+     * @param \DateTimeInterface|null $lastPasswordUpdate
+     * @return AdminUser
+     */
+    public function setLastPasswordUpdate(?\DateTimeInterface $lastPasswordUpdate): AdminUser
+    {
+        $this->lastPasswordUpdate = $lastPasswordUpdate;
+
+        return $this;
+    }
 }
