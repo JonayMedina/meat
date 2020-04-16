@@ -142,7 +142,6 @@
                 }, 150);
             });
 
-
             jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
             jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
             jQuery('.quantity').each(function() {
@@ -155,11 +154,13 @@
 
                 btnUp.click(function() {
                     var oldValue = parseFloat(input.val());
+
                     if (oldValue >= max) {
                         var newVal = oldValue;
                     } else {
                         var newVal = oldValue + 1;
                     }
+
                     spinner.find("input").val(newVal);
                     spinner.find("input").trigger("change");
                 });
@@ -167,10 +168,12 @@
                 btnDown.click(function() {
                     var oldValue = parseFloat(input.val());
                     if (oldValue <= min) {
+
                         var newVal = oldValue;
                     } else {
                         var newVal = oldValue - 1;
                     }
+
                     spinner.find("input").val(newVal);
                     spinner.find("input").trigger("change");
                 });

@@ -584,3 +584,4 @@ app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con 
 app.ui.captcha.error.message: 'Por favor verifica el captcha para continuar.'
 app.ui.back_to_home: 'Regresar al catálogo'
 app.ui.product.price_by_package_%price%: 'Precio: %price% por paquete'
+app.ui.product.add_to_favorites: 'Agregar a favoritos'

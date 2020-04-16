@@ -18,8 +18,6 @@
         {% endif %}
     </div>
 
-    <p class="mb-4 pb-3">{{ product.name }}</p>
-
     <div class="required field">
         {{ form_label(form.cartItem.quantity) }}
         {{ form_errors(form.cartItem.quantity) }}
@@ -31,7 +29,10 @@
 
     {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
-    <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+    <div>
+        <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+        <a>{{ 'app.ui.product.add_to_favorites'|trans }}</a>
+    </div>
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}
 </div>

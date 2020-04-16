@@ -70,6 +70,13 @@
             }
             {% endif %}
 
+            .lb-data .lb-close{
+                background: url('{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}') !important;
+                background-size: cover !important;
+                margin-top: 10px !important;
+                width: 20px !important;
+                height: 20px !important;
+            }
         </style>
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}

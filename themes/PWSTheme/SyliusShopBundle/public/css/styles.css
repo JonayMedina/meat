@@ -957,17 +957,17 @@ label.error:before {
     width: calc(100% - 60px);
 }
 
-.products .custom-overlay form label {
+.products .custom-overlay form label, .product .add-to-cart form label {
     text-align: center;
     font-family: "Raleway SemiBold", sans-serif;
     color: #ab162b !important;
 }
 
-.products .custom-overlay form label:after {
+.products .custom-overlay form label:after, .product .add-to-cart label:after {
     content: none !important;
 }
 
-.products .custom-overlay p {
+.products .custom-overlay p, .product .add-to-cart p {
     font-family: "Raleway Regular", sans-serif;
     color: #404040;
 }
@@ -1102,6 +1102,69 @@ body.blocked {
 
 .mh-breadcrumb i {
     margin-right: 15px;
+}
+
+/* Product Detail */
+.product h1 {
+    padding-top: 0;
+    padding-bottom: 15px;
+    margin-bottom: 0;
+}
+
+.product .price h3 {
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 24px;
+    color: #404040;
+}
+
+.product .desc {
+    font-family: "Raleway Regular", sans-serif;
+    color: #404040;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.product .add-to-cart div.field {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.product .add-to-cart form label {
+    margin-bottom: 0 !important;
+}
+
+.product .add-to-cart p.type {
+    color: #ab162b;
+}
+
+.product .quantity {
+    max-width: 160px;
+    margin: 0;
+}
+
+.product .quantity input {
+    max-width: 60px;
+    background: #ebe7e7 !important;
+    background-color: #ebe7e7 !important;
+    border-color: #ebe7e7 !important;
+}
+
+.product .quantity .quantity-button {
+    background: #ffffff;
+}
+
+/* Lightbox */
+.lightboxOverlay {
+    background-color: #917171 !important;
+    opacity: .58 !important;
+}
+
+.lb-data .lb-close{
+    background-size: cover !important;
+    margin-top: 10px !important;
+    width: 20px !important;
+    height: 20px !important;
 }
 
 /* Responsive */
