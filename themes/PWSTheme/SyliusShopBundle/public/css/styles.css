@@ -1085,6 +1085,25 @@ body.blocked {
     overflow: hidden;
 }
 
+/* Breadcrumb */
+.mh-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mh-breadcrumb .divider {
+    width: auto;
+    background: none !important;
+    color: #AB162B;
+    font-family: "Raleway Light", sans-serif;
+    margin: 0 15px;
+    height: auto;
+}
+
+.mh-breadcrumb i {
+    margin-right: 15px;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

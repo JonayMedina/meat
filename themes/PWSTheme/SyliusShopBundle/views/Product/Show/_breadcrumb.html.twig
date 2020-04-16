@@ -1,5 +1,5 @@
-<div class="ui breadcrumb">
-    <a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a>
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 mh-breadcrumb mb-4 pb-3">
+    <a href="{{ path('sylius_shop_homepage') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_home'|trans }}</a>
     <div class="divider"> / </div>
     {% if product.mainTaxon is not null %}
         {% set taxon = product.mainTaxon %}
@@ -7,15 +7,13 @@
 
         {% for ancestor in ancestors %}
             {% if ancestor.isRoot() %}
-                <div class="section">{{ ancestor.name }}</div>
+                <div>{{ ancestor.name }}</div>
             {% else %}
-                <a href="{{ path('sylius_shop_product_index', {'slug': ancestor.slug, '_locale': ancestor.translation.locale}) }}" class="section">{{ ancestor.name }}</a>
+                <a href="{{ path('sylius_shop_product_index', {'slug': ancestor.slug, '_locale': ancestor.translation.locale}) }}">{{ ancestor.name }}</a>
             {% endif %}
             <div class="divider"> / </div>
         {% endfor %}
 
-        <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" class="section">{{ taxon.name }}</a>
-        <div class="divider"> / </div>
+        <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">{{ taxon.name }}</a>
     {% endif %}
-    <div class="active section">{{ product.name }}</div>
 </div>
