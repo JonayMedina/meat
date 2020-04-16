@@ -4,6 +4,7 @@ namespace App\Controller\FrontendApi;
 
 use App\Model\APIResponse;
 use App\Service\CaptchaVerificationService;
+use App\Service\SettingsService;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,16 +30,23 @@ class ResourcesController extends AbstractFOSRestController
     private $captchaVerification;
 
     /**
+     * @var SettingsService
+     */
+    private $settingsService;
+
+    /**
      * QueueController constructor.
      * @param SenderInterface $sender
      * @param TranslatorInterface $translator
      * @param CaptchaVerificationService $captchaVerification
+     * @param SettingsService $settingsService
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService)
     {
         $this->sender = $sender;
         $this->translator = $translator;
         $this->captchaVerification = $captchaVerification;
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -56,7 +64,7 @@ class ResourcesController extends AbstractFOSRestController
         if (isset($data)) {
             if ($this->captchaVerification->verify($data['captcha_code'])) {
                 try {
-                    $this->sender->send('message_received', ["rroca@praga.ws"], ['name' => $data['name'], 'email' => $data['email'], "message" => $data['message']]);
+                    $this->sender->send('message_received', [$this->settingsService->getComplaintsEmail()], ['name' => $data['name'], 'email' => $data['email'], "message" => $data['message']]);
                     $this->sender->send('message_sent', [$data['email']]);
 
                     $statusCode = Response::HTTP_OK;

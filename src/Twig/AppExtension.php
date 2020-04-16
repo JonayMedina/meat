@@ -174,7 +174,8 @@ class AppExtension extends AbstractExtension
             case 'play-store': return $this->settingsService->getPlayStoreUrl();
             case 'phrase': return $this->settingsService->getPhrase();
             case 'author': return $this->settingsService->getAuthor();
-            case 'email': return $this->settingsService->getEmail();
+            case 'complaints-email': return $this->settingsService->getComplaintsEmail();
+            case 'contact-email': return $this->settingsService->getContactEmail();
             case 'theme': return $this->settingsService->getTheme();
             case 'delivery-hours': return $this->settingsService->getDeliveryHours();
             case 'show-search': return $this->settingsService->isShowProductSearchBox();
