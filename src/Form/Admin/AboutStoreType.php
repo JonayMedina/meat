@@ -83,8 +83,15 @@ class AboutStoreType extends AbstractType
                     new Url()
                 ]
             ])
-            ->add('email', null, [
-                'label' => 'app.ui.email',
+            ->add('complaintsEmail', null, [
+                'label' => 'app.ui.complaints_email',
+                'constraints' => [
+                    new Email(),
+                    new NotBlank()
+                ]
+            ])
+            ->add('contactEmail', null, [
+                'label' => 'app.ui.contact_email',
                 'constraints' => [
                     new Email(),
                     new NotBlank()

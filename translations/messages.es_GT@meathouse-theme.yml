@@ -549,6 +549,8 @@ app.ui.first_login.repeat_your_password: 'Reescribe tu contraseña'
 app.ui.first_login.password: 'Tu contraseña'
 app.ui.first_password.success: 'Se ha cambiado tu contraseña, ¡Bienvenido!'
 app.ui.first_password.error: 'Hubo un error al cambiar la contraseña, por favor intentalo de nuevo más tarde.'
+app.ui.complaints_email: 'Correo electrónico de quejas'
+app.ui.contact_email: 'Correo electrónico de contacto'
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
 app.ui.message: Mensaje
