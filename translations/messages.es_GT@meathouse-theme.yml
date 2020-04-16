@@ -551,6 +551,20 @@ app.ui.first_password.success: 'Se ha cambiado tu contraseña, ¡Bienvenido!'
 app.ui.first_password.error: 'Hubo un error al cambiar la contraseña, por favor intentalo de nuevo más tarde.'
 app.ui.complaints_email: 'Correo electrónico de quejas'
 app.ui.contact_email: 'Correo electrónico de contacto'
+app.ui.no_segments_found: 'No hay segmentos existentes. Selecciona el botón "Nuevo segmento" para crear un nuevo segmento.'
+app.ui.frequency: Frecuencia
+app.ui.age_range: 'Rango de edades'
+app.ui.search_box.segment: '¿Qué estas buscando?'
+app.ui.new_segment: 'Nuevo segmento'
+app.ui.qty_of_segments_%total%: 'Cantidad de segmentos: %total%'
+app.ui.segment.gender.f: Femenino
+app.ui.segment.gender.m: Masculino
+app.ui.segment.gender.both: Ambos
+app.ui.segment.frequency_type.amount: 'Por monto de %currency%%amount% o mayor'
+app.ui.segment.frequency_type.times: 'Por compra más de %times% veces al mes'
+app.ui.segment_remove_text: '%name%'
+app.ui.segment_remove_title: '¿Estás seguro de eliminar este segmento?'
+app.ui.segment_error_on_remove_message: 'Hubo un error al eliminar este segmento, por favor inténtalo de nuevo más tarde.'
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
 app.ui.message: Mensaje

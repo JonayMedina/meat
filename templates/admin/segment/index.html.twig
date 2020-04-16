@@ -4,11 +4,106 @@
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.segments'|trans }}</h1>
-            <br><br>
 
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                <h1>{{ 'app.ui.segments'|trans }} <small>{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_segments_%total%{% endtrans %}</small></h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        &nbsp;
+                        {{'app.ui.new_segment'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
+
+                        <div class="search-box">
+                            <form action="" method="get">
+                                <input type="search" name="filter" class="search-box-input form-control" placeholder="{{ 'app.ui.search_box.segment'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                            </form>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th>&nbsp;</th>
+                                    <th>{{ 'app.ui.name'|trans }}</th>
+                                    <th>{{ 'app.ui.age_range'|trans }}</th>
+                                    <th>{{ 'app.ui.gender.label'|trans }}</th>
+                                    <th>{{ 'app.ui.frequency'|trans }}</th>
+                                    <th class="actions-header">{{ 'app.ui.actions'|trans }}</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for segment in pagination %}
+                                    <tr>
+                                        <td>{{ segment.id }}</td>
+                                        <td>
+                                            <h4>{{ segment.name }}</h4>
+                                        </td>
+                                        <td>
+                                            {% if segment.minAge and segment.maxAge %}
+                                                {{ segment.minAge }} - {{ segment.maxAge }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ segment.gender ? ('app.ui.segment.gender.' ~ segment.gender)|trans : 'app.ui.segment.gender.both'|trans }}
+                                        </td>
+                                        <td>
+                                            {{ segment.frequencyType ? ('app.ui.segment.frequency_type.' ~ segment.frequencyType)|trans({'%amount%': segment.fixedAmount, '%times%': segment.purchaseTimes, '%currency%': currency}) : 'app.ui.n/a'|trans }}
+                                        </td>
+                                        <td>
+                                            <a href="#" class="btn btn-default btn-action-button">
+                                                {{ 'app.ui.edit'|trans }}
+                                            </a>
+                                            &nbsp;
+                                            <a href="{{ path('segments_delete', {id: segment.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.segment_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.segment_remove_title'|trans }}" data-text="{{ 'app.ui.segment_remove_text'|trans({'%name%': segment.name}) }}">
+                                                {{ 'app.ui.delete'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            {{ 'app.ui.no_segments_found'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+
+{% endblock %}
+
+
+{% block styles %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+
+<script>
+$(document).ready(function() {
+});
+</script>
 {% endblock %}
