@@ -39,8 +39,8 @@ class Segment implements ResourceInterface
     private $name;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=3, nullable=true)
+     * @var array
+     * @ORM\Column(type="json", nullable=true)
      */
     private $gender;
 
@@ -115,27 +115,19 @@ class Segment implements ResourceInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getGender(): ?string
+    public function getGender(): ?array
     {
         return $this->gender;
     }
 
     /**
-     * @param string $gender
+     * @param array $gender
      * @return Segment
      */
-    public function setGender(?string $gender): Segment
+    public function setGender(?array $gender): Segment
     {
-        if (!in_array($gender, [
-            CustomerInterface::FEMALE_GENDER,
-            CustomerInterface::MALE_GENDER,
-            ''
-        ])) {
-            throw new BadRequestHttpException('Invalid gender type for segment.');
-        }
-
         $this->gender = $gender;
 
         return $this;
