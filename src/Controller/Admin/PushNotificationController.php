@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 
+use App\Entity\PushNotification;
 use Psr\Log\LoggerInterface;
 use App\Repository\SegmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,6 +97,24 @@ class PushNotificationController extends AbstractController
 
         return $this->render('/admin/push/index.html.twig', [
             'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * Show Push notification
+     * @Route("/push/{id}", name="push_show")
+     * @param Request $request
+     * @return Response
+     */
+    public function showAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        /** @var PushNotification $push */
+        $push = $this->repository->find($id);
+
+        return $this->render('/admin/push/show.html.twig', [
+            'push' => $push
         ]);
     }
 }

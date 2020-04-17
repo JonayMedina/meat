@@ -65,7 +65,7 @@
                                         </td>
                                         <td>{{ push.segment|default('app.ui.all_segments'|trans) }}</td>
                                         <td>
-                                            <a href="#" class="btn btn-default btn-action-button">
+                                            <a href="{{ path('push_show', {id: push.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.view'|trans }}
                                             </a>
                                         </td>
