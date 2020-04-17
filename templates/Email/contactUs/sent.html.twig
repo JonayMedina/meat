@@ -1,0 +1,17 @@
+{% extends 'Email/base.html.twig' %}
+
+{% block subject %}
+    {{ 'app.email.contact_us.message_sent'|trans }}
+{% endblock %}
+
+{% block title %}
+    {{ 'app.email.contact_us.message_sent'|trans }}
+{% endblock %}
+
+{% block content %}
+    <td class="content-block text-center">
+        <p class="text-left">{{ 'app.email.contact_us.message_sent.message'|trans  }}</p>
+    </td>
+{% endblock %}
+
+{% block button %}{% endblock %}

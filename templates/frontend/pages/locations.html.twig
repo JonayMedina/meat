@@ -2,11 +2,37 @@
 
 {% block extracontent %}
     <div class="row pt-5">
-        <div class="col-12 segment">
+        <div class="col-12 segment contact-us">
             <div class="row">
                 <div class="col-12 text-center">
                     <h1>{{ 'app.ui.contact_us'|trans }}</h1>
-                    <p class="text-center">{{ 'app.ui.contact_us.message'|trans }}</p>
+                    <p class="text-center xs-text-right">{{ 'app.ui.contact_us.message'|trans }}</p>
+                </div>
+                <div class="col-12">
+                    <form class="ui loadable form margin-0-auto" novalidate="novalidate">
+                        <div>
+                            <div class="required field"><label for="name" class="required">{{ 'app.ui.name'|trans }}</label>
+                                <input type="text" id="name" name="name" required="required">
+                            </div>
+                            <div class="required field"><label for="email" class="required">{{ 'app.ui.email.short'|trans }}</label>
+                                <input type="text" id="email" name="email" required="required">
+                            </div>
+                        </div>
+                        <div class="required field"><label for="message" class="required">{{ 'app.ui.message'|trans }}</label>
+                            <textarea id="message" name="message" required="required"></textarea>
+                        </div>
+
+                        <div class="error text-center" style="display: none">
+                            <span>{{ 'app.ui.contact_us.form.error'|trans }}</span>
+                        </div>
+
+                        <div class="g-recaptcha d-flex justify-content-center overflow-hidden pt-3" data-callback="verifyCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="{{ captcha_key }}"></div>
+
+                        <div class="text-center">
+                            <input id="contact-captcha" name="contact-captcha" type="hidden" required="required">
+                            <button id="send" class="btn-rounded margin-0-auto">{{ 'app.ui.send_menssage'|trans }}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -19,7 +45,6 @@
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4">
                         <div class="content custom-overlay-container">
                             <div>
-                                {# <img src="{{ location.filePath }}">#}
                                 <img src="{{ uploaded_location_asset(location.photo) }}" alt="{{ location.name }}" title="{{ location.name }}" width="100%" height="100%">
                                 <a class="d-flex justify-content-between trigger-overlay">
                                     <h4>{{ location.name }}</h4><i class="fas fa-chevron-up"></i>
@@ -55,11 +80,43 @@
             </div>
         </div>
     </div>
+
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none">
+        <button id="triggerModal" type="button" data-toggle="modal" data-target="#showMessage"></button>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
     <script>
+        var $captchaCode = $('#contact-captcha');
+
+        var verifyCaptcha = function(response) {
+            $captchaCode.val(response);
+        };
+
+        var expiredCaptcha = function() {
+            $captchaCode.val('');
+        };
+
         $(document).ready(function () {
+            let $send = $('#send');
+            let $form = $("form");
+            let $modal = $('#showMessage');
+
             $('a.trigger-overlay').click(function () {
                 let $div = $(this).closest('div.content');
                 $div.find('div.custom-overlay').attr('style', 'display: block;');
@@ -76,6 +133,99 @@
                 setTimeout(function () {
                     $div.find('div.custom-overlay').attr('style', 'display: none;');
                 }, 150);
+            });
+
+            $form.validate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 40
+                    },
+                    email: {
+                        required: true,
+                        maxlength: 40,
+                        email: true,
+                    },
+                    message: {
+                        required: true,
+                        maxlength: 500
+                    }
+                },
+                messages: {
+                    name: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_greater_than_%x%'|trans({'%x%': 40}) }}'
+                    },
+                    email: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        email: '{{ 'app.ui.error.enter_valid_email'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 40}) }}'
+                    },
+                    message: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 500}) }}'
+                    }
+                },
+                invalidHandler: function(event, validator) {
+                    // 'this' refers to the form
+                    var errors = validator.numberOfInvalids();
+
+                    if (errors) {
+                        $("div.error").show();
+                    } else {
+                        $("div.error").hide();
+                    }
+                }
+            });
+
+            $send.click(function (e) {
+                e.preventDefault();
+
+                if ($form.valid()) {
+                    $("div.error").hide();
+                    blockPage();
+                    $.ajax({
+                        url: Routing.generate("store_api_messages", { version: 1}),
+                        method: "POST",
+                        data: JSON.stringify({
+                            name: $form.find('#name').val(),
+                            email: $form.find('#email').val(),
+                            message: $form.find('#message').val(),
+                            captcha_code: $captchaCode.val()
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    })
+                    .done(function (data) {
+                        let recordset = data['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+                        $('#cleanForm').addClass('success');
+
+                        unblockPage();
+                        $('#triggerModal').trigger('click');
+
+                        $('#cleanForm.success').click(function () {
+                            $form.find('#name').val("");
+                            $form.find('#email').val("");
+                            $form.find('#message').val("");
+                        });
+
+                        grecaptcha.reset();
+                    })
+                    .fail(function (error) {
+                        let recordset = error['responseJSON']['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+
+                        unblockPage();
+                        $('#triggerModal').trigger('click');
+                        grecaptcha.reset();
+                    });
+                } else {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                }
             });
         });
     </script>

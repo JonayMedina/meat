@@ -1,0 +1,38 @@
+{% set product = order_item.variant.product %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+<div class="add-to-cart" id="sylius-product-selecting-variant">
+    {{ sonata_block_render_event('sylius.shop.product.show.before_add_to_cart', {'product': product, 'order_item': order_item}) }}
+
+    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart', 'class': 'ui loadable form text-center', 'novalidate': 'novalidate', 'data-redirect': path(configuration.getRedirectRoute('summary'))}}) }}
+    {{ form_errors(form) }}
+    <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
+    <div class="d-none">
+        {% if not product.simple %}
+            {% if product.variantSelectionMethodChoice %}
+                {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
+            {% else %}
+                {% include '@SyliusShop/Product/Show/_options.html.twig' %}
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="required field">
+        {{ form_label(form.cartItem.quantity) }}
+        {{ form_errors(form.cartItem.quantity) }}
+        <div class="quantity">
+            {{ form_widget(form.cartItem.quantity) }}
+        </div>
+        <p class="type">{{ 'app.ui.express_buy.package'|trans }}</p>
+    </div>
+
+    {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
+
+    <div class="extra">
+        <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+        <a>{{ 'app.ui.product.add_to_favorites'|trans }}<i class="far fa-heart"></i></a>
+    </div>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

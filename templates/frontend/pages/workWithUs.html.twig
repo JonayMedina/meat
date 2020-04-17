@@ -10,7 +10,7 @@
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex sm-order-1">
                     <div class="text-center xs-text-left-i">
                         <h1>{{ 'app.ui.work_with_us'|trans }}</h1>
-                        {% set email = '<a class="ff-rw-bold" href="mailto:' ~ aboutStore('email')|default('example@mnc.com') ~ '">' ~ aboutStore('email')|default('example@mnc.com') ~ '</a>' %}
+                        {% set email = '<a class="ff-rw-bold" href="mailto:' ~ aboutStore('contact-email')|default('example@mnc.com') ~ '">' ~ aboutStore('contact-email')|default('example@mnc.com') ~ '</a>' %}
                         <p>{{ 'app.ui.work_with_us.message_%email%'|trans({'%email%': email})|raw }}</p>
                     </div>
                 </div>

@@ -8,7 +8,7 @@
         {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
 
         <div class="row home pt-5">
-            {% if aboutStore('show-search') %}
+            {% if about_store('show-search') %}
                 <div class="col-12 mb-4">
                     <form class="search-box form d-flex" role="search" method="get" action="">
                         <label>
@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="container">
-        {{ render(url('store_products_by_taxon', {'code': 'pro'})) }}
+        {{ render(url('store_offers')) }}
     </div>
 {% endblock %}
 
@@ -142,7 +142,6 @@
                 }, 150);
             });
 
-
             jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
             jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
             jQuery('.quantity').each(function() {
@@ -155,11 +154,13 @@
 
                 btnUp.click(function() {
                     var oldValue = parseFloat(input.val());
+
                     if (oldValue >= max) {
                         var newVal = oldValue;
                     } else {
                         var newVal = oldValue + 1;
                     }
+
                     spinner.find("input").val(newVal);
                     spinner.find("input").trigger("change");
                 });
@@ -167,14 +168,15 @@
                 btnDown.click(function() {
                     var oldValue = parseFloat(input.val());
                     if (oldValue <= min) {
+
                         var newVal = oldValue;
                     } else {
                         var newVal = oldValue - 1;
                     }
+
                     spinner.find("input").val(newVal);
                     spinner.find("input").trigger("change");
                 });
-
             });
         });
     </script>

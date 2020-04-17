@@ -1,62 +1,51 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{% block content %}
-{% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
-<div class="ui hidden divider"></div>
+{% block extracontent %}
+    <div class="row product pt-5">
+        {% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
+        <div class="col-12">
+            <div class="row">
+                <div class="col-7">
+                    {{ sonata_block_render_event('sylius.shop.product.show.before_images', {'product': product}) }}
+                    {% include '@SyliusShop/Product/Show/_images.html.twig' %}
+                    {{ sonata_block_render_event('sylius.shop.product.show.after_images', {'product': product}) }}
+                </div>
+                <div class="col-5">
+                    {% include '@SyliusShop/Product/Show/_header.html.twig' %}
 
-<div class="ui two column stackable grid">
-    <div class="column">
-        {{ sonata_block_render_event('sylius.shop.product.show.before_images', {'product': product}) }}
+                    {{ sonata_block_render_event('sylius.shop.product.show.after_product_header', {'product': product}) }}
 
-        {% include '@SyliusShop/Product/Show/_images.html.twig' %}
+                    <div class="price">
+                        {% if not product.variants.empty() %}
+                            {% include '@SyliusShop/Product/Show/_price.html.twig' %}
+                        {% endif %}
+                    </div>
 
-        {{ sonata_block_render_event('sylius.shop.product.show.after_images', {'product': product}) }}
-    </div>
-    <div class="column">
-        {% include '@SyliusShop/Product/Show/_header.html.twig' %}
+                    {{ sonata_block_render_event('sylius.shop.product.show.after_price', {'product': product}) }}
 
-        {{ sonata_block_render_event('sylius.shop.product.show.after_product_header', {'product': product}) }}
+                    <div class="desc">
+                        {% if product.description is not empty %}
+                            {{ product.description | nl2br }}
+                        {% else %}
+                            {{ 'sylius.ui.no_description'|trans }}.
+                        {% endif %}
+                    </div>
 
-        {% include '@SyliusShop/Product/Show/_reviews.html.twig' %}
+                    {{ sonata_block_render_event('sylius.shop.product.show.after_description', {'product': product}) }}
 
-        {{ sonata_block_render_event('sylius.shop.product.show.after_reviews', {'product': product}) }}
+                    {% if product.isConfigurable() and product.getVariantSelectionMethod() == 'match' and not product.variants.empty() %}
+                        {% include '@SyliusShop/Product/Show/_variantsPricing.html.twig' with {'pricing': sylius_product_variant_prices(product, sylius.channel)} %}
+                    {% endif %}
+                    {% include '@SyliusShop/Product/Show/_inventory.html.twig' %}
 
-        <div class="ui stackable grid">
-            <div class="four wide column">
-                {% if not product.variants.empty() %}
-                {% include '@SyliusShop/Product/Show/_price.html.twig' %}
-                {% endif %}
+                    {{ sonata_block_render_event('sylius.shop.product.show.after_add_to_cart', {'product': product}) }}
+                </div>
             </div>
-            <div class="twelve wide right aligned column">
-                <span class="ui sub header">{{ product.code }}</span>
+            <div class="row">
+                {% include '@SyliusShop/Product/Show/_associations.html.twig' %}
             </div>
         </div>
-
-        {{ sonata_block_render_event('sylius.shop.product.show.after_price', {'product': product}) }}
-
-        <div class="ui basic segment">
-            <p>{{ product.shortDescription }}</p>
-        </div>
-
-        {{ sonata_block_render_event('sylius.shop.product.show.after_description', {'product': product}) }}
-
-        {% if product.isConfigurable() and product.getVariantSelectionMethod() == 'match' and not product.variants.empty() %}
-            {% include '@SyliusShop/Product/Show/_variantsPricing.html.twig' with {'pricing': sylius_product_variant_prices(product, sylius.channel)} %}
-        {% endif %}
-        {% include '@SyliusShop/Product/Show/_inventory.html.twig' %}
-        <div class="ui hidden divider"></div>
-
-        {{ sonata_block_render_event('sylius.shop.product.show.after_add_to_cart', {'product': product}) }}
     </div>
-</div>
-
-{{ sonata_block_render_event('sylius.shop.product.show.before_tabs', {'product': product}) }}
-
-{% include '@SyliusShop/Product/Show/_tabs.html.twig' %}
-
-{{ sonata_block_render_event('sylius.shop.product.show.before_associations', {'product': product}) }}
-
-{% include '@SyliusShop/Product/Show/_associations.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
@@ -65,6 +54,91 @@
 <script type="text/javascript">
     lightbox.option({
         'albumLabel': '{{ 'sylius.lightbox.image_album_label'|trans|escape('js') }}'
+    });
+
+    $(document).ready(function () {
+        jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
+        jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
+        jQuery('.quantity').each(function() {
+            var spinner = jQuery(this),
+                input = spinner.find('input[type="number"]'),
+                btnUp = spinner.find('.quantity-up'),
+                btnDown = spinner.find('.quantity-down'),
+                min = input.attr('min'),
+                max = input.attr('max');
+
+            btnUp.click(function() {
+                var oldValue = parseFloat(input.val());
+
+                if (oldValue >= max) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue + 1;
+                }
+
+                spinner.find("input").val(newVal);
+                spinner.find("input").trigger("change");
+            });
+
+            btnDown.click(function() {
+                var oldValue = parseFloat(input.val());
+
+                if (oldValue <= min) {
+                    var newVal = oldValue;
+                } else {
+                    var newVal = oldValue - 1;
+                }
+
+                spinner.find("input").val(newVal);
+                spinner.find("input").trigger("change");
+            });
+        });
+
+       $('.products-carousel').owlCarousel({
+            loop: false,
+            margin: 25,
+            nav: true,
+            dots: false,
+            items: 5,
+            autoWidth: false,
+            responsiveClass:true,
+            navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+            responsive:{
+                0:{
+                    items: 2
+                },
+                576:{
+                    items: 2
+                },
+                768:{
+                    items: 3
+                },
+                992:{
+                    items: 4
+                },
+                1200:{
+                    items: 4
+                }
+            }
+        });
+
+       $('.xpress-button').click(function () {
+           let $div = $(this).closest('div.custom-overlay-container');
+           $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+           setTimeout(function () {
+               $div.addClass('show');
+           }, 150);
+       });
+
+       $('button.close').click(function () {
+           let $div = $(this).closest('div.custom-overlay-container');
+           $div.removeClass('show');
+
+           setTimeout(function () {
+               $div.find('div.custom-overlay').attr('style', 'display: none;');
+           }, 150);
+       });
     });
 </script>
 {% endblock %}

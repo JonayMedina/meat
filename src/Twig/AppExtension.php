@@ -2,16 +2,18 @@
 
 namespace App\Twig;
 
+use App\Entity\Channel\ChannelPricing;
+use App\Entity\Product\Product;
+use App\Service\SettingsService;
 use Exception;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\User\ShopUser;
 use App\Service\UploaderHelper;
-use App\Entity\Product\Product;
 use App\Service\FavoriteService;
-use App\Service\SettingsService;
 use Twig\Extension\AbstractExtension;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -49,6 +51,11 @@ class AppExtension extends AbstractExtension
     private $tokenStorage;
 
     /**
+     * @var ChannelContextInterface
+     */
+    private $channelContext;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
@@ -56,8 +63,9 @@ class AppExtension extends AbstractExtension
      * @param TranslatorInterface $translator
      * @param FavoriteService $favoriteService
      * @param TokenStorageInterface $tokenStorage
+     * @param ChannelContextInterface $channelContext
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -65,6 +73,7 @@ class AppExtension extends AbstractExtension
         $this->translator = $translator;
         $this->favoriteService = $favoriteService;
         $this->tokenStorage = $tokenStorage;
+        $this->channelContext = $channelContext;
     }
 
     /**
@@ -86,9 +95,10 @@ class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('getUrl', [$this, 'getUrl']),
+            new TwigFunction('get_url', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
-            new TwigFunction('aboutStore', [$this, 'aboutStore'])
+            new TwigFunction('about_store', [$this, 'aboutStore']),
+            new TwigFunction('get_price', [$this, 'getPrice'])
         ];
     }
 
@@ -195,7 +205,8 @@ class AppExtension extends AbstractExtension
             case 'play-store': return $this->settingsService->getPlayStoreUrl();
             case 'phrase': return $this->settingsService->getPhrase();
             case 'author': return $this->settingsService->getAuthor();
-            case 'email': return $this->settingsService->getEmail();
+            case 'complaints-email': return $this->settingsService->getComplaintsEmail();
+            case 'contact-email': return $this->settingsService->getContactEmail();
             case 'theme': return $this->settingsService->getTheme();
             case 'delivery-hours': return $this->settingsService->getDeliveryHours();
             case 'show-search': return $this->settingsService->isShowProductSearchBox();
@@ -219,5 +230,22 @@ class AppExtension extends AbstractExtension
         $user = $this->tokenStorage->getToken()->getUser();
 
         return ($user instanceof ShopUser) ? $user : null;
+    }
+
+    /**
+     * @param Product $product
+     * @return array
+     */
+    public function getPrice(Product $product) {
+        /**
+         * @var ChannelPricing $channelPricing
+         */
+        $channelPricing = $product->getVariants()[0]->getChannelPricings()[$this->channelContext->getChannel()->getCode()];
+
+        if ($channelPricing->getOriginalPrice() > $channelPricing->getPrice()) {
+            return ['isOffer' => true, 'price' => $channelPricing->getPrice(), 'originalPrice' => $channelPricing->getOriginalPrice()];
+        } else {
+            return ['isOffer' => false, 'price' => $channelPricing->getPrice()];
+        }
     }
 }

@@ -64,12 +64,19 @@
                 src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Italic.ttf') }}");
             }
 
-            {% if aboutStore('show-search') %}
+            {% if about_store('show-search') %}
             .search-box label {
                 width: calc(80% + 30px);
             }
             {% endif %}
 
+            .lb-data .lb-close{
+                background: url('{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}') !important;
+                background-size: cover !important;
+                margin-top: 10px !important;
+                width: 20px !important;
+                height: 20px !important;
+            }
         </style>
 
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
@@ -79,6 +86,7 @@
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/owl-carousel/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/lightbox/lightbox.min.css') }}">
         {% block extracss %}{% endblock %}
     {% endblock %}
 
@@ -133,11 +141,21 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="{{ asset('bundles/syliusshop/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
-    <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}"></script>
-    <script src="{{ asset('bundles/syliusshop/js/owl-carousel/owl.carousel.min.js') }}" defer="defer"></script>
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
-
+    <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/owl-carousel/owl.carousel.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/blockUi/jquery.blockUi.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/lightbox/lightbox.min.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/syliusshop/js/app.min.js'} %}
+    <script>
+        function blockPage() {
+            $('body').addClass('blocked');
+            $.blockUI({ message: '<img src="{{ asset('bundles/syliusshop/img/loader.gif') }}">' });
+        }
+    </script>
     {% block extrajs %}{% endblock %}
 {% endblock %}
 
