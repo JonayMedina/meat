@@ -8,7 +8,6 @@ use App\Entity\User\ShopUser;
 use App\Entity\Product\Product;
 use App\Repository\FavoriteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Class FavoriteService

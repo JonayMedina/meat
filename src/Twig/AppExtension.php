@@ -2,16 +2,16 @@
 
 namespace App\Twig;
 
-use App\Entity\Product\Product;
-use App\Entity\User\ShopUser;
-use App\Service\FavoriteService;
-use App\Service\SettingsService;
 use Exception;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\User\ShopUser;
 use App\Service\UploaderHelper;
+use App\Entity\Product\Product;
+use App\Service\FavoriteService;
+use App\Service\SettingsService;
 use Twig\Extension\AbstractExtension;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
