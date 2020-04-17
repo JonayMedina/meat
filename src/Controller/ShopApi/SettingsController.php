@@ -32,7 +32,7 @@ class SettingsController extends AbstractFOSRestController
     /**
      * @Route(
      *     ".{_format}",
-     *     name="api_index",
+     *     name="shop_api_settings",
      *     methods={"GET"}
      * )
      *

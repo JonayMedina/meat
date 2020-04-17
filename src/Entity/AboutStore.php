@@ -6,11 +6,13 @@ use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
 use App\Model\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @ORM\Table(name="app_about_store")
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Entity(repositoryClass="App\Repository\AboutStoreRepository")
  */
 class AboutStore implements ResourceInterface
@@ -24,156 +26,182 @@ class AboutStore implements ResourceInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(name="about_us", type="text", nullable=true)
+     * @Serializer\Expose()
      */
     private $aboutUs;
 
     /**
      * @var string
      * @ORM\Column(name="first_purchase_message", type="text", nullable=true)
+     * @Serializer\Expose()
      */
     private $firstPurchaseMessage;
 
     /**
      * @var string
      * @ORM\Column(name="new_address_message", type="text", nullable=true)
+     * @Serializer\Expose()
      */
     private $newAddressMessage;
 
     /**
      * @var string
      * @ORM\Column(name="phrase", type="string", length=125, nullable=true)
+     * @Serializer\Expose()
      */
     private $phrase;
 
     /**
      * @var string
      * @ORM\Column(name="author", type="string", length=30, nullable=true)
+     * @Serializer\Expose()
      */
     private $author;
 
     /**
      * @var float
      * @ORM\Column(name="maximum_purchase_value", type="decimal", scale=2, precision=13, nullable=true)
+     * @Serializer\Expose()
      */
     private $maximumPurchaseValue;
 
     /**
      * @var float
      * @ORM\Column(name="minimum_purchase_value", type="decimal", scale=2, precision=13, nullable=true)
+     * @Serializer\Expose()
      */
     private $minimumPurchaseValue;
 
     /**
      * @var int
      * @ORM\Column(name="days_to_choose_in_advance_to_purchase", type="integer", nullable=true)
+     * @Serializer\Expose()
      */
     private $daysToChooseInAdvanceToPurchase;
 
     /**
      * @var bool
      * @ORM\Column(name="show_product_search_box", type="boolean")
+     * @Serializer\Expose()
      */
     private $showProductSearchBox = true;
 
     /**
      * @var array
      * @ORM\Column(name="delivery_hours", type="json", nullable=true)
+     * @Serializer\Expose()
      */
     private $deliveryHours = [];
 
     /**
      * @var string
      * @ORM\Column(name="facebook_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $facebookUrl;
 
     /**
      * @var string
      * @ORM\Column(name="twitter_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $twitterUrl;
 
     /**
      * @var string
      * @ORM\Column(name="instagram_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $instagramUrl;
 
     /**
      * @var string
      * @ORM\Column(name="pinterest_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $pinterestUrl;
 
     /**
      * @var string
      * @ORM\Column(name="app_store_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $appStoreUrl;
 
     /**
      * @var string
      * @ORM\Column(name="play_store_url", type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $playStoreUrl;
 
     /**
      * @var string
      * @ORM\Column(name="theme", type="string", length=100, nullable=true)
+     * @Serializer\Expose()
      */
     private $theme = self::THEME_DARK;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Expose()
      */
     private $productsUpdatedAt;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Expose()
      */
     private $categoriesUpdatedAt;
 
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Expose()
      */
     private $couponsUpdatedAt;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $complaintsEmail;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Expose()
      */
     private $contactEmail;
 
     /**
      * @var string
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Serializer\Expose()
      */
     private $phoneNumber;
 
     /**
      * Settings API Usage.
      * @var string
+     * @Serializer\Expose()
      */
     public $currencyCode;
 
     /**
      * Settings API Usage.
      * @var string
+     * @Serializer\Expose()
      */
     public $currencySymbol;
 

@@ -5,11 +5,13 @@ namespace App\Entity;
 use App\Model\BlameableTrait;
 use App\Model\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * @ORM\Table(name="app_faq")
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Entity(repositoryClass="App\Repository\FAQRepository")
  */
 class FAQ implements ResourceInterface
@@ -24,41 +26,48 @@ class FAQ implements ResourceInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      */
     private $id;
 
     /**
      * @var int
+     * @Serializer\Expose()
      * @ORM\Column(name="position", type="integer", nullable=false)
      */
     private $position = 1;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="question", type="string", length=125, nullable=false)
      */
     private $question;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="answer", type="string", length=200, nullable=true)
      */
     private $answer;
 
     /**
      * @var array
+     * @Serializer\Expose()
      * @ORM\Column(name="time_to_place_an_order", type="json", nullable=true)
      */
     private $timeToPlaceAnOrder;
 
     /**
      * @var array
+     * @Serializer\Expose()
      * @ORM\Column(name="order_delivery_time", type="json", nullable=true)
      */
     private $orderDeliveryTime;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="type", type="string", length=50, nullable=false)
      */
     private $type = self::TYPE_QUESTION;
