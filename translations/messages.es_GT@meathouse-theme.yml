@@ -580,6 +580,17 @@ app.ui.segment_new_error_message: 'Hubo un error al guardar el segmento, intente
 app.ui.edit_segment: 'Editar segmento'
 app.ui.segment_edit_success_message: 'Se ha actualizado el segmento'
 app.ui.segment_edit_error_message: 'Hubo un error al actualizar el segmento, por favor intentelo de nuevo más tarde.'
+app.ui.no_push_found: 'No hay notificaciones push existentes. Selecciona el botón "Nueva push" para crear uno nuevo.'
+app.ui.coupon_or_promotion: 'Cupón / Promoción'
+app.ui.new_push: 'Nueva push'
+app.ui.segment_label: Segmento
+app.ui.date: Fecha
+app.ui.search_box.push: '¿Qué estás buscando?'
+app.ui.push_remove_text: app.ui.push_remove_text
+app.ui.push_remove_title: app.ui.push_remove_title
+app.ui.push_error_on_remove_message: app.ui.push_error_on_remove_message
+app.ui.all_segments: Todos
+app.ui.push: Notificaciones
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
 app.ui.message: Mensaje

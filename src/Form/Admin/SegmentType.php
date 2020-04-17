@@ -6,9 +6,10 @@ use App\Entity\Segment;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SegmentType extends AbstractType
@@ -25,8 +26,8 @@ class SegmentType extends AbstractType
             ->add('gender', ChoiceType::class, [
                 'label' => 'app.ui.gender.label',
                 'expanded' => true,
+                'multiple' => true,
                 'choices' => [
-                    'app.ui.segment.gender.both' => '',
                     'app.ui.segment.gender.'.CustomerInterface::FEMALE_GENDER => CustomerInterface::FEMALE_GENDER,
                     'app.ui.segment.gender.'.CustomerInterface::MALE_GENDER => CustomerInterface::MALE_GENDER,
                 ]
@@ -39,17 +40,41 @@ class SegmentType extends AbstractType
                     'app.ui.segment.frequency_type.'.Segment::TYPE_FIXED_AMOUNT.'.label' => Segment::TYPE_FIXED_AMOUNT,
                 ]
             ])
-            ->add('fixedAmount', IntegerType::class, [
-                'label' => 'app.ui.segment.frequency_type.amount'
+            ->add('fixedAmount', TextType::class, [
+                'label' => 'app.ui.segment.frequency_type.amount',
+                'constraints' => [
+                    new Length(['max' => 4])
+                ],
+                'attr' => [
+                    'maxlength' => 4
+                ]
             ])
-            ->add('purchaseTimes', IntegerType::class, [
-                'label' => 'app.ui.segment.frequency_type.times'
+            ->add('purchaseTimes', TextType::class, [
+                'label' => 'app.ui.segment.frequency_type.times',
+                'constraints' => [
+                    new Length(['max' => 2])
+                ],
+                'attr' => [
+                    'maxlength' => 2
+                ]
             ])
-            ->add('minAge', null, [
-                'label' => false
+            ->add('minAge', TextType::class, [
+                'label' => false,
+                'constraints' => [
+                    new Length(['max' => 2])
+                ],
+                'attr' => [
+                    'maxlength' => 2
+                ]
             ])
-            ->add('maxAge', null, [
-                'label' => false
+            ->add('maxAge', TextType::class, [
+                'label' => false,
+                'constraints' => [
+                    new Length(['max' => 2])
+                ],
+                'attr' => [
+                    'maxlength' => 2
+                ]
             ])
         ;
     }

@@ -59,7 +59,11 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            {{ segment.gender ? ('app.ui.segment.gender.' ~ segment.gender)|trans : 'app.ui.segment.gender.both'|trans }}
+                                            {% if segment.gender|length >= 2 %}
+                                                {{ 'app.ui.segment.gender.both'|trans }}
+                                            {% else %}
+                                                {{ ('app.ui.segment.gender.'~segment.gender[0])|trans }}
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {{ segment.frequencyType ? ('app.ui.segment.frequency_type.' ~ segment.frequencyType)|trans({'%amount%': segment.fixedAmount, '%times%': segment.purchaseTimes, '%currency%': currency}) : 'app.ui.n/a'|trans }}
