@@ -89,9 +89,7 @@ class ResourcesController extends AbstractController
         $repository = $this->getDoctrine()->getManager()->getRepository('App:FAQ');
 
         $queryBuilder = $repository
-            ->createQueryBuilder('faq');
-
-        $queryBuilder
+            ->createQueryBuilder('faq')
             ->orderBy('faq.position', 'ASC');
 
         $faqs = $queryBuilder
