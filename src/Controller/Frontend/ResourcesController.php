@@ -15,6 +15,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ResourcesController extends AbstractController
 {
+    /** @var $captchaKey string */
+    private $captchaKey;
+
+    /**
+     * ResourcesController constructor.
+     * @param $captchaKey
+     */
+    public function __construct($captchaKey) {
+        $this->captchaKey = $captchaKey;
+    }
+
     /**
      *
      * @Route("/terms", name="store_terms")
@@ -119,7 +130,7 @@ class ResourcesController extends AbstractController
     public function locationsAction(LocationRepository $locationRepository) {
         $this->get('session')->getFlashBag()->clear();
 
-        return $this->render('/frontend/pages/locations.html.twig', ['locations' => $locationRepository->findAll()]);
+        return $this->render('/frontend/pages/locations.html.twig', ['locations' => $locationRepository->findAll(), 'captchaKey' => $this->captchaKey]);
     }
 
     /**
