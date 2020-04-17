@@ -56,7 +56,9 @@
                                                 <img src="{{ asset('meathouse/img/icons/coupons.svg') }}" alt="{{ 'app.ui.push'|trans }}" title="{{ 'app.ui.push'|trans }}">
                                             {% endif %}
                                         </td>
-                                        <td>{{ push.title }}</td>
+                                        <td>
+                                            <h4>{{ push.title }}</h4>
+                                        </td>
                                         <td>{{ push.createdAt|localizeddate("medium", "none") }}</td>
                                         <td>
                                             {{ push.promotionCoupon|default(push.promotion|default('app.ui.n/a'|trans)) }}

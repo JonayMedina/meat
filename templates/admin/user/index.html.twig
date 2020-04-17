@@ -66,7 +66,9 @@
                                 {% for user in pagination %}
                                     <tr>
                                         <td>{{ user.id }}</td>
-                                        <td>{{ user.firstName }}</td>
+                                        <td>
+                                            <h4>{{ user.firstName }}</h4>
+                                        </td>
                                         <td>{{ user.lastName }}</td>
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.roles|translated_roles }}</td>
