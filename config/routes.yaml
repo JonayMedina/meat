@@ -30,6 +30,13 @@ meathouse_admin_api:
     defaults:
       _format: json
       
+meathouse_shop_api:
+    resource: "Controller/ShopApi"
+    type:     annotation
+    prefix:   /shop-api
+    defaults:
+        _format: json
+      
 user_favorites:
     path: /account/favorites
     methods: [GET]

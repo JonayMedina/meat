@@ -165,6 +165,18 @@ class AboutStore implements ResourceInterface
      */
     private $phoneNumber;
 
+    /**
+     * Settings API Usage.
+     * @var string
+     */
+    public $currencyCode;
+
+    /**
+     * Settings API Usage.
+     * @var string
+     */
+    public $currencySymbol;
+
     public function getId(): ?int
     {
         return $this->id;
