@@ -7,10 +7,12 @@ use App\Model\IpTraceableTrait;
 use App\Model\TimestampableTrait;
 use App\Service\UploaderHelper;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Table(name="app_location")
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
  */
 class Location implements ResourceInterface
@@ -21,35 +23,41 @@ class Location implements ResourceInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      */
     private $id;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
      */
     private $name;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="address", type="text", nullable=false)
      */
     private $address;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="phone_number", type="string", length=10, nullable=false)
      */
     private $phoneNumber;
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(name="extension", type="string", length=4, nullable=true)
      */
     private $extension;
 
     /**
      * @var array
+     * @Serializer\Expose()
      * @ORM\Column(name="schedule", type="json", nullable=true)
      */
     private $schedule;
@@ -59,6 +67,13 @@ class Location implements ResourceInterface
      * @ORM\Column(name="photo", type="text", nullable=true)
      */
     private $photo;
+
+    /**
+     * API Usage.
+     * @Serializer\Expose()
+     * @var string
+     */
+    public $photoUrl;
 
     public function getId(): ?int
     {
