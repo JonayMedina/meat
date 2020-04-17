@@ -29,9 +29,9 @@
 
     {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
-    <div>
+    <div class="extra">
         <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
-        <a>{{ 'app.ui.product.add_to_favorites'|trans }}</a>
+        <a>{{ 'app.ui.product.add_to_favorites'|trans }}<i class="far fa-heart"></i></a>
     </div>
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}

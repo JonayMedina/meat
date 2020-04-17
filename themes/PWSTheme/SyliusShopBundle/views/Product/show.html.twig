@@ -5,12 +5,12 @@
         {% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
         <div class="col-12">
             <div class="row">
-                <div class="col-6">
+                <div class="col-7">
                     {{ sonata_block_render_event('sylius.shop.product.show.before_images', {'product': product}) }}
                     {% include '@SyliusShop/Product/Show/_images.html.twig' %}
                     {{ sonata_block_render_event('sylius.shop.product.show.after_images', {'product': product}) }}
                 </div>
-                <div class="col-6">
+                <div class="col-5">
                     {% include '@SyliusShop/Product/Show/_header.html.twig' %}
 
                     {{ sonata_block_render_event('sylius.shop.product.show.after_product_header', {'product': product}) }}
@@ -41,10 +41,11 @@
                     {{ sonata_block_render_event('sylius.shop.product.show.after_add_to_cart', {'product': product}) }}
                 </div>
             </div>
+            <div class="row">
+                {% include '@SyliusShop/Product/Show/_associations.html.twig' %}
+            </div>
         </div>
     </div>
-
-{#{% include '@SyliusShop/Product/Show/_associations.html.twig' %}#}
 {% endblock %}
 
 {% block javascripts %}
@@ -92,6 +93,35 @@
                 spinner.find("input").trigger("change");
             });
         });
+
+       $('.products-carousel').owlCarousel({
+                loop: false,
+                margin: 25,
+                nav: true,
+                dots: false,
+                items: 5,
+                autoWidth: true,
+                responsiveClass:true,
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                responsive:{
+                    0:{
+                        items: 2
+                    },
+                    576:{
+                        items: 2
+                    },
+                    768:{
+                        items: 3
+                    },
+                    992:{
+                        items: 4
+                    },
+                    1200:{
+                        items: 4
+                    }
+                }
+            });
+
     });
 </script>
 {% endblock %}

@@ -9,7 +9,7 @@ img, iframe {
     height: auto;
 }
 
-.ff-rw-bold {
+.ff-rw-bold, .ff-rw-bold:hover {
     font-family: "Raleway Bold", sans-serif;
 }
 
@@ -825,23 +825,28 @@ label.error:before {
 }
 
 /* Products */
-.products .image {
+.products .image, .associations .image {
     position: relative;
 }
 
-.products .image a {
+.products .image a, .associations .image a {
     background-position: center !important;
     background-size: cover !important;
     background-repeat: no-repeat;
 }
 
-.products .image img {
+.products .image img, .associations .image img {
     visibility: hidden;
     width: 100%;
     max-height: 216px;
 }
 
-.products .image .xpress-button, .products .image .xpress-button-disabled {
+.associations .image img {
+    max-width: 216px;
+    max-height: 158px;
+}
+
+.products .image .xpress-button, .products .image .xpress-button-disabled, .associations .image .xpress-button, .associations .image .xpress-button-disabled {
     background: #ffffff;
     position: absolute;
     top: 15px;
@@ -857,87 +862,95 @@ label.error:before {
     user-select: none;
 }
 
-.products .image .xpress-button-disabled {
+.products .image .xpress-button-disabled, .associations .image .xpress-button-disabled {
     cursor: not-allowed;
 }
 
-.products .image .xpress-button:hover, .products .image .xpress-button-disabled:hover {
+.products .image .xpress-button:hover, .products .image .xpress-button-disabled:hover, .associations .image .xpress-button:hover,
+.associations .image .xpress-button-disabled:hover {
     color: rgba(171, 22, 43, 1);
 }
 
-.products .content {
+.products .content, .associations .content {
     padding: 15px;
 }
 
-.products .content p {
+.products .content p, .associations .content p {
     font-family: "Raleway", sans-serif;
     letter-spacing: 0.7px;
     color: #404040 !important;
     margin-bottom: 35px;
 }
 
-.products .btn-rounded {
+.products .btn-rounded, .associations .btn-rounded {
     padding: 5px 10px;
     border: none;
+    display: inline-block;
+    margin-top: 0;
 }
 
-.products .btn-rounded img {
+.products .btn-rounded img, .associations .btn-rounded img {
     margin-right: 12px;
 }
 
-.products .content .price {
+.associations .btn-rounded img {
+    width: auto !important;
+    display: inline-block !important;
+}
+
+.products .content .price, .associations .content .price {
     text-align: right;
     letter-spacing: 0.7px;
 }
 
-.products .content .price span {
+.products .content .price span, .associations .content .price span {
     font-family: "Raleway SemiBold", sans-serif;
     letter-spacing: 0;
     color: #404040;
     font-size: 17px;
 }
 
-.products .content .price span.offer {
+.products .content .price span.offer, .associations .content .price span.offer {
     color: #ab162b;
 }
 
-.products .content .price span.original {
+.products .content .price span.original, .associations .content .price span.original {
     text-decoration: line-through;
 }
 
-.products .custom-overlay {
+.products .custom-overlay, .associations .custom-overlay {
     background: #ffffff;
 }
 
-.products .custom-overlay-container.sold-out .custom-overlay {
+.products .custom-overlay-container.sold-out .custom-overlay, .associations .custom-overlay-container.sold-out .custom-overlay {
     background: rgba(145, 113, 113, .6);
     color: #ffffff !important;
 }
 
-.products .custom-overlay-container.show .custom-overlay {
+.products .custom-overlay-container.show .custom-overlay, .associations .custom-overlay-container.show .custom-overlay {
     opacity: 1;
 }
 
-.products .custom-overlay-container.sold-out {
+.products .custom-overlay-container.sold-out, .associations .custom-overlay-container.sold-out {
     user-select: none;
 }
 
-.products .custom-overlay > div {
+.products .custom-overlay > div, .associations .custom-overlay > div {
     height: 100%;
     position: relative;
 }
 
-.products .custom-overlay-container.sold-out .custom-overlay > div {
+.products .custom-overlay-container.sold-out .custom-overlay > div, .associations .custom-overlay-container.sold-out .custom-overlay > div {
     display: flex;
     justify-content: center;
 }
 
-.products .custom-overlay-container.sold-out .custom-overlay h3 {
+.products .custom-overlay-container.sold-out .custom-overlay h3, .associations .custom-overlay-container.sold-out .custom-overlay h3 {
     font-size: 32px;
     margin-top: 90px;
 }
 
-.products .custom-overlay .close {
+.products .custom-overlay .close, .associations .custom-overlay .close {
     position: absolute;
     top: 24px;
     right: 24px;
@@ -946,43 +959,44 @@ label.error:before {
     opacity: 1;
 }
 
-.products .custom-overlay .add-to-cart {
+.products .custom-overlay .add-to-cart, .associations .custom-overlay .add-to-cart {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.products .custom-overlay form {
+.products .custom-overlay form, .associations .custom-overlay form {
     width: calc(100% - 60px);
 }
 
-.products .custom-overlay form label, .product .add-to-cart form label {
+.products .custom-overlay form label, .product .add-to-cart form label, .associations .custom-overlay form label {
     text-align: center;
     font-family: "Raleway SemiBold", sans-serif;
     color: #ab162b !important;
 }
 
-.products .custom-overlay form label:after, .product .add-to-cart label:after {
+.products .custom-overlay form label:after, .associations .custom-overlay form label:after, .product .add-to-cart label:after {
     content: none !important;
 }
 
-.products .custom-overlay p, .product .add-to-cart p {
+.products .custom-overlay p, .associations .custom-overlay p, .product .add-to-cart p {
     font-family: "Raleway Regular", sans-serif;
     color: #404040;
 }
 
-.products .custom-overlay p.type {
+.products .custom-overlay p.type, .associations .custom-overlay p.type {
     text-align: center;
     color: #ab162b;
     margin: 5px 0;
 }
 
-.products .custom-overlay-container {
+.products .custom-overlay-container, .associations .custom-overlay-container {
     box-shadow: 0 3px 9px -6px #917171 !important;
 }
 
-.products .custom-overlay-container, .products .custom-overlay-container > div {
+.products .custom-overlay-container, .products .custom-overlay-container > div, .associations .custom-overlay-container,
+.associations .custom-overlay-container > div {
     height: 100%;
 }
 
@@ -1122,12 +1136,15 @@ body.blocked {
     color: #404040;
     margin-top: 15px;
     margin-bottom: 20px;
+    font-size: 16px;
 }
 
 .product .add-to-cart div.field {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    padding-top: 5px;
+    padding-bottom: 15px;
 }
 
 .product .add-to-cart form label {
@@ -1152,6 +1169,43 @@ body.blocked {
 
 .product .quantity .quantity-button {
     background: #ffffff;
+}
+
+.product .extra {
+    text-align: left;
+}
+
+.product .extra .btn-rounded {
+    padding: 6px 25px;
+    margin-top: 0;
+    margin-right: 15px;
+}
+
+.product .extra a, .product .extra a:hover {
+    font-family: "Raleway SemiBold", sans-serif;
+}
+
+.product .extra a i {
+    margin-left: 15px;
+}
+
+.product .associations > .row .association:last-child {
+    order: 1;
+}
+
+.product .associations > .row .association:first-child {
+    order: 2;
+}
+
+.product .associations .association {
+    margin-top: 35px;
+}
+
+.product .association h4 {
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 24px;
+    color: #404040;
+    margin-bottom: 30px;
 }
 
 /* Lightbox */
