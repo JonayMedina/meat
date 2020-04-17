@@ -2,6 +2,9 @@
 
 namespace App\Twig;
 
+use App\Entity\Product\Product;
+use App\Entity\User\ShopUser;
+use App\Service\FavoriteService;
 use App\Service\SettingsService;
 use Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -10,6 +13,7 @@ use Twig\TwigFunction;
 use App\Service\UploaderHelper;
 use Twig\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class AppExtension
@@ -35,18 +39,32 @@ class AppExtension extends AbstractExtension
     private $translator;
 
     /**
+     * @var FavoriteService
+     */
+    private $favoriteService;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
      * @param SettingsService $settingsService
      * @param TranslatorInterface $translator
+     * @param FavoriteService $favoriteService
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
         $this->settingsService = $settingsService;
         $this->translator = $translator;
+        $this->favoriteService = $favoriteService;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -57,7 +75,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('price', [$this, 'formatPrice']),
             new TwigFilter('base64', [$this, 'imageToBase64']),
-            new TwigFilter('translated_roles', [$this, 'translatedRoles'])
+            new TwigFilter('translated_roles', [$this, 'translatedRoles']),
+            new TwigFilter('is_favorite', [$this, 'isFavorite']),
         ];
     }
 
@@ -73,6 +92,22 @@ class AppExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @param Product $product
+     * @param ShopUser|null $user
+     * @return bool
+     */
+    public function isFavorite(Product $product, ShopUser $user = null)
+    {
+        $user = ($user instanceof ShopUser) ? $user : $this->getUser();
+
+        return $this->favoriteService->isFavorite($product, $user);
+    }
+
+    /**
+     * @param $roles
+     * @return string|string[]
+     */
     public function translatedRoles($roles)
     {
         $string = '';
@@ -173,5 +208,16 @@ class AppExtension extends AbstractExtension
             default:
                 return $this->settingsService->getAboutUs();
         }
+    }
+
+    /**
+     * Return current user.
+     * @return ShopUser|null
+     */
+    private function getUser(): ?ShopUser
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        return ($user instanceof ShopUser) ? $user : null;
     }
 }
