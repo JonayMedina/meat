@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SegmentRepository")
@@ -60,6 +62,9 @@ class Segment implements ResourceInterface
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\GreaterThanOrEqual(
+     *     value = 18
+     * )
      */
     private $minAge;
 
@@ -110,7 +115,7 @@ class Segment implements ResourceInterface
         if (!in_array($gender, [
             CustomerInterface::FEMALE_GENDER,
             CustomerInterface::MALE_GENDER,
-            CustomerInterface::UNKNOWN_GENDER
+            ''
         ])) {
             throw new BadRequestHttpException('Invalid gender type for segment.');
         }
@@ -220,6 +225,40 @@ class Segment implements ResourceInterface
         $this->maxAge = $maxAge;
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->minAge && null == $this->maxAge) {
+            $context->buildViolation('app.ui.segment.enter_max_age')
+                ->atPath('maxAge')
+                ->addViolation();
+        }
+
+        if ($this->maxAge && $this->maxAge < $this->minAge) {
+            $context->buildViolation('app.ui.segment.max_age_must_be_greater_than_min_age')
+                ->atPath('maxAge')
+                ->addViolation();
+        }
+
+        if ($this->frequencyType) {
+            if ($this->frequencyType == self::TYPE_FIXED_AMOUNT && !$this->fixedAmount) {
+                $context->buildViolation('app.ui.segment.enter_fixed_amount')
+                    ->atPath('fixedAmount')
+                    ->addViolation();
+            }
+
+            if ($this->frequencyType == self::TYPE_PURCHASE_TIMES && !$this->purchaseTimes) {
+                $context->buildViolation('app.ui.segment.enter_purchase_times')
+                    ->atPath('purchaseTimes')
+                    ->addViolation();
+            }
+        }
     }
 
     /**

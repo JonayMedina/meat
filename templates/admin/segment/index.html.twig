@@ -11,7 +11,7 @@
             </div>
             <div class="col-sm-8">
                 <div class="title-action">
-                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                    <a href="{{ path('segments_new') }}" class="btn btn-primary btn-lg btn-standard-width">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;
                         {{'app.ui.new_segment'|trans}}
@@ -65,7 +65,7 @@
                                             {{ segment.frequencyType ? ('app.ui.segment.frequency_type.' ~ segment.frequencyType)|trans({'%amount%': segment.fixedAmount, '%times%': segment.purchaseTimes, '%currency%': currency}) : 'app.ui.n/a'|trans }}
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-default btn-action-button">
+                                            <a href="{{ path('segments_edit', {id: segment.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.edit'|trans }}
                                             </a>
                                             &nbsp;

@@ -124,6 +124,8 @@ class MenuBuilder
             ->setExtras([
                 'routes' => [
                     'segments_index',
+                    'segments_new',
+                    'segments_edit',
                 ],
             ])
             ->setAttribute('second-level', 'true');

@@ -3,6 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Segment;
+use App\Form\Admin\SegmentType;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use App\Repository\SegmentRepository;
 use Symfony\Component\Intl\Currencies;
@@ -45,17 +47,25 @@ class SegmentController extends AbstractController
     private $repository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * CouponController constructor.
      * @param LoggerInterface $logger
      * @param PaginatorInterface $paginator
      * @param TranslatorInterface $translator
+     * @param SegmentRepository $repository
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(LoggerInterface $logger, PaginatorInterface $paginator, TranslatorInterface $translator, SegmentRepository $repository)
+    public function __construct(LoggerInterface $logger, PaginatorInterface $paginator, TranslatorInterface $translator, SegmentRepository $repository, EntityManagerInterface $entityManager)
     {
         $this->logger = $logger;
         $this->paginator = $paginator;
         $this->translator = $translator;
         $this->repository = $repository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -92,6 +102,73 @@ class SegmentController extends AbstractController
             'pagination' => $pagination,
             'total' => $this->countSegments(),
             'currency' => Currencies::getSymbol($currencyContext->getCurrencyCode())
+        ]);
+    }
+
+    /**
+     * New segment.
+     * @Route("/segment/new", name="segments_new")
+     * @param Request $request
+     * @return Response
+     */
+    public function newAction(Request $request)
+    {
+        $segment = new Segment();
+
+        $form = $this->createForm(SegmentType::class, $segment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($segment);
+
+            try {
+                $this->entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.segment_new_success_message'));
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.segment_new_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
+
+            return $this->redirectToRoute('segments_index');
+        }
+
+        return $this->render('/admin/segment/new.html.twig', [
+            'form' => $form->createView(),
+            'segment' => $segment
+        ]);
+    }
+
+    /**
+     * Edit segment.
+     * @Route("/segment/{id}/edit", name="segments_edit")
+     * @param Request $request
+     * @return Response
+     */
+    public function editAction(Request $request)
+    {
+        $id = $request->get('id');
+
+        /** @var Segment $segment */
+        $segment = $this->repository->find($id);
+
+        $form = $this->createForm(SegmentType::class, $segment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->entityManager->flush();
+                $this->addFlash('success', $this->translator->trans('app.ui.segment_edit_success_message'));
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.segment_edit_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
+
+            return $this->redirectToRoute('segments_index');
+        }
+
+        return $this->render('/admin/segment/edit.html.twig', [
+            'form' => $form->createView(),
+            'segment' => $segment
         ]);
     }
 

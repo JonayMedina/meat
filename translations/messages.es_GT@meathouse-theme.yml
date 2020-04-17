@@ -565,6 +565,21 @@ app.ui.segment.frequency_type.times: 'Por compra más de %times% veces al mes'
 app.ui.segment_remove_text: '%name%'
 app.ui.segment_remove_title: '¿Estás seguro de eliminar este segmento?'
 app.ui.segment_error_on_remove_message: 'Hubo un error al eliminar este segmento, por favor inténtalo de nuevo más tarde.'
+app.ui.back_to_segments: 'Regresar a segmentos'
+app.ui.age_range_between: Entre
+app.ui.save_segment: 'Guardar segmento'
+app.ui.age_range__years: Años
+app.ui.segment.frequency_type.amount.label: 'Por monto'
+app.ui.segment.frequency_type.times.label: 'Por veces'
+app.ui.segment.purchase_times_or_greater_in_monthly_purchases: 'o más en compras al mes'
+app.ui.segment.fixed_amount_or_greater_in_monthly_purchases: 'o mayor en compras mensualmente'
+app.ui.segment.name: 'Nombre del segmento'
+app.ui.segment.age_range: 'Rango de edades'
+app.ui.segment_new_success_message: 'Se ha creado el nuevo segmento'
+app.ui.segment_new_error_message: 'Hubo un error al guardar el segmento, intentelo de nuevo más tarde'
+app.ui.edit_segment: 'Editar segmento'
+app.ui.segment_edit_success_message: 'Se ha actualizado el segmento'
+app.ui.segment_edit_error_message: 'Hubo un error al actualizar el segmento, por favor intentelo de nuevo más tarde.'
 app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
 app.ui.sold_out: Agotado
 app.ui.message: Mensaje
