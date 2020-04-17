@@ -23,8 +23,8 @@
                 </a>
                 <div>
                     {% if not product.variants.empty() %}
-                        <div class="price {% if getPrice(product)['isOffer'] %}offer{% endif %}">
-                            {% if getPrice(product)['isOffer'] %}
+                        <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                            {% if get_price(product)['isOffer'] %}
                                 <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
                                 {{ 'app.ui.produc.%price%_peer_pound'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>'})|raw }}
                             {% else %}

@@ -10,9 +10,12 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\User\ShopUser;
 use App\Service\UploaderHelper;
+use App\Service\FavoriteService;
 use Twig\Extension\AbstractExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class AppExtension
@@ -38,6 +41,16 @@ class AppExtension extends AbstractExtension
     private $translator;
 
     /**
+     * @var FavoriteService
+     */
+    private $favoriteService;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
      * @var ChannelContextInterface
      */
     private $channelContext;
@@ -48,13 +61,18 @@ class AppExtension extends AbstractExtension
      * @param UploaderHelper $uploaderHelper
      * @param SettingsService $settingsService
      * @param TranslatorInterface $translator
+     * @param FavoriteService $favoriteService
+     * @param TokenStorageInterface $tokenStorage
+     * @param ChannelContextInterface $channelContext
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, ChannelContextInterface $channelContext)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
         $this->settingsService = $settingsService;
         $this->translator = $translator;
+        $this->favoriteService = $favoriteService;
+        $this->tokenStorage = $tokenStorage;
         $this->channelContext = $channelContext;
     }
 
@@ -66,7 +84,8 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('price', [$this, 'formatPrice']),
             new TwigFilter('base64', [$this, 'imageToBase64']),
-            new TwigFilter('translated_roles', [$this, 'translatedRoles'])
+            new TwigFilter('translated_roles', [$this, 'translatedRoles']),
+            new TwigFilter('is_favorite', [$this, 'isFavorite']),
         ];
     }
 
@@ -76,13 +95,29 @@ class AppExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('getUrl', [$this, 'getUrl']),
+            new TwigFunction('get_url', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
-            new TwigFunction('aboutStore', [$this, 'aboutStore']),
-            new TwigFunction('getPrice', [$this, 'getPrice'])
+            new TwigFunction('about_store', [$this, 'aboutStore']),
+            new TwigFunction('get_price', [$this, 'getPrice'])
         ];
     }
 
+    /**
+     * @param Product $product
+     * @param ShopUser|null $user
+     * @return bool
+     */
+    public function isFavorite(Product $product, ShopUser $user = null)
+    {
+        $user = ($user instanceof ShopUser) ? $user : $this->getUser();
+
+        return $this->favoriteService->isFavorite($product, $user);
+    }
+
+    /**
+     * @param $roles
+     * @return string|string[]
+     */
     public function translatedRoles($roles)
     {
         $string = '';
@@ -184,6 +219,17 @@ class AppExtension extends AbstractExtension
             default:
                 return $this->settingsService->getAboutUs();
         }
+    }
+
+    /**
+     * Return current user.
+     * @return ShopUser|null
+     */
+    private function getUser(): ?ShopUser
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        return ($user instanceof ShopUser) ? $user : null;
     }
 
     /**
