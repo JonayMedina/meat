@@ -95,33 +95,50 @@
         });
 
        $('.products-carousel').owlCarousel({
-                loop: false,
-                margin: 25,
-                nav: true,
-                dots: false,
-                items: 5,
-                autoWidth: false,
-                responsiveClass:true,
-                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
-                responsive:{
-                    0:{
-                        items: 2
-                    },
-                    576:{
-                        items: 2
-                    },
-                    768:{
-                        items: 3
-                    },
-                    992:{
-                        items: 4
-                    },
-                    1200:{
-                        items: 4
-                    }
+            loop: false,
+            margin: 25,
+            nav: true,
+            dots: false,
+            items: 5,
+            autoWidth: false,
+            responsiveClass:true,
+            navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+            responsive:{
+                0:{
+                    items: 2
+                },
+                576:{
+                    items: 2
+                },
+                768:{
+                    items: 3
+                },
+                992:{
+                    items: 4
+                },
+                1200:{
+                    items: 4
                 }
-            });
+            }
+        });
 
+       $('.xpress-button').click(function () {
+           let $div = $(this).closest('div.custom-overlay-container');
+           $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+           setTimeout(function () {
+               $div.addClass('show');
+           }, 150);
+       });
+
+       $('button.close').click(function () {
+           let $div = $(this).closest('div.custom-overlay-container');
+           $div.removeClass('show');
+
+           setTimeout(function () {
+               $div.find('div.custom-overlay').attr('style', 'display: none;');
+           }, 150);
+       });
     });
 </script>
 {% endblock %}

@@ -692,7 +692,7 @@ label.error:before {
     top: -52px;
 }
 
-.taxons-carousel .owl-nav .owl-next, .taxons-carousel .owl-nav .owl-prev {
+.taxons-carousel .owl-nav .owl-next, .taxons-carousel .owl-nav .owl-prev, .products-carousel .owl-nav .owl-next, .products-carousel .owl-nav .owl-prev {
     position: absolute;
     width: 41px;
     height: 41px;
@@ -701,11 +701,12 @@ label.error:before {
     border-radius: 50px;
 }
 
-.taxons-carousel .owl-nav .owl-next.disabled, .taxons-carousel .owl-nav .owl-prev.disabled {
+.taxons-carousel .owl-nav .owl-next.disabled, .taxons-carousel .owl-nav .owl-prev.disabled, .products-carousel .owl-nav .owl-next.disabled,
+.products-carousel .owl-nav .owl-prev.disabled {
     opacity: .5;
 }
 
-.taxons-carousel .owl-nav .owl-next i, .taxons-carousel .owl-nav .owl-prev i {
+.taxons-carousel .owl-nav .owl-next i, .taxons-carousel .owl-nav .owl-prev i, .products-carousel .owl-nav .owl-next i, .products-carousel .owl-nav .owl-prev i {
     font-size: 20px;
     line-height: 2.2;
 }
@@ -714,7 +715,7 @@ label.error:before {
     right: 0;
 }
 
-.taxons-carousel .owl-nav .owl-next i {
+.taxons-carousel .owl-nav .owl-next i, .products-carousel .owl-nav .owl-next i {
     margin-left: 4px;
 }
 
@@ -1206,6 +1207,41 @@ body.blocked {
     font-size: 24px;
     color: #404040;
     margin-bottom: 30px;
+}
+
+/* Products Carousel */
+.products-carousel .owl-stage {
+    display: flex;
+    padding-bottom: 10px;
+}
+
+.products-carousel .owl-stage .owl-item {
+    box-shadow: 0 3px 9px -6px #917171 !important;
+}
+
+.products-carousel .owl-stage .owl-item .item {
+    height: 100%;
+}
+
+.products-carousel .custom-overlay-container .content {
+    height: 100%;
+    max-height: calc(100% - 158px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.products-carousel .owl-nav {
+    position: relative;
+    top: -190px;
+}
+
+.products-carousel .owl-nav .owl-prev {
+    left: -29px;
+}
+
+.products-carousel .owl-nav .owl-next {
+    right: -26px;
 }
 
 /* Lightbox */
