@@ -297,7 +297,7 @@
                             <table cellpadding="0" cellspacing="0">
                                 <tbody><tr>
                                     <td class="text-center">
-                                        {% block image %}<img class="img-fluid" style="max-width: 130px;" src="{% block imgurl %}{{ getUrl() ~ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}" alt="Logo">{% endblock %}
+                                        {% block image %}<img class="img-fluid" style="max-width: 130px;" src="{% block imgurl %}{{ get_url() ~ asset('bundles/syliusshop/img/logo.png') }}{%  endblock %}" alt="Logo">{% endblock %}
                                     </td>
                                 </tr>
                                 <tr>
@@ -330,17 +330,17 @@
                         <tbody>
                         <tr>
                             {% set social %}
-                                {% if aboutStore('facebook') %}
-                                    <a href="{{ aboutStore('facebook') }}" title="Facebook link">Facebook</a>&nbsp;
+                                {% if about_store('facebook') %}
+                                    <a href="{{ about_store('facebook') }}" title="Facebook link">Facebook</a>&nbsp;
                                 {% endif %}
-                                {% if aboutStore('twitter') %}
-                                    <a href="{{ aboutStore('twitter') }}" title="Twitter link">Twitter</a>&nbsp;
+                                {% if about_store('twitter') %}
+                                    <a href="{{ about_store('twitter') }}" title="Twitter link">Twitter</a>&nbsp;
                                 {% endif %}
-                                {% if aboutStore('instagram') %}
-                                    <a href="{{ aboutStore('instagram') }}" title="Instagram link">Instagram</a>&nbsp;
+                                {% if about_store('instagram') %}
+                                    <a href="{{ about_store('instagram') }}" title="Instagram link">Instagram</a>&nbsp;
                                 {% endif %}
-                                {% if aboutStore('pinterest') %}
-                                    <a href="{{ aboutStore('pinterest') }}" title="Pinterest link">Pinterest</a>
+                                {% if about_store('pinterest') %}
+                                    <a href="{{ about_store('pinterest') }}" title="Pinterest link">Pinterest</a>
                                 {% endif %}
                             {% endset %}
                             <td class="text-center content-block">{{ 'app.email.follow_us_on_%social_media%'|trans({'%social_media%': social})|raw }}</td>

@@ -6,4 +6,3 @@ twig:
     globals:
         app_name: '%app_name%'
         dev_name: '%dev_name%'
-        captcha_key: '%env(CAPTCHA_KEY)%'
