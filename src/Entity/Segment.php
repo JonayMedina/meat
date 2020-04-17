@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Model\BlameableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use Sylius\Component\Customer\Model\CustomerInterface;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
+ * @ORM\Table(name="app_segment")
  * @ORM\Entity(repositoryClass="App\Repository\SegmentRepository")
  */
 class Segment implements ResourceInterface
@@ -73,6 +76,19 @@ class Segment implements ResourceInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $maxAge;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\PushNotification",
+     *     mappedBy="segment"
+     * )
+     */
+    private $pushNotifications;
+
+    public function __construct()
+    {
+        $this->pushNotifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -240,7 +256,7 @@ class Segment implements ResourceInterface
                 ->addViolation();
         }
 
-        if ($this->maxAge && $this->maxAge < $this->minAge) {
+        if ($this->maxAge && $this->maxAge <= $this->minAge) {
             $context->buildViolation('app.ui.segment.max_age_must_be_greater_than_min_age')
                 ->atPath('maxAge')
                 ->addViolation();
@@ -267,5 +283,36 @@ class Segment implements ResourceInterface
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection|PushNotification[]
+     */
+    public function getPushNotifications(): Collection
+    {
+        return $this->pushNotifications;
+    }
+
+    public function addPushNotification(PushNotification $pushNotification): self
+    {
+        if (!$this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications[] = $pushNotification;
+            $pushNotification->setSegment($this);
+        }
+
+        return $this;
+    }
+
+    public function removePushNotification(PushNotification $pushNotification): self
+    {
+        if ($this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications->removeElement($pushNotification);
+            // set the owning side to null (unless already changed)
+            if ($pushNotification->getSegment() === $this) {
+                $pushNotification->setSegment(null);
+            }
+        }
+
+        return $this;
     }
 }

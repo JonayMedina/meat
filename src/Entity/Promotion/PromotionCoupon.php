@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Promotion;
 
+use App\Entity\PushNotification;
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\PromotionCoupon as BasePromotionCoupon;
 
@@ -28,6 +31,19 @@ class PromotionCoupon extends BasePromotionCoupon
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $enabled;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\PushNotification",
+     *     mappedBy="promotionCoupon"
+     * )
+     */
+    private $pushNotifications;
+
+    public function __construct()
+    {
+        $this->pushNotifications = new ArrayCollection();
+    }
 
     /**
      * @return bool
@@ -131,5 +147,44 @@ class PromotionCoupon extends BasePromotionCoupon
         $promotion = $this->getPromotion();
 
         return ($promotion->getUsageLimit() && $promotion->getUsed() >= $promotion->getUsageLimit());
+    }
+
+    /**
+     * @return Collection|PushNotification[]
+     */
+    public function getPushNotifications(): Collection
+    {
+        return $this->pushNotifications;
+    }
+
+    public function addPushNotification(PushNotification $pushNotification): self
+    {
+        if (!$this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications[] = $pushNotification;
+            $pushNotification->setPromotionCoupon($this);
+        }
+
+        return $this;
+    }
+
+    public function removePushNotification(PushNotification $pushNotification): self
+    {
+        if ($this->pushNotifications->contains($pushNotification)) {
+            $this->pushNotifications->removeElement($pushNotification);
+            // set the owning side to null (unless already changed)
+            if ($pushNotification->getPromotionCoupon() === $this) {
+                $pushNotification->setPromotionCoupon(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->code;
     }
 }

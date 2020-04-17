@@ -2,3 +2,7 @@ app.ui.coupon_code_is_already_in_use: 'Ya existe un cupón con este código, por
 app.ui.error.password_must_be_at_least_8_characters: 'Ingresa una contraseña con más de 8 caracteres'
 app.ui.first_login.enter_password: 'Debes ingresar ambos campos para continuar.'
 app.ui.first_login.password_must_match: 'Parece que tus contraseñas no coinciden, inténtalo nuevamente.'
+app.ui.segment.max_age_must_be_greater_than_min_age: 'La edad máxima debe ser mayor a la edad mínima '
+app.ui.segment.enter_max_age: 'Ingrese la edad máxima'
+app.ui.segment.enter_purchase_times: 'Ingrese la cantidad de compras por mes'
+app.ui.segment.enter_fixed_amount: 'Ingrese el monto de compra por mes'

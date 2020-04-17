@@ -30,3 +30,8 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\Segment
+                
+        app.push_notification:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\PushNotification
