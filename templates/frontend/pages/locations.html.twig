@@ -26,7 +26,7 @@
                             <span>{{ 'app.ui.contact_us.form.error'|trans }}</span>
                         </div>
 
-                        <div class="g-recaptcha d-flex justify-content-center overflow-hidden pt-3" data-callback="verifyCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="{{ getEnv('CAPTCHA_KEY') }}"></div>
+                        <div class="g-recaptcha d-flex justify-content-center overflow-hidden pt-3" data-callback="verifyCaptcha" data-expired-callback="expiredCaptcha" data-sitekey="{{ captcha_key }}"></div>
 
                         <div class="text-center">
                             <input id="contact-captcha" name="contact-captcha" type="hidden" required="required">
@@ -185,7 +185,7 @@
                     $("div.error").hide();
                     blockPage();
                     $.ajax({
-                        url: "{{ path('store_api_messages', {'version': 1}) }}",
+                        url: Routing.generate("store_api_messages", { version: 1}),
                         method: "POST",
                         data: JSON.stringify({
                             name: $form.find('#name').val(),

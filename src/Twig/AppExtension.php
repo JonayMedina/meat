@@ -6,6 +6,7 @@ use App\Entity\Channel\ChannelPricing;
 use App\Entity\Product\Product;
 use App\Service\SettingsService;
 use Exception;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -37,18 +38,24 @@ class AppExtension extends AbstractExtension
     private $translator;
 
     /**
+     * @var ChannelContextInterface
+     */
+    private $channelContext;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
      * @param SettingsService $settingsService
      * @param TranslatorInterface $translator
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, ChannelContextInterface $channelContext)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
         $this->settingsService = $settingsService;
         $this->translator = $translator;
+        $this->channelContext = $channelContext;
     }
 
     /**
@@ -70,7 +77,6 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFunction('getUrl', [$this, 'getUrl']),
-            new TwigFunction('getEnv', [$this, 'getEnv']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('aboutStore', [$this, 'aboutStore']),
             new TwigFunction('getPrice', [$this, 'getPrice'])
@@ -151,16 +157,6 @@ class AppExtension extends AbstractExtension
     }
 
     /**
-     * Return env variable.
-     * @param $name
-     * @return string
-     */
-    public function getEnv($name)
-    {
-        return getenv($name);
-    }
-
-    /**
      * @param string $option
      * @return string|null
      */
@@ -198,7 +194,7 @@ class AppExtension extends AbstractExtension
         /**
          * @var ChannelPricing $channelPricing
          */
-        $channelPricing = $product->getVariants()[0]->getChannelPricings()["FASHION_WEB"];
+        $channelPricing = $product->getVariants()[0]->getChannelPricings()[$this->channelContext->getChannel()->getCode()];
 
         if ($channelPricing->getOriginalPrice() > $channelPricing->getPrice()) {
             return ['isOffer' => true, 'price' => $channelPricing->getPrice(), 'originalPrice' => $channelPricing->getOriginalPrice()];

@@ -53,7 +53,8 @@ class ResourcesController extends AbstractFOSRestController
      * @Route(
      *     "/message.{_format}",
      *     name="store_api_messages",
-     *     methods={"POST"}
+     *     methods={"POST"},
+     *     options={"expose" = true}
      * )
      * @param Request $request
      * @return Response

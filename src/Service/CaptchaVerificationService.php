@@ -18,7 +18,7 @@ class CaptchaVerificationService
     private $secret;
 
     /**
-     * ToolsService constructor.
+     * Constructor.
      * @param ContainerInterface $serviceContainer
      * @param $captchaSecret
      */
