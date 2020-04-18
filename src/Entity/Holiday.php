@@ -6,10 +6,12 @@ use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
 use App\Model\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Table(name="app_holiday")
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Entity(repositoryClass="App\Repository\HolidayRepository")
  */
 class Holiday implements ResourceInterface
@@ -20,24 +22,28 @@ class Holiday implements ResourceInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(name="name", type="string", length=200, nullable=false)
+     * @Serializer\Expose()
      */
     private $name;
 
     /**
      * @var string
      * @ORM\Column(name="month_name", type="string", length=150, nullable=true)
+     * @Serializer\Expose()
      */
     private $monthName;
 
     /**
      * @var \DateTime()
      * @ORM\Column(name="date", type="date", nullable=false)
+     * @Serializer\Expose()
      */
     private $date;
 
