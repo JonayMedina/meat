@@ -115,6 +115,8 @@ class MenuBuilder
             ->setExtras([
                 'routes' => [
                     'push_index',
+                    'push_show',
+                    'push_new',
                 ],
             ])
             ->setAttribute('second-level', 'true');

@@ -32,4 +32,5 @@ framework:
             
         routing:
             'App\Message\Sync':  async
+            'App\Message\PushNotificationMessage':  async
 

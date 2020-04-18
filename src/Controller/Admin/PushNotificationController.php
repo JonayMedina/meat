@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 
 use App\Entity\PushNotification;
+use App\Form\Admin\PushNotificationType;
+use App\Message\PushNotificationMessage;
 use Psr\Log\LoggerInterface;
 use App\Repository\SegmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,6 +13,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\PushNotificationRepository;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -97,6 +100,46 @@ class PushNotificationController extends AbstractController
 
         return $this->render('/admin/push/index.html.twig', [
             'pagination' => $pagination
+        ]);
+    }
+
+    /**
+     * New Push notification
+     * @Route("/push/new", name="push_new")
+     * @param Request $request
+     * @param MessageBusInterface $bus
+     * @return Response
+     */
+    public function newAction(Request $request, MessageBusInterface $bus)
+    {
+        $push = new PushNotification();
+
+        $form = $this->createForm(PushNotificationType::class, $push);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($push);
+
+            try {
+                $this->entityManager->flush();
+
+                /***
+                 * Queue push_notification entry.
+                 */
+                $bus->dispatch(new PushNotificationMessage($push));
+                $this->addFlash('success', $this->translator->trans('app.ui.push_new_success_message'));
+
+            } catch (\Exception $exception) {
+                $this->addFlash('danger', $this->translator->trans('app.ui.push_new_error_message'));
+                $this->logger->error($exception->getMessage());
+            }
+
+            return $this->redirectToRoute('push_index');
+        }
+
+        return $this->render('/admin/push/new.html.twig', [
+            'push' =>  $push,
+            'form' => $form->createView(),
         ]);
     }
 

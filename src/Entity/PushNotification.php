@@ -7,7 +7,9 @@ use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use App\Entity\Promotion\PromotionCoupon;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -192,6 +194,20 @@ class PushNotification implements ResourceInterface
         $this->promotionCoupon = $promotionCoupon;
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->type == self::TYPE_PROMOTION && !$this->promotionCoupon instanceof PromotionCoupon) {
+            $context->buildViolation('app.ui.push.select_a_coupon')
+                ->atPath('promotionCoupon')
+                ->addViolation();
+        }
     }
 
     /**

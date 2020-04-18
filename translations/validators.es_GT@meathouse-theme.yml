@@ -6,3 +6,4 @@ app.ui.segment.max_age_must_be_greater_than_min_age: 'La edad máxima debe ser m
 app.ui.segment.enter_max_age: 'Ingrese la edad máxima'
 app.ui.segment.enter_purchase_times: 'Ingrese la cantidad de compras por mes'
 app.ui.segment.enter_fixed_amount: 'Ingrese el monto de compra por mes'
+app.ui.push.select_a_coupon: 'Debe seleccionar un cupón'
