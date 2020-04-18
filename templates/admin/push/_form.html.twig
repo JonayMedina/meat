@@ -1,0 +1,47 @@
+{% import "admin/_macros.html.twig" as UI %}
+
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.title},
+]) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.description},
+]) }}
+
+<div class="row">
+    <fieldset class="form-group col-lg-12">
+        <legend class="col-form-label required">{{ form_label(form.type) }}</legend>
+    </fieldset>
+
+    <div class="col-lg-3">
+        <div class="form-group">
+            {{ form_widget(form.type[0]) }}
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="form-group">
+            {{ form_widget(form.type[1]) }}
+        </div>
+    </div>
+</div>
+
+<div id="promotion-type-push">
+    {{ UI.row([
+        {'span': 3, 'field': form.promotionCoupon},
+    ]) }}
+</div>
+
+
+{{ UI.row([
+    {'span': 6, 'field': form.segment},
+]) }}
+
+<div class="form-group padding-top-35">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

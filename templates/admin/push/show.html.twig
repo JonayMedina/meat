@@ -1,0 +1,73 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ push.title }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('push_index'), 'app.ui.back_to_push') }}
+                <br>
+                <h1>{{ 'app.ui.push_detail'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="show-container">
+                            <div class="row padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.push_title'|trans }}</h3>
+                                    {{ push.title }}
+                                </div>
+                            </div>
+
+                            <div class="row padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.push_description'|trans }}</h3>
+                                    {{ push.description }}
+                                </div>
+                            </div>
+
+                            <div class="row padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.push_created_at'|trans }}</h3>
+                                    {{ push.createdAt|localizeddate("medium", "none") }}
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.push_created_by'|trans }}</h3>
+                                    {{ push.createdBy }}
+                                </div>
+                            </div>
+
+                            <div class="row padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.push_type'|trans }}</h3>
+                                    {{ ('app.ui.push.types.'~push.type)|trans }}
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.coupon_or_promotion'|trans }}</h3>
+                                    {{ push.promotionCoupon|default(push.promotion|default('app.ui.n/a'|trans)) }}
+                                </div>
+                            </div>
+
+                            <div class="row padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.segment_label'|trans }}</h3>
+                                    {{ push.segment|default('app.ui.all_segments'|trans) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

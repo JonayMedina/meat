@@ -611,3 +611,15 @@ app.ui.captcha.error.message: 'Por favor verifica el captcha para continuar.'
 app.ui.back_to_home: 'Regresar al catálogo'
 app.ui.product.price_by_package_%price%: 'Precio: %price% por paquete'
 app.ui.product.add_to_favorites: 'Agregar a favoritos'
+app.ui.push_type: Tipo
+app.ui.push_created_by: 'Creado por'
+app.ui.push_created_at: 'Fecha de creación'
+app.ui.push_description: Descripción
+app.ui.push_title: Titulo
+app.ui.push_detail: 'Detalle de push'
+app.ui.back_to_push: 'Regresar a envío push'
+app.ui.push.types.promotion: Cupón
+app.ui.push.types.info: Informativa
+app.ui.select_a_coupon: 'Seleccione un cupón'
+app.ui.push_new_success_message: 'Se ha creado la notificación y pronto se estará enviando.'
+app.ui.push_new_error_message: 'Hubo un error al crear la notificación, por favor intentelo de nuevo más tarde.'

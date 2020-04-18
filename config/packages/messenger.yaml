@@ -22,6 +22,13 @@ framework:
                 options:
                     queue_name: sync
                     auto_setup: true
+                    
+            push_notification:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                serializer: messenger.transport.symfony_serializer
+                options:
+                    queue_name: push_notification
+                    auto_setup: true
                 
             failed:
                 dsn: 'doctrine://default'
@@ -32,4 +39,5 @@ framework:
             
         routing:
             'App\Message\Sync':  async
+            'App\Message\PushNotificationMessage':  push_notification
 
