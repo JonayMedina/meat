@@ -276,7 +276,7 @@ class FAQController extends AbstractController
             }
 
         } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage());
+            $this->logger->warning($exception->getMessage());
 
             return 1;
         }
