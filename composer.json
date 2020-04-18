@@ -26,6 +26,7 @@
         "php": "^7.2",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-curl": "*",
         "aws/aws-sdk-php": "^3.133",
         "cron/cron-bundle": "^2.3",
         "deployer/deployer": "^6.7",

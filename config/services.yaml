@@ -28,6 +28,7 @@ services:
             $s3BucketName: '%env(AWS_S3_BUCKET_NAME)%'
             $captchaKey: '%env(CAPTCHA_KEY)%'
             $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
+            $fcmServerKey: '%env(FCM_SERVER_KEY)%'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
