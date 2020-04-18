@@ -10,7 +10,7 @@
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex sm-order-1 xs-mb-1">
                     <div class="text-center">
                         <h1>{{ 'app.ui.wholesalers'|trans }}</h1>
-                        {% set phone = '<a class="ff-rw-bold" href="tel:' ~ aboutStore('phone')|default('0000-0000') ~ '">' ~ aboutStore('phone')|default('0000-0000') ~ '</a>' %}
+                        {% set phone = '<a class="ff-rw-bold" href="tel:' ~ about_store('phone')|default('0000-0000') ~ '">' ~ about_store('phone')|default('0000-0000') ~ '</a>' %}
                         <p class="xs-text-center">{{ 'app.ui.wholesalers.message_%phone%'|trans({'%phone%': phone})|raw }}</p>
                     </div>
                 </div>

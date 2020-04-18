@@ -142,7 +142,7 @@ class ResourcesController extends AbstractController
         /**
          * @var Taxon[] $categories
          */
-        $categories = $taxonRepository->findAll();
+        $categories = $taxonRepository->findRootNodes();
 
         return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories]);
     }

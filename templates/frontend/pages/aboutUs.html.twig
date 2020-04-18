@@ -91,15 +91,14 @@
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 d-flex align-items-center pt-4 pb-5 about sm-order-2">
                     <div>
                         <h1>{{ 'app.ui.frontend.about_procasa'|trans }}</h1>
-                        {% set email = '<a href="mailto:' ~ (sylius.channel.contactEmail)|default('example@mnc.com') ~ '">' ~ (sylius.channel.contactEmail)|default('example@mnc.com') ~ '</a>' %}
-                        <p>{{ aboutStore()|raw }}</p>
+                        <p>{{ about_store()|raw }}</p>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 pr-0 phrase sm-order-1">
                     <img class="w-100" src="{{ asset('bundles/syliusshop/img/about-us.png') }}" alt="{{ 'app.ui.frontend.about_procasa'|trans }}" title="{{ 'app.ui.frontend.about_procasa'|trans }}" width="auto" height="auto">
                     <div class="content">
-                        <p>"{{ aboutStore('phrase') }}"</p>
-                        <p class="text-right">- {{ aboutStore('author') }}</p>
+                        <p>"{{ about_store('phrase') }}"</p>
+                        <p class="text-right">- {{ about_store('author') }}</p>
                     </div>
                 </div>
             </div>
