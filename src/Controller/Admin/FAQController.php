@@ -271,9 +271,9 @@ class FAQController extends AbstractController
 
             if (isset($lastFaq['position'])) {
                 return $lastFaq['position'] + 1;
+            } else {
+                return 1;
             }
-
-            return 1;
 
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
