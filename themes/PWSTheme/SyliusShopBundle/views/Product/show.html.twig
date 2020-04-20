@@ -4,7 +4,7 @@
     <div class="row product pt-5">
         {% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
         <div class="col-12">
-            <div class="row">
+            <div class="row information">
                 <div class="col-7">
                     {{ sonata_block_render_event('sylius.shop.product.show.before_images', {'product': product}) }}
                     {% include '@SyliusShop/Product/Show/_images.html.twig' %}

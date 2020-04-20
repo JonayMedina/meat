@@ -609,7 +609,8 @@ app.email.contact_us.message_sent: '¡Hemos recibido tu mensaje!'
 app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con nosotros, en breve estaremos respondiendo tu comentario.'
 app.ui.captcha.error.message: 'Por favor verifica el captcha para continuar.'
 app.ui.back_to_home: 'Regresar al catálogo'
-app.ui.product.price_by_package_%price%: 'Precio: %price% por paquete'
+app.ui.product.price_by_%measure%_%price%: 'Precio: %price% por paquete'
+app.ui.product.price_by_%measure%_%price%_%offer%: 'Precio: %price% %offer% por paquete'
 app.ui.product.add_to_favorites: 'Agregar a favoritos'
 app.ui.push_type: Tipo
 app.ui.push_created_by: 'Creado por'
@@ -623,3 +624,7 @@ app.ui.push.types.info: Informativa
 app.ui.select_a_coupon: 'Seleccione un cupón'
 app.ui.push_new_success_message: 'Se ha creado la notificación y pronto se estará enviando.'
 app.ui.push_new_error_message: 'Hubo un error al crear la notificación, por favor intentelo de nuevo más tarde.'
+app.ui.latest_products: 'Últimos productos:'
+app.ui.package: paquete
+app.ui.favorites.modal.unlogged.title: '¿Se te antoja para después?'
+app.ui.favorites.modal.unlogged.message: '¡Crea una cuenta y agrega favoritos para facilitar tu compra!'

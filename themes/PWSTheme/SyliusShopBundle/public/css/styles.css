@@ -487,6 +487,10 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding: 60px 75px 40px 75px !important;
 }
 
+.modal.smaller.add-favorites .modal-content {
+    padding: 30px 75px 30px 75px !important;
+}
+
 .modal-title {
     font-family: "Raleway Medium", sans-serif;
     font-size: 32px;
@@ -501,6 +505,11 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 .modal-header {
     justify-content: center !important;
     border-bottom: none !important;
+    flex-wrap: wrap !important;
+}
+
+.modal.smaller.add-favorites .modal-header {
+    padding-bottom: 5px !important;
 }
 
 .modal-footer {
@@ -511,11 +520,26 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     justify-content: center;
 }
 
+.modal.smaller .modal-header img {
+    display: block;
+    margin-bottom: 30px;
+}
+
 .modal .close {
     position: absolute;
     right: 15px;
     color: #AB162B;
     font-size: 30px;
+}
+
+.modal.smaller.add-favorites .close {
+    top: 30px;
+    right: 40px;
+}
+
+.modal.smaller.add-favorites .close img {
+    max-width: 16px;
+    max-height: 16px;
 }
 
 .modal.fade {
@@ -529,6 +553,11 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 
 .modal.smaller .modal-body {
     padding: 2rem 0 2rem 0 !important;
+}
+
+.modal.smaller.add-favorites .modal-body {
+    padding: 0 !important;
+    font-size: 16px;
 }
 
 .modal .btn-rounded {
@@ -911,11 +940,11 @@ label.error:before {
     font-size: 17px;
 }
 
-.products .content .price span.offer, .associations .content .price span.offer {
+.products .content .price span.offer, .associations .content .price span.offer, .product span.offer {
     color: #ab162b;
 }
 
-.products .content .price span.original, .associations .content .price span.original {
+.products .content .price span.original, .associations .content .price span.original, .product span.original {
     text-decoration: line-through;
 }
 
@@ -1140,7 +1169,7 @@ body.blocked {
     font-size: 16px;
 }
 
-.product .add-to-cart div.field {
+.product div.information .add-to-cart div.field {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -1156,19 +1185,19 @@ body.blocked {
     color: #ab162b;
 }
 
-.product .quantity {
+.product div.information .quantity {
     max-width: 160px;
     margin: 0;
 }
 
-.product .quantity input {
+.product div.information .quantity input {
     max-width: 60px;
     background: #ebe7e7 !important;
     background-color: #ebe7e7 !important;
     border-color: #ebe7e7 !important;
 }
 
-.product .quantity .quantity-button {
+.product div.information .quantity .quantity-button {
     background: #ffffff;
 }
 
@@ -1242,6 +1271,10 @@ body.blocked {
 
 .products-carousel .owl-nav .owl-next {
     right: -26px;
+}
+
+.products-carousel .quantity {
+    width: calc(100% - 35px);
 }
 
 /* Lightbox */
@@ -1697,8 +1730,13 @@ body.blocked {
         justify-content: center;
     }
 
-    .modal.smaller .modal-content {
+    .modal.smaller .modal-content, .modal.smaller.add-favorites .modal-content {
         padding: 20px 15px !important;
+    }
+
+    .modal.smaller.add-favorites .btn-rounded {
+        padding-left: 50px;
+        padding-right: 50px;
     }
 
     .blockUI.blockMsg.blockPage {
