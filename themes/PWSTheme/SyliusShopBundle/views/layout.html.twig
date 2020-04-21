@@ -86,7 +86,7 @@
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/owl-carousel/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/lightbox/lightbox.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/animocons/icons.min.css') }}">
         {% block extracss %}{% endblock %}
     {% endblock %}
 
@@ -152,6 +152,8 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/animocons/mo.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/animocons/animocon.js') }}"></script>
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/syliusshop/js/app.min.js'} %}
     <script>
         function blockPage() {

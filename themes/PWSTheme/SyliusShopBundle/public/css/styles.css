@@ -1215,8 +1215,13 @@ body.blocked {
     font-family: "Raleway SemiBold", sans-serif;
 }
 
-.product .extra a i {
-    margin-left: 15px;
+.product .extra a:not(.add-true) i, .product .extra a.add-true label {
+    margin-left: 5px;
+}
+
+.product .extra a.add-true label {
+    color: #C0C1C3 !important;
+    cursor: pointer;
 }
 
 .product .associations > .row .association:last-child {
@@ -1288,6 +1293,11 @@ body.blocked {
     margin-top: 10px !important;
     width: 20px !important;
     height: 20px !important;
+}
+
+/* Animocons */
+label.icobutton input {
+    display: none;
 }
 
 /* Responsive */
