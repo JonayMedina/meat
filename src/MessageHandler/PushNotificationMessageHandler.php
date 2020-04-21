@@ -113,9 +113,11 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $queryBuilder = $this->container->get('sylius.repository.shop_user')
             ->createQueryBuilder('shop_user');
 
+        /**
+         * Age filter...
+         */
         if ($minAge && $maxAge) {
-            $queryBuilder
-                ->andWhere('shop_user.');
+            // TODO: Create age filter
         }
 
         /**
@@ -127,6 +129,20 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
                     ->andWhere('shop_user.gender = :gender')
                     ->setParameter('gender', $gender[0]);
             }
+        }
+
+        /**
+         * Monthly purchase times filter...
+         */
+        if ($frequencyType == Segment::TYPE_PURCHASE_TIMES) {
+            // TODO: Create monthly purchases filter...
+        }
+
+        /**
+         * Monthly fixed amount filter...
+         */
+        if ($frequencyType == Segment::TYPE_FIXED_AMOUNT) {
+            // TODO: Create monthly fixed amount filter...
         }
 
         $users = $queryBuilder
