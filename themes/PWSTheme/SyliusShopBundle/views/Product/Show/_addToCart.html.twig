@@ -5,7 +5,7 @@
 <div class="add-to-cart" id="sylius-product-selecting-variant">
     {{ sonata_block_render_event('sylius.shop.product.show.before_add_to_cart', {'product': product, 'order_item': order_item}) }}
 
-    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart', 'class': 'ui loadable form text-center', 'novalidate': 'novalidate', 'data-redirect': path(configuration.getRedirectRoute('summary'))}}) }}
+    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id, 'class': 'ui loadable form text-center', 'novalidate': 'novalidate', 'data-redirect': path(configuration.getRedirectRoute('summary'))}}) }}
     {{ form_errors(form) }}
     <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
     <div class="d-none">

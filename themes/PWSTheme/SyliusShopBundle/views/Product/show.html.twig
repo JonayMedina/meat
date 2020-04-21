@@ -4,13 +4,13 @@
     <div class="row product pt-5">
         {% include '@SyliusShop/Product/Show/_breadcrumb.html.twig' %}
         <div class="col-12">
-            <div class="row">
-                <div class="col-7">
+            <div class="row information">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-7 xs-pl-0 xs-pr-0">
                     {{ sonata_block_render_event('sylius.shop.product.show.before_images', {'product': product}) }}
                     {% include '@SyliusShop/Product/Show/_images.html.twig' %}
                     {{ sonata_block_render_event('sylius.shop.product.show.after_images', {'product': product}) }}
                 </div>
-                <div class="col-5">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-5 md-pt-2">
                     {% include '@SyliusShop/Product/Show/_header.html.twig' %}
 
                     {{ sonata_block_render_event('sylius.shop.product.show.after_product_header', {'product': product}) }}
@@ -46,6 +46,22 @@
             </div>
         </div>
     </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-none">
+        <button id="triggerModal" type="button" data-toggle="modal" data-target="#showMessage"></button>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -57,6 +73,7 @@
     });
 
     $(document).ready(function () {
+        let $modal = $('#showMessage');
         jQuery('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
         jQuery('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
         jQuery('.quantity').each(function() {
@@ -105,7 +122,9 @@
             navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
             responsive:{
                 0:{
-                    items: 2
+                    items: 1,
+                    nav: false,
+                    autoWidth: true
                 },
                 576:{
                     items: 2
@@ -138,6 +157,73 @@
            setTimeout(function () {
                $div.find('div.custom-overlay').attr('style', 'display: none;');
            }, 150);
+       });
+
+       var $navbarPopover = $('.navbar-collapse .favorites a');
+       $navbarPopover.attr('data-container', 'body');
+       $navbarPopover.attr('data-toggle', 'popover');
+       $navbarPopover.attr('data-placement', 'bottom');
+       $navbarPopover.attr('data-content', '');
+
+       $('a.add-true').click(function () {
+           var $a = $(this);
+           var $input = $a.find('input');
+           var checked = false;
+
+           if ((Boolean) ($input.attr('checked'))) {
+               $input.attr('checked', false);
+               checked = true;
+           } else {
+               checked = $input.prop('checked');
+           }
+
+           $.ajax({
+               url: checked ? Routing.generate("store_api_favorites_remove", { version: 1}) : Routing.generate("store_api_favorites_add", { version: 1}),
+               method: checked ? "DELETE" : "POST",
+               data: JSON.stringify({
+                   product: $(this).data('id')
+               }),
+               contentType: "application/json; charset=utf-8",
+               dataType: "json",
+           })
+           .done(function (data) {
+               if (checked) {
+                   $a.find('span').text('{{ 'app.ui.product.add_to_favorites'|trans }}');
+               } else {
+                   if (window.innerWidth > 991) {
+                       $navbarPopover.attr('data-content', '{{ 'app.ui.product.added_to_favorites_%name%'|trans({'%name%': '<span class="mh-color">' ~ product.name ~ '</span>'})|raw }}');
+                       $('#favPopover').popover('show');
+                       $('.popover-body').html('{{ 'app.ui.product.added_to_favorites_%name%'|trans({'%name%': '<span class="mh-red">' ~ product.name ~ '</span>'})|raw }}');
+
+                       setTimeout(function () {
+                           $('#favPopover').popover('hide');
+                       }, 3000);
+                   }
+
+                   $a.find('span').text('{{ 'app.ui.product.favorite'|trans }}');
+
+                   setTimeout(function () {
+                       $a.find('span').text("");
+                   }, 500);
+               }
+           })
+           .fail(function (error) {
+               let recordset = error['responseJSON']['recordset'];
+               $modal.find('.modal-title').html(recordset['title']);
+               $modal.find('.modal-body').html(recordset['message']);
+
+               if (checked) {
+                   $a.find('span').text('{{ 'app.ui.product.favorite'|trans }}');
+                   $('.icobutton').attr('style', 'color:#ab162b !important');
+                   $input.prop('checked', checked).change();
+               } else {
+                   $a.find('span').text('{{ 'app.ui.product.add_to_favorites'|trans }}');
+                   $('.icobutton').attr('style', 'color:#C0C1C3 !important');
+                   $input.prop('checked', checked).change();
+               }
+
+               $('#triggerModal').trigger('click');
+           });
        });
     });
 </script>
