@@ -40,3 +40,8 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\Favorite
+                
+        app.shop_user_device:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\ShopUserDevice

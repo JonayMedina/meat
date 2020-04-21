@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\User;
 
 use App\Entity\Favorite;
+use App\Entity\ShopUserDevice;
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -36,10 +37,19 @@ class ShopUser extends BaseShopUser
      */
     private $termsAndConditionsAcceptedAt;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\ShopUserDevice",
+     *     mappedBy="user"
+     * )
+     */
+    private $devices;
+
     public function __construct()
     {
         parent::__construct();
         $this->favorites = new ArrayCollection();
+        $this->devices = new ArrayCollection();
     }
 
     /**
@@ -83,6 +93,37 @@ class ShopUser extends BaseShopUser
             // set the owning side to null (unless already changed)
             if ($favorite->getShopUser() === $this) {
                 $favorite->setShopUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ShopUserDevice[]
+     */
+    public function getDevices(): Collection
+    {
+        return $this->devices;
+    }
+
+    public function addDevice(ShopUserDevice $device): self
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices[] = $device;
+            $device->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevice(ShopUserDevice $device): self
+    {
+        if ($this->devices->contains($device)) {
+            $this->devices->removeElement($device);
+            // set the owning side to null (unless already changed)
+            if ($device->getUser() === $this) {
+                $device->setUser(null);
             }
         }
 
