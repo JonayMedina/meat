@@ -2,21 +2,20 @@
 
 namespace App\Controller\Admin;
 
-
+use Psr\Log\LoggerInterface;
 use App\Entity\PushNotification;
+use App\Repository\SegmentRepository;
 use App\Form\Admin\PushNotificationType;
 use App\Message\PushNotificationMessage;
-use Psr\Log\LoggerInterface;
-use App\Repository\SegmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\PushNotificationRepository;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class PushNotificationController
@@ -126,7 +125,7 @@ class PushNotificationController extends AbstractController
                 /***
                  * Queue push_notification entry.
                  */
-                $bus->dispatch(new PushNotificationMessage($push));
+                $bus->dispatch(new PushNotificationMessage($push->getId()));
                 $this->addFlash('success', $this->translator->trans('app.ui.push_new_success_message'));
 
             } catch (\Exception $exception) {

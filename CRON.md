@@ -74,3 +74,12 @@ Start the cron as a daemon. By default it forks itself to the background and sup
 bin/console cron:stop
 ```
 Stops the background cron daemon started with `cron:start`. This is not applicable when the daemon was started with `--blocking`.
+
+
+## Recommended Cron jobs
+```shell
+# Send push notifications to FCM servers, 
+# In production use supervisor and restart every deploy. 
+# https://symfony.com/doc/current/messenger.html#deploying-to-production
+messenger:consume push_notification
+```
