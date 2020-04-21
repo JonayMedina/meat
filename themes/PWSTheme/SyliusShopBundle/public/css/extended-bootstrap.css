@@ -731,19 +731,19 @@
         padding-right: 5rem !important;
     }
 
-    .pt-1.xs-pt-0, .pt-2.xs-pt-0, .pt-3.xs-pt-0, .pt-3.xs-pt-0, .pt-5.xs-pt-0 {
+    .pt-1.xs-pt-0, .pt-2.xs-pt-0, .pt-3.xs-pt-0, .pt-3.xs-pt-0, .pt-5.xs-pt-0, .xs-pt-0 {
         padding-top: 0 !important;
     }
 
-    .pb-1.xs-pb-0, .pb-2.xs-pb-0, .pb-3.xs-pb-0, .pb-3.xs-pb-0, .pb-5.xs-pb-0 {
+    .pb-1.xs-pb-0, .pb-2.xs-pb-0, .pb-3.xs-pb-0, .pb-3.xs-pb-0, .pb-5.xs-pb-0, .xs-pb-0 {
         padding-bottom: 0 !important;
     }
 
-    .pl-1.xs-pl-0, .pl-2.xs-pl-0, .pl-3.xs-pl-0, .pl-3.xs-pl-0, .pl-5.xs-pl-0 {
+    .pl-1.xs-pl-0, .pl-2.xs-pl-0, .pl-3.xs-pl-0, .pl-3.xs-pl-0, .pl-5.xs-pl-0, .xs-pl-0 {
         padding-left: 0 !important;
     }
 
-    .pr-1.xs-pr-0, .pr-2.xs-pr-0, .pr-3.xs-pr-0, .pr-3.xs-pr-0, .pr-5.xs-pr-0 {
+    .pr-1.xs-pr-0, .pr-2.xs-pr-0, .pr-3.xs-pr-0, .pr-3.xs-pr-0, .pr-5.xs-pr-0, .xs-pr-0 {
         padding-right: 0 !important;
     }
 
