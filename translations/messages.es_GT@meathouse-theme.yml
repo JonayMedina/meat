@@ -628,3 +628,13 @@ app.ui.latest_products: 'Últimos productos:'
 app.ui.package: paquete
 app.ui.favorites.modal.unlogged.title: '¿Se te antoja para después?'
 app.ui.favorites.modal.unlogged.message: '¡Crea una cuenta y agrega favoritos para facilitar tu compra!'
+app.api.favorites.add.success: '¡Producto agregado a favoritos!'
+app.api.favorites.add.error.title: '¡Parece que hubo un error al agregar a favoritos!'
+app.api.favorites.add.error.message: 'Un error no permitió agregar el producto a favoritos, intentalo nuevamente.'
+app.api.favorites.add.error.non_existent_product: 'Parece que el producto que deseas agregar a favoritos no existe...'
+app.api.favorites.remove.success: '¡Producto removido de favoritos!'
+app.api.favorites.remove.error.title: '¡Parece que hubo un error al remover de favoritos!'
+app.api.favorites.remove.error.message: 'Un error no permitió remover el producto de favoritos, intentalo nuevamente.'
+app.api.favorites.remove.error.non_existent_product: 'Parece que el producto que deseas remover de favoritos no existe...'
+app.ui.product.favorite: Favorito
+app.ui.product.added_to_favorites_%name%: 'Agregamos %name% a tus favoritos.'

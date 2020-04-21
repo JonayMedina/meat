@@ -1300,6 +1300,22 @@ label.icobutton input {
     display: none;
 }
 
+/* Popover */
+.popover {
+    max-width: 415px !important;
+}
+
+.popover-body {
+    font-size: 16px;
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #404040 !important;
+    padding: 25px 40px !important;
+}
+
+.popover-body span.mh-red {
+    color: #AB162B;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

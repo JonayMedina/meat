@@ -22,8 +22,9 @@
                 <li class="nav-item">
                     <a href="{{ path('sylius_shop_account_order_index') }}" class="nav-link">{{ 'app.ui.purchase_history'|trans }}</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ path('user_favorites') }}" class="nav-link">{{ 'app.ui.my_favorites'|trans }}</a>
+                <li class="nav-item favorites">
+                    <a id="favPopover" href="{{ path('user_favorites') }}" class="nav-link">{{ 'app.ui.my_favorites'|trans }}</a>
+{#                    <button id="favPopover" type="button" class="d-none" data-container="body" data-toggle="popover" data-placement="bottom" data-content=""></button>#}
                 </li>
                 <li class="nav-item">
                     <a href="{{ path('sylius_shop_account_dashboard') }}" class="nav-link">{{ 'app.ui.view_my_profile'|trans }}</a>

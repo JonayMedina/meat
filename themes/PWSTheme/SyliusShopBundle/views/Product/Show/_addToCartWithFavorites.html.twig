@@ -31,15 +31,20 @@
 
     <div class="extra">
         <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
-        <a {% if not is_granted('ROLE_USER') %}data-toggle="modal" data-target="#createAccount"{% else %}class="add-true"{% endif %}>
-            {{ 'app.ui.product.add_to_favorites'|trans }}
+        <a {% if not is_granted('ROLE_USER') %}data-toggle="modal" data-target="#createAccount"{% else %}class="add-true" data-id="{{ product.id }}"{% endif %}>
             {% if is_granted('ROLE_USER') %}
                 {% set isFavorite = product|is_favorite %}
-                <label class="icobutton icobutton--thumbs-up" for="favorite">
+                {% if isFavorite %}
+                    <span></span>
+                {% else %}
+                    <span>{{ 'app.ui.product.add_to_favorites'|trans }}</span>
+                {% endif %}
+                <label class="icobutton icobutton--thumbs-up" for="favorite" {% if isFavorite %}style="color: #ab162b !important"{% endif %}>
                     <i class="fas fa-heart"></i>
                     <input type="checkbox" name="favorite" {% if isFavorite %}checked{% endif %}>
                 </label>
             {% else %}
+                {{ 'app.ui.product.add_to_favorites'|trans }}
                 <i class="far fa-heart"></i>
             {% endif %}
         </a>

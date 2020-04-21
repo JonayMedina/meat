@@ -65,6 +65,10 @@
 
         self.checked = !self.checked;
       });
+
+      $(this.el[0]).find('input').on('change', function () {
+        self.checked = $(this).prop('checked');
+      });
     }
 
     if (checked) {
@@ -96,12 +100,12 @@
           // burst animation
           new mojs.Burst({
             parent: el6,
-            radius: { 20: 50 },
+            radius: { 10: 30 },
             count: 10,
             children: {
               shape: 'line',
               fill: 'white',
-              radius: { 12: 0 },
+              radius: { 7: 0 },
               scale: 1,
               stroke: '#ab162b',
               strokeWidth: 2,
@@ -121,11 +125,15 @@
         ],
         onCheck: function () {
           el6.attr('style', 'color:#ab162b !important');
-          el6.find('input[type="checkbox"]').prop('checked', true);
+          setTimeout(function () {
+            el6.find('input[type="checkbox"]').prop('checked', true);
+          }, 500);
         },
         onUnCheck: function () {
           el6.attr('style', 'color:#C0C1C3 !important');
-          el6.find('input[type="checkbox"]').prop('checked', false);
+          setTimeout(function () {
+            el6.find('input[type="checkbox"]').prop('checked', false);
+          });
         }
       });
       /* Icon 6 */
