@@ -211,6 +211,44 @@ class PushNotification implements ResourceInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isSent(): bool
+    {
+        return $this->sent;
+    }
+
+    /**
+     * @param bool $sent
+     * @return PushNotification
+     */
+    public function setSent(bool $sent): PushNotification
+    {
+        $this->sent = $sent;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getResponse(): array
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param array $response
+     * @return PushNotification
+     */
+    public function setResponse(array $response): PushNotification
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function __toString()
