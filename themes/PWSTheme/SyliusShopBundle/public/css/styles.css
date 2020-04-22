@@ -1354,6 +1354,7 @@ label.icobutton input {
 #product-in-cart .close {
     top: 20px !important;
     right: 20px !important;
+    z-index: 1;
 }
 
 #product-in-cart .close img {
@@ -1423,6 +1424,28 @@ label.icobutton input {
     height: auto;
 }
 
+@media (max-width: 1600px) {
+    #product-in-cart .modal-dialog {
+        max-width: 57vw !important;
+    }
+}
+
+@media (max-width: 1399px) {
+    #product-in-cart .modal-dialog {
+        max-width: 67vw !important;
+    }
+
+    #product-in-cart .modal-footer {
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+    }
+
+    #product-in-cart .modal-footer > div.row {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+
 @media (min-width: 992px) {
     .modal-dialog {
         max-width: 50% !important;
@@ -1446,6 +1469,10 @@ label.icobutton input {
     .taxons-carousel .owl-stage-outer {
         margin-left: 50px;
         margin-right: 50px;
+    }
+
+    #product-in-cart .modal-dialog {
+        max-width: 80vw !important;
     }
 }
 
@@ -1582,6 +1609,30 @@ label.icobutton input {
     .product .information img {
         max-width: 500px;
     }
+
+    #product-in-cart .modal-dialog {
+        max-width: 500px !important;
+    }
+
+    #product-in-cart .modal-body .buttons {
+        justify-content: center;
+    }
+
+    #product-in-cart .modal-body .buttons a:first-of-type {
+        margin-right: 0;
+    }
+
+    #product-in-cart .info>div {
+        justify-content: center;
+    }
+
+    #product-in-cart .calculated p {
+        text-align: center;
+    }
+
+    #product-in-cart .info img.product-image {
+        max-width: 150px;
+    }
 }
 
 @media (max-width: 767px) {
@@ -1683,6 +1734,11 @@ label.icobutton input {
     .taxons-carousel .owl-stage-outer {
         margin-left: 93px;
         margin-right: 93px;
+    }
+
+    #product-in-cart .info img.product-image {
+        max-width: 200px;
+        margin-right: 0;
     }
 }
 
@@ -1792,6 +1848,10 @@ label.icobutton input {
     .products-carousel .owl-stage .owl-item .item {
         min-width: 240px !important;
     }
+
+    #product-in-cart .modal-dialog {
+        max-width: 100% !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1886,6 +1946,33 @@ label.icobutton input {
 
     .products .btn-rounded img, .associations .btn-rounded img {
         margin-right: 5px;
+    }
+
+    #product-in-cart .info img.product-image {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    #product-in-cart .modal-body {
+        padding-left: 30px !important;
+        padding-right: 30px !important;
+    }
+
+    #product-in-cart .modal-body .buttons a {
+        width: 100%;
+        text-align: center;
+    }
+
+    #product-in-cart .calculated p {
+        text-align: left;
+    }
+
+    #product-in-cart .close {
+        top: 5px !important;
+    }
+
+    #product-in-cart .modal-dialog {
+        max-width: 500px !important;
     }
 }
 

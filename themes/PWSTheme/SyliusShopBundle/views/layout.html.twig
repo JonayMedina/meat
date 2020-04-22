@@ -142,16 +142,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-8">
                             <div class="row info">
-                                <div class="col-4">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-4">
                                     <img class="product-image" src="" alt="{{ 'app.ui.product.image'|trans }}" title="{{ 'app.ui.product.image'|trans }}" width="auto" height="auto">
-                                    <img src="{{ asset('bundles/syliusshop/img/icons/check.svg') }}" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
+                                    <img class="d-none d-lg-block" src="{{ asset('bundles/syliusshop/img/icons/check.svg') }}" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
                                 </div>
-                                <div class="col-8 product-text"></div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-8 product-text md-mt-2"><p></p></div>
                             </div>
                         </div>
-                        <div class="col-4 calculated">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-4 calculated md-mt-2">
                             <div class="row">
                                 <div class="col-6">
                                     <p>{{ 'app.ui.quantity'|trans }}</p>
@@ -169,9 +169,23 @@
                         <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.go_to_my_cart'|trans }}</a>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer d-none d-lg-block">
                     <h4>{{ 'app.ui.complement_with'|trans }}</h4>
                     {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal smaller fade" id="showErrorMessage" tabindex="-1" role="dialog" aria-labelledby="showErrorMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showErrorMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
                 </div>
             </div>
         </div>
@@ -211,6 +225,12 @@
 
         $(document).ready(function () {
             let $modal = $('#product-in-cart');
+            let $errorModal = $('#showErrorMessage');
+
+            $modal.find('.custom-overlay-container .custom-overlay form button').click(function () {
+                $modal.modal('hide');
+            });
+
             $('form.product-buy').on('submit', function (e) {
                 e.preventDefault();
                 var $this = $(this);
@@ -218,6 +238,7 @@
                 var url = '{{ path('sylius_shop_ajax_cart_add_item', {'productId': 'product-id'}) }}';
                 url = url.replace('product-id', $(this).data('id'));
 
+                blockPage();
                 $.ajax({
                     type: 'POST',
                     url: url,
@@ -225,11 +246,29 @@
                     success: function () {
                         var message = '{{ 'app.ui.added_%product%_to_cart'|trans({'%product%': '&nbsp;<span class="mh-red">product-name</span>&nbsp;'})|raw }}';
                         message = message.replace('product-name', $this.data('name'));
-                        $modal.find('.product-text').html(message);
+                        $modal.find('.product-text p').html(message);
                         $modal.find('.product-image').attr('src', $this.data('img'));
                         $modal.find('.quantity-text').html($this.find('input').val() + ' ' + $this.data('measure'));
 
-                        $modal.modal('show')
+                        unblockPage();
+
+                        $modal.find('.custom-overlay-container').removeClass('show');
+                        $modal.find('.custom-overlay').attr('style', 'display: none;');
+                        $modal.modal('show');
+                    },
+                    error: function (data) {
+                        var recordset = data['responseJSON'];
+                        var errorMsg = '{{ 'app.ui.cart.add_product.error.message'|trans }}';
+                        $errorModal.find('.modal-title').html('{{ 'app.ui.cart.add_product.error'|trans }}');
+
+                        if (recordset['errors']) {
+                            errorMsg = recordset['errors']['errors'][0];
+                        }
+
+                        $errorModal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $errorModal.modal('show');
                     }
                 });
             });

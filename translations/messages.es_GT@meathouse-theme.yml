@@ -668,3 +668,5 @@ app.ui.complement_with: 'Compleméntalo con:'
 app.ui.product.image: 'Imagen del producto'
 app.ui.check: Chequeado
 app.ui.added_%product%_to_cart: 'Agregamos %product% a tu carrito'
+app.ui.cart.add_product.error: '¡Hubo un error al agregar el producto a tu carrito!'
+app.ui.cart.add_product.error.message: 'Un error no permitio agregar el producto a tu carrito, intentalo nuevamente...'
