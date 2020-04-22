@@ -5,7 +5,9 @@
 <div class="add-to-cart" id="sylius-product-selecting-variant">
     {{ sonata_block_render_event('sylius.shop.product.show.before_add_to_cart', {'product': product, 'order_item': order_item}) }}
 
-    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart', 'class': 'ui loadable form text-center', 'novalidate': 'novalidate', 'data-redirect': path(configuration.getRedirectRoute('summary'))}}) }}
+    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
+        'class': 'ui loadable form text-center product-buy', 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
+        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': 'app.ui.package'|trans }}) }}
     {{ form_errors(form) }}
     <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
     <div class="d-none">
@@ -59,7 +61,7 @@
                             <img src="{{ asset('bundles/syliusshop/img/icons/add-to-favorites.png') }}" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
                             <h5 class="modal-title text-center" id="createAccountLabel">{{ 'app.ui.favorites.modal.unlogged.title'|trans }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                                <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                             </button>
                         </div>
                         <div class="modal-body text-center">

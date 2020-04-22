@@ -130,6 +130,53 @@
     {% block contentFluid %}
     {% endblock %}
 
+    <!-- Modal -->
+    <div class="modal fade" id="product-in-cart" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="product-in-cartLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="product-in-cartLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="row info">
+                                <div class="col-4">
+                                    <img class="product-image" src="" alt="{{ 'app.ui.product.image'|trans }}" title="{{ 'app.ui.product.image'|trans }}" width="auto" height="auto">
+                                    <img src="{{ asset('bundles/syliusshop/img/icons/check.svg') }}" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
+                                </div>
+                                <div class="col-8 product-text"></div>
+                            </div>
+                        </div>
+                        <div class="col-4 calculated">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p>{{ 'app.ui.quantity'|trans }}</p>
+                                    <p class="quantity-text"></p>
+                                </div>
+                                <div class="col-6">
+                                    <p>{{ 'app.ui.total'|trans }}</p>
+                                    <p class="total-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded inverted">{{ 'app.ui.view_more_products'|trans }}</a>
+                        <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.go_to_my_cart'|trans }}</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <h4>{{ 'app.ui.complement_with'|trans }}</h4>
+                    {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% block modals %}
     {% endblock %}
 
@@ -161,8 +208,35 @@
             $('body').addClass('blocked');
             $.blockUI({ message: '<img src="{{ asset('bundles/syliusshop/img/loader.gif') }}">' });
         }
+
+        $(document).ready(function () {
+            let $modal = $('#product-in-cart');
+            $('form.product-buy').on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+
+                var url = '{{ path('sylius_shop_ajax_cart_add_item', {'productId': 'product-id'}) }}';
+                url = url.replace('product-id', $(this).data('id'));
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $(this).serialize(),
+                    success: function () {
+                        var message = '{{ 'app.ui.added_%product%_to_cart'|trans({'%product%': '&nbsp;<span class="mh-red">product-name</span>&nbsp;'})|raw }}';
+                        message = message.replace('product-name', $this.data('name'));
+                        $modal.find('.product-text').html(message);
+                        $modal.find('.product-image').attr('src', $this.data('img'));
+                        $modal.find('.quantity-text').html($this.find('input').val() + ' ' + $this.data('measure'));
+
+                        $modal.modal('show')
+                    }
+                });
+            });
+        });
     </script>
     {% block extrajs %}{% endblock %}
+    {% block formjs %}{% endblock %}
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}

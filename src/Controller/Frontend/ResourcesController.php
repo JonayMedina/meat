@@ -5,7 +5,6 @@ namespace App\Controller\Frontend;
 
 use App\Entity\Taxonomy\Taxon;
 use App\Repository\LocationRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -149,17 +148,19 @@ class ResourcesController extends AbstractController
 
     /**
      * @Route("/{code}/products", name="store_products_by_taxon")
+     * @param Request $request
      * @param String $code
      * @param TaxonRepositoryInterface $taxonRepository
      * @param ProductRepositoryInterface $productRepository
      * @return Response
      */
-    public function productsByTaxonAction(String $code, TaxonRepositoryInterface $taxonRepository, ProductRepositoryInterface $productRepository) {
+    public function productsByTaxonAction(Request $request, String $code, TaxonRepositoryInterface $taxonRepository, ProductRepositoryInterface $productRepository) {
         $taxon = $taxonRepository->findOneBy(['code' => $code]);
         $products = [];
+        $limit = $request->query->get('count');
 
         if ($taxon instanceof Taxon) {
-            $products = $productRepository->findByTaxon($code);
+            $products = $productRepository->findByTaxon($taxon->getId(), $limit);
         }
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);

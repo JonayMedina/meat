@@ -638,3 +638,9 @@ app.api.favorites.remove.error.message: 'Un error no permitió remover el produc
 app.api.favorites.remove.error.non_existent_product: 'Parece que el producto que deseas remover de favoritos no existe...'
 app.ui.product.favorite: Favorito
 app.ui.product.added_to_favorites_%name%: 'Agregamos %name% a tus favoritos.'
+app.ui.view_more_products: 'Ver más productos'
+app.ui.go_to_my_cart: 'Ir a mi carrito'
+app.ui.complement_with: 'Compleméntalo con:'
+app.ui.product.image: 'Imagen del producto'
+app.ui.check: Chequeado
+app.ui.added_%product%_to_cart: 'Agregamos %product% a tu carrito'
