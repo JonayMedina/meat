@@ -12,6 +12,8 @@ class TokenPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $code = $options['code'];
+
         $builder
             ->add('token', null, [
                 'label' => 'app.ui.forgot_password_token',
@@ -21,14 +23,15 @@ class TokenPasswordType extends AbstractType
                 ],
                 'attr' => [
                     'maxlength' => 10
-                ]
+                ],
+                'data' => $code
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'code' => null
         ]);
     }
 }
