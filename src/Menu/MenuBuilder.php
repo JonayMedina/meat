@@ -78,6 +78,8 @@ class MenuBuilder
             'icon' => 'slider',
             'routes' => [
                 'banners_index',
+                'banners_new',
+                'banners_edit',
             ],
         ]);
 

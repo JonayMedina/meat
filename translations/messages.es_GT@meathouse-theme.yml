@@ -638,6 +638,30 @@ app.api.favorites.remove.error.message: 'Un error no permitió remover el produc
 app.api.favorites.remove.error.non_existent_product: 'Parece que el producto que deseas remover de favoritos no existe...'
 app.ui.product.favorite: Favorito
 app.ui.product.added_to_favorites_%name%: 'Agregamos %name% a tus favoritos.'
+app.ui.forgot_password.request_password_title: 'Solicitar contraseña'
+app.ui.forgot_password_email: Correo
+app.ui.forgot_password.motd: 'Escribe el correo de tu usuario para solicitar una nueva contraseña.'
+app.ui.forgot_password.request_a_new_password: 'Solicitud de nueva contraseña'
+app.ui.forgot_password_back_to_login: 'Regresar a login'
+app.ui.forgot_password.not_found_error: 'Este correo no existe en nuestro sistema. Prueba con otro o habla con tu supervisor.'
+app.ui.validate_token.submit_text: Recuperar
+app.ui.forgot_password_token: Código
+app.ui.validate_token.motd: 'Te enviamos un código a tu correo. Por favor revisa tu correo y escribe abajo el código que te enviamos.'
+app.ui.validate_token.title: 'Solicitud enviada'
+app.ui.forgot_password.didnt_receive_your_code: '¿No te llegó tu código?'
+app.ui.validate_token.resend_code: 'Reenvialo haciendo click aquí'
+app.ui.validate_token.user_not_found: 'El código es incorrecto. Por favor revisa tu correo.'
+app.ui.new_password.submit_text: Recuperar
+app.ui.new_password.motd: 'Escribe la contraseña que ahora usarás para ingresar a tu cuenta.'
+app.ui.new_password.title: 'Crear una nueva contraseña'
+app.ui.forgot_password.password_updated: 'Se ha restablecido el acceso a su cuenta con la nueva contraseña.'
+app.email.admin_password_request_subject: 'Recupera tu contraseña en %app_name%'
+app.email.admin.admin_password_request_message_title_%name%: 'Hola %name%, este es tu código para recuperar tu contraseña.'
+app.email.admin_password_request_message: 'Usa este código para recuperar tu contraseña.'
+app.email.admin.click_here_to_get_a_new_password: 'Restablecer su contraseña'
+app.ui.product_id: 'Id de producto'
+app.ui.new_banner: 'Nueva promoción'
+app.ui.news_banner_title: 'Carrousel de promociones'
 app.ui.view_more_products: 'Ver más productos'
 app.ui.go_to_my_cart: 'Ir a mi carrito'
 app.ui.complement_with: 'Compleméntalo con:'

@@ -2,6 +2,7 @@
 
 namespace App\MessageHandler;
 
+use App\Entity\Promotion\PromotionCoupon;
 use App\Entity\Segment;
 use App\Service\FCMService;
 use App\Entity\PushNotification;
@@ -61,6 +62,9 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         /** @var PushNotification $pushNotification */
         $pushNotification = $this->repository->find($message->getPushId());
         $chunks = array_chunk($this->getUsers($pushNotification), self::CHUNK_SIZE);
+
+        /** @var PromotionCoupon $coupon */
+        $coupon = $pushNotification->getPromotionCoupon();
 
         foreach ($chunks as $chunk) {
             foreach ($chunk as $user) {
