@@ -659,3 +659,6 @@ app.email.admin_password_request_subject: 'Recupera tu contraseña en %app_name%
 app.email.admin.admin_password_request_message_title_%name%: 'Hola %name%, este es tu código para recuperar tu contraseña.'
 app.email.admin_password_request_message: 'Usa este código para recuperar tu contraseña.'
 app.email.admin.click_here_to_get_a_new_password: 'Restablecer su contraseña'
+app.ui.product_id: 'Id de producto'
+app.ui.new_banner: 'Nueva promoción'
+app.ui.news_banner_title: 'Carrousel de promociones'
