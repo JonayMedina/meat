@@ -1,6 +1,6 @@
 parameters:
     sylius.security.admin_regex: "^/admin"
-    sylius.security.shop_regex: "^/(?!admin|shop-api|media/.*)[^/]++" # shop-api has been added inside the brackets
+    sylius.security.shop_regex: "^" # shop-api has been added inside the brackets
     sylius_shop_api.security.regex: "^/shop-api"
 
 security:
@@ -74,6 +74,21 @@ security:
             #http_basic:
             #    realm: Secured Area
             anonymous: true
+            
+        sylius_shop_api:
+            pattern: "%sylius_shop_api.security.regex%"
+            stateless: true
+            anonymous: true
+            provider: sylius_shop_user_provider
+            json_login:
+                check_path: /shop-api/login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
@@ -113,21 +128,6 @@ security:
                 oauth_user_provider:
                     service: sylius.oauth.user_provider
             anonymous: true
-            
-        sylius_shop_api:
-            pattern: "%sylius_shop_api.security.regex%"
-            stateless: true
-            anonymous: true
-            provider: sylius_shop_user_provider
-            json_login:
-                check_path: /shop-api/login
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
 
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
