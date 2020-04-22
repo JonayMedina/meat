@@ -36,6 +36,12 @@ class AdminUser extends BaseAdminUser
      */
     private $lastPasswordUpdate;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=50, nullable=true, unique=true)
+     */
+    private $passwordRecoveryId;
+
     public function getFullName()
     {
         if (!empty($this->getFirstName())) {
@@ -81,6 +87,24 @@ class AdminUser extends BaseAdminUser
     {
         $this->lastPasswordUpdate = $lastPasswordUpdate;
 
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPasswordRecoveryId(): ?string
+    {
+        return $this->passwordRecoveryId;
+    }
+
+    /**
+     * @param string $passwordRecoveryId
+     * @return AdminUser
+     */
+    public function setPasswordRecoveryId(?string $passwordRecoveryId): AdminUser
+    {
+        $this->passwordRecoveryId = $passwordRecoveryId;
         return $this;
     }
 }

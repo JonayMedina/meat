@@ -33,3 +33,7 @@ sylius_mailer:
             subject: app.email.contact_us.message_sent
             template: "Email/contactUs/sent.html.twig"
             enabled: true
+        admin_forgot_password_request_token:
+            subject: app.email.admin_password_request
+            template: "Email/admin/password_request_token.html.twig"
+            enabled: true

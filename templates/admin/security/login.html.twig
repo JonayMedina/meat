@@ -31,6 +31,8 @@
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
 
+                        {{ include('admin/security/_flashes.html.twig') }}
+
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                         <div class="form-group">
@@ -53,7 +55,7 @@
                             </div>
                         #}
 
-                        <a href="#">
+                        <a href="{{ path('app_forgot_password') }}">
                             {{ 'app.ui.login.request_new_password'|trans }}
                         </a>
                         <br><br>
