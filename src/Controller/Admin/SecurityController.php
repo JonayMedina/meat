@@ -9,6 +9,7 @@ use App\Form\Admin\NewPasswordType;
 use App\Form\Admin\TokenPasswordType;
 use App\Form\Admin\ForgotPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\RandomStringGeneratorService;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,14 +35,28 @@ class SecurityController extends AbstractController
     private $randomStringGenerator;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * SecurityController constructor.
      * @param EntityManagerInterface $entityManager
      * @param RandomStringGeneratorService $generatorService
+     * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
      */
-    public function __construct(EntityManagerInterface $entityManager, RandomStringGeneratorService $generatorService)
+    public function __construct(EntityManagerInterface $entityManager, RandomStringGeneratorService $generatorService, LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
         $this->randomStringGenerator = $generatorService;
+        $this->logger = $logger;
+        $this->translator = $translator;
     }
 
 
@@ -69,11 +84,9 @@ class SecurityController extends AbstractController
      * @Route("/update-password", name="app_update_password")
      * @param Request $request
      * @param TokenStorageInterface $tokenStorage
-     * @param LoggerInterface $logger
-     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function changePassword(Request $request, TokenStorageInterface $tokenStorage, LoggerInterface $logger, TranslatorInterface $translator): Response
+    public function changePassword(Request $request, TokenStorageInterface $tokenStorage): Response
     {
         /** @var AdminUser $user */
         $user = $tokenStorage->getToken()->getUser();
@@ -87,12 +100,12 @@ class SecurityController extends AbstractController
 
             try {
                 $this->entityManager->flush();
-                $this->addFlash('success', $translator->trans('app.ui.first_password.success'));
+                $this->addFlash('success', $this->translator->trans('app.ui.first_password.success'));
 
                 return $this->redirectToRoute('dashboard_index');
             } catch (\Exception $exception) {
-                $logger->error($exception->getMessage());
-                $this->addFlash('success', $translator->trans('app.ui.first_password.error'));
+                $this->logger->error($exception->getMessage());
+                $this->addFlash('success', $this->translator->trans('app.ui.first_password.error'));
 
                 return $this->redirectToRoute('app_update_password');
             }
@@ -107,11 +120,10 @@ class SecurityController extends AbstractController
      * Forgot password view.
      * @Route("/forgot-password", name="app_forgot_password")
      * @param Request $request
-     * @param TranslatorInterface $translator
      * @param SenderInterface $sender
      * @return Response
      */
-    public function forgotPassword(Request $request, TranslatorInterface $translator, SenderInterface $sender)
+    public function forgotPassword(Request $request, SenderInterface $sender)
     {
         $form = $this->createForm(ForgotPasswordType::class);
         $form->handleRequest($request);
@@ -119,22 +131,9 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
 
-            $user = $this->entityManager->getRepository('App:User\AdminUser')->findOneBy(['email' => $email]);
-
-            if (!$user instanceof AdminUser) {
-                $this->addFlash('danger', $translator->trans('app.ui.forgot_password.not_found_error'));
-
-                return $this->redirectToRoute('app_forgot_password');
+            if (!$this->sendCode($email, $sender)) {
+                $this->redirectToRoute('app_forgot_password');
             }
-
-            $token = $this->generateToken();
-            $this->sendTokenEmail($user, $token, $sender);
-
-            $user->setPasswordRequestedAt(new \DateTime());
-            $user->setPasswordResetToken($token);
-            $user->setPasswordRecoveryId(md5($token));
-
-            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_validate_token', ['user' => $email]);
         }
@@ -145,15 +144,43 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * Resend resetting code.
+     * @Route("/{email}/resend-code", name="app_resend_code", options={"expose" = "true"}, methods={"POST"})
+     * @param Request $request
+     * @param SenderInterface $sender
+     * @return Response
+     */
+    public function resendCode(Request $request, SenderInterface $sender)
+    {
+        $email = $request->get('email');
+
+        if (!$this->sendCode($email, $sender)) {
+            return new JsonResponse([
+                'code' => Response::HTTP_BAD_REQUEST,
+                'message' => $this->translator->trans('app.ui.forgot_password.not_found_error'),
+                'type' => 'error'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([
+            'code' => Response::HTTP_OK,
+            'message' => 'Ok',
+            'type' => 'info'
+        ]);
+    }
+
+    /**
      * Validate token view.
      * @Route("/validate-token", name="app_validate_token")
      * @param Request $request
-     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function validateToken(Request $request, TranslatorInterface $translator)
+    public function validateToken(Request $request)
     {
-        $form = $this->createForm(TokenPasswordType::class);
+        $code = $request->get('code', '');
+        $email = $request->get('user', '');
+
+        $form = $this->createForm(TokenPasswordType::class, null,  ['code' => $code]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -166,9 +193,9 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_new_password', ['passwordRecoveryId' => md5($token)]);
             }
 
-            $this->addFlash('danger', $translator->trans('app.ui.validate_token.user_not_found'));
+            $this->addFlash('danger', $this->translator->trans('app.ui.validate_token.user_not_found'));
 
-            return $this->redirectToRoute('app_validate_token');
+            return $this->redirectToRoute('app_validate_token', ['user' => $email, 'code' => $code]);
         }
 
         return $this->render('/admin/security/validate-token.html.twig', [
@@ -180,10 +207,9 @@ class SecurityController extends AbstractController
      * Create a new password
      * @Route("/{passwordRecoveryId}/new-password", name="app_new_password")
      * @param Request $request
-     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function newPassword(Request $request, TranslatorInterface $translator)
+    public function newPassword(Request $request)
     {
         $passwordRecoveryId = $request->get('passwordRecoveryId');
 
@@ -205,7 +231,7 @@ class SecurityController extends AbstractController
             $user->setPasswordRequestedAt(null);
             $user->setPasswordRecoveryId(null);
 
-            $this->addFlash('success', $translator->trans('app.ui.forgot_password.password_updated'));
+            $this->addFlash('success', $this->translator->trans('app.ui.forgot_password.password_updated'));
 
             $this->entityManager->flush();
 
@@ -258,5 +284,39 @@ class SecurityController extends AbstractController
             'email' => $user->getEmail(),
             "code" => $token,
         ]);
+    }
+
+    /**
+     * @param $email
+     * @param SenderInterface $sender
+     * @return bool
+     */
+    private function sendCode($email, SenderInterface $sender)
+    {
+        $user = $this->entityManager->getRepository('App:User\AdminUser')->findOneBy(['email' => $email]);
+
+        if (!$user instanceof AdminUser) {
+            $this->addFlash('danger', $this->translator->trans('app.ui.forgot_password.not_found_error'));
+
+            return false;
+        }
+
+        $token = $this->generateToken();
+        $this->sendTokenEmail($user, $token, $sender);
+
+        $user->setPasswordRequestedAt(new \DateTime());
+        $user->setPasswordResetToken($token);
+        $user->setPasswordRecoveryId(md5($token));
+
+        try {
+            $this->entityManager->flush();
+
+            return true;
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            $this->addFlash('danger', $this->translator->trans('app.ui.forgot_password.error_on_save_code'));
+
+            return false;
+        }
     }
 }

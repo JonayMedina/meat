@@ -127,6 +127,16 @@
         .alert-success .close, .alert-danger .close, .alert-warning .close  {
             color: #ffffff;
         }
+
+        #blockUIMessage {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        #blockUIMessage img {
+            width: 120px;
+        }
     </style>
 
 </head>
@@ -135,10 +145,37 @@
 {% block content %}
 {% endblock %}
 
+<div id="blockUIMessage" style="display:none;">
+    <div class="spinner-loader">
+        <img src="{{ asset('meathouse/img/spinner.gif') }}" alt="{{ app_name }}"/>
+        <span class="block-message">
+            {{ 'app.ui.block-ui-message'|trans }}
+        </span>
+    </div>
+</div>
+
 <!-- Mainly scripts -->
 <script src="{{ asset('meathouse/js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('meathouse/js/popper.min.js') }}"></script>
 <script src="{{ asset('meathouse/js/bootstrap.js') }}"></script>
+
+<script src="{{ asset('meathouse/js/plugins/blockUI/jquery.blockUI.min.js') }}"></script>
+
+<!-- FOS JS Routing -->
+<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+<script>
+    $.blockUI.defaults.message = $('#blockUIMessage');
+
+    function blockUI() {
+        $.blockUI();
+    }
+
+    function unblockUI() {
+        $.unblockUI();
+    }
+</script>
 {% block javascripts %}
 {% endblock %}
 </body>

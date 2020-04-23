@@ -147,6 +147,7 @@ security:
         - { path: "%sylius.security.admin_regex%/forgot-password", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.admin_regex%/validate-token", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.admin_regex%/.*/new-password", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "%sylius.security.admin_regex%/.*/resend-code", role: IS_AUTHENTICATED_ANONYMOUSLY }
         #- { path: "%sylius.security.api_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
 

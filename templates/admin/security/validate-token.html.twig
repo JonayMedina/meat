@@ -1,5 +1,6 @@
 {% extends '/admin/security.html.twig' %}
 {% import "admin/_macros.html.twig" as UI %}
+{% set email = app.request.get('user')|default('') %}
 
 {% block title %} {{ 'app.ui.validate_token.title'|trans }} {% endblock %}
 
@@ -60,9 +61,40 @@
         <p>
             {{ 'app.ui.forgot_password.didnt_receive_your_code'|trans }}
 
-            <a href="{{ path('app_forgot_password') }}">
+            {% if email %}
+            <a href="#" id="resend-code">
                 {{ 'app.ui.validate_token.resend_code'|trans }}
             </a>
+            {% endif %}
         </p>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function () {
+            var $wrapper = $('.login-header');
+
+            {% if email %}
+            $wrapper.on('click', '#resend-code', function (e) {
+                e.preventDefault();
+                blockUI();
+
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('app_resend_code', {email: '{{ email }}'}),
+                    success: function () {
+                        $wrapper.find('#token_password_token').select();
+                        unblockUI();
+                    },
+                    error: function () {
+                        unblockUI();
+                    }
+                });
+            });
+            {% endif %}
+        });
+    </script>
 {% endblock %}
