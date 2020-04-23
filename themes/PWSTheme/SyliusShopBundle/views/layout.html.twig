@@ -245,10 +245,18 @@
                     data: $(this).serialize(),
                     success: function () {
                         var message = '{{ 'app.ui.added_%product%_to_cart'|trans({'%product%': '&nbsp;<span class="mh-red">product-name</span>&nbsp;'})|raw }}';
+                        var quantity = $this.find('input').val();
+                        var dataPrice = (String) ($this.data('price'));
+                        var priceWithCode = dataPrice.split(/(\s+)/);
+                        var currency = priceWithCode[0];
+                        var price = priceWithCode[2];
+                        var total = quantity*price;
+
                         message = message.replace('product-name', $this.data('name'));
                         $modal.find('.product-text p').html(message);
                         $modal.find('.product-image').attr('src', $this.data('img'));
-                        $modal.find('.quantity-text').html($this.find('input').val() + ' ' + $this.data('measure'));
+                        $modal.find('.quantity-text').html(quantity + ' ' + $this.data('measure'));
+                        $modal.find('.total-text').html(currency + ' ' + total.toFixed(2));
 
                         unblockPage();
 
