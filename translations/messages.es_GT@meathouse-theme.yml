@@ -530,7 +530,7 @@ app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de 
 app.ui.close: Cerrar
 app.ui.search: Buscar
 app.ui.search.placeholder: '¿Qué estás buscando hoy?'
-app.ui.produc.%price%_peer_pound: '%price% por libra'
+app.ui.produc.%price%_peer_%measure%: '%price% por %measure%'
 app.ui.express_buy: 'Xpress Buy'
 app.ui.cart.icon: 'Icono del carrito'
 app.ui.express_buy.package: Paquete
@@ -671,3 +671,12 @@ app.ui.check: Chequeado
 app.ui.added_%product%_to_cart: 'Agregamos %product% a tu carrito'
 app.ui.cart.add_product.error: '¡Hubo un error al agregar el producto a tu carrito!'
 app.ui.cart.add_product.error.message: 'Un error no permitio agregar el producto a tu carrito, intentalo nuevamente...'
+app.ui.favorites.all: Todas
+app.ui.sub_total: Subtotal
+app.ui.favorites.delete: 'Eliminar <br> de favoritos'
+app.ui.favorites.delete_from: 'Eliminar de favoritos'
+app.ui.favorites.delete_favorite: 'Eliminar favorito'
+app.ui.favorites.delete.are_you_sure?: '¿Estás seguro de eliminar este producto de tus favoritos?'
+app.ui.pound: libra
+app.ui.return_to_favorites: 'Regresar a favoritos'
+app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'

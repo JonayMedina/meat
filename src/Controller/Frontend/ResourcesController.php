@@ -4,6 +4,7 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Taxonomy\Taxon;
+use App\Repository\FavoriteRepository;
 use App\Repository\LocationRepository;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
@@ -134,16 +135,18 @@ class ResourcesController extends AbstractController
 
     /**
      * @Route("/categories", name="store_categories")
+     * @param Request $request
      * @param TaxonRepositoryInterface $taxonRepository
      * @return Response
      */
-    public function categoriesAction(TaxonRepositoryInterface $taxonRepository) {
+    public function categoriesAction(Request $request, TaxonRepositoryInterface $taxonRepository) {
         /**
          * @var Taxon[] $categories
          */
         $categories = $taxonRepository->findRootNodes();
+        $from = $request->query->get('from') ? $request->query->get('from') : 'home';
 
-        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories]);
+        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories, 'from' => $from]);
     }
 
     /**
