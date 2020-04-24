@@ -680,3 +680,6 @@ app.ui.favorites.delete.are_you_sure?: '¿Estás seguro de eliminar este product
 app.ui.pound: libra
 app.ui.return_to_favorites: 'Regresar a favoritos'
 app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'
+app.ui.search.empty: 'Búsqueda sin resultados'
+app.ui.search.empty.message: 'Parece que no existen coincidencias con la información que ingresaste. Inténtalo nuevamente cambiando tu búsqueda.'
+app.ui.loading: Cargando...

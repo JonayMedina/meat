@@ -1,6 +1,6 @@
 <div class="owl-carousel taxons-carousel owl-theme mb-4">
     {% for category in categories %}
-        <div class="item {% if category.code == 'pro' %}current{% endif %} {% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}">
+        <div class="item {% if category.code == 'pro' %}current{% endif %} {% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" data-taxon="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}">
             <a class="{{ about_store('theme') }}" style="background: {% if about_store('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% endif %}">
                 <p>{% if from == 'favorites' and category.code == 'pro' %}{{ 'app.ui.favorites.all'|trans }}{% else %}{{ category.name }}{% endif %}</p>
             </a>

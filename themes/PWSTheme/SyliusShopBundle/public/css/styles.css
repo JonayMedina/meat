@@ -849,6 +849,10 @@ label.error:before {
     width: 20%;
 }
 
+.search-box button img {
+    max-width: 28px;
+}
+
 /* Products */
 .products .image, .associations .image {
     position: relative;
@@ -1296,7 +1300,7 @@ body.blocked {
     margin-bottom: 10px !important;
 }
 
-.favorites.page .favorite-item:first-of-type form label, .favorites.page .favorite-item:first-of-type .sub-total-title {
+.favorites.page .favorite-item.first form label, .favorites.page .favorite-item.first .sub-total-title {
     visibility: visible !important;
 }
 
@@ -1318,7 +1322,7 @@ body.blocked {
     margin-bottom: 34px;
 }
 
-.favorites.page .favorite-item:first-of-type {
+.favorites.page .favorite-item.first {
     margin-top: 0;
 }
 

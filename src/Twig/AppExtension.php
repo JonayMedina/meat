@@ -4,9 +4,11 @@ namespace App\Twig;
 
 use App\Entity\Channel\ChannelPricing;
 use App\Entity\Product\Product;
+use App\Entity\Taxonomy\Taxon;
 use App\Service\SettingsService;
 use Exception;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -98,7 +100,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_url', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
             new TwigFunction('about_store', [$this, 'aboutStore']),
-            new TwigFunction('get_price', [$this, 'getPrice'])
+            new TwigFunction('get_price', [$this, 'getPrice']),
+            new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon'])
         ];
     }
 
@@ -247,5 +250,17 @@ class AppExtension extends AbstractExtension
         } else {
             return ['isOffer' => false, 'price' => $channelPricing->getPrice()];
         }
+    }
+
+    /**
+     * @param Taxon $taxon
+     * @return Taxon|null
+     */
+    public function getPrincipalTaxon(Taxon $taxon) {
+        while ($taxon->getParent() != null) {
+            $taxon = $taxon->getParent();
+        }
+
+        return $taxon;
     }
 }
