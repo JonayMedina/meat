@@ -1,7 +1,35 @@
 <div class="owl-carousel taxons-carousel owl-theme mb-4">
+    {% set i = 0 %}
     {% for category in categories %}
-        <div class="item {% if category.code == 'pro' %}current{% endif %} {% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" data-taxon="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}">
-            <a class="{{ about_store('theme') }}" style="background: {% if about_store('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% endif %}">
+        {% set classes = ['item']  %}
+
+        {% if current is not null %}
+            {% if category.code == current %}
+                {% set classes = classes|merge(["current"])  %}
+            {% endif %}
+            {% set classes = classes|merge([category.code])  %}
+        {% else %}
+            {% if from == 'favorites' and category.code == 'pro'  %}
+                {% set classes = classes|merge(["all", "current"])  %}
+            {% elseif category.code == 'pro' %}
+                {% set classes = classes|merge(["current", category.code]) %}
+            {% else %}
+                {% set classes = classes|merge([category.code])  %}
+            {% endif %}
+        {% endif %}
+
+        {% set href = '' %}
+
+        {% if from != 'favorites' %}
+            {% if category.code == 'pro'  %}
+                {% set href = 'href="' ~ url('sylius_shop_homepage') ~ '"' %}
+            {% else %}
+                {% set href = 'href="' ~ path('sylius_shop_product_index', {'slug': category.slug, '_locale': category.translation.locale}) ~ '"' %}
+            {% endif %}
+        {% endif %}
+
+        <div id="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" class="{{ classes|join(' ') }}" data-taxon="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" data-position="{{ i }}">
+            <a {{ href|raw }} {% if from != 'favorites' and category.code == 'pro' %}href="{{ url('sylius_shop_homepage') }}"{% endif %} class="{{ about_store('theme') }}" style="background: {% if about_store('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% endif %}">
                 <p>{% if from == 'favorites' and category.code == 'pro' %}{{ 'app.ui.favorites.all'|trans }}{% else %}{{ category.name }}{% endif %}</p>
             </a>
             <style>
@@ -13,5 +41,6 @@
                 }
             </style>
         </div>
+        {% set i = i+1 %}
     {% endfor %}
 </div>

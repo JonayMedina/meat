@@ -683,3 +683,5 @@ app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'
 app.ui.search.empty: 'Búsqueda sin resultados'
 app.ui.search.empty.message: 'Parece que no existen coincidencias con la información que ingresaste. Inténtalo nuevamente cambiando tu búsqueda.'
 app.ui.loading: Cargando...
+app.ui.load_more_products: 'Cargar más productos'
+app.ui.back_to_%taxon%: 'Regresar a %taxon%'

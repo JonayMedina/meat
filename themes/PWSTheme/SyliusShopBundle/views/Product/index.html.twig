@@ -1,13 +1,4 @@
-{% extends '@SyliusShop/layout.html.twig' %}
-
-{% block content %}
-{% include '@SyliusShop/Product/Index/_header.html.twig' %}
-<div class="ui stackable grid">
-    <div class="four wide column">
-        {% include '@SyliusShop/Product/Index/_sidebar.html.twig' %}
-    </div>
-    <div class="twelve wide column">
-        {% include '@SyliusShop/Product/Index/_main.html.twig' %}
-    </div>
-</div>
-{% endblock %}
+{{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+    'slug': app.request.attributes.get('slug'),
+    'template': '@SyliusShop/Taxon/index.html.twig'
+})) }}

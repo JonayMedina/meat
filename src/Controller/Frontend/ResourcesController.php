@@ -145,8 +145,20 @@ class ResourcesController extends AbstractController
          */
         $categories = $taxonRepository->findRootNodes();
         $from = $request->query->get('from') ? $request->query->get('from') : 'home';
+        $current = $request->query->get('current') ? $request->query->get('current') : null;
 
-        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories, 'from' => $from]);
+        return $this->render('/frontend/pages/widgets/_categories.html.twig', ['categories' => $categories, 'from' => $from, 'current' => $current]);
+    }
+
+    /**
+     * @Route("/categories/{slug}", name="store_show_category")
+     * @param Request $request
+     * @param $slug
+     * @param TaxonRepositoryInterface $taxonRepository
+     * @return void
+     */
+    public function showCategoryAction(Request $request, $slug, TaxonRepositoryInterface $taxonRepository) {
+
     }
 
     /**
@@ -166,7 +178,7 @@ class ResourcesController extends AbstractController
             $products = $productRepository->findByTaxon($taxon->getId(), $limit);
         }
 
-        return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
+        return $this->render('/frontend/pages/widgets/taxon/_products.html.twig', ['products' => $products]);
     }
 
     /**
