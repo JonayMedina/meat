@@ -1,14 +1,119 @@
 {% extends "/admin/base.html.twig" %}
 
-{% block title %}{{ 'app.ui.order_history'|trans }}{% endblock %}
+{% block title %}{{ 'app.ui.orders_list'|trans }}{% endblock %}
 
 {% block content %}
     <div class="col-lg-12">
-        <div class="m-t-lg">
-            <h1>{{ 'app.ui.order_history'|trans }}</h1>
-            <br><br>
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                <h1>{{ 'app.ui.orders_list'|trans }}</h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        &nbsp;
+                        {{'app.ui.orders.export_to_excel'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
 
+                        <div class="search-box search-box-fullwidth">
+                            <form action="" method="get">
+                                <input type="search" name="filter" class="search-box-input form-control" maxlength="30" placeholder="{{ 'app.ui.search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                            </form>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th style="width: 1%;">&nbsp;</th>
+                                    <th>{{ 'app.ui.order.label'|trans }}</th>
+                                    <th>{{ 'app.ui.name'|trans }}</th>
+                                    <th>{{ 'app.ui.deliver_date'|trans }}</th>
+                                    <th>{{ 'app.ui.deliver_time'|trans }}</th>
+                                    <th>{{ 'app.ui.amount'|trans }}</th>
+                                    <th>&nbsp;</th>
+                                    <th class="actions-header">
+                                        {{ 'app.ui.actions'|trans }}
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for order in pagination %}
+                                    {% set customer = order.customer %}
+                                    <tr>
+                                        <td class="order-{{ order.status }}"></td>
+                                        <td>{{ '#' ~ order.number }}</td>
+                                        <td>{{ (customer.firstName and customer.lastName) ? customer.firstName ~ ' ' ~ customer.lastName : customer }}</td>
+                                        <td>
+                                            {% if order.hasShipments and order.shipments[0].state == constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
+                                                {{ order.shipment[0].cratedAt|localizeddate("medium", "none") }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if order.hasShipments and order.shipments[0].state == constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
+                                                {{ order.shipment[0].cratedAt|localizeddate("none", "medium") }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ order.total|price|number_format_currency(currency) }}</td>
+                                        <td>{{ ('app.ui.orders.states.'~order.status)|trans }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-default btn-block" style="border-radius: 10px;">
+                                                {{ 'app.ui.view_detail'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            {{ 'app.ui.locations_no_items_on_table'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .order-pending {
+            background-color: #D1D1D1;
+        }
+
+        .order-cancelled {
+            background-color: #F5B0BD;
+        }
+
+        .order-delivered {
+            background-color: #D7FFAE;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script>
+$(document).ready(function() {
+});
+</script>
 {% endblock %}

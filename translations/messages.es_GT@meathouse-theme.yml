@@ -676,7 +676,7 @@ app.ui.sub_total: Subtotal
 app.ui.favorites.delete: 'Eliminar <br> de favoritos'
 app.ui.favorites.delete_from: 'Eliminar de favoritos'
 app.ui.favorites.delete_favorite: 'Eliminar favorito'
-app.ui.favorites.delete.are_you_sure?: '¿Estás seguro de eliminar este producto de tus favoritos?'
+'app.ui.favorites.delete.are_you_sure?': '¿Estás seguro de eliminar este producto de tus favoritos?'
 app.ui.pound: libra
 app.ui.return_to_favorites: 'Regresar a favoritos'
 app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'
@@ -685,3 +685,12 @@ app.ui.search.empty.message: 'Parece que no existen coincidencias con la informa
 app.ui.loading: Cargando...
 app.ui.load_more_products: 'Cargar más productos'
 app.ui.back_to_%taxon%: 'Regresar a %taxon%'
+app.ui.view_detail: 'Ver detalle'
+app.ui.deliver_time: Horario
+app.ui.deliver_date: Entrega
+app.ui.orders.export_to_excel: 'Exportar a Excel'
+app.ui.orders_list: Órdenes
+app.ui.orders.states.n/a: ---
+app.ui.orders.states.pending: Pendiente
+app.ui.orders.states.cancelled: Cancelada
+app.ui.orders.states.delivered: Entregada

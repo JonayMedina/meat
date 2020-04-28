@@ -7,7 +7,9 @@ namespace App\Entity\Order;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
+use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
+use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
@@ -22,6 +24,12 @@ class Order extends BaseOrder
     const MIN_RATING = 0;
 
     const MAX_RATING = 5;
+
+    const STATUS_PENDING = 'pending';
+
+    const STATUS_CANCELLED = 'cancelled';
+
+    const STATUS_DELIVERED = 'delivered';
 
     /**
      * @var int $rating
@@ -90,5 +98,25 @@ class Order extends BaseOrder
                 ->atPath('rating')
                 ->addViolation();
         }
+    }
+
+    /**
+     * Return Meat House Order Status.
+     */
+    public function getStatus(): string
+    {
+        if ($this->getState() == OrderInterface::STATE_NEW) {
+            return self::STATUS_PENDING;
+        }
+
+        if ($this->getState() == OrderInterface::STATE_CANCELLED) {
+            return self::STATUS_CANCELLED;
+        }
+
+        if ($this->getShippingState() == ShipmentInterface::STATE_SHIPPED) {
+            return self::STATUS_DELIVERED;
+        }
+
+        return 'n/a';
     }
 }
