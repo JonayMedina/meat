@@ -28,9 +28,7 @@
         {% endif %}
     </div>
 
-    <p class="mb-4 pb-3">{{ product.name }}</p>
-
-    <div class="required field">
+    <div class="required field {% if not available %}invisible{% endif %}">
         {{ form_label(form.cartItem.quantity) }}
         {{ form_errors(form.cartItem.quantity) }}
         <div class="quantity">
@@ -39,9 +37,17 @@
         <p class="type">{{ 'app.ui.express_buy.package'|trans }}</p>
     </div>
 
+    <div>
+        <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
+        <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
+    </div>
+
     {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
-    <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+    <div class="extra {% if not available %}invisible{% endif %}">
+        <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+    </div>
+
     {{ form_row(form._token) }}
     {{ form_end(form, {'render_rest': false}) }}
 </div>

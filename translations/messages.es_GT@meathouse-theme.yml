@@ -530,7 +530,7 @@ app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de 
 app.ui.close: Cerrar
 app.ui.search: Buscar
 app.ui.search.placeholder: '¿Qué estás buscando hoy?'
-app.ui.produc.%price%_peer_pound: '%price% por libra'
+app.ui.produc.%price%_peer_%measure%: '%price% por %measure%'
 app.ui.express_buy: 'Xpress Buy'
 app.ui.cart.icon: 'Icono del carrito'
 app.ui.express_buy.package: Paquete
@@ -663,3 +663,25 @@ app.ui.product_id: 'Id de producto'
 app.ui.new_banner: 'Nueva promoción'
 app.ui.news_banner_title: 'Carrousel de promociones'
 app.ui.forgot_password.error_on_save_code: 'Hubo un error al guardar el cóigo de seguridad, por favor contactese con los desarrolladores.'
+app.ui.view_more_products: 'Ver más productos'
+app.ui.go_to_my_cart: 'Ir a mi carrito'
+app.ui.complement_with: 'Compleméntalo con:'
+app.ui.product.image: 'Imagen del producto'
+app.ui.check: Chequeado
+app.ui.added_%product%_to_cart: 'Agregamos %product% a tu carrito'
+app.ui.cart.add_product.error: '¡Hubo un error al agregar el producto a tu carrito!'
+app.ui.cart.add_product.error.message: 'Un error no permitio agregar el producto a tu carrito, intentalo nuevamente...'
+app.ui.favorites.all: Todas
+app.ui.sub_total: Subtotal
+app.ui.favorites.delete: 'Eliminar <br> de favoritos'
+app.ui.favorites.delete_from: 'Eliminar de favoritos'
+app.ui.favorites.delete_favorite: 'Eliminar favorito'
+app.ui.favorites.delete.are_you_sure?: '¿Estás seguro de eliminar este producto de tus favoritos?'
+app.ui.pound: libra
+app.ui.return_to_favorites: 'Regresar a favoritos'
+app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'
+app.ui.search.empty: 'Búsqueda sin resultados'
+app.ui.search.empty.message: 'Parece que no existen coincidencias con la información que ingresaste. Inténtalo nuevamente cambiando tu búsqueda.'
+app.ui.loading: Cargando...
+app.ui.load_more_products: 'Cargar más productos'
+app.ui.back_to_%taxon%: 'Regresar a %taxon%'

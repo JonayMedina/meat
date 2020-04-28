@@ -135,6 +135,9 @@
                 }, 150);
             });
 
+            $('.sub-navbar-nav ul li:first-of-type').removeClass('active');
+            $('.sub-navbar-nav ul li:last-of-type').addClass('active');
+
             $form.validate({
                 rules: {
                     name: {

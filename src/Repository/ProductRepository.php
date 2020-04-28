@@ -10,22 +10,28 @@ class ProductRepository extends BaseProductRepository
 {
     /**
      * @param int $taxon
+     * @param int|null $limit
      * @return array
      */
-    public function findByTaxon(int $taxon): array
+    public function findByTaxon(int $taxon, int $limit = null): array
     {
         $qb = $this->createQueryBuilder('p');
 
-        /**
-         * @var Product[] $products
-         */
-        $products = $qb->select('p')
-            ->from('App\Entity\Product\Product', 'p')
+        $query = $qb->select('p')
             ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'WITH', 'p.id = pt.product')
             ->where('p.enabled like :true')
             ->andWhere('pt.taxon = :taxon')
             ->setParameter('true', true)
-            ->setParameter('taxon', $taxon)
+            ->setParameter('taxon', $taxon);
+
+        if (isset($limit)) {
+            $query->setMaxResults($limit);
+        }
+
+        /**
+         * @var Product[] $products
+         */
+        $products = $query
             ->getQuery()
             ->getResult();
 
