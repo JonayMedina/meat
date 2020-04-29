@@ -79,7 +79,7 @@
                                         <td>
                                             <strong>{{ '#' ~ order.number }}</strong>
                                         </td>
-                                        <td>{{ (customer.firstName and customer.lastName) ? customer.firstName ~ ' ' ~ customer.lastName : customer }}</td>
+                                        <td>{#{{ (customer.firstName and customer.lastName) ? customer.firstName ~ ' ' ~ customer.lastName : customer }}#}</td>
                                         <td>
                                             {% if order.hasShipments and order.shipments[0].state == constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
                                                 {{ order.shipment[0].cratedAt|localizeddate("medium", "none") }}
