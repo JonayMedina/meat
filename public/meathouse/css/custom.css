@@ -630,13 +630,18 @@ a.text-primary:hover, a.text-primary:focus {
 }
 
 /* Orders Legend */
-.orders .legend {
+.legend {
     margin-bottom: 10px;
     text-align: left;
 }
 
-.orders .legend span {
-    font-family: 'Raleway Italic', sans-serif;
+.order .legend {
+    margin-bottom: 0;
+}
+
+.legend span {
+    font-family: 'Raleway', sans-serif;
+    font-style: italic;
     font-size: 14px;
     letter-spacing: .61px;
     color: #404040;
@@ -645,7 +650,13 @@ a.text-primary:hover, a.text-primary:focus {
     margin-right: 35px;
 }
 
-.orders .legend span:before {
+.order .legend span {
+    font-style: normal;
+    font-weight: 600;
+    margin-right: 0;
+}
+
+.legend span:before {
     content: " ";
     width: 24px;
     height: 24px;
@@ -654,11 +665,11 @@ a.text-primary:hover, a.text-primary:focus {
     display: inline-block;
 }
 
-.orders .legend span.cancelled:before {
+.legend span.cancelled:before {
     background: #f5b0bd;
 }
 
-.orders .legend span.delivered:before {
+.legend span.delivered:before {
     background: #d7ffae;
 }
 
@@ -676,6 +687,117 @@ a.text-primary:hover, a.text-primary:focus {
 
 .order---- {
     background-color: #F3F3F4;
+}
+
+.header h2 {
+    font-weight: 500;
+    color: #404040;
+}
+
+.divider {
+    width: 100%;
+    height: 2px;
+    background: #917171;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+table.spaced {
+    border-collapse: separate;
+    border-spacing: 0 1em;
+}
+
+.order table tr td {
+    font-weight: 400;
+    font-size: 14px;
+    color: #404040;
+    letter-spacing: .6px;
+}
+
+.order table tr td:first-of-type {
+    width: 25%;
+}
+
+.order table tr td strong {
+    font-weight: 600;
+    letter-spacing: normal;
+}
+
+.order table a, .order table a:hover {
+    font-weight: 500;
+    color: #ab162b;
+    text-decoration: underline;
+}
+
+.order table a:hover {
+    font-weight: 600;
+}
+
+.order p {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.order .products p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order .product .title, .order .products .discount span, .order .products .total span{
+    font-weight: 600;
+    color: #ab162b;
+}
+
+.order .product .title {
+    margin-bottom: 25px;
+}
+
+.product .divider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.order .products span span {
+    font-weight: 400;
+    color: #ab162b;
+    margin-right: 15px;
+}
+
+.order .products .total {
+    margin-top: 35px;
+}
+
+.order .stars {
+    margin-top: 25px;
+    margin-bottom: 35px;
+}
+
+.order .stars span {
+    color: #d8d8d8;
+    margin-right: 5px;
+}
+
+.order .stars span.checked {
+    color: #ffd239;
+}
+
+@media (min-width: 1400px) {
+    .order table tr td:first-of-type {
+        width: 27%;
+    }
+}
+
+@media (max-width: 1200px) {
+    .order table tr td:first-of-type {
+        width: 40%;
+    }
 }
 
 @media (min-width: 768px) {
@@ -724,6 +846,14 @@ a.text-primary:hover, a.text-primary:focus {
 @media (max-width: 480px) {
     .ibox-content.padding-55 {
         padding: 55px 30px;
+    }
+
+    .order table tr td:first-of-type {
+        width: 50%;
+    }
+
+    .order .fa-3x {
+        font-size: 32px;
     }
 }
 
