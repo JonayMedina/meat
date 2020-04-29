@@ -3,13 +3,18 @@
 {% block title %}{{ 'app.ui.orders_list'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="col-lg-12">
+    <div class="col-lg-12 orders">
         <div class="row wrapper page-heading">
-            <div class="col-sm-4">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
                 <h1>{{ 'app.ui.orders_list'|trans }}</h1>
             </div>
-            <div class="col-sm-8">
-                <div class="title-action">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 col">
+                <div class="title-action d-flex justify-content-end align-items-center flex-wrap">
+                    <div class="legend">
+                        <span class="pending">{{ 'app.ui.orders.states.pending'|trans }}</span>
+                        <span class="cancelled">{{ 'app.ui.orders.states.cancelled'|trans }}</span>
+                        <span class="delivered">{{ 'app.ui.orders.states.delivered'|trans }}</span>
+                    </div>
                     <a href="#" class="btn btn-primary btn-lg btn-standard-width">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;

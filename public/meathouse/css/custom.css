@@ -625,6 +625,43 @@ textarea.height-200 {
 }
 /* FULLCALENDAR */
 
+a.text-primary:hover, a.text-primary:focus {
+    color: #ab162b !important;
+}
+
+/* Orders Legend */
+.orders .legend {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.orders .legend span {
+    font-family: 'Raleway Italic', sans-serif;
+    font-size: 14px;
+    letter-spacing: .61px;
+    color: #404040;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 35px;
+}
+
+.orders .legend span:before {
+    content: " ";
+    width: 24px;
+    height: 24px;
+    background: #d1d1d1;
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.orders .legend span.cancelled:before {
+    background: #f5b0bd;
+}
+
+.orders .legend span.delivered:before {
+    background: #d7ffae;
+}
+
 @media (min-width: 768px) {
     .navbar-static-side {
         width: 300px;
