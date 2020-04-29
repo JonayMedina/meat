@@ -4,7 +4,7 @@
 {% block title %}{{ '#' ~ order.number }}{% endblock %}
 
 {% block content %}
-    <div class="col-lg-12">
+    <div class="col-lg-12 order">
 
         <div class="row wrapper page-heading">
             <div class="col-sm-12">
@@ -15,14 +15,134 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-12 header">
+                                        <div class="order-header">
+                                            <h2>{{ 'app.ui.order.label'|trans }} {{ '#' ~ order.number }}</h2>
+                                            <div class="legend">
+                                                <span class="delivered">{{ 'app.ui.orders.states.delivered'|trans }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <table class="spaced" style="width: 100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.name'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.email'|trans }}</strong></td>
+                                                    <td><a href="mailto: example@emial.com">Fake name</a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.addressing_step'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.form.address.annotations'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.form.address.phone_number'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.date'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.deliver_time'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.name_in_tax'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.nit'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.address_in_tax'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.payment_method'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.applied_discount'|trans }}</strong></td>
+                                                    <td>Fake name</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-12 header">
+                                        <h2>{{ 'app.ui.rating'|trans }}</h2>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="stars">
+                                            <span class="fa fa-star fa-3x checked"></span>
+                                            <span class="fa fa-star fa-3x checked"></span>
+                                            <span class="fa fa-star fa-3x checked"></span>
+                                            <span class="fa fa-star fa-3x"></span>
+                                            <span class="fa fa-star fa-3x"></span>
+                                        </div>
+                                        <div class="comment">
+                                            <p>{{ 'app.ui.comment'|trans }}</p>
+                                            <p>Este es un comentario bien shidori jeje, una prueba que le ishen, namas xD</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
                 <div class="ibox">
                     <div class="ibox-content">
-                        <div class="show-container">
-                            <div class="row">
-                                Hello Roca!
+                        <div class="row">
+                            <div class="col-12 header mb-3">
+                                <h2>{{ 'app.ui.products'|trans }}</h2>
                             </div>
-
+                            <div class="col-12 products">
+                                <div class="row">
+                                    <div class="col-12 product">
+                                        <p class="title">Carnita asada</p>
+                                        <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> 3</span> <strong>Q27.00</strong></p>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12 product">
+                                        <p class="title">Carnita asada</p>
+                                        <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> 3</span> <strong>Q27.00</strong></p>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <p><span><span>{{ 'app.ui.sub_total'|trans }}</span></span> Q27.00</p>
+                                        <p class="discount"><span>{{ 'app.ui.applied_discount'|trans }}:</span> -Q0.00</p>
+                                        <p class="total"><span>{{ 'app.ui.total'|trans }}</span> <strong>Q27.00</strong></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
