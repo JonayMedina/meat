@@ -15,11 +15,48 @@
                         <span class="cancelled">{{ 'app.ui.orders.states.cancelled'|trans }}</span>
                         <span class="delivered">{{ 'app.ui.orders.states.delivered'|trans }}</span>
                     </div>
-                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
-                        <i class="fa fa-plus-circle pull-left"></i>
-                        &nbsp;
-                        {{'app.ui.orders.export_to_excel'|trans}}
-                    </a>
+
+                    <div class="btn-group">
+                        <a href="{{ path('orders_download', {
+                            'format': 'xlsx',
+                            'filter': app.request.get('filter'),
+                            'status': app.request.get('status'),
+                            'order': app.request.get('order')
+                        }) }}" class="btn btn-primary btn-lg btn-standard-width">
+                            <i class="fa fa-plus-circle pull-left"></i>
+                            &nbsp;
+                            {{'app.ui.orders.export_to_excel'|trans}}
+                        </a>
+                        <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-top-right-radius: 25px;border-bottom-right-radius: 25px; background-color: #AB172C; border-color: #AB172C;">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'csv',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">{{'app.ui.orders.export_to_csv'|trans}}</a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'xls',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">{{'app.ui.orders.export_to_excel_97'|trans}}</a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'html',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">{{'app.ui.orders.export_to_html'|trans}}</a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'pdf',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">{{'app.ui.orders.export_to_pdf'|trans}}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,26 +110,17 @@
 
                                 <tbody>
                                 {% for order in pagination %}
-                                    {% set customer = order.customer %}
                                     <tr>
                                         <td class="order-{{ order.status }}"></td>
                                         <td>
                                             <strong>{{ '#' ~ order.number }}</strong>
                                         </td>
-                                        <td>{{ (customer.firstName and customer.lastName) ? customer.firstName ~ ' ' ~ customer.lastName : customer }}</td>
+                                        <td>{{ order.customerName }}</td>
                                         <td>
-                                            {% if order.hasShipments and order.shipments[0].state == constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
-                                                {{ order.shipment[0].cratedAt|localizeddate("medium", "none") }}
-                                            {% else %}
-                                                {{ 'app.ui.n/a'|trans }}
-                                            {% endif %}
+                                            {{ order.deliverDate|default('app.ui.n/a'|trans) }}
                                         </td>
                                         <td>
-                                            {% if order.hasShipments and order.shipments[0].state == constant('Sylius\\Component\\Shipping\\Model\\ShipmentInterface::STATE_SHIPPED') %}
-                                                {{ order.shipment[0].cratedAt|localizeddate("none", "medium") }}
-                                            {% else %}
-                                                {{ 'app.ui.n/a'|trans }}
-                                            {% endif %}
+                                            {{ order.deliverTime|default('app.ui.n/a'|trans) }}
                                         </td>
                                         <td>
                                             <h4>{{ order.total|price|number_format_currency(currency) }}</h4>

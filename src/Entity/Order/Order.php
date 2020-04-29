@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
+use App\Entity\Customer\Customer;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
@@ -122,5 +123,34 @@ class Order extends BaseOrder
         }
 
         return '---';
+    }
+
+    /**
+     * Return customer name.
+     * @return string|null
+     */
+    public function getCustomerName(): ?string
+    {
+        $customer = $this->getCustomer();
+
+        if ($customer instanceof Customer) {
+            if ($customer->getFirstName() && $customer->getLastName()) {
+                return $customer->getFirstName() . " " . $customer->getLastName();
+            } else {
+                return $customer->getEmail();
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public function getDeliverTime()
+    {
+
+    }
+
+    public function getDeliverDate()
+    {
+
     }
 }

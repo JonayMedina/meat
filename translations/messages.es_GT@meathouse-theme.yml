@@ -690,6 +690,7 @@ app.ui.deliver_time: Horario
 app.ui.deliver_date: Entrega
 app.ui.orders.export_to_excel: 'Exportar a Excel'
 app.ui.orders_list: Órdenes
+app.ui.orders_download: 'Dump listado de ordenes'
 app.ui.orders.states.---: '---'
 app.ui.orders.states.pending: Pendiente
 app.ui.orders.states.cancelled: Cancelada
@@ -700,3 +701,9 @@ app.ui.order.sort.recent: 'Más reciente'
 app.ui.orders_no_items_on_table: "Aún no hay ordenes aquí.\n<br>\nEsperemos hasta que se cree la primera orden."
 app.ui.order_detail: 'Detalle de orden'
 app.ui.orders_back_to_orders: 'Regresar a órdenes'
+app.ui.orders.export_to_excel_97: 'Exportar a Excel 97'
+app.ui.orders.export_to_csv: 'Exportar a CSV'
+app.ui.orders.export_to_html: 'Exportar a HTML'
+app.ui.order_status: Estado
+app.ui.rating: Calificación
+app.ui.orders.export_to_pdf: 'Descargar PDF'

@@ -326,6 +326,12 @@
             "ref": "7f6676627c1ceeeee204553d24a0545d5f918b7b"
         }
     },
+    "markbaker/complex": {
+        "version": "1.4.8"
+    },
+    "markbaker/matrix": {
+        "version": "1.2.0"
+    },
     "matthiasnoback/symfony-config-test": {
         "version": "3.1.1"
     },
@@ -340,6 +346,9 @@
     },
     "monolog/monolog": {
         "version": "1.23.0"
+    },
+    "mpdf/mpdf": {
+        "version": "v8.0.5"
     },
     "mtdowling/jmespath.php": {
         "version": "2.5.0"
@@ -494,6 +503,9 @@
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
     },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.12.0"
+    },
     "phpoption/phpoption": {
         "version": "1.5.0"
     },
@@ -640,6 +652,9 @@
         "files": [
             "config/packages/sentry.yaml"
         ]
+    },
+    "setasign/fpdi": {
+        "version": "v2.3.3"
     },
     "slam/php-cs-fixer-extensions": {
         "version": "v1.17.0"
