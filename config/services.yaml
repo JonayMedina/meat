@@ -61,7 +61,13 @@ services:
     App\EventSubscriber\ShopUserSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
-                
+
+    app.factory.product.listview:
+        class: App\Factory\Product\ListProductViewFactoryExtension
+        decorates: sylius.shop_api_plugin.factory.list_product_view_factory
+        arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.product_view_factory', '@sylius.shop_api_plugin.factory.product_variant_view_factory']
+        public: false
+
     app.form.extension.type.customer_registration:
         class: App\Form\Extension\CustomerRegistrationTypeExtension
         tags:
