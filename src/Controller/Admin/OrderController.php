@@ -174,7 +174,7 @@ class OrderController extends AbstractController
                 $order->getCustomerName() ?? '--',
                 $order->getDeliverDate() ?? '--',
                 $order->getDeliverTime() ?? '--',
-                $currencySymbol . ' ' . ($order->getTotal() / 100),
+                ($order->getTotal() / 100),
                 $translator->trans('app.ui.order.status.' . $order->getStatus()),
                 $order->getRating() ? $order->getRating() . '/' . Order::MAX_RATING : '--',
                 $order->getRatingComment() ?? '--',
@@ -208,6 +208,10 @@ class OrderController extends AbstractController
             ];
 
             $spreadsheet->getActiveSheet()->getStyle('A' . $colorIndex)->applyFromArray($styleArray);
+            $spreadsheet->getActiveSheet()->getStyle('E' . $colorIndex)
+                ->getNumberFormat()
+                ->setFormatCode('_("'.$currencySymbol.'"* #,##0.00_);_("'.$currencySymbol.'"* \(#,##0.00\);_("'.$currencySymbol.'"* "-"??_);_(@_)');
+
             $colorIndex++;
         }
 
