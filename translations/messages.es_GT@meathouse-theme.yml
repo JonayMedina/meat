@@ -690,7 +690,11 @@ app.ui.deliver_time: Horario
 app.ui.deliver_date: Entrega
 app.ui.orders.export_to_excel: 'Exportar a Excel'
 app.ui.orders_list: Órdenes
-app.ui.orders.states.n/a: ---
+app.ui.orders.states.---: '---'
 app.ui.orders.states.pending: Pendiente
 app.ui.orders.states.cancelled: Cancelada
 app.ui.orders.states.delivered: Entregada
+app.ui.order.status.all: Todos
+app.ui.order.sort.order_number: 'Número de orden'
+app.ui.order.sort.recent: 'Más reciente'
+app.ui.orders_no_items_on_table: "Aún no hay ordenes aquí.\n<br>\nEsperemos hasta que se cree la primera orden."

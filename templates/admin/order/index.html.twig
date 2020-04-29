@@ -29,14 +29,33 @@
                 <div class="ibox">
                     <div class="ibox-content no-padding">
 
-                        <div class="search-box search-box-fullwidth">
-                            <form action="" method="get">
-                                <input type="search" name="filter" class="search-box-input form-control" maxlength="30" placeholder="{{ 'app.ui.search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
-                            </form>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="search-box search-box-fullwidth" style="width: 100%;">
+                                    <input type="search" name="filter" class="search-box-input form-control" maxlength="50" placeholder="{{ 'app.ui.users_search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 search-box">
+                                <select class="search-box-input status-filter form-control">
+                                    <option value="">{{ 'app.ui.order.status.all'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATE_CANCELLED') }}" {% if constant('App\\Entity\\Order\\Order::STATE_CANCELLED') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.cancelled'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATUS_DELIVERED') }}" {% if constant('App\\Entity\\Order\\Order::STATUS_DELIVERED') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.delivered'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATUS_PENDING') }}" {% if constant('App\\Entity\\Order\\Order::STATUS_PENDING') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.pending'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 search-box text-right">
+                                <label for="order-by-control">{{ 'app.ui.filter_order_by'|trans }}</label>
+                            </div>
+                            <div class="col-lg-2 search-box">
+                                <select id="order-by-control" class="search-box-input order-filter form-control">
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::SORT_RECENT') }}" {% if constant('App\\Entity\\Order\\Order::SORT_RECENT')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.order.sort.recent'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::SORT_ORDER_NUMBER') }}" {% if constant('App\\Entity\\Order\\Order::SORT_ORDER_NUMBER')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.order.sort.order_number'|trans }}</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="table-responsive-sm">
-                            <table class="table top-products-table">
+                            <table class="table top-products-table" style="margin-bottom: 0;">
                                 <thead>
                                 <tr>
                                     <th style="width: 1%;">&nbsp;</th>
@@ -83,8 +102,8 @@
                                     </tr>
                                 {% else %}
                                     <tr>
-                                        <td colspan="7" class="text-center">
-                                            {{ 'app.ui.locations_no_items_on_table'|trans }}
+                                        <td colspan="8" class="text-center">
+                                            {{ 'app.ui.orders_no_items_on_table'|trans|raw }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -99,26 +118,46 @@
     </div>
 {% endblock %}
 
-{% block styles %}
-    <style>
-        .order-pending {
-            background-color: #D1D1D1;
-        }
-
-        .order-cancelled {
-            background-color: #F5B0BD;
-        }
-
-        .order-delivered {
-            background-color: #D7FFAE;
-        }
-    </style>
-{% endblock %}
-
 {% block javascript %}
 {{ parent() }}
 <script>
 $(document).ready(function() {
+    var $wrapper = $('#wrapper');
+    var $searchBox = $wrapper.find('.search-box .search-box-input');
+    var $statusFilter = $wrapper.find('.search-box .status-filter');
+    var $orderFilter = $wrapper.find('.search-box .order-filter');
+
+    function filter() {
+        var searchText = $searchBox.val();
+        var status = $statusFilter.val();
+        var order = $orderFilter.val();
+
+        window.location = Routing.generate('orders_index', {
+            filter: searchText,
+            status: status,
+            order: order
+        });
+    }
+
+    $searchBox.on('keypress', function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+
+        if (keycode === '13') {
+            filter();
+        }
+    });
+
+    $searchBox.on('change', function() {
+        filter();
+    });
+
+    $statusFilter.on('change', function() {
+        filter();
+    });
+
+    $orderFilter.on('change', function() {
+        filter();
+    });
 });
 </script>
 {% endblock %}

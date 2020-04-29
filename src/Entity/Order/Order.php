@@ -31,6 +31,10 @@ class Order extends BaseOrder
 
     const STATUS_DELIVERED = 'delivered';
 
+    const SORT_RECENT = 'recent';
+
+    const SORT_ORDER_NUMBER = 'order_number';
+
     /**
      * @var int $rating
      * @ORM\Column(type="integer", nullable=true)
@@ -117,6 +121,6 @@ class Order extends BaseOrder
             return self::STATUS_DELIVERED;
         }
 
-        return 'n/a';
+        return '---';
     }
 }

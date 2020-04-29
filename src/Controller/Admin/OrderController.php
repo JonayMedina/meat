@@ -2,15 +2,18 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Order\Order;
+use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
-use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class OrderController
@@ -58,7 +61,7 @@ class OrderController extends AbstractController
 
     /**
      *
-     * @Route("/order", name="orders_index")
+     * @Route("/order", name="orders_index", options={"expose" = "true"})
      * @param Request $request
      * @param CurrencyContextInterface $currencyContext
      * @return Response
@@ -66,19 +69,57 @@ class OrderController extends AbstractController
     public function indexAction(Request $request, CurrencyContextInterface $currencyContext)
     {
         $filter = $request->query->get('filter');
+        $status = $request->query->get('status');
+        $sort = $request->query->get('order');
         $page = $request->query->getInt('page', 1);
 
         $queryBuilder = $this->entityManager->getRepository('App:Order\Order')
             ->createQueryBuilder('o');
 
+        /** Text search filter */
         if (!empty($filter)) {
             $queryBuilder
                 ->andWhere('o.number LIKE :filter OR o.total LIKE :filter')
                 ->setParameter('filter', '%'.$filter.'%');
         }
 
-        $queryBuilder
-            ->orderBy('o.createdAt', 'DESC');
+        /** Status filter */
+        if (!empty($status)) {
+            if ($status == Order::STATUS_PENDING) {
+                $queryBuilder
+                    ->andWhere('o.state = :state')
+                    ->setParameter('state', OrderInterface::STATE_NEW);
+            }
+
+            if ($status == Order::STATUS_DELIVERED) {
+                $queryBuilder
+                    ->andWhere('o.shippingState = :shippingState')
+                    ->setParameter('shippingState', ShipmentInterface::STATE_SHIPPED);
+            }
+
+            if ($status == Order::STATUS_CANCELLED) {
+                $queryBuilder
+                    ->andWhere('o.state = :state')
+                    ->setParameter('state', OrderInterface::STATE_CANCELLED);
+            }
+        }
+
+        /** Sort filter */
+        if (!empty($sort)) {
+            if ($sort == Order::SORT_ORDER_NUMBER) {
+                $queryBuilder
+                    ->orderBy('o.number', 'DESC');
+            } else if ($sort == Order::SORT_RECENT) {
+                $queryBuilder
+                    ->orderBy('o.createdAt', 'DESC');
+            } else {
+                $queryBuilder
+                    ->orderBy('o.createdAt', 'DESC');
+            }
+        } else {
+            $queryBuilder
+                ->orderBy('o.createdAt', 'DESC');
+        }
 
         $pagination = $this->paginator->paginate(
             $queryBuilder,

@@ -662,6 +662,22 @@ a.text-primary:hover, a.text-primary:focus {
     background: #d7ffae;
 }
 
+.order-pending {
+    background-color: #D1D1D1;
+}
+
+.order-cancelled {
+    background-color: #F5B0BD;
+}
+
+.order-delivered {
+    background-color: #D7FFAE;
+}
+
+.order---- {
+    background-color: #F3F3F4;
+}
+
 @media (min-width: 768px) {
     .navbar-static-side {
         width: 300px;
