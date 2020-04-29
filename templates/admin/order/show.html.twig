@@ -1,0 +1,33 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ '#' ~ order.number }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('orders_index'), 'app.ui.orders_back_to_orders') }}
+                <br>
+                <h1>{{ 'app.ui.order_detail'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="show-container">
+                            <div class="row">
+                                Hello Roca!
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -66,6 +66,7 @@ class MenuBuilder
             'icon' => 'orders',
             'routes' => [
                 'orders_index',
+                'orders_show',
             ],
         ]);
 

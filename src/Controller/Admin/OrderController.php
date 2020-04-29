@@ -60,7 +60,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     *
+     * Order index
      * @Route("/order", name="orders_index", options={"expose" = "true"})
      * @param Request $request
      * @param CurrencyContextInterface $currencyContext
@@ -75,6 +75,8 @@ class OrderController extends AbstractController
 
         $queryBuilder = $this->entityManager->getRepository('App:Order\Order')
             ->createQueryBuilder('o');
+            //->andWhere('o.state != :cartState')
+            //->setParameter('cartState', OrderInterface::STATE_CART);
 
         /** Text search filter */
         if (!empty($filter)) {
@@ -130,6 +132,20 @@ class OrderController extends AbstractController
         return $this->render('/admin/order/index.html.twig', [
             'pagination' => $pagination,
             'currency' => $currencyContext->getCurrencyCode(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/order/{id}", name="orders_show", options={"expose" = "true"})
+     */
+    public function showAction(Request $request)
+    {
+        $id = $request->get('id');
+        $order = $this->entityManager->getRepository('App:Order\Order')->find($id);
+
+        return $this->render('/admin/order/show.html.twig', [
+            'order' => $order
         ]);
     }
 }

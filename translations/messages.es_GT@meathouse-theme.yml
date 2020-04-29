@@ -698,3 +698,5 @@ app.ui.order.status.all: Todos
 app.ui.order.sort.order_number: 'Número de orden'
 app.ui.order.sort.recent: 'Más reciente'
 app.ui.orders_no_items_on_table: "Aún no hay ordenes aquí.\n<br>\nEsperemos hasta que se cree la primera orden."
+app.ui.order_detail: 'Detalle de orden'
+app.ui.orders_back_to_orders: 'Regresar a órdenes'
