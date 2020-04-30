@@ -69,7 +69,7 @@ class Address extends BaseAddress
     /**
      * @return string
      */
-    public function getTaxId(): string
+    public function getTaxId(): ?string
     {
         return $this->taxId;
     }
@@ -77,7 +77,7 @@ class Address extends BaseAddress
     /**
      * @param string $taxId
      */
-    public function setTaxId(string $taxId): void
+    public function setTaxId(?string $taxId): void
     {
         $this->taxId = $taxId;
     }

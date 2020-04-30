@@ -23,7 +23,7 @@
                             'status': app.request.get('status'),
                             'order': app.request.get('order')
                         }) }}" class="btn btn-primary btn-lg btn-standard-width">
-                            <i class="fa fa-plus-circle pull-left"></i>
+                            <i class="fa fa-cloud-download pull-left"></i>
                             &nbsp;
                             {{'app.ui.orders.export_to_excel'|trans}}
                         </a>
@@ -36,25 +36,41 @@
                                 'filter': app.request.get('filter'),
                                 'status': app.request.get('status'),
                                 'order': app.request.get('order')
-                            }) }}">{{'app.ui.orders.export_to_csv'|trans}}</a>
+                            }) }}">
+                                <i class="fa fa-file-csv"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_csv'|trans}}
+                            </a>
                             <a class="dropdown-item" href="{{ path('orders_download', {
                                 'format': 'xls',
                                 'filter': app.request.get('filter'),
                                 'status': app.request.get('status'),
                                 'order': app.request.get('order')
-                            }) }}">{{'app.ui.orders.export_to_excel_97'|trans}}</a>
+                            }) }}">
+                                <i class="fa fa-file-excel"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_excel_97'|trans}}
+                            </a>
                             <a class="dropdown-item" href="{{ path('orders_download', {
                                 'format': 'html',
                                 'filter': app.request.get('filter'),
                                 'status': app.request.get('status'),
                                 'order': app.request.get('order')
-                            }) }}">{{'app.ui.orders.export_to_html'|trans}}</a>
+                            }) }}">
+                                <i class="fa fa-html5"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_html'|trans}}
+                            </a>
                             <a class="dropdown-item" href="{{ path('orders_download', {
                                 'format': 'pdf',
                                 'filter': app.request.get('filter'),
                                 'status': app.request.get('status'),
                                 'order': app.request.get('order')
-                            }) }}">{{'app.ui.orders.export_to_pdf'|trans}}</a>
+                            }) }}">
+                                <i class="fa fa-file-pdf"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_pdf'|trans}}
+                            </a>
                         </div>
                     </div>
                 </div>
