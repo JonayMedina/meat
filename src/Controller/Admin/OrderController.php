@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Order\Order;
 use Doctrine\ORM\QueryBuilder;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -305,13 +304,14 @@ class OrderController extends AbstractController
     {
         $queryBuilder = $this->entityManager->getRepository('App:Order\Order')
             ->createQueryBuilder('o')
+            ->leftJoin('o.customer', 'customer')
             ->andWhere('o.state != :cartState')
             ->setParameter('cartState', OrderInterface::STATE_CART);
 
         /** Text search filter */
         if (!empty($filter)) {
             $queryBuilder
-                ->andWhere('o.number LIKE :filter OR o.total LIKE :filter')
+                ->andWhere('o.number LIKE :filter OR o.total LIKE :filter OR customer.email LIKE :filter OR customer.firstName LIKE :filter OR customer.lastName LIKE :filter')
                 ->setParameter('filter', '%'.$filter.'%');
         }
 

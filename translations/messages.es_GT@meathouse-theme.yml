@@ -713,3 +713,4 @@ app.ui.orders.export_to_html: 'Exportar a HTML'
 app.ui.order_status: Estado
 app.ui.rating: Calificación
 app.ui.orders.export_to_pdf: 'Descargar PDF'
+app.ui.orders_search_label: 'Busca una orden'
