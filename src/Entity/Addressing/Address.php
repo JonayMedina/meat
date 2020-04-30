@@ -29,6 +29,12 @@ class Address extends BaseAddress
     private $annotations;
 
     /**
+     * @var string
+     * @ORM\Column(name="tax_id", type="string", length=100, nullable=true)
+     */
+    private $taxId;
+
+    /**
      * @return string
      */
     public function getAnnotations(): string
@@ -58,5 +64,21 @@ class Address extends BaseAddress
     public function setFullAddress(string $fullAddress): void
     {
         $this->fullAddress = $fullAddress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTaxId(): string
+    {
+        return $this->taxId;
+    }
+
+    /**
+     * @param string $taxId
+     */
+    public function setTaxId(string $taxId): void
+    {
+        $this->taxId = $taxId;
     }
 }

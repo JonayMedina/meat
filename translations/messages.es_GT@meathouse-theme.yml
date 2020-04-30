@@ -715,3 +715,4 @@ app.ui.rating: Calificación
 app.ui.orders.export_to_pdf: 'Descargar PDF'
 app.ui.orders_search_label: 'Busca una orden'
 app.ui.tax_id.cf: C/F
+app.ui.proceed_to_pay: 'Proceder a pago'

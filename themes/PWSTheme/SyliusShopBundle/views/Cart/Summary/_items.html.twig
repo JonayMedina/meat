@@ -1,3 +1,24 @@
+<div class="col-12 segment pt-4 xs-pb-4-i favorites-exist products-list favorites-list" style="display: block;">
+    <div class="row">
+        {% for key, item in cart.items %}
+            {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id} %}
+        {% endfor %}
+    </div>
+
+    {% if form.promotionCoupon is defined %}
+        <div class="row">
+            <div class="col-12 mt-4 pt-2">
+                {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
+
+                {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
+
+                {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
 <div class="ui segment">
     {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
         {{ form_errors(form) }}
@@ -33,5 +54,4 @@
         {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
     {% endif %}
     <div class="ui hidden divider"></div>
-    {% include '@SyliusShop/Cart/Summary/_update.html.twig' with {'main_form': form.vars.id} %}
 </div>

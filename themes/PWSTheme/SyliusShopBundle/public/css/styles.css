@@ -46,13 +46,13 @@ h3 {
     font-size: 24px;
 }
 
-form label {
+form label, .form label {
     font-family: "Raleway SemiBold", sans-serif;
     font-size: 16px !important;
     text-align: left;
 }
 
-form input, form textarea {
+form input, form textarea, .form input, .form textarea {
     font-family: "Raleway Light", sans-serif !important;
     font-size: 16px !important;
     border-radius: 15px !important;
@@ -88,7 +88,7 @@ form textarea::placeholder {
     color: #917171 !important;
 }
 
-form input, form input:-webkit-autofill, form textarea, form textarea:-webkit-autofill {
+form input, form input:-webkit-autofill, form textarea, form textarea:-webkit-autofill, .form input, .form input:-webkit-autofill, .form textarea, .form textarea:-webkit-autofill {
     background: #F5F5F5 !important;
     background-color: #F5F5F5 !important;
     border-color: #F5F5F5 !important;
@@ -1296,11 +1296,11 @@ body.blocked {
     padding-bottom: 0;
 }
 
-.favorites.page form {
+.favorites.page form, .cart-summary.page .form {
     display: flex;
 }
 
-.favorites.page form:not(.search-box) label, .favorites.page .sub-total-title {
+.favorites.page form:not(.search-box) label, .favorites.page .sub-total-title, .cart-summary.page .form label, .cart-summary.page .sub-total-title {
     font-family: "Raleway SemiBold", sans-serif;
     font-size: 16px !important;
     color: #AB162B !important;
@@ -1308,15 +1308,15 @@ body.blocked {
     margin-bottom: 10px !important;
 }
 
-.favorites.page .favorite-item.first form label, .favorites.page .favorite-item.first .sub-total-title {
+.favorites.page .favorite-item.first form label, .favorites.page .favorite-item.first .sub-total-title, .cart-summary.page .favorite-item.first .form label, .cart-summary.page .favorite-item.first .sub-total-title {
     visibility: visible !important;
 }
 
-.favorites.page form label:after {
+.favorites.page form label:after, .cart-summary.page .form label:after {
     content: none !important;
 }
 
-.favorites.page form > div:not(.extra) {
+.favorites.page form > div:not(.extra), .cart-summary.page .form > div:not(.extra) {
     margin-right: 20px;
     margin-bottom: 0 !important;
 }
@@ -1606,6 +1606,10 @@ label.icobutton input {
     color: #AB162B;
 }
 
+#product-in-cart .element {
+    display: block !important;
+}
+
 /* Taxons page */
 .taxons .bg-white {
     height: 100%;
@@ -1648,6 +1652,12 @@ label.icobutton input {
     position: absolute;
     top: -25px;
     right: 15px;
+}
+
+/* Cart Summary */
+.cart-summary form input, .cart-summary form input:focus {
+    border: none;
+    outline: none;
 }
 
 /* Responsive */
@@ -2287,25 +2297,25 @@ label.icobutton input {
         padding-right: 0 !important;
     }
 
-    .favorites.page form {
+    .favorites.page form, .cart-summary.page ,form {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .favorites.page form:not(.search-box) label, .favorites.page .sub-total-title {
+    .favorites.page form:not(.search-box) label, .favorites.page .sub-total-title, .cart-summary.page .form label, .cart-summary.page .sub-total-title {
         display: none;
     }
 
-    .favorites.page .favorite-item p.sub-total {
+    .favorites.page .favorite-item p.sub-total, .cart-summary.page .favorite-item p.sub-total {
         padding-top: 15px;
         padding-bottom: 15px;
     }
 
-    .favorites.page form div.field {
+    .favorites.page form div.field, .cart-summary.page .form div.field {
         display: flex;
     }
 
-    .favorites.page form div.field p {
+    .favorites.page form div.field p, .cart-summary.page .form div.field p {
         margin-left: 15px;
     }
 }
