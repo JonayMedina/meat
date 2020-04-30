@@ -11,7 +11,7 @@
 
 <div class="col-12 product-item favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
             <div class="row p-{{ product.id }}">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
                     <div class="row">
@@ -36,28 +36,25 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-pt-1">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-9">
-                    <form id="price" data-price="{{ money.calculatePrice(product|sylius_resolve_variant) }}">
-                        <div class="required field {% if not available %}invisible{% endif %}">
-                            {{ form_label(form.quantity) }}
-                            {{ form_errors(form.quantity) }}
-                            <div class="quantity">
-                                {{ form_widget(form.quantity, {'attr': {'form': main_form}}) }}
-                            </div>
-                            <p class="type">{{ 'app.ui.express_buy.package'|trans }}</p>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6 sm-pt-1">
+            <div class="form ui" id="price" data-price="{{ money.calculatePrice(product|sylius_resolve_variant) }}">
+                <div class="required field {% if not available %}invisible{% endif %}">
+                    {{ form_label(form.quantity) }}
+                    {{ form_errors(form.quantity) }}
+                    <div>
+                        <div class="quantity">
+                            {{ form_widget(form.quantity, {'attr': {'form': main_form}}) }}
                         </div>
-
-                        <div>
-                            <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
-                            <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
-                        </div>
-                    </form>
-{#                    {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithSubTotal.html.twig', 'productId': product.id})) }}#}
+                        <p class="type">{{ 'app.ui.express_buy.package'|trans }}</p>
+                    </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-3 delete-content d-none d-md-none d-lg-flex">
-                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+
+                <div>
+                    <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
+                    <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
+                </div>
+                <div class="delete delete-content d-none d-md-none d-lg-flex">
+                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
                 </div>
             </div>
         </div>

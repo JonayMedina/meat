@@ -1382,7 +1382,7 @@ body.blocked {
     margin-top: 0;
 }
 
-.favorites.page .favorite-item p.sub-total {
+.favorites.page .favorite-item p.sub-total, .cart-summary.page .favorite-item p.sub-total {
     height: calc(100% - 32px);
     display: flex;
     align-items: center;
@@ -1658,6 +1658,27 @@ label.icobutton input {
 .cart-summary form input, .cart-summary form input:focus {
     border: none;
     outline: none;
+}
+
+.cart-summary.page .form {
+    justify-content: space-between;
+}
+
+.cart-summary.page .form .field > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cart-summary.page .form .field > div p.type {
+    margin-left: 15px;
+}
+
+.cart-summary.page .favorite-item p.sub-total {
+    padding-bottom: 0;
+}
+
+.cart-summary.page .form > div.delete {
+    margin-top: 34px;
 }
 
 /* Responsive */

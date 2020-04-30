@@ -68,16 +68,19 @@
                 var doneTypingInterval = 1000;
                 var $search = $('#site-search');
                 var $searchBtn = $('form.search-box button');
+                var $productsList = $('.products-list');
 
                 $('.quantity-up').click(function () {
-                    calculateSubtotal($(this).closest('form'));
+                    calculateSubtotal($(this).closest('div.form'));
                 });
 
                 $('.quantity-down').click(function () {
-                    calculateSubtotal($(this).closest('form'));
+                    calculateSubtotal($(this).closest('div.form'));
                 });
 
-                calculateSubtotal($('#price'));
+                $productsList.find('.product-item').each(function () {
+                    calculateSubtotal($(this).find('.form'));
+                });
 
                 $('a.delete').click(function () {
                     var id = $(this).data('id');
@@ -285,7 +288,7 @@
                 function findFirstProduct() {
                     var i = 0;
 
-                    $('.products-list').find('.product-item.view').each(function () {
+                    $productsList.find('.product-item.view').each(function () {
                         var $favorite = $(this);
 
                         if (i === 0) {
