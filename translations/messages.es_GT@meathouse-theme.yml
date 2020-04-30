@@ -690,6 +690,7 @@ app.ui.deliver_time: Horario
 app.ui.deliver_date: Entrega
 app.ui.orders.export_to_excel: 'Exportar a Excel'
 app.ui.orders_list: Órdenes
+app.ui.orders_download: 'Dump listado de ordenes'
 app.ui.orders.states.---: '---'
 app.ui.orders.states.pending: Pendiente
 app.ui.orders.states.cancelled: Cancelada
@@ -705,6 +706,13 @@ app.ui.address_in_tax: 'Dirección en factura'
 app.ui.nit: NIT
 app.ui.payment_method: 'Método de pago'
 app.ui.applied_discount: 'Descuento aplicado'
-app.ui.rating: 'Rating'
 app.ui.products: Productos
+app.ui.orders.export_to_excel_97: 'Exportar a Excel 97'
+app.ui.orders.export_to_csv: 'Exportar a CSV'
+app.ui.orders.export_to_html: 'Exportar a HTML'
+app.ui.order_status: Estado
+app.ui.rating: Calificación
+app.ui.orders.export_to_pdf: 'Descargar PDF'
+app.ui.orders_search_label: 'Busca una orden'
+app.ui.tax_id.cf: C/F
 app.ui.proceed_to_pay: 'Proceder a pago'

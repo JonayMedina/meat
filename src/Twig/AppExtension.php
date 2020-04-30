@@ -153,17 +153,11 @@ class AppExtension extends AbstractExtension
 
     /**
      * @param $number
-     * @param int $decimals
-     * @param string $decPoint
-     * @param string $thousandsSep
      * @return float|int|string
      */
-    public function formatPrice($number, $decimals = 2, $decPoint = '.', $thousandsSep = ',')
+    public function formatPrice($number)
     {
-        $price = $number / 100;
-        $price = number_format($price, $decimals, $decPoint, $thousandsSep);
-
-        return $price;
+        return $number / 100;
     }
 
     /**
