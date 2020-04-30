@@ -37,39 +37,45 @@ class Address extends BaseAddress
     /**
      * @return string
      */
-    public function getAnnotations(): string
+    public function getAnnotations(): ?string
     {
         return $this->annotations;
     }
 
     /**
      * @param string $annotations
+     * @return Address
      */
-    public function setAnnotations(string $annotations): void
+    public function setAnnotations(string $annotations): self
     {
         $this->annotations = $annotations;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getFullAddress(): string
+    public function getFullAddress(): ?string
     {
         return $this->fullAddress;
     }
 
     /**
      * @param string $fullAddress
+     * @return Address
      */
-    public function setFullAddress(string $fullAddress): void
+    public function setFullAddress(string $fullAddress): self
     {
         $this->fullAddress = $fullAddress;
+
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getTaxId(): string
+    public function getTaxId(): ?string
     {
         return $this->taxId;
     }
