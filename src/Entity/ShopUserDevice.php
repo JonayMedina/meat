@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Entity\User\ShopUser;
+use App\Model\BlameableTrait;
+use App\Model\IpTraceableTrait;
+use App\Model\TimestampableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,6 +22,8 @@ class ShopUserDevice implements ResourceInterface
     const TYPE_ANDROID = 'android';
 
     const TYPE_IOS = 'ios';
+
+    use BlameableTrait, TimestampableTrait, IpTraceableTrait;
 
     /**
      * @ORM\Id()
