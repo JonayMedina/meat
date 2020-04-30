@@ -76,9 +76,12 @@ class Address extends BaseAddress
 
     /**
      * @param string $taxId
+     * @return Address
      */
-    public function setTaxId(?string $taxId): void
+    public function setTaxId(?string $taxId): self
     {
         $this->taxId = $taxId;
+
+        return $this;
     }
 }
