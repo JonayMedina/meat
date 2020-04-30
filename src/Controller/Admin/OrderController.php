@@ -282,15 +282,18 @@ class OrderController extends AbstractController
 
     /**
      * @param Request $request
+     * @param CurrencyContextInterface $currencyContext
+     * @return Response
      * @Route("/order/{id}", name="orders_show", options={"expose" = "true"})
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request, CurrencyContextInterface $currencyContext)
     {
         $id = $request->get('id');
         $order = $this->entityManager->getRepository('App:Order\Order')->find($id);
 
         return $this->render('/admin/order/show.html.twig', [
-            'order' => $order
+            'order' => $order,
+            'currency' => $currencyContext->getCurrencyCode(),
         ]);
     }
 

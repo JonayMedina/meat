@@ -25,7 +25,7 @@
                                         <div class="order-header">
                                             <h2>{{ 'app.ui.order.label'|trans }} {{ '#' ~ order.number }}</h2>
                                             <div class="legend">
-                                                <span class="delivered">{{ 'app.ui.orders.states.delivered'|trans }}</span>
+                                                <span class="{{ order.status }}">{{ ('app.ui.orders.states.'~order.status)|trans }}</span>
                                             </div>
                                         </div>
                                         <div class="divider"></div>
@@ -35,51 +35,61 @@
                                             <tbody>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.name'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.customerName }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.email'|trans }}</strong></td>
-                                                    <td><a href="mailto: example@emial.com">Fake name</a></td>
+                                                    <td>
+                                                        {% if order.customer.email|default('') %}
+                                                            <a href="mailto: {{ order.customer.email|default('app.ui.n/a'|trans) }}">{{ order.customer.email|default('app.ui.n/a'|trans) }}</a>
+                                                        {% else %}
+                                                            {{ 'app.ui.n/a'|trans }}
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.addressing_step'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>
+                                                        {{ order.shippingAddress.street }}, {{ order.shippingAddress.city }} {{ order.shippingAddress.postCode }}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.annotations'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.phone_number'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.shippingAddress.phoneNumber }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.date'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.estimatedDeliveryDate ? order.estimatedDeliveryDate|localizeddate("medium") : 'app.ui.n/a'|trans }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.deliver_time'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.preferredDeliveryTime|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.name_in_tax'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.nit'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.billingAddress.taxId|default('app.ui.tax_id.cf'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.address_in_tax'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>
+                                                        {{ order.billingAddress.street }}, {{ order.billingAddress.city }} {{ order.billingAddress.postCode }}
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.payment_method'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.payments[0].method.name|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.applied_discount'|trans }}</strong></td>
-                                                    <td>Fake name</td>
+                                                    <td>{{ order.promotionCoupon.code|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -89,6 +99,7 @@
                         </div>
                     </div>
 
+                    {% if order.status == 'shipped' or order.rating %}
                     <div class="col-12">
                         <div class="ibox">
                             <div class="ibox-content">
@@ -99,21 +110,22 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="stars">
-                                            <span class="fa fa-star fa-3x checked"></span>
-                                            <span class="fa fa-star fa-3x checked"></span>
-                                            <span class="fa fa-star fa-3x checked"></span>
-                                            <span class="fa fa-star fa-3x"></span>
-                                            <span class="fa fa-star fa-3x"></span>
+                                            {% for i in 1..constant('App\\Entity\\Order\\Order::MAX_RATING') %}
+                                                <span class="fa fa-star fa-3x {% if i <= order.rating  %}checked{% endif %}"></span>
+                                            {% endfor %}
                                         </div>
+                                        {% if order.ratingComment %}
                                         <div class="comment">
                                             <p>{{ 'app.ui.comment'|trans }}</p>
-                                            <p>Este es un comentario bien shidori jeje, una prueba que le ishen, namas xD</p>
+                                            <p>{{ order.ratingComment }}</p>
                                         </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -126,20 +138,20 @@
                             </div>
                             <div class="col-12 products">
                                 <div class="row">
-                                    <div class="col-12 product">
-                                        <p class="title">Carnita asada</p>
-                                        <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> 3</span> <strong>Q27.00</strong></p>
-                                        <div class="divider"></div>
-                                    </div>
-                                    <div class="col-12 product">
-                                        <p class="title">Carnita asada</p>
-                                        <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> 3</span> <strong>Q27.00</strong></p>
-                                        <div class="divider"></div>
-                                    </div>
+                                    {% for item in order.items %}
+                                        <div class="col-12 product">
+                                            <p class="title">{{ item.variant }}</p>
+                                            <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> {{ item.quantity }}</span> <strong>{{ item.total|price|number_format_currency(currency) }}</strong></p>
+                                            <div class="divider"></div>
+                                        </div>
+                                    {% endfor %}
+
                                     <div class="col-12">
-                                        <p><span><span>{{ 'app.ui.sub_total'|trans }}</span></span> Q27.00</p>
-                                        <p class="discount"><span>{{ 'app.ui.applied_discount'|trans }}:</span> -Q0.00</p>
-                                        <p class="total"><span>{{ 'app.ui.total'|trans }}</span> <strong>Q27.00</strong></p>
+                                        <p><span><span>{{ 'app.ui.sub_total'|trans }}</span></span> {{ order.itemsTotal|price|number_format_currency(currency) }}</p>
+                                        {% for adjustment in order.adjustments %}
+                                            <p class="discount"><span>{{ adjustment.label }}:</span> {{ adjustment.amount|price|number_format_currency(currency) }}</p>
+                                        {% endfor %}
+                                        <p class="total"><span>{{ 'app.ui.total'|trans }}</span> <strong>{{ order.total|price|number_format_currency(currency) }}</strong></p>
                                     </div>
                                 </div>
                             </div>
