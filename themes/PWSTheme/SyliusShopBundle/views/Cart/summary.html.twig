@@ -9,36 +9,42 @@
 {% block title %}{{ parent() }} | {{ header|trans }}{% endblock %}
 
 {% block extracontent %}
-    <div class="row profile pt-4 cart-summary">
+    <div class="row profile pt-4 favorites page cart-summary">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
             <h1 class="text-center">{{ 'app.ui.my_cart'|trans }}</h1>
             <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
         </div>
 
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 segment">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
             {% if not cart.empty %}
-                {% include '@SyliusShop/Cart/Summary/_header.html.twig' %}
-
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
 
-                <div class="ui stackable grid">
-                    <div class="eleven wide column">
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.before_items', {'cart': cart}) }}
+                <div class="row">
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_items', {'cart': cart}) }}
 
-                        {% include '@SyliusShop/Cart/Summary/_items.html.twig' %}
+                    {% include '@SyliusShop/Cart/Summary/_items.html.twig' %}
 
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.after_items', {'cart': cart}) }}
-                    </div>
-                    <div class="five wide column">
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_items', {'cart': cart}) }}
+                </div>
 
-                        {% include '@SyliusShop/Cart/Summary/_totals.html.twig' %}
-
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.after_totals', {'cart': cart}) }}
-
-                        {% include '@SyliusShop/Cart/Summary/_checkout.html.twig' %}
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
+                        <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
+
+
+
+{#                <div class="five wide column">#}
+{#                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}#}
+
+{#                    {% include '@SyliusShop/Cart/Summary/_totals.html.twig' %}#}
+
+{#                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_totals', {'cart': cart}) }}#}
+
+{#                    {% include '@SyliusShop/Cart/Summary/_checkout.html.twig' %}#}
+{#                </div>#}
 
                 {{ sonata_block_render_event('sylius.shop.cart.summary.before_suggestions', {'cart': cart}) }}
             {% else %}
@@ -51,3 +57,247 @@
         </div>
     </div>
 {% endblock %}
+
+{% if not cart.empty %}
+    {% block extrajs %}
+        <script>
+            $(document).ready(function () {
+                var $deleteModal = $('#deleteFavorite');
+                var $modal = $('#showMessage');
+                var typingTimer;
+                var doneTypingInterval = 1000;
+                var $search = $('#site-search');
+                var $searchBtn = $('form.search-box button');
+
+                $('.quantity-up').click(function () {
+                    calculateSubtotal($(this).closest('form'));
+                });
+
+                $('.quantity-down').click(function () {
+                    calculateSubtotal($(this).closest('form'));
+                });
+
+                calculateSubtotal($('#price'));
+
+                $('a.delete').click(function () {
+                    var id = $(this).data('id');
+                    var $content = $('.favorites-list').find('.p-' + id)[0].outerHTML;
+
+                    $deleteModal.find('.content').html($content);
+                    $deleteModal.find('#delete').attr('data-id', id);
+                    $deleteModal.modal('show');
+                });
+
+                $('#delete').click(function () {
+                    var id = $(this).data('id');
+                    $deleteModal.modal('hide');
+                    blockPage();
+
+                    $.ajax({
+                        url: Routing.generate("store_api_favorites_remove", { version: 1}),
+                        method: "DELETE",
+                        data: JSON.stringify({
+                            product: $(this).attr('data-id')
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    })
+                        .done(function (data) {
+                            noFavorites--;
+                            unblockPage();
+
+                            if (noFavorites > 0) {
+                                cuteHide($('.favorites-list').find('.product-' + id));
+                            } else {
+                                showNoFavorites();
+                            }
+                        })
+                        .fail(function (error) {
+                            let recordset = error['responseJSON']['recordset'];
+                            $modal.find('.modal-title').html(recordset['title']);
+                            $modal.find('.modal-body').html(recordset['message']);
+
+                            unblockPage();
+                            $modal.modal('show');
+                        });
+                });
+
+                /* Filter by taxon */
+                var $btns = $('.owl-item').click(function() {
+                    showFavorites();
+
+                    if ($(this).find('.item').hasClass('all')) {
+                        showAllTaxons();
+                    } else {
+                        var $el = $('.' + $(this).find('.item').data('taxon'));
+
+                        if ($el.length > 1) {
+                            showElements($el);
+                        } else {
+                            showEmptySearch();
+                        }
+                    }
+                    $btns.find('.item').removeClass('current');
+                    $(this).find('.item').addClass('current');
+                });
+
+                {% if about_store('show-search') %}
+                $search.on('keyup', function () {
+                    clearTimeout(typingTimer);
+                    searching();
+
+                    typingTimer = setTimeout(function () {
+                        initSearch();
+                    }, doneTypingInterval);
+                });
+
+                $('form.search-box').on('submit', function (evt) {
+                    evt.preventDefault();
+                    searching();
+
+                    setTimeout(function () {
+                        initSearch();
+                    }, 200);
+                });
+
+                function initSearch() {
+                    var $favoritesList = $('.favorites-list');
+                    var i = 0;
+                    var $el;
+
+                    if ((Boolean)($search.val()) && $search.val().length > 1) {
+                        $favoritesList.find('.product-name').each(function () {
+                            var $pName = $(this);
+                            var name = $pName.text().toLowerCase();
+
+                            if (name.includes($search.val().toLowerCase())) {
+                                $pName.closest('.favorite-item').addClass('similar');
+                                $('.divider.' + name.replace(' ', '-')).addClass('similar');
+                                i++;
+                            } else {
+                                $pName.closest('.favorite-item').removeClass('similar');
+                                $('.divider.' + name.replace(' ', '-')).removeClass('similar');
+                            }
+                        });
+
+                        if (i > 0) {
+                            $el = $('.similar');
+
+                            if ($el.length > 0) {
+                                showFavorites();
+                                showElements($el);
+                            } else {
+                                showEmptySearch();
+                            }
+                        } else {
+                            showEmptySearch();
+                        }
+                    } else {
+                        showFavorites();
+
+                        var $currentTaxon = $('.owl-carousel').find('.item.current');
+
+                        if ($currentTaxon.length > 0) {
+                            if ($currentTaxon.hasClass('all')) {
+                                showAllTaxons()
+                            } else {
+                                $el = $('.' + $currentTaxon.data('taxon'));
+
+                                if ($el.length > 1) {
+                                    showElements($el);
+                                } else {
+                                    showEmptySearch();
+                                }
+                            }
+                        }
+                    }
+
+                    searched();
+                }
+
+                function searching() {
+                    $searchBtn.find('span').hide();
+                    $searchBtn.find('img').show();
+                }
+
+                function searched() {
+                    $searchBtn.find('img').hide();
+                    $searchBtn.find('span').show();
+                }
+                {% endif %}
+
+                function calculateSubtotal($form) {
+                    var quantity = $form.find('input').val();
+                    var priceWithCode = $form.data('price').split(/(\s+)/);
+                    var currency = priceWithCode[0];
+                    var price = priceWithCode[2];
+                    var total = quantity*price;
+
+                    $form.find('.sub-total').html(currency + ' ' + total.toFixed(2));
+                }
+
+                // Animated element removal
+                function cuteHide(el) {
+                    el.animate({opacity: '0'}, 150, function(){
+                        el.animate({height: '0px'}, 150, function(){
+                            el.remove();
+                        });
+                    });
+
+                    setTimeout(function () {
+                        findFirstFavorite();
+                    }, 500);
+                }
+
+                function showFavorites() {
+                    $('#empty-search').hide();
+                    $('.favorites-list').fadeIn(450);
+                }
+
+                function showEmptySearch() {
+                    $('.favorites-list').hide();
+                    $('#empty-search').fadeIn(450);
+                }
+
+                function showAllTaxons() {
+                    $('.favorites-list .favorite-item').fadeIn(450).addClass('view');
+                    $('.favorites-list .divider').fadeIn(450);
+                    findFirstFavorite();
+                }
+
+                function showElements($el) {
+                    $el.addClass('view');
+                    $el.fadeIn(450);
+
+                    $('.favorites-list .favorite-item').not($el).removeClass('view').hide();
+                    $('.favorites-list .divider').not($el).removeClass('view').hide();
+                    findFirstFavorite();
+                }
+
+                function showNoFavorites() {
+                    $('.favorites-exist').remove();
+                    $('#empty-search').remove();
+                    $('#no-favorites').fadeIn(450);
+                }
+
+                findFirstProduct();
+
+                function findFirstProduct() {
+                    var i = 0;
+
+                    $('.products-list').find('.product-item.view').each(function () {
+                        var $favorite = $(this);
+
+                        if (i === 0) {
+                            $favorite.addClass('first');
+                        } else {
+                            $favorite.removeClass('first');
+                        }
+
+                        i++;
+                    });
+                }
+            });
+        </script>
+    {% endblock %}
+{% endif %}

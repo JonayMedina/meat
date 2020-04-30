@@ -707,3 +707,4 @@ app.ui.payment_method: 'Método de pago'
 app.ui.applied_discount: 'Descuento aplicado'
 app.ui.rating: 'Rating'
 app.ui.products: Productos
+app.ui.proceed_to_pay: 'Proceder a pago'
