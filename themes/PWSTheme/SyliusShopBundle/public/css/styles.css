@@ -1681,6 +1681,56 @@ label.icobutton input {
     margin-top: 34px;
 }
 
+.cart-summary.page #sylius-coupon {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cart-summary.page #sylius-coupon p {
+    font-family: "Raleway Italic", sans-serif;
+    font-size: 14px;
+    letter-spacing: .61px;
+    margin-bottom: 0;
+    color: #404040;
+    margin-top: 0;
+}
+
+.cart-summary.page #sylius-coupon .input {
+    display: flex;
+    margin-right: 0;
+}
+
+.cart-summary.page #sylius-coupon .input input {
+    max-width: 125px;
+    margin-right: -20px;
+    border-radius: 15px 0 0 15px !important;
+}
+
+.cart-summary.page #sylius-coupon .input .btn-rounded {
+    margin-top: 0;
+}
+
+.cart-summary.page .total {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cart-summary.page .total p {
+    font-family: "Raleway SemiBold", sans-serif;
+    margin-bottom: 0;
+}
+
+.cart-summary.page .total .title {
+    font-size: 16px;
+    color: #ab162b;
+}
+
+.cart-summary.page .buttons a:first-of-type {
+    margin-right: 35px;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

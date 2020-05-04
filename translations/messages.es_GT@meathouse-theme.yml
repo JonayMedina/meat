@@ -719,3 +719,4 @@ app.ui.proceed_to_pay: 'Proceder a pago'
 app.ui.cart.delete: Eliminar
 app.ui.coupon.apply: Aplicar
 app.ui.coupon.instructions: '¿Tienes algún cupón? <br> Ingrésalo aquí:'
+app.ui.cart.your_total: 'Tu total'

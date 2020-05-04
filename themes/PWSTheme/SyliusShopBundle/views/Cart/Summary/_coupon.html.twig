@@ -1,6 +1,6 @@
-<div id="sylius-coupon">
+<div class="ui form" id="sylius-coupon">
     <p>{{ 'app.ui.coupon.instructions'|trans|raw }}</p>
-    <div class="ui coupon action input">
+    <div class="input">
         {{ form_widget(form, {'attr': {'form': main_form, 'placeholder': 'app.ui.code'|trans}}) }}
         <button type="submit" id="sylius-save" class="btn-rounded" form="{{ main_form }}">{{ 'app.ui.coupon.apply'|trans }}</button>
     </div>

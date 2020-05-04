@@ -8,11 +8,22 @@
     {% if form.promotionCoupon is defined %}
         <div class="row">
             <div class="col-12 mt-4 pt-2">
-                {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
+                <div class="row">
+                    <div class="col-6">
+                        {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
 
-                {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
+                        {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
 
-                {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
+                        {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
+                    </div>
+                    <div class="col-6">
+                        <div class="total">
+                            <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
+                            <p>Q0.00</p>
+                            <br>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     {% endif %}
