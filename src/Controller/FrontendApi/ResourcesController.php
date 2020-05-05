@@ -2,6 +2,7 @@
 
 namespace App\Controller\FrontendApi;
 
+use App\Controller\ShopApi\ContactUsController;
 use App\Entity\Product\Product;
 use App\Entity\User\ShopUser;
 use App\Model\APIResponse;
@@ -49,6 +50,11 @@ class ResourcesController extends AbstractFOSRestController
     private $productRepository;
 
     /**
+     * @var ContactUsController $contactUsController
+     */
+    private $contactUsController;
+
+    /**
      * QueueController constructor.
      * @param SenderInterface $sender
      * @param TranslatorInterface $translator
@@ -56,8 +62,9 @@ class ResourcesController extends AbstractFOSRestController
      * @param SettingsService $settingsService
      * @param FavoriteService $favoriteService
      * @param ProductRepositoryInterface $productRepository
+     * @param ContactUsController $contactUsController
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -65,6 +72,7 @@ class ResourcesController extends AbstractFOSRestController
         $this->settingsService = $settingsService;
         $this->favoriteService = $favoriteService;
         $this->productRepository = $productRepository;
+        $this->contactUsController = $contactUsController;
     }
 
     /**
@@ -80,36 +88,13 @@ class ResourcesController extends AbstractFOSRestController
     public function newMessageAction(Request $request) {
         $data = json_decode($request->getContent(), true);
 
-        if (isset($data)) {
-            if ($this->captchaVerification->verify($data['captcha_code'])) {
-                try {
-                    $this->sender->send('message_received', [$this->settingsService->getComplaintsEmail()], ['name' => $data['name'], 'email' => $data['email'], "message" => $data['message']]);
-                    $this->sender->send('message_sent', [$data['email']]);
-
-                    $statusCode = Response::HTTP_OK;
-                    $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
-                        'title' => $this->translator->trans('app.ui.contact_us.success'),
-                        'message' => $this->translator->trans('app.ui.contact_us.success.message')
-                    ]);
-                } catch (\Exception $exception) {
-                    $statusCode = Response::HTTP_BAD_REQUEST;
-                    $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
-                        'title' => $this->translator->trans('app.ui.contact_us.error'),
-                        'message' => $this->translator->trans('app.ui.contact_us.error.message')
-                    ]);
-                }
-            } else {
-                $statusCode = Response::HTTP_BAD_REQUEST;
-                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
-                    'title' => $this->translator->trans('app.ui.contact_us.error'),
-                    'message' => $this->translator->trans('app.ui.captcha.error.message')
-                ]);
-            }
+        if ($this->captchaVerification->verify($data['captcha_code'])) {
+            return $this->contactUsController->newAction($request);
         } else {
             $statusCode = Response::HTTP_BAD_REQUEST;
             $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
                 'title' => $this->translator->trans('app.ui.contact_us.error'),
-                'message' => $this->translator->trans('app.ui.contact_us.error.message')
+                'message' => $this->translator->trans('app.ui.captcha.error.message')
             ]);
         }
 
