@@ -62,6 +62,7 @@ class ResourcesController extends AbstractFOSRestController
      * @param SettingsService $settingsService
      * @param FavoriteService $favoriteService
      * @param ProductRepositoryInterface $productRepository
+     * @param ContactUsController $contactUsController
      */
     public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController)
     {
