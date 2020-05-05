@@ -689,6 +689,13 @@ a.text-primary:hover, a.text-primary:focus {
     background-color: #F3F3F4;
 }
 
+/** button disabled */
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #D1D1D1;
+    border-color: #D1D1D1;
+}
+
 .header h2 {
     font-weight: 500;
     color: #404040;
