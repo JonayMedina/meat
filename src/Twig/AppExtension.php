@@ -99,6 +99,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('get_url', [$this, 'getUrl']),
             new TwigFunction('uploaded_location_asset', [$this, 'getUploadedLocationAssetPath']),
+            new TwigFunction('uploaded_banner_asset', [$this, 'getUploadedBannerAssetPath']),
             new TwigFunction('about_store', [$this, 'aboutStore']),
             new TwigFunction('get_price', [$this, 'getPrice']),
             new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon'])
@@ -130,6 +131,11 @@ class AppExtension extends AbstractExtension
         }
 
         return substr_replace($string ,"", -2);
+    }
+
+    public function getUploadedBannerAssetPath($path)
+    {
+        return $this->getUploadedAssetPath( UploaderHelper::BANNER_PHOTO_IMAGE . '/' . $path);
     }
 
     /**

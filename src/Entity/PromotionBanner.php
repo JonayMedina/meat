@@ -7,20 +7,25 @@ use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use App\Entity\Product\ProductVariant;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Table(name="app_promotion_banner")
  * @ORM\Entity(repositoryClass="App\Repository\PromotionBannerRepository")
  */
 class PromotionBanner implements ResourceInterface
 {
+    const MAX_ITEMS = 5;
+
     use BlameableTrait, TimestampableTrait, IpTraceableTrait;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Expose()
      */
     private $id;
 
@@ -39,18 +44,21 @@ class PromotionBanner implements ResourceInterface
 
     /**
      * @var string
+     * @Serializer\Expose()
      * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $name;
 
     /**
      * @var \DateTime
+     * @Serializer\Expose()
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $startDate;
 
     /**
      * @var \DateTime
+     * @Serializer\Expose()
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $endDate;
@@ -78,6 +86,41 @@ class PromotionBanner implements ResourceInterface
      * @ORM\Column(type="text", nullable=true)
      */
     private $photoApp;
+
+    /**
+     * API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $bannerWebUrl = null;
+
+    /**
+     * API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $bannerTabletUrl = null;
+
+    /**
+     * API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $bannerMobileUrl = null;
+
+    /**
+     * API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $bannerAppUrl = null;
+
+    /**
+     * API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $product = null;
 
     public function getId(): ?int
     {
@@ -234,5 +277,13 @@ class PromotionBanner implements ResourceInterface
         $this->photoApp = $photoApp;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 }

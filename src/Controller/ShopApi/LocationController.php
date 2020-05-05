@@ -4,7 +4,6 @@ namespace App\Controller\ShopApi;
 
 use App\Entity\Location;
 use App\Model\APIResponse;
-use App\Repository\FAQRepository;
 use App\Repository\LocationRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

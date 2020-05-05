@@ -323,7 +323,9 @@ class OrderController extends AbstractController
             if ($status == Order::STATUS_PENDING) {
                 $queryBuilder
                     ->andWhere('o.state = :state')
-                    ->setParameter('state', OrderInterface::STATE_NEW);
+                    ->andWhere('o.shippingState != :shippingState')
+                    ->setParameter('state', OrderInterface::STATE_NEW)
+                    ->setParameter('shippingState', ShipmentInterface::STATE_SHIPPED);
             }
 
             if ($status == Order::STATUS_DELIVERED) {

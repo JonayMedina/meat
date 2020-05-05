@@ -1,0 +1,71 @@
+{% import "admin/_macros.html.twig" as UI %}
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.name},
+    {'span': 6, 'field': form.productVariant}
+]) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.startDate},
+]) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.endDate},
+]) }}
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            {{ form_label(form.photoWebType) }}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'app.ui.banner_web.image_help'|trans }}"></i>
+
+            {{ form_widget(form.photoWebType) }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            {{ form_label(form.photoTabletType) }}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'app.ui.banner_tablet.image_help'|trans }}"></i>
+
+            {{ form_widget(form.photoTabletType) }}
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            {{ form_label(form.photoMobileType) }}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'app.ui.banner_mobile.image_help'|trans }}"></i>
+
+            {{ form_widget(form.photoMobileType) }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="form-group">
+            {{ form_label(form.photoAppType) }}
+            <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'app.ui.banner_app.image_help'|trans }}"></i>
+
+            {{ form_widget(form.photoAppType) }}
+        </div>
+    </div>
+</div>
+
+
+<div class="padding-bottom-35"></div>
+
+<div class="form-group">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

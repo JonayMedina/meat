@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-6">
                 <div class="title-action">
-                    <a href="#" class="btn btn-primary btn-lg btn-standard-width">
+                    <a href="{{ path('banners_new') }}" class="btn btn-primary btn-lg btn-standard-width {% if banners|length >= constant('App\\Entity\\PromotionBanner::MAX_ITEMS') %}disabled{% endif %}">
                         <i class="fa fa-plus-circle pull-left"></i>
                         &nbsp;
                         {{'app.ui.new_banner'|trans}}
@@ -29,6 +29,7 @@
                                 <thead>
                                 <tr>
                                     <th class="width-80">&nbsp;</th>
+                                    <th class="width-120">&nbsp;</th>
                                     <th>{{ 'app.ui.name'|trans }}</th>
                                     <th>{{ 'app.ui.created_at'|trans }}</th>
                                     <th>{{ 'app.ui.product_id'|trans }}</th>
@@ -39,8 +40,48 @@
                                 </thead>
 
                                 <tbody>
-
+                                {% for banner in banners %}
+                                <tr>
+                                    <td>{{ banner.id }}</td>
+                                    <td>
+                                        {% if banner.photoMobile %}
+                                            <img src="{{ uploaded_banner_asset(banner.photoMobile) }}" width="100" alt="{{ banner.name }}" title="{{ banner.name }}">
+                                        {% else %}
+                                            <img src="https://dummyimage.com/320x296/404040/ffffff&text=No+image+available" width="100" alt="{{ banner.name }}">
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ banner.name }}</td>
+                                    <td>{{ banner.createdAt|localizeddate('medium', 'short') }}</td>
+                                    <td>
+                                        {% if banner.productVariant %}
+                                            {{ banner.productVariant.product.id }}
+                                            {#<strong>({{ banner.productVariant }})</strong>#}
+                                        {% else %}
+                                            {{ 'app.ui.n/a'|trans }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('banners_edit', {id: banner.id}) }}" class="btn btn-default btn-action-button">
+                                            {{ 'app.ui.edit'|trans }}
+                                        </a>
+                                        &nbsp;
+                                        <a href="{{ path('banners_delete', {id: banner.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.promotion_banner_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.promotion_banner_remove_title'|trans }}" data-text="{{ 'app.ui.promotion_banner_remove_text'|trans({'%code%': banner.name}) }}">
+                                            {{ 'app.ui.delete'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                                 </tbody>
+
+                                {% if banners|length >= constant('App\\Entity\\PromotionBanner::MAX_ITEMS') %}
+                                <tfoot>
+                                <tr>
+                                    <td colspan="6" class="text-center text-banner-alert">
+                                        {{ 'app.ui.promotion_banner.limit_alert_message'|trans }}
+                                    </td>
+                                </tr>
+                                </tfoot>
+                                {% endif %}
                             </table>
                         </div>
                     </div>
@@ -48,6 +89,16 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .text-banner-alert {
+            color: #AB162B;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 {% endblock %}
 
 {% block javascript %}

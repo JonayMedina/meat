@@ -21,6 +21,7 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
 |keywords|Nombres clave para búsqueda de producto separados por coma|VARCHAR|255|No|
 |photo|Fotografía principal del producto|LONGTEXT (BASE64) |--|Sí|
 
+LB/Unidad
 
 ### Request
 

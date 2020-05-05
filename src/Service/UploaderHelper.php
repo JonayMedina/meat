@@ -18,6 +18,8 @@ class UploaderHelper
      */
     const LOCATION_IMAGE = 'location_image';
 
+    const BANNER_PHOTO_IMAGE = 'banner_image';
+
     /**
      * @var FilesystemInterface
      */
@@ -70,6 +72,32 @@ class UploaderHelper
     }
 
     /**
+     * @param File $file
+     * @param string|null $existingFilename
+     * @return string
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \Exception
+     */
+    public function uploadBannerImage(File $file, ?string $existingFilename): string
+    {
+        $newFilename = $this->uploadFile($file,  self::BANNER_PHOTO_IMAGE, true);
+
+        if ($existingFilename) {
+            try {
+                $result = $this->deleteBannerImage($existingFilename);
+
+                if ($result === false) {
+                    throw new \Exception(sprintf('Could not delete old uploaded file "%s"', $existingFilename));
+                }
+            } catch (FileNotFoundException $e) {
+                $this->logger->alert(sprintf('Old uploaded file "%s" was missing when trying to delete', $existingFilename));
+            }
+        }
+
+        return $newFilename;
+    }
+
+    /**
      * @param $existingFilename
      * @return bool
      * @throws FileNotFoundException
@@ -81,6 +109,20 @@ class UploaderHelper
         }
 
         return $this->filesystem->delete( self::LOCATION_IMAGE.'/'.$existingFilename);
+    }
+
+    /**
+     * @param $existingFilename
+     * @return bool
+     * @throws FileNotFoundException
+     */
+    public function deleteBannerImage($existingFilename)
+    {
+        if (empty($existingFilename)) {
+            return false;
+        }
+
+        return $this->filesystem->delete( self::BANNER_PHOTO_IMAGE.'/'.$existingFilename);
     }
 
     /**

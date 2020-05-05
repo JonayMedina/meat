@@ -1,0 +1,38 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.banners_limit_error'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('banners_index')) }}
+                <br>
+                <h1 class="text-center">{{ 'app.ui.banners_limit_error'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content" style="padding: 100px;">
+
+                        <div class="table-responsive-sm text-center">
+                            <i class="fa fa-bomb fa-7x"></i>
+                            <div class="padding-bottom-35"></div>
+                            <p>{{ 'app.ui.banners_limit_error_message'|trans({
+                                    '%limit%': constant('App\\Entity\\PromotionBanner::MAX_ITEMS'),
+                                    '%vendor%': dev_name,
+                                })|raw }}</p>
+                            <br>
+                            <a href="{{ path('banners_index') }}" class="btn btn-primary btn-standard-width">
+                                {{ 'app.ui.back'|trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -716,3 +716,25 @@ app.ui.orders.export_to_pdf: 'Descargar PDF'
 app.ui.orders_search_label: 'Busca una orden'
 app.ui.tax_id.cf: C/F
 app.ui.proceed_to_pay: 'Proceder a pago'
+app.ui.promotion_banner_remove_text: '%code%'
+app.ui.promotion_banner_remove_title: '¿Está seguro de eliminar esta promoción?'
+app.ui.promotion_banner_error_on_remove_message: 'Hubo un error al borrar esta promoción, por favor inténtelo de nuevo más tarde.'
+app.ui.promotion_banner.limit_alert_message: 'No puedes agregar más promociones al carrousel. Por favor borra uno para agregar otro.'
+app.ui.banners_product_if_applicable: 'Producto al que llevará (si aplica)'
+app.ui.banner_no_product_selected: '---'
+app.ui.banner_new_success_message: 'Se ha creado la nueva promoción'
+app.ui.banner_new_error_message: 'Hubo un error al crear la promoción, inténtelo de nuevo más tarde.'
+app.ui.banner_edit_success_message: 'Se ha actualizado la promoción'
+app.ui.banner_edit_error_message: 'Hubo un error al actualizar la promoción, inténtelo de nuevo más tarde.'
+app.ui.banner_web.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 1440 x 500 px.'
+app.ui.banner_tablet.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 767 x 350 px.'
+app.ui.banner_mobile.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 320 x 296 px.'
+app.ui.banner_app.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 882 x 399 px.'
+app.ui.edit_banner: 'Editar promoción en carrousel'
+app.ui.banners.app: App
+app.ui.banners.mobile: Móvil
+app.ui.banners.tablet: Tablet
+app.ui.banners.web: Web
+app.ui.new_banner_in_carrousel: 'Nueva promoción en carrousel'
+app.ui.banners_limit_error: 'Buen intento, pero esta operación no está permitida.'
+app.ui.banners_limit_error_message: "<strong>Eres una persona muy inteligente...</strong> pero el limite sigue siendo de %limit% promociones simulataneas. <br>Tal vez puedas comunicarte con <strong>%vendor%</strong> para aumentar el limite de las promociones."
