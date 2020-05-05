@@ -737,4 +737,5 @@ app.ui.banners.tablet: Tablet
 app.ui.banners.web: Web
 app.ui.new_banner_in_carrousel: 'Nueva promoción en carrousel'
 app.ui.banners_limit_error: 'Buen intento, pero esta operación no está permitida.'
-app.ui.banners_limit_error_message: "<strong>Eres una persona muy inteligente...</strong> pero el limite sigue siendo de %limit% promociones simulataneas. <br>Tal vez puedas comunicarte con <strong>%vendor%</strong> para aumentar el limite de las promociones."
+app.ui.banners_limit_error_message: '<strong>Eres una persona muy inteligente...</strong> pero el limite sigue siendo de %limit% promociones simulataneas. <br>Tal vez puedas comunicarte con <strong>%vendor%</strong> para aumentar el limite de las promociones.'
+app.ui.banners_no_items_on_table: 'Aún no hay promociones, da click en el botón "Nueva promoción" para crear una nueva.'
