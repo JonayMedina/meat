@@ -54,7 +54,11 @@
                     <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
                 </div>
                 <div class="delete delete-content d-none d-md-none d-lg-flex">
-                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                    <form id="delete-{{ item.id }}" class="delete-product d-none" data-id="{{ product.id }}" action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token(item.id) }}" />
+                    </form>
+                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
                 </div>
             </div>
         </div>

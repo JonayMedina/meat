@@ -1,4 +1,4 @@
-<div class="col-12 segment pt-4 xs-pb-4-i favorites-exist products-list favorites-list" style="display: block;">
+<div class="col-12 segment pt-4 xs-pb-4-i products-list favorites-list" style="display: block;">
     <div class="row">
         {% for key, item in cart.items %}
             {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id} %}

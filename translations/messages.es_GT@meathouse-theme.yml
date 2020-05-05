@@ -720,3 +720,8 @@ app.ui.cart.delete: Eliminar
 app.ui.coupon.apply: Aplicar
 app.ui.coupon.instructions: '¿Tienes algún cupón? <br> Ingrésalo aquí:'
 app.ui.cart.your_total: 'Tu total'
+app.ui.cart.delete_product: 'Eliminar del carrito'
+app.ui.cart.delete_product.are_you_sure?: '¿Estás seguro de eliminar este producto de tu carrito?'
+app.ui.cart.delete_from: 'Eliminar de mi carrito'
+app.ui.cart.delete_product.error: '¡Error al eliminar el producto!'
+app.ui.cart.delete_product.error.message: 'Un error no permitio eliminar el producto de tu carrito, inténtalo nuevamente...'

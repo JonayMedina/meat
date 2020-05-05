@@ -19,7 +19,7 @@
             {% if not cart.empty %}
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
 
-                <div class="row">
+                <div class="row products-exist">
                     {{ sonata_block_render_event('sylius.shop.cart.summary.before_items', {'cart': cart}) }}
 
                     {% include '@SyliusShop/Cart/Summary/_items.html.twig' %}
@@ -27,14 +27,12 @@
                     {{ sonata_block_render_event('sylius.shop.cart.summary.after_items', {'cart': cart}) }}
                 </div>
 
-                <div class="row">
+                <div class="row products-exist">
                     <div class="col-12 buttons text-right">
                         <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
                         <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
-
-
 
 {#                <div class="five wide column">#}
 {#                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}#}
@@ -47,6 +45,43 @@
 {#                </div>#}
 
                 {{ sonata_block_render_event('sylius.shop.cart.summary.before_suggestions', {'cart': cart}) }}
+
+                <div id="empty-cart" class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0" style="display: none">
+                    <img src="{{ asset('bundles/syliusshop/img/icons/empty-cart.png') }}" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-5 mb-5 xs-text-left">{{ 'app.ui.cart.empty_instructions'|trans }}</h2>
+                    <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+
+                <div class="modal smaller fade" id="deleteFavorite" tabindex="-1" role="dialog" aria-labelledby="deleteFavoriteLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="deleteFavoriteLabel">{{ 'app.ui.cart.delete_product'|trans }}</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <p>{{ 'app.ui.cart.delete_product.are_you_sure?'|trans }}</p>
+                                <div class="content"></div>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.back'|trans }}</button>
+                                <button id="delete" data-id="" type="button" class="btn-rounded">{{ 'app.ui.cart.delete_from'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                            </div>
+                            <div class="modal-body text-center"></div>
+                            <div class="modal-footer text-center">
+                                <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% else %}
                 <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">
                     <img src="{{ asset('bundles/syliusshop/img/icons/empty-cart.png') }}" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
@@ -64,11 +99,8 @@
             $(document).ready(function () {
                 var $deleteModal = $('#deleteFavorite');
                 var $modal = $('#showMessage');
-                var typingTimer;
-                var doneTypingInterval = 1000;
-                var $search = $('#site-search');
-                var $searchBtn = $('form.search-box button');
                 var $productsList = $('.products-list');
+                var noItems = {{ cart.items|length|e('js') }};
 
                 $('.quantity-up').click(function () {
                     calculateSubtotal($(this).closest('div.form'));
@@ -84,150 +116,19 @@
 
                 $('a.delete').click(function () {
                     var id = $(this).data('id');
-                    var $content = $('.favorites-list').find('.p-' + id)[0].outerHTML;
+                    var item = $(this).data('item');
+                    var $content = $('.products-list').find('.p-' + id)[0].outerHTML;
 
                     $deleteModal.find('.content').html($content);
-                    $deleteModal.find('#delete').attr('data-id', id);
+                    $deleteModal.find('#delete').attr('data-id', item);
                     $deleteModal.modal('show');
                 });
 
                 $('#delete').click(function () {
                     var id = $(this).data('id');
                     $deleteModal.modal('hide');
-                    blockPage();
-
-                    $.ajax({
-                        url: Routing.generate("store_api_favorites_remove", { version: 1}),
-                        method: "DELETE",
-                        data: JSON.stringify({
-                            product: $(this).attr('data-id')
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                    })
-                        .done(function (data) {
-                            noFavorites--;
-                            unblockPage();
-
-                            if (noFavorites > 0) {
-                                cuteHide($('.favorites-list').find('.product-' + id));
-                            } else {
-                                showNoFavorites();
-                            }
-                        })
-                        .fail(function (error) {
-                            let recordset = error['responseJSON']['recordset'];
-                            $modal.find('.modal-title').html(recordset['title']);
-                            $modal.find('.modal-body').html(recordset['message']);
-
-                            unblockPage();
-                            $modal.modal('show');
-                        });
+                    $('#delete-'+ id).submit();
                 });
-
-                /* Filter by taxon */
-                var $btns = $('.owl-item').click(function() {
-                    showFavorites();
-
-                    if ($(this).find('.item').hasClass('all')) {
-                        showAllTaxons();
-                    } else {
-                        var $el = $('.' + $(this).find('.item').data('taxon'));
-
-                        if ($el.length > 1) {
-                            showElements($el);
-                        } else {
-                            showEmptySearch();
-                        }
-                    }
-                    $btns.find('.item').removeClass('current');
-                    $(this).find('.item').addClass('current');
-                });
-
-                {% if about_store('show-search') %}
-                $search.on('keyup', function () {
-                    clearTimeout(typingTimer);
-                    searching();
-
-                    typingTimer = setTimeout(function () {
-                        initSearch();
-                    }, doneTypingInterval);
-                });
-
-                $('form.search-box').on('submit', function (evt) {
-                    evt.preventDefault();
-                    searching();
-
-                    setTimeout(function () {
-                        initSearch();
-                    }, 200);
-                });
-
-                function initSearch() {
-                    var $favoritesList = $('.favorites-list');
-                    var i = 0;
-                    var $el;
-
-                    if ((Boolean)($search.val()) && $search.val().length > 1) {
-                        $favoritesList.find('.product-name').each(function () {
-                            var $pName = $(this);
-                            var name = $pName.text().toLowerCase();
-
-                            if (name.includes($search.val().toLowerCase())) {
-                                $pName.closest('.favorite-item').addClass('similar');
-                                $('.divider.' + name.replace(' ', '-')).addClass('similar');
-                                i++;
-                            } else {
-                                $pName.closest('.favorite-item').removeClass('similar');
-                                $('.divider.' + name.replace(' ', '-')).removeClass('similar');
-                            }
-                        });
-
-                        if (i > 0) {
-                            $el = $('.similar');
-
-                            if ($el.length > 0) {
-                                showFavorites();
-                                showElements($el);
-                            } else {
-                                showEmptySearch();
-                            }
-                        } else {
-                            showEmptySearch();
-                        }
-                    } else {
-                        showFavorites();
-
-                        var $currentTaxon = $('.owl-carousel').find('.item.current');
-
-                        if ($currentTaxon.length > 0) {
-                            if ($currentTaxon.hasClass('all')) {
-                                showAllTaxons()
-                            } else {
-                                $el = $('.' + $currentTaxon.data('taxon'));
-
-                                if ($el.length > 1) {
-                                    showElements($el);
-                                } else {
-                                    showEmptySearch();
-                                }
-                            }
-                        }
-                    }
-
-                    searched();
-                }
-
-                function searching() {
-                    $searchBtn.find('span').hide();
-                    $searchBtn.find('img').show();
-                }
-
-                function searched() {
-                    $searchBtn.find('img').hide();
-                    $searchBtn.find('span').show();
-                }
-                {% endif %}
 
                 function calculateSubtotal($form) {
                     var quantity = $form.find('input').val();
@@ -248,39 +149,13 @@
                     });
 
                     setTimeout(function () {
-                        findFirstFavorite();
+                        findFirstProduct();
                     }, 500);
                 }
 
-                function showFavorites() {
-                    $('#empty-search').hide();
-                    $('.favorites-list').fadeIn(450);
-                }
-
-                function showEmptySearch() {
-                    $('.favorites-list').hide();
-                    $('#empty-search').fadeIn(450);
-                }
-
-                function showAllTaxons() {
-                    $('.favorites-list .favorite-item').fadeIn(450).addClass('view');
-                    $('.favorites-list .divider').fadeIn(450);
-                    findFirstFavorite();
-                }
-
-                function showElements($el) {
-                    $el.addClass('view');
-                    $el.fadeIn(450);
-
-                    $('.favorites-list .favorite-item').not($el).removeClass('view').hide();
-                    $('.favorites-list .divider').not($el).removeClass('view').hide();
-                    findFirstFavorite();
-                }
-
-                function showNoFavorites() {
-                    $('.favorites-exist').remove();
-                    $('#empty-search').remove();
-                    $('#no-favorites').fadeIn(450);
+                function showEmptyCart() {
+                    $('.products-exist').remove();
+                    $('#empty-cart').fadeIn(450);
                 }
 
                 findFirstProduct();
@@ -289,17 +164,52 @@
                     var i = 0;
 
                     $productsList.find('.product-item.view').each(function () {
-                        var $favorite = $(this);
+                        var $product = $(this);
 
                         if (i === 0) {
-                            $favorite.addClass('first');
+                            $product.addClass('first');
                         } else {
-                            $favorite.removeClass('first');
+                            $product.removeClass('first');
                         }
 
                         i++;
                     });
                 }
+
+                $('form.delete-product').on('submit', function (e) {
+                    e.preventDefault();
+                    var $this = $(this);
+
+                    blockPage();
+                    $.ajax({
+                        type: 'POST',
+                        url: $this.attr('action'),
+                        data: $(this).serialize(),
+                        success: function () {
+                            unblockPage();
+
+                            if (noItems > 0) {
+                                cuteHide($('.products-list').find('.product-' + $this.data('id')));
+                            } else {
+                                showEmptyCart();
+                            }
+                        },
+                        error: function (error) {
+                            let recordset = error['responseJSON']['recordset'];
+                            var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                            $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                            if (recordset['errors']) {
+                                errorMsg = recordset['errors']['errors'][0];
+                            }
+
+                            $modal.find('.modal-body').html(errorMsg);
+
+                            unblockPage();
+                            $modal.modal('show');
+                        }
+                    });
+                });
             });
         </script>
     {% endblock %}
