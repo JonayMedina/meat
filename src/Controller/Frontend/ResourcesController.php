@@ -3,9 +3,11 @@
 
 namespace App\Controller\Frontend;
 
+use App\Controller\Admin\BannerController;
 use App\Entity\Taxonomy\Taxon;
 use App\Repository\FavoriteRepository;
 use App\Repository\LocationRepository;
+use App\Repository\PromotionBannerRepository;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -151,17 +153,6 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     * @Route("/categories/{slug}", name="store_show_category")
-     * @param Request $request
-     * @param $slug
-     * @param TaxonRepositoryInterface $taxonRepository
-     * @return void
-     */
-    public function showCategoryAction(Request $request, $slug, TaxonRepositoryInterface $taxonRepository) {
-
-    }
-
-    /**
      * @Route("/{code}/products", name="store_products_by_taxon")
      * @param Request $request
      * @param String $code
@@ -190,5 +181,14 @@ class ResourcesController extends AbstractController
         $products = $productRepository->findOffers();
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
+    }
+
+    /**
+     * @Route("/banners", name="store_banners")
+     * @param PromotionBannerRepository $promotionBannerRepository
+     * @return Response
+     */
+    public function bannersAction(PromotionBannerRepository $promotionBannerRepository) {
+        return $this->render('/frontend/pages/widgets/_banners.html.twig', ['banners' => $promotionBannerRepository->findAvailable()]);
     }
 }

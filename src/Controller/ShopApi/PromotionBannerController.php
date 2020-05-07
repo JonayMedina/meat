@@ -49,18 +49,11 @@ class PromotionBannerController extends AbstractFOSRestController
     public function indexAction()
     {
         $statusCode = Response::HTTP_OK;
-        $now = date('Y-m-d H:i:s');
 
         /** @var PromotionBanner[] $banners */
-        $banners = $this->repository->createQueryBuilder('promotion_banner')
-            ->andWhere('promotion_banner.startDate <= :now')
-            ->andWhere('promotion_banner.endDate >= :now')
-            ->setParameter('now', $now)
-            ->getQuery()
-            ->getResult();
+        $banners = $this->repository->findAvailable();
 
         foreach ($banners as $banner) {
-
             if ($banner->getPhotoWeb()) {
                 $banner->bannerWebUrl = $this->uploadedAssetsBaseUrl.'/'.UploaderHelper::BANNER_PHOTO_IMAGE.'/'.$banner->getPhotoWeb();
             }

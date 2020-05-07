@@ -19,32 +19,18 @@ class PromotionBannerRepository extends ServiceEntityRepository
         parent::__construct($registry, PromotionBanner::class);
     }
 
-    // /**
-    //  * @return PromotionBanner[] Returns an array of PromotionBanner objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return int|mixed|string
+     */
+    public function findAvailable()
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $now = date('Y-m-d H:i:s');
 
-    /*
-    public function findOneBySomeField($value): ?PromotionBanner
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('promotion_banner')
+            ->andWhere('promotion_banner.startDate <= :now')
+            ->andWhere('promotion_banner.endDate >= :now')
+            ->setParameter('now', $now)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

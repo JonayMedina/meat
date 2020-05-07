@@ -2191,12 +2191,6 @@ label.icobutton input {
         background-repeat: no-repeat !important;
     }
 
-    #banners-carousel img {
-        min-height: 250px;
-        max-height: 270px;
-        visibility: hidden;
-    }
-
     #banners-carousel .carousel-indicators.mb-5 {
         margin-bottom: 1rem !important;
     }
