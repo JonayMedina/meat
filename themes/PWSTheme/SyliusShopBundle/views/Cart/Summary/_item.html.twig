@@ -23,22 +23,22 @@
                                 {% endif %}
                             </a>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-sm-flex d-md-none">
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-none d-sm-flex d-md-none">
                             <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-9">
                     <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
-                    <div class="price">
+                    <div class="price xs-pt-1">
                         {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-7 col-lg-6 sm-pt-1">
-            <div class="form ui" id="price" data-price="{{ money.calculatePrice(product|sylius_resolve_variant) }}">
-                <div class="required field {% if not available %}invisible{% endif %}">
+        <div class="col-12 col-sm-12 col-md-7 col-lg-6 xs-pt-0 sm-pt-1">
+            <div class="form ui row p-info" id="price" data-price="{{ money.calculatePrice(product|sylius_resolve_variant) }}">
+                <div class="required field col-12 col-sm-12 col-md-5 col-lg-6 {% if not available %}invisible{% endif %}">
                     {{ form_label(form.quantity) }}
                     {{ form_errors(form.quantity) }}
                     <div>
@@ -49,12 +49,14 @@
                     </div>
                 </div>
 
-                <div class="sub-total-container">
-                    <a class="delete hvr-icon-buzz-out d-none" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                <div class="sub-total-container col-12 col-sm-12 col-md-3 col-lg-3">
+                    <span class="delete-content">
+                        <a class="delete hvr-icon-buzz-out d-inline-block d-sm-none" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                    </span>
                     <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
                     <p class="sub-total" data-value="0" data-currency="">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
                 </div>
-                <div class="delete delete-content d-none d-sm-none d-md-flex d-lg-flex">
+                <div class="delete delete-content d-none d-sm-none d-md-flex d-lg-flex col-12 col-sm-12 col-md-4 col-lg-3">
                     <form id="delete-{{ item.id }}" class="delete-product d-none" data-id="{{ product.id }}" action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
                         <input type="hidden" name="_method" value="DELETE" />
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token(item.id) }}" />

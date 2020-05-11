@@ -1316,7 +1316,7 @@ body.blocked {
     content: none !important;
 }
 
-.favorites.page form > div:not(.extra), .cart-summary.page .form > div:not(.extra) {
+.favorites.page form > div:not(.extra) {
     margin-right: 20px;
     margin-bottom: 0 !important;
 }
@@ -1661,7 +1661,7 @@ label.icobutton input {
 }
 
 .cart-summary.page .form {
-    justify-content: space-between;
+    max-width: initial;
 }
 
 .cart-summary.page .form .field > div {
@@ -1679,6 +1679,10 @@ label.icobutton input {
 
 .cart-summary.page .form > div.delete {
     margin-top: 34px;
+}
+
+.cart-summary.page .form>div:not(.extra) {
+    margin-bottom: 0 !important;
 }
 
 .cart-summary.page #sylius-coupon {
@@ -1730,6 +1734,10 @@ label.icobutton input {
 
 .cart-summary.page .buttons a:first-of-type {
     margin-right: 35px;
+}
+
+.cart-summary.page .quantity {
+    margin: initial;
 }
 
 /* Responsive */
@@ -1987,6 +1995,19 @@ label.icobutton input {
     #deleteFavorite .modal-body a.image img {
         max-height: inherit;
     }
+
+    .cart-summary.page #sylius-coupon p {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .cart-summary.page #sylius-coupon .input input {
+        max-width: initial;
+    }
+
+    .cart-summary.page #sylius-coupon br {
+        display: none;
+    }
 }
 
 @media (max-width: 767px) {
@@ -2233,6 +2254,24 @@ label.icobutton input {
     #deleteFavorite .modal-footer .btn-rounded:first-of-type {
         margin-bottom: 15px;
     }
+
+    .cart-summary.page  .form.p-info label, .cart-summary.page  .form.p-info .field {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .cart-summary.page  .form.p-info label, .cart-summary.page  .form.p-info .sub-total-title {
+        display: none;
+    }
+
+    .cart-summary.page .sub-total-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-summary.page .favorite-item p.sub-total {
+        align-items: initial;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2392,6 +2431,21 @@ label.icobutton input {
 
     .cart-summary .sub-total-container .delete-content {
         display: flex !important;
+    }
+
+    .cart-summary.page .buttons {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .cart-summary.page .buttons a {
+        width: 100%;
+        margin-right: 0 !important;
+        text-align: center;
+    }
+
+    .cart-summary.page .buttons a:first-of-type {
+        order: 1;
     }
 }
 

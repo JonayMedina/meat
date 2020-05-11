@@ -149,7 +149,7 @@
                 });
 
                 $('#delete').click(function () {
-                    var id = $(this).data('id');
+                    var id = $(this).attr('data-id');
                     $deleteModal.modal('hide');
                     $('#delete-'+ id).submit();
                 });
@@ -226,10 +226,14 @@
                         url: $this.attr('action'),
                         data: $(this).serialize(),
                         success: function () {
+                            noItems--;
                             unblockPage();
 
                             if (noItems > 0) {
                                 cuteHide($('.products-list').find('.product-' + $this.data('id')));
+                                setTimeout(function () {
+                                    calculateTotal();
+                                }, 500);
                             } else {
                                 showEmptyCart();
                             }
