@@ -764,3 +764,9 @@
         text-align: left !important;
     }
 }
+
+@media (max-width: 480px) {
+    .xss-d-none {
+        display: none !important;
+    }
+}

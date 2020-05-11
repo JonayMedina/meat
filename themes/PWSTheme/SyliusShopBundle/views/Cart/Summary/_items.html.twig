@@ -5,28 +5,34 @@
         {% endfor %}
     </div>
 
-    {% if form.promotionCoupon is defined %}
-        <div class="row">
-            <div class="col-12 mt-4 pt-2">
-                <div class="row">
-                    <div class="col-6">
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
+    <div class="row mb-3">
+        <div class="col-12 mt-4 pt-2">
+            <div class="row">
+                <div class="col-6">
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
 
-                        {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
+                    {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
 
-                        {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
-                    </div>
-                    <div class="col-6">
-                        <div class="total">
-                            <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
-                            <p>Q0.00</p>
-                            <br>
-                        </div>
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
+                </div>
+                <div class="col-6">
+                    <div class="total">
+                        <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
+                        <p class="value" data-value="0">Q0.00</p>
+                        <br>
                     </div>
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
+    <div class="d-none">
+        {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+        {{ form_errors(form) }}
+        <input type="hidden" name="_method" value="PATCH"/>
+        {{ form_row(form._token) }}
+        {% include '@SyliusShop/Cart/Summary/_update.html.twig' with {'main_form': form.vars.id} %}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
 </div>
 
 {#<div class="ui segment">#}

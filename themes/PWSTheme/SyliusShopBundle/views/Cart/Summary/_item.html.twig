@@ -11,9 +11,9 @@
 
 <div class="col-12 product-item favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
     <div class="row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-5 col-lg-6">
             <div class="row p-{{ product.id }}">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1 xss-d-none">
                     <div class="row">
                         <div class="col-6 col-sm-6 col-md-6 col-lg-12 image-container">
                             <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
@@ -23,8 +23,8 @@
                                 {% endif %}
                             </a>
                         </div>
-                        <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-lg-none">
-                            <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-sm-flex d-md-none">
+                            <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 sm-pt-1">
+        <div class="col-12 col-sm-12 col-md-7 col-lg-6 sm-pt-1">
             <div class="form ui" id="price" data-price="{{ money.calculatePrice(product|sylius_resolve_variant) }}">
                 <div class="required field {% if not available %}invisible{% endif %}">
                     {{ form_label(form.quantity) }}
@@ -49,11 +49,12 @@
                     </div>
                 </div>
 
-                <div>
+                <div class="sub-total-container">
+                    <a class="delete hvr-icon-buzz-out d-none" data-id="{{ product.id }}" data-item="{{ item.id }}"><span>{{ 'app.ui.cart.delete'|trans|raw }}</span> <img class="hvr-icon" src="{{ asset('bundles/syliusshop/img/icons/trash.svg') }}" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
                     <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
-                    <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
+                    <p class="sub-total" data-value="0" data-currency="">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
                 </div>
-                <div class="delete delete-content d-none d-md-none d-lg-flex">
+                <div class="delete delete-content d-none d-sm-none d-md-flex d-lg-flex">
                     <form id="delete-{{ item.id }}" class="delete-product d-none" data-id="{{ product.id }}" action="{{ path('sylius_shop_cart_item_remove', {'id': item.id}) }}" method="post">
                         <input type="hidden" name="_method" value="DELETE" />
                         <input type="hidden" name="_csrf_token" value="{{ csrf_token(item.id) }}" />

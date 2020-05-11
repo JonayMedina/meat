@@ -30,7 +30,7 @@
                 <div class="row products-exist">
                     <div class="col-12 buttons text-right">
                         <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
-                        <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
+                        <a id="to-pay" class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
 
@@ -96,11 +96,13 @@
 {% if not cart.empty %}
     {% block extrajs %}
         <script>
-            $(document).ready(function () {
+            $(function () {
                 var $deleteModal = $('#deleteFavorite');
                 var $modal = $('#showMessage');
                 var $productsList = $('.products-list');
                 var noItems = {{ cart.items|length|e('js') }};
+                var $toPay = $('#to-pay');
+                var $updateCart = $('#sylius_cart');
 
                 $('.quantity-up').click(function () {
                     calculateSubtotal($(this).closest('div.form'));
@@ -110,8 +112,30 @@
                     calculateSubtotal($(this).closest('div.form'));
                 });
 
+                $('input[type="number"]').change(function () {
+                    calculateSubtotal($(this).closest('div.form'));
+                });
+
                 $productsList.find('.product-item').each(function () {
                     calculateSubtotal($(this).find('.form'));
+                });
+
+                $toPay.click(function (evt) {
+                    evt.preventDefault();
+                    var value = $('.total .value').attr('data-value');
+
+                    if (value < {{ about_store('min-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
+                        $modal.modal('show');
+                    } else if (value > {{ about_store('max-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.max.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
+                        $modal.modal('show');
+                    } else {
+                        $('#sylius-cart-update').trigger('click');
+                    }
+
                 });
 
                 $('a.delete').click(function () {
@@ -137,7 +161,23 @@
                     var price = priceWithCode[2];
                     var total = quantity*price;
 
-                    $form.find('.sub-total').html(currency + ' ' + total.toFixed(2));
+                    $form.find('.sub-total').html(currency + ' ' + total.toFixed(2)).attr('data-currency', currency).attr('data-value', total);
+
+                    calculateTotal();
+                }
+
+                function calculateTotal() {
+                    var total = 0;
+                    var currency = "";
+
+                    $('body').find('.sub-total').each(function () {
+                        var $sub = $(this);
+
+                        total += Number($sub.attr('data-value'));
+                        currency = $sub.attr('data-currency');
+                    });
+
+                    $('.total .value').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
                 }
 
                 // Animated element removal
@@ -203,6 +243,36 @@
                                 errorMsg = recordset['errors']['errors'][0];
                             }
 
+                            $modal.find('.modal-body').html(errorMsg);
+
+                            unblockPage();
+                            $modal.modal('show');
+                        }
+                    });
+                });
+
+                $updateCart.on('submit', function (e) {
+                    e.preventDefault();
+                    var $this = $(this);
+
+                    blockPage();
+                    $.ajax({
+                        type: 'POST',
+                        url: $this.attr('action'),
+                        data: $(this).serialize(),
+                        success: function () {
+                            unblockPage();
+                            var logged = {% if is_granted('ROLE_USER') %}true{% else %}false{% endif %}
+
+                            if (logged) {
+                                window.location.href = "{{ path('sylius_shop_checkout_start') }}";
+                            } else {
+                                window.location.href = "{{ path('sylius_shop_register') }}";
+                            }
+                        },
+                        error: function (error) {
+                            var errorMsg = '{{ 'app.ui.cart.update.error.message'|trans }}';
+                            $modal.find('.modal-title').html('{{ 'app.ui.cart.update.error'|trans }}');
                             $modal.find('.modal-body').html(errorMsg);
 
                             unblockPage();

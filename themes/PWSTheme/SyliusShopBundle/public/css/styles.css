@@ -1685,6 +1685,7 @@ label.icobutton input {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    padding-left: 20px;
 }
 
 .cart-summary.page #sylius-coupon p {
@@ -2382,6 +2383,15 @@ label.icobutton input {
 
     .favorites.page form div.field p, .cart-summary.page .form div.field p {
         margin-left: 15px;
+    }
+
+    .cart-summary .sub-total-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-summary .sub-total-container .delete-content {
+        display: flex !important;
     }
 }
 
