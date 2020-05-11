@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**

@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Product\ProductVariant;
 use App\Entity\User\ShopUser;
 use App\Model\BlameableTrait;
 use App\Entity\Product\Product;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
+use JMS\Serializer\Annotation as Serializer;
 use Sylius\Component\Resource\Model\ResourceInterface;
 
 /**
  * @ORM\Table(name="app_favorite")
+ * @Serializer\ExclusionPolicy("all")
  * @ORM\Entity(repositoryClass="App\Repository\FavoriteRepository")
  */
 class Favorite implements ResourceInterface
@@ -49,6 +52,32 @@ class Favorite implements ResourceInterface
      * )
      */
     private $product;
+
+    /**
+     * Virtual property for API
+     * @var array
+     * @Serializer\Expose()
+     * @Serializer\SerializedName("product")
+     */
+    public $virtualProduct;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @Serializer\Expose()
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @Serializer\Expose()
+     */
+    private $updatedAt;
 
     /**
      * @return int|null
