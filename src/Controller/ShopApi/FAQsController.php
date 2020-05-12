@@ -20,7 +20,7 @@ class FAQsController extends AbstractFOSRestController
     private $repository;
 
     /**
-     * DashboardController constructor.
+     * FAQsController constructor.
      * @param FAQRepository $repository
      */
     public function __construct(FAQRepository $repository)

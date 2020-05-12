@@ -21,7 +21,7 @@ class SettingsController extends AbstractFOSRestController
     private $repository;
 
     /**
-     * DashboardController constructor.
+     * SettingsController constructor.
      * @param AboutStoreRepository $repository
      */
     public function __construct(AboutStoreRepository $repository)

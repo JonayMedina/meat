@@ -21,7 +21,7 @@ class HolidayController extends AbstractFOSRestController
     private $repository;
 
     /**
-     * DashboardController constructor.
+     * HolidayController constructor.
      * @param HolidayRepository $repository
      */
     public function __construct(HolidayRepository $repository)

@@ -9,8 +9,8 @@ use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 class PromotionBannerType extends AbstractType
 {
@@ -36,7 +36,7 @@ class PromotionBannerType extends AbstractType
                 'time_widget' => 'single_text',
                 'time_label' => 'Hora',
                 'constraints' => [
-                    new GreaterThan(['value' => 'now']),
+                    new GreaterThanOrEqual(['value' => 'today']),
                     new DateTime(),
                     new NotBlank()
                 ]
@@ -47,7 +47,7 @@ class PromotionBannerType extends AbstractType
                 'time_widget' => 'single_text',
                 'time_label' => 'Hora',
                 'constraints' => [
-                    new GreaterThan(['value' => 'now']),
+                    new GreaterThanOrEqual(['value' => 'today']),
                     new DateTime(),
                     new NotBlank()
                 ]

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * FAQsController
+ * ContactUsController
  * @Route("/contact-us")
  */
 class ContactUsController extends AbstractFOSRestController
@@ -34,7 +34,7 @@ class ContactUsController extends AbstractFOSRestController
     private $settingsService;
 
     /**
-     * DashboardController constructor.
+     * ContactUsController constructor.
      * @param SenderInterface $sender
      * @param TranslatorInterface $translator
      * @param SettingsService $settingsService

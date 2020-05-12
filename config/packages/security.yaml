@@ -137,6 +137,7 @@ security:
         - { path: "%sylius_shop_api.security.regex%/login", roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius_shop_api.security.regex%/address-book", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/me", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/favorites", role: ROLE_USER}
             
         - { path: "%sylius.security.admin_regex%/_partial", role: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
         - { path: "%sylius.security.admin_regex%/_partial", role: ROLE_NO_ACCESS }

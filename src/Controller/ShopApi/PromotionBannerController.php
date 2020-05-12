@@ -28,6 +28,7 @@ class PromotionBannerController extends AbstractFOSRestController
     private $uploadedAssetsBaseUrl;
 
     /**
+     * PromotionBannerController constructor.
      * @param PromotionBannerRepository $repository
      * @param $uploadedAssetsBaseUrl
      */

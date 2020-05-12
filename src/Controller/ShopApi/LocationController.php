@@ -26,7 +26,7 @@ class LocationController extends AbstractFOSRestController
     private $uploadedAssetsBaseUrl;
 
     /**
-     * DashboardController constructor.
+     * LocationController constructor.
      * @param LocationRepository $repository
      * @param $uploadedAssetsBaseUrl
      */
