@@ -110,6 +110,12 @@
                 checkTerms(true);
             });
 
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
             $('a.show-terms').click(function () {
                 var $btn = $(this);
                 var $buttons = $('#termsModal .modal-footer button');
