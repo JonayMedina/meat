@@ -108,8 +108,6 @@ class FavoriteController extends AbstractFOSRestController
                 $product['availability'] = $variant->getChannelPricingForChannel($channel);
             }
 
-            // TODO: Agregar imagenes a las variantes de productos
-
             $favorite->virtualProduct = $product;
         }
 
