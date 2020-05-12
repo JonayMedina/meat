@@ -36,11 +36,8 @@
 
 {#                <div class="five wide column">#}
 {#                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}#}
-
 {#                    {% include '@SyliusShop/Cart/Summary/_totals.html.twig' %}#}
-
 {#                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_totals', {'cart': cart}) }}#}
-
 {#                    {% include '@SyliusShop/Cart/Summary/_checkout.html.twig' %}#}
 {#                </div>#}
 
@@ -103,6 +100,7 @@
                 var noItems = {{ cart.items|length|e('js') }};
                 var $toPay = $('#to-pay');
                 var $updateCart = $('#sylius_cart');
+                var $couponAdd = $('#coupon-add');
 
                 $('.quantity-up').click(function () {
                     calculateSubtotal($(this).closest('div.form'));
@@ -136,6 +134,37 @@
                         $('#sylius-cart-update').trigger('click');
                     }
 
+                });
+
+                $couponAdd.click(function () {
+                    var token = $('#sylius_cart__token').val();
+
+                    blockPage();
+                    $.ajax({
+                        type: 'PUT',
+                        url: Routing.generate('sylius_shop_api_add_coupon_to_cart ', {'token': token}),
+                        data: $('#sylius_cart_promotionCoupon').serialize(),
+                        success: function (data) {
+                            console.log(data);
+                            unblockPage();
+                        },
+                        error: function (error) {
+                            console.log(error);
+
+                            let recordset = error['responseJSON']['recordset'];
+                            var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                            $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                            if (recordset['errors']) {
+                                errorMsg = recordset['errors']['errors'][0];
+                            }
+
+                            $modal.find('.modal-body').html(errorMsg);
+
+                            unblockPage();
+                            $modal.modal('show');
+                        }
+                    });
                 });
 
                 $('a.delete').click(function () {
