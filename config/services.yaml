@@ -48,6 +48,12 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
         
+    Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository:
+        alias: 'sylius.repository.order'
+        
+    Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository:
+        alias: 'sylius.repository.promotion_coupon'
+        
     App\Menu\MenuBuilder:
         arguments: ["@knp_menu.factory"]
         tags:
