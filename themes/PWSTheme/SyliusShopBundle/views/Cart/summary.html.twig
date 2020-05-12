@@ -15,7 +15,7 @@
             <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
         </div>
 
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 {{ cart.tokenValue }}">
             {% if not cart.empty %}
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
 
@@ -138,12 +138,15 @@
 
                 $couponAdd.click(function () {
                     var token = $('#sylius_cart__token').val();
+                    {#var url = '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': 'jhjkhhjk'}) }}';#}
+                    var url = '{{ path('sylius_shop_api_pickup_cart') }}';
+
+                    // url = url.replace('token-code', token);
 
                     blockPage();
                     $.ajax({
-                        type: 'PUT',
-                        url: Routing.generate('sylius_shop_api_add_coupon_to_cart ', {'token': token}),
-                        data: $('#sylius_cart_promotionCoupon').serialize(),
+                        type: 'POST',
+                        url: url,
                         success: function (data) {
                             console.log(data);
                             unblockPage();

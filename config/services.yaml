@@ -61,6 +61,10 @@ services:
     App\EventSubscriber\ShopUserSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\OrderSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
 
     app.factory.product.listview:
         class: App\Factory\Product\ListProductViewFactoryExtension
