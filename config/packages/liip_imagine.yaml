@@ -4,3 +4,17 @@ liip_imagine:
             web_path:
                 web_root: "%kernel.project_dir%/public"
                 cache_prefix: "media/cache"
+    filter_sets:
+        mh_shop_api_product_original: ~
+        mh_shop_api_product_tiny_thumbnail:
+            filters:
+                thumbnail: { size: [64, 64], mode: outbound }
+        mh_shop_api_product_small_thumbnail:
+            filters:
+                thumbnail: { size: [150, 112], mode: outbound }
+        mh_shop_api_product_medium_thumbnail:
+            filters:
+                thumbnail: { size: [260, 260], mode: outbound }
+        mh_shop_api_product_large_thumbnail:
+            filters:
+                thumbnail: { size: [550, 412], mode: outbound }

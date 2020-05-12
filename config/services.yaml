@@ -54,6 +54,9 @@ services:
     Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository:
         alias: 'sylius.repository.promotion_coupon'
         
+    Liip\ImagineBundle\Service\FilterService:
+        alias: 'liip_imagine.service.filter'
+        
     App\Menu\MenuBuilder:
         arguments: ["@knp_menu.factory"]
         tags:

@@ -10,6 +10,7 @@ use App\Service\FavoriteService;
 use App\Repository\ProductRepository;
 use App\Repository\FavoriteRepository;
 use App\Entity\Product\ProductVariant;
+use Liip\ImagineBundle\Service\FilterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -39,16 +40,23 @@ class FavoriteController extends AbstractFOSRestController
     private $repository;
 
     /**
+     * @var FilterService
+     */
+    private $filterService;
+
+    /**
      * FavoriteController constructor.
      * @param FavoriteRepository $repository
      * @param FavoriteService $favoriteService
      * @param ProductRepository $productRepository
+     * @param FilterService $filterService
      */
-    public function __construct(FavoriteRepository $repository, FavoriteService $favoriteService, ProductRepository $productRepository)
+    public function __construct(FavoriteRepository $repository, FavoriteService $favoriteService, ProductRepository $productRepository, FilterService $filterService)
     {
         $this->repository = $repository;
         $this->favoriteService = $favoriteService;
         $this->productRepository = $productRepository;
+        $this->filterService = $filterService;
     }
 
     /**
@@ -76,22 +84,80 @@ class FavoriteController extends AbstractFOSRestController
         foreach ($favorites as $favorite) {
             $product = $favorite->getProduct();
             $variant = $product->getVariants()[0];
+            $images = [];
+
+            foreach ($product->getImages() as $image) {
+                $images[] = [
+                    'original' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_original'),
+                    'large' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_large_thumbnail'),
+                    'medium' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_medium_thumbnail'),
+                    'small' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_small_thumbnail'),
+                    'tiny' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_tiny_thumbnail'),
+                ];
+            }
 
             $product = [
                 'id' => $product->getId(),
                 'slug' => $product->getSlug(),
                 'code' => $product->getCode(),
                 'name' => $product->getName(),
+                'images' => $images
             ];
 
             if ($variant instanceof ProductVariant) {
                 $product['availability'] = $variant->getChannelPricingForChannel($channel);
             }
 
+            // TODO: Agregar imagenes a las variantes de productos
+
             $favorite->virtualProduct = $product;
         }
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Favorite list', $favorites);
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * Returns 200 HTTP Code if product exists as favorite, 404, if not.
+     * @Route(
+     *     "/{code}.{_format}",
+     *     name="shop_api_is_in_favorites",
+     *     methods={"GET"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function showAction(Request $request)
+    {
+        /** @var Product $product */
+        $product = $this->productRepository->findOneBy(['code' => $request->get('code')]);
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+
+        if (!$product instanceof Product) {
+            $statusCode = Response::HTTP_NOT_FOUND;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Product not found.', []);
+
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        if ($this->favoriteService->isFavorite($product, $user)) {
+            $statusCode = Response::HTTP_OK;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Is Favorite', []);
+
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        $statusCode = Response::HTTP_NOT_FOUND;
+        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Is not favorite', []);
+
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
