@@ -6,17 +6,14 @@ use App\Entity\Favorite;
 use App\Model\APIResponse;
 use App\Entity\User\ShopUser;
 use App\Entity\Product\Product;
+use App\Service\ProductService;
 use App\Service\FavoriteService;
 use App\Repository\ProductRepository;
 use App\Repository\FavoriteRepository;
-use App\Entity\Product\ProductVariant;
-use Liip\ImagineBundle\Service\FilterService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
-use Sylius\Component\Core\Model\ChannelInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
 
 /**
  * FavoriteController
@@ -40,23 +37,23 @@ class FavoriteController extends AbstractFOSRestController
     private $repository;
 
     /**
-     * @var FilterService
+     * @var ProductService
      */
-    private $filterService;
+    private $productService;
 
     /**
      * FavoriteController constructor.
      * @param FavoriteRepository $repository
      * @param FavoriteService $favoriteService
      * @param ProductRepository $productRepository
-     * @param FilterService $filterService
+     * @param ProductService $productService
      */
-    public function __construct(FavoriteRepository $repository, FavoriteService $favoriteService, ProductRepository $productRepository, FilterService $filterService)
+    public function __construct(FavoriteRepository $repository, FavoriteService $favoriteService, ProductRepository $productRepository, ProductService $productService)
     {
         $this->repository = $repository;
         $this->favoriteService = $favoriteService;
         $this->productRepository = $productRepository;
-        $this->filterService = $filterService;
+        $this->productService = $productService;
     }
 
     /**
@@ -66,10 +63,9 @@ class FavoriteController extends AbstractFOSRestController
      *     methods={"GET"}
      * )
      *
-     * @param ChannelContextInterface $channelContext
      * @return Response
      */
-    public function indexAction(ChannelContextInterface $channelContext)
+    public function indexAction()
     {
         $statusCode = Response::HTTP_OK;
         /** @var Favorite[] $favorites */
@@ -78,35 +74,8 @@ class FavoriteController extends AbstractFOSRestController
             ->getQuery()
             ->getResult();
 
-        /** @var ChannelInterface $channel */
-        $channel = $channelContext->getChannel();
-
         foreach ($favorites as $favorite) {
-            $product = $favorite->getProduct();
-            $variant = $product->getVariants()[0];
-            $images = [];
-
-            foreach ($product->getImages() as $image) {
-                $images[] = [
-                    'original' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_original'),
-                    'large' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_large_thumbnail'),
-                    'medium' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_medium_thumbnail'),
-                    'small' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_small_thumbnail'),
-                    'tiny' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mh_shop_api_product_tiny_thumbnail'),
-                ];
-            }
-
-            $product = [
-                'id' => $product->getId(),
-                'slug' => $product->getSlug(),
-                'code' => $product->getCode(),
-                'name' => $product->getName(),
-                'images' => $images
-            ];
-
-            if ($variant instanceof ProductVariant) {
-                $product['availability'] = $variant->getChannelPricingForChannel($channel);
-            }
+            $product = $this->productService->serialize($favorite->getProduct());
 
             $favorite->virtualProduct = $product;
         }
