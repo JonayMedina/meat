@@ -1,3 +1,4 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 <div class="col-12 segment pt-4 xs-pb-2-i products-list favorites-list" style="display: block;">
     <div class="row">
         {% for key, item in cart.items %}
@@ -18,10 +19,19 @@
                 <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                     <div class="total row">
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                            <p class="pre-total-title title" {% if not cart.orderPromotionTotal %}style="display: none"{% endif %}>{{ 'app.ui.cart.sub-total'|trans }}</p>
+                            <p class="pre-total-title title" {% if not cart.orderPromotionTotal %}style="display: none"{% endif %}>{{ 'app.ui.cart.discount'|trans }}</p>
                             <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
                         </div>
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                            <p class="value xs-text-right" data-value="0">Q0.00</p>
+                            {% if cart.orderPromotionTotal %}
+                                <p class="pre-total" data-value="0">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
+                                <p class="discount" data-value="0" data-first="{{ money.convertAndFormat(cart.orderPromotionTotal) }}">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
+                            {% else %}
+                                <p class="pre-total" style="display: none"></p>
+                                <p class="discount" data-value="0" style="display: none"></p>
+                            {% endif %}
+                            <p class="value xs-text-right" data-value="{{ cart.total }}">{{ money.convertAndFormat(cart.total) }}</p>
                         </div>
                     </div>
                 </div>
