@@ -129,4 +129,22 @@ class ShopUser extends BaseShopUser
 
         return $this;
     }
+
+    public function getFullName()
+    {
+        if (!empty($this->getCustomer()->getFirstName())) {
+            $fullName = $this->getCustomer()->getFirstName(). ' ' . $this->getCustomer()->getLastName();
+            return (string)$fullName;
+        }
+
+        return $this->getUsername();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString(): string
+    {
+        return $this->getFullName();
+    }
 }

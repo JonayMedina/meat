@@ -435,6 +435,7 @@ app.email.register_message: 'Bienvenido a nuestra tienda, es un gusto tenerte co
 app.email.user_registration: '¡Te has registrado con éxito!'
 app.email.password_reset: '¡Restablecimiento de contraseña!'
 app.email.hello_%name%: '¡Hola %name%!'
+app.email.here_is_your_code: 'Reestablece tu contraseña usando este código.'
 app.email.to_reset_password: 'Para restablecer tu contraseña por favor ingresa el siguiente código en el sitio:'
 app.ui.enter_the_token: 'Ingresa el código'
 app.ui.reset_instructions: 'Te enviamos un código a tu correo. Por favor revista tu correo y escribe abajo el código que te enviamos.'
