@@ -75,7 +75,6 @@ class Favorite implements ResourceInterface
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     * @Serializer\Expose()
      */
     private $updatedAt;
 

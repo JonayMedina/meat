@@ -6,6 +6,7 @@ use App\Model\APIResponse;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Promotion\PromotionCoupon;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,9 +56,10 @@ class CouponController extends AbstractFOSRestController
      * )
      *
      * @param Request $request
+     * @param ChannelContextInterface $channelContext
      * @return Response
      */
-    public function showAction(Request $request)
+    public function showAction(Request $request, ChannelContextInterface $channelContext)
     {
         $code = $request->get('code');
         $coupon = $this->getPromotionCoupon($code);
@@ -79,6 +81,9 @@ class CouponController extends AbstractFOSRestController
             'limit' => $coupon->getUsageLimit(),
             'used' => $coupon->getUsed(),
             'expires_at' => $coupon->getExpiresAt(),
+            'type' => $coupon->getTypeSlug($channelContext->getChannel()),
+            'type_label' => $coupon->getType($channelContext->getChannel()),
+            'amount' => $coupon->getValue($channelContext->getChannel()),
         ];
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Coupon code.', $recordset);

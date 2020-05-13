@@ -3,11 +3,31 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product\Product;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as BaseProductRepository;
 
 class ProductRepository extends BaseProductRepository
 {
+    /**
+     * Perform a search query.
+     * @param string $phrase
+     * @param string $locale
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return QueryBuilder
+     */
+    public function searchQuery(string $phrase, string $locale, ?int $limit = 100, ?int $offset = 0): QueryBuilder
+    {
+        return $this->createQueryBuilder('o')
+            ->innerJoin('o.translations', 'translation', 'WITH', 'translation.locale = :locale')
+            ->andWhere('translation.name LIKE :name')
+            ->setParameter('name', '%' . $phrase . '%')
+            ->setParameter('locale', $locale)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+    }
+
     /**
      * @param int $taxon
      * @param int|null $limit
