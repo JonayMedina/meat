@@ -1751,6 +1751,11 @@ label.icobutton input {
     margin: initial;
 }
 
+/* New login */
+.new-login form {
+    border-bottom: none;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -1808,6 +1813,10 @@ label.icobutton input {
 
     .welcome .information > .row > div:not(.separator) {
         padding: 50px 0;
+    }
+
+    .btn-rounded {
+        min-width: 220px;
     }
 }
 

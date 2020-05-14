@@ -260,13 +260,21 @@ class ResourcesController extends AbstractFOSRestController
             $user = $this->userRepository->findOneBy(['username' => $email]);
 
             if ($user instanceof ShopUser) {
-                $this->sender->send('reset_password_token', [$email], ['user' => $user]);
+                if ($user->getPasswordResetToken()) {
+                    $this->sender->send('reset_password_token', [$email], ['user' => $user]);
 
-                $statusCode = Response::HTTP_CREATED;
-                $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
-                    'title' => $this->translator->trans('app.ui.reset_password.success'),
-                    'message' => $this->translator->trans('app.ui.reset_password.success.message')
-                ]);
+                    $statusCode = Response::HTTP_CREATED;
+                    $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+                        'title' => $this->translator->trans('app.ui.reset_password.success'),
+                        'message' => $this->translator->trans('app.ui.reset_password.success.message')
+                    ]);
+                } else {
+                    $statusCode = Response::HTTP_BAD_REQUEST;
+                    $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                        'title' => $this->translator->trans('app.ui.reset_password.error.title'),
+                        'message' => $this->translator->trans('app.ui.reset_password.error.message')
+                    ]);
+                }
             } else {
                 $statusCode = Response::HTTP_BAD_REQUEST;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
