@@ -31,6 +31,7 @@ services:
             $captchaKey: '%env(CAPTCHA_KEY)%'
             $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
             $fcmServerKey: '%env(FCM_SERVER_KEY)%'
+            $userRepository: '@sylius.repository.shop_user'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:

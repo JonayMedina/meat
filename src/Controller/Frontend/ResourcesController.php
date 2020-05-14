@@ -66,9 +66,10 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/forgotten-password/token", name="store_set_token")
      * @param Request $request
+     * @param object|null $data
      * @return RedirectResponse|Response
      */
-    public function setResetTokenAction(Request $request) {
+    public function setResetTokenAction(Request $request, object $data = null) {
         $this->get('session')->getFlashBag()->clear();
         $code = $request->get('code', '');
 

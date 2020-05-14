@@ -761,3 +761,7 @@ app.ui.cart.sub-total: Subtotal
 app.ui.cart.discount: Descuento
 app.ui.reset_password.error.title: '¡Parece que hubo un error!'
 app.ui.reset_password.check_you_email.message: 'El código es incorrecto. Por favor revisa tu correo...'
+app.ui.reset_password.error.enter_email: 'Ingresa un correo valido...'
+app.ui.reset_password.error.not_registered: 'Este correo no ha sido registrado en nuestro sistema. Prueba con otro o registrate.'
+app.ui.reset_password.success: '¡Código envíado!'
+app.ui.reset_password.success.message: 'Hemos envíado un código a tu correo, revisa e ingresa el código en el campo para continuar.'
