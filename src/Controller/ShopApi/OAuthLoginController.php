@@ -82,9 +82,6 @@ class OAuthLoginController extends AbstractFOSRestController
         }
 
         $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
-        $email = $serverResponse['email'];
-        $firstName = $serverResponse['first_name'];
-        $lastName = $serverResponse['last_name'];
 
         if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
@@ -94,6 +91,10 @@ class OAuthLoginController extends AbstractFOSRestController
 
             return $this->handleView($view);
         }
+
+        $email = $serverResponse['email'];
+        $firstName = $serverResponse['first_name'];
+        $lastName = $serverResponse['last_name'];
 
         $oauthUser = $this->getOAuthUser($provider, $identifier);
 
