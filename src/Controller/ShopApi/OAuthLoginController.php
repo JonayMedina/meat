@@ -86,7 +86,7 @@ class OAuthLoginController extends AbstractFOSRestController
         $firstName = $serverResponse['first_name'];
         $lastName = $serverResponse['last_name'];
 
-        if (null === $email) {
+        if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
 
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Unauthorized', []);
