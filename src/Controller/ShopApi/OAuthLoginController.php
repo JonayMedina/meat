@@ -209,6 +209,8 @@ class OAuthLoginController extends AbstractFOSRestController
             $customer->setLastName($lastName);
             $customer->setEmail($email);
 
+            $this->entityManager->persist($customer);
+
             /** Create Shop User */
             $shopUser = new ShopUser();
             $shopUser->setCustomer($customer);
@@ -229,7 +231,6 @@ class OAuthLoginController extends AbstractFOSRestController
         $userOAuth->setAccessToken($accessToken);
 
         $this->entityManager->persist($shopUser);
-        $this->entityManager->persist($customer);
         $this->entityManager->persist($userOAuth);
 
         $this->entityManager->flush();
