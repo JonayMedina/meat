@@ -3,6 +3,9 @@ sylius_mailer:
         name: '%env(APP_NAME)%'
         address: no-reply@meathouse.com
     emails:
+        api_reset_password_token:
+            subject: sylius.emails.user.reset_password_token.subject
+            template: "Email/ShopApi/passwordReset.html.twig"
         contact_request:
             subject: sylius.emails.contact_request.subject
             template: "@SyliusShop/Email/contactRequest.html.twig"
