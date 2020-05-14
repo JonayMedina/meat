@@ -113,6 +113,73 @@ class OAuthLoginController extends AbstractFOSRestController
     }
 
     /**
+     * Merge accounts
+     * @Route(
+     *     "/merge.{_format}",
+     *     name="shop_api_oauth_merge",
+     *     methods={"POST"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function mergeAction(Request $request)
+    {
+        $customer_id = $request->get('customer_id');
+        $identifier = $request->get('identifier');
+        $accessToken = $request->get('access_token');
+        $provider = $request->get('provider');
+
+        if (!$this->validateProvider($provider)) {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Bad provider: ' . $provider, []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
+
+        if (null === $serverResponse) {
+            $statusCode = Response::HTTP_UNAUTHORIZED;
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Unauthorized', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        /**
+         * Everything is valid...
+         * @var Customer $customer
+         */
+        $customer = $this->entityManager->getRepository('App:Customer\Customer')
+            ->find($customer_id);
+
+        $shopUser = $customer->getUser();
+
+        if (null === $this->getOAuthUser($provider, $identifier)) {
+            /** Create User OAuth */
+            $userOAuth = new UserOAuth();
+            $userOAuth->setProvider($provider);
+            $userOAuth->setUser($shopUser);
+            $userOAuth->setIdentifier($identifier);
+            $userOAuth->setAccessToken($accessToken);
+
+            $this->entityManager->persist($userOAuth);
+            $this->entityManager->flush();
+        }
+
+        $statusCode = Response::HTTP_CREATED;
+        $response = [];
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
      * Check if given provider is valid.
      * @param $provider
      * @return bool
