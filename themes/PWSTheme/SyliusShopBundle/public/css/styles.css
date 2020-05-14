@@ -368,6 +368,17 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding-left: 30px;
 }
 
+.forgot-password .field label {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.forgot-password .field label span {
+    order: 2;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .field .dropdown .grouped {
     display: flex !important;
 }

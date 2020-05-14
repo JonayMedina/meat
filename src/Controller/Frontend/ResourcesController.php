@@ -85,10 +85,10 @@ class ResourcesController extends AbstractController
                 return $this->redirectToRoute('sylius_shop_password_reset', ['token' => $token]);
             }
 
-            return $this->redirectToRoute('store_set_token', ['code' => $code]);
+            return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form->createView(), 'error' => 'app.ui.reset_password.check_you_email.message']);
         }
 
-        return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form]);
+        return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form->createView()]);
     }
 
     /**

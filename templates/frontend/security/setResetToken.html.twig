@@ -30,17 +30,35 @@
             </div>
         </div>
     </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel">{{ 'app.ui.reset_password.error.title'|trans }}</h5>
+                </div>
+                <div class="modal-body text-center">{% if error is defined %}{{ error|trans }}{% endif %}</div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
     <script>
         $(function () {
+            let $modal = $('#showMessage');
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
 
             if (urlParams.get('token')) {
-                $('#sylius_user_request_password_reset_token').val(urlParams.get('token'));
+                $('#token_password_token').val(urlParams.get('token'));
             }
+
+            {% if error is defined %}
+                $modal.modal('show');
+            {% endif %}
         });
     </script>
 {% endblock %}
