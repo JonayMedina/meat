@@ -106,7 +106,7 @@ class Order extends BaseOrder
     }
 
     /**
-     * @Assert\Callback
+     * @Assert\Callback()
      * @param ExecutionContextInterface $context
      */
     public function validate(ExecutionContextInterface $context)

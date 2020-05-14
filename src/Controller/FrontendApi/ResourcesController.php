@@ -12,6 +12,7 @@ use App\Service\SettingsService;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
+use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,6 +56,11 @@ class ResourcesController extends AbstractFOSRestController
     private $contactUsController;
 
     /**
+     * @var UserRepositoryInterface
+     */
+    private $userRepository;
+
+    /**
      * QueueController constructor.
      * @param SenderInterface $sender
      * @param TranslatorInterface $translator
@@ -63,8 +69,9 @@ class ResourcesController extends AbstractFOSRestController
      * @param FavoriteService $favoriteService
      * @param ProductRepositoryInterface $productRepository
      * @param ContactUsController $contactUsController
+     * @param UserRepositoryInterface $userRepository
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -73,6 +80,7 @@ class ResourcesController extends AbstractFOSRestController
         $this->favoriteService = $favoriteService;
         $this->productRepository = $productRepository;
         $this->contactUsController = $contactUsController;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -228,6 +236,58 @@ class ResourcesController extends AbstractFOSRestController
                     'title' => $this->translator->trans('app.api.favorites.remove.error.title'),
                     'message' => $this->translator->trans('app.api.favorites.remove.error.message'),
                 ]);
+        }
+
+        $view = $this->view($data, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/forgotten-password.{_format}",
+     *     name="store_api_forgotten_password",
+     *     methods={"POST"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function newRequestPasswordResetAction(Request $request) {
+        $email = $request->get('email', null);
+
+        if ($email) {
+            $user = $this->userRepository->findOneBy(['username' => $email]);
+
+            if ($user instanceof ShopUser) {
+                if ($user->getPasswordResetToken()) {
+                    $this->sender->send('reset_password_token', [$email], ['user' => $user]);
+
+                    $statusCode = Response::HTTP_CREATED;
+                    $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+                        'title' => $this->translator->trans('app.ui.reset_password.success'),
+                        'message' => $this->translator->trans('app.ui.reset_password.success.message')
+                    ]);
+                } else {
+                    $statusCode = Response::HTTP_BAD_REQUEST;
+                    $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                        'title' => $this->translator->trans('app.ui.reset_password.error.title'),
+                        'message' => $this->translator->trans('app.ui.reset_password.error.message')
+                    ]);
+                }
+            } else {
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.ui.reset_password.error.title'),
+                    'message' => $this->translator->trans('app.ui.reset_password.error.not_registered')
+                ]);
+            }
+        } else {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+            $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                'title' => $this->translator->trans('app.ui.reset_password.error.title'),
+                'message' => $this->translator->trans('app.ui.reset_password.error.enter_email')
+            ]);
         }
 
         $view = $this->view($data, $statusCode);

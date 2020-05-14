@@ -368,6 +368,17 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     padding-left: 30px;
 }
 
+.forgot-password .field label {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.forgot-password .field label span {
+    order: 2;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .field .dropdown .grouped {
     display: flex !important;
 }
@@ -1316,7 +1327,7 @@ body.blocked {
     content: none !important;
 }
 
-.favorites.page form > div:not(.extra), .cart-summary.page .form > div:not(.extra) {
+.favorites.page form > div:not(.extra) {
     margin-right: 20px;
     margin-bottom: 0 !important;
 }
@@ -1382,7 +1393,7 @@ body.blocked {
     margin-top: 0;
 }
 
-.favorites.page .favorite-item p.sub-total {
+.favorites.page .favorite-item p.sub-total, .cart-summary.page .favorite-item p.sub-total {
     height: calc(100% - 32px);
     display: flex;
     align-items: center;
@@ -1660,6 +1671,91 @@ label.icobutton input {
     outline: none;
 }
 
+.cart-summary.page .form {
+    max-width: initial;
+}
+
+.cart-summary.page .form .field > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cart-summary.page .form .field > div p.type {
+    margin-left: 15px;
+}
+
+.cart-summary.page .favorite-item p.sub-total {
+    padding-bottom: 0;
+}
+
+.cart-summary.page .form > div.delete {
+    margin-top: 34px;
+}
+
+.cart-summary.page .form>div:not(.extra) {
+    margin-bottom: 0 !important;
+}
+
+.cart-summary.page #sylius-coupon {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-left: 20px;
+}
+
+.cart-summary.page #sylius-coupon p {
+    font-family: "Raleway Italic", sans-serif;
+    font-size: 14px;
+    letter-spacing: .61px;
+    margin-bottom: 0;
+    color: #404040;
+    margin-top: 0;
+}
+
+.cart-summary.page #sylius-coupon .input {
+    display: flex;
+    margin-right: 0;
+}
+
+.cart-summary.page #sylius-coupon .input input {
+    max-width: 125px;
+    margin-right: -20px;
+    border-radius: 15px 0 0 15px !important;
+}
+
+.cart-summary.page #sylius-coupon .input .btn-rounded {
+    margin-top: 0;
+}
+
+.cart-summary.page .total {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cart-summary.page .total p {
+    font-family: "Raleway SemiBold", sans-serif;
+    margin-bottom: 0;
+}
+
+.cart-summary.page .total .title {
+    font-size: 16px;
+    color: #ab162b;
+}
+
+.cart-summary.page .buttons a:first-of-type {
+    margin-right: 35px;
+}
+
+.cart-summary.page .quantity {
+    margin: initial;
+}
+
+/* New login */
+.new-login form {
+    border-bottom: none;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -1717,6 +1813,10 @@ label.icobutton input {
 
     .welcome .information > .row > div:not(.separator) {
         padding: 50px 0;
+    }
+
+    .btn-rounded {
+        min-width: 220px;
     }
 }
 
@@ -1914,6 +2014,19 @@ label.icobutton input {
 
     #deleteFavorite .modal-body a.image img {
         max-height: inherit;
+    }
+
+    .cart-summary.page #sylius-coupon p {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .cart-summary.page #sylius-coupon .input input {
+        max-width: initial;
+    }
+
+    .cart-summary.page #sylius-coupon br {
+        display: none;
     }
 }
 
@@ -2120,12 +2233,6 @@ label.icobutton input {
         background-repeat: no-repeat !important;
     }
 
-    #banners-carousel img {
-        min-height: 250px;
-        max-height: 270px;
-        visibility: hidden;
-    }
-
     #banners-carousel .carousel-indicators.mb-5 {
         margin-bottom: 1rem !important;
     }
@@ -2166,6 +2273,24 @@ label.icobutton input {
 
     #deleteFavorite .modal-footer .btn-rounded:first-of-type {
         margin-bottom: 15px;
+    }
+
+    .cart-summary.page  .form.p-info label, .cart-summary.page  .form.p-info .field {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .cart-summary.page  .form.p-info label, .cart-summary.page  .form.p-info .sub-total-title {
+        display: none;
+    }
+
+    .cart-summary.page .sub-total-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-summary.page .favorite-item p.sub-total {
+        align-items: initial;
     }
 }
 
@@ -2317,6 +2442,30 @@ label.icobutton input {
 
     .favorites.page form div.field p, .cart-summary.page .form div.field p {
         margin-left: 15px;
+    }
+
+    .cart-summary .sub-total-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-summary .sub-total-container .delete-content {
+        display: flex !important;
+    }
+
+    .cart-summary.page .buttons {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .cart-summary.page .buttons a {
+        width: 100%;
+        margin-right: 0 !important;
+        text-align: center;
+    }
+
+    .cart-summary.page .buttons a:first-of-type {
+        order: 1;
     }
 }
 

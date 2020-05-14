@@ -83,7 +83,7 @@
 
 {% block extrajs %}
     <script>
-        jQuery(document).ready(function ($) {
+        jQuery(function ($) {
             let $form = $("form");
             let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
             let $radio = $('input[type="radio"]');
@@ -108,6 +108,12 @@
 
             $terms.on('change', function () {
                 checkTerms(true);
+            });
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
             });
 
             $('a.show-terms').click(function () {

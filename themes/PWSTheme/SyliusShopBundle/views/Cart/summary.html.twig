@@ -15,11 +15,13 @@
             <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
         </div>
 
+        {{ dump(get_coupon_action(cart.promotionCoupon.promotion).configuration) }}
+
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
             {% if not cart.empty %}
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
 
-                <div class="row">
+                <div class="row products-exist">
                     {{ sonata_block_render_event('sylius.shop.cart.summary.before_items', {'cart': cart}) }}
 
                     {% include '@SyliusShop/Cart/Summary/_items.html.twig' %}
@@ -27,26 +29,58 @@
                     {{ sonata_block_render_event('sylius.shop.cart.summary.after_items', {'cart': cart}) }}
                 </div>
 
-                <div class="row">
-                    <div class="col-12 text-right">
+                <div class="row products-exist">
+                    <div class="col-12 buttons text-right">
                         <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
-                        <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
+                        <a id="to-pay" class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
 
-
-
 {#                <div class="five wide column">#}
 {#                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}#}
-
 {#                    {% include '@SyliusShop/Cart/Summary/_totals.html.twig' %}#}
-
 {#                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_totals', {'cart': cart}) }}#}
-
 {#                    {% include '@SyliusShop/Cart/Summary/_checkout.html.twig' %}#}
 {#                </div>#}
 
                 {{ sonata_block_render_event('sylius.shop.cart.summary.before_suggestions', {'cart': cart}) }}
+
+                <div id="empty-cart" class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0" style="display: none">
+                    <img src="{{ asset('bundles/syliusshop/img/icons/empty-cart.png') }}" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-5 mb-5 xs-text-left">{{ 'app.ui.cart.empty_instructions'|trans }}</h2>
+                    <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+
+                <div class="modal smaller fade" id="deleteFavorite" tabindex="-1" role="dialog" aria-labelledby="deleteFavoriteLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="deleteFavoriteLabel">{{ 'app.ui.cart.delete_product'|trans }}</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <p>{{ 'app.ui.cart.delete_product.are_you_sure?'|trans }}</p>
+                                <div class="content"></div>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.back'|trans }}</button>
+                                <button id="delete" data-id="" type="button" class="btn-rounded">{{ 'app.ui.cart.delete_from'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                            </div>
+                            <div class="modal-body text-center"></div>
+                            <div class="modal-footer text-center">
+                                <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% else %}
                 <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">
                     <img src="{{ asset('bundles/syliusshop/img/icons/empty-cart.png') }}" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
@@ -58,246 +92,264 @@
     </div>
 {% endblock %}
 
-{% if not cart.empty %}
-    {% block extrajs %}
-        <script>
-            $(document).ready(function () {
-                var $deleteModal = $('#deleteFavorite');
-                var $modal = $('#showMessage');
-                var typingTimer;
-                var doneTypingInterval = 1000;
-                var $search = $('#site-search');
-                var $searchBtn = $('form.search-box button');
+{% block extrajs %}
+    {% if not cart.empty %}
+    <script>
+        $(function () {
+            var $deleteModal = $('#deleteFavorite');
+            var $modal = $('#showMessage');
+            var $productsList = $('.products-list');
+            var noItems = {{ cart.items|length|e('js') }};
+            var $toPay = $('#to-pay');
+            var $updateCart = $('#sylius_cart');
+            var $couponAdd = $('#coupon-add');
 
-                $('.quantity-up').click(function () {
-                    calculateSubtotal($(this).closest('form'));
-                });
+            $('.quantity-up').click(function () {
+                calculateSubtotal($(this).closest('div.form'));
+            });
 
-                $('.quantity-down').click(function () {
-                    calculateSubtotal($(this).closest('form'));
-                });
+            $('.quantity-down').click(function () {
+                calculateSubtotal($(this).closest('div.form'));
+            });
 
-                calculateSubtotal($('#price'));
+            $('input[type="number"]').change(function () {
+                calculateSubtotal($(this).closest('div.form'));
+            });
 
-                $('a.delete').click(function () {
-                    var id = $(this).data('id');
-                    var $content = $('.favorites-list').find('.p-' + id)[0].outerHTML;
+            $productsList.find('.product-item').each(function () {
+                calculateSubtotal($(this).find('.form'));
+            });
 
-                    $deleteModal.find('.content').html($content);
-                    $deleteModal.find('#delete').attr('data-id', id);
-                    $deleteModal.modal('show');
-                });
+            {% if cart.orderPromotionTotal %}
+                $('#sylius_cart_promotionCoupon').attr('readonly', true);
+            {% endif %}
 
-                $('#delete').click(function () {
-                    var id = $(this).data('id');
-                    $deleteModal.modal('hide');
-                    blockPage();
+            $toPay.click(function (evt) {
+                evt.preventDefault();
+                var value = $('.total .value').attr('data-value');
 
-                    $.ajax({
-                        url: Routing.generate("store_api_favorites_remove", { version: 1}),
-                        method: "DELETE",
-                        data: JSON.stringify({
-                            product: $(this).attr('data-id')
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                    })
-                        .done(function (data) {
-                            noFavorites--;
-                            unblockPage();
+                if (value < {{ about_store('min-purchase')|e('js') }}) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
+                    $modal.modal('show');
+                } else if (value > {{ about_store('max-purchase')|e('js') }}) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.max.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
+                    $modal.modal('show');
+                } else {
+                    $('#sylius-cart-update').trigger('click');
+                }
 
-                            if (noFavorites > 0) {
-                                cuteHide($('.favorites-list').find('.product-' + id));
-                            } else {
-                                showNoFavorites();
-                            }
-                        })
-                        .fail(function (error) {
-                            let recordset = error['responseJSON']['recordset'];
-                            $modal.find('.modal-title').html(recordset['title']);
-                            $modal.find('.modal-body').html(recordset['message']);
+            });
 
-                            unblockPage();
-                            $modal.modal('show');
-                        });
-                });
+            $couponAdd.click(function () {
+                {% if cart.orderPromotionTotal %}
+                {% else %}
+                blockPage();
+                $.ajax({
+                    type: 'PUT',
+                    url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue }) }}',
+                    data: {
+                        'coupon': $('#sylius_cart_promotionCoupon').val(),
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        unblockPage();
+                    },
+                    error: function (error) {
+                        console.log(error);
 
-                /* Filter by taxon */
-                var $btns = $('.owl-item').click(function() {
-                    showFavorites();
+                        let recordset = error['responseJSON']['recordset'];
+                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
 
-                    if ($(this).find('.item').hasClass('all')) {
-                        showAllTaxons();
-                    } else {
-                        var $el = $('.' + $(this).find('.item').data('taxon'));
-
-                        if ($el.length > 1) {
-                            showElements($el);
-                        } else {
-                            showEmptySearch();
+                        if (recordset['errors']) {
+                            errorMsg = recordset['errors']['errors'][0];
                         }
+
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
                     }
-                    $btns.find('.item').removeClass('current');
-                    $(this).find('.item').addClass('current');
+                });
+                {% endif %}
+            });
+
+            $('a.delete').click(function () {
+                var id = $(this).data('id');
+                var item = $(this).data('item');
+                var $content = $('.products-list').find('.p-' + id)[0].outerHTML;
+
+                $deleteModal.find('.content').html($content);
+                $deleteModal.find('#delete').attr('data-id', item);
+                $deleteModal.modal('show');
+            });
+
+            $('#delete').click(function () {
+                var id = $(this).attr('data-id');
+                $deleteModal.modal('hide');
+                $('#delete-'+ id).submit();
+            });
+
+            function calculateSubtotal($form) {
+                var quantity = $form.find('input').val();
+                var priceWithCode = $form.data('price').split(/(\s+)/);
+                var currency = priceWithCode[0];
+                var price = priceWithCode[2];
+                var total = quantity*price;
+
+                $form.find('.sub-total').html(currency + ' ' + total.toFixed(2)).attr('data-currency', currency).attr('data-value', total);
+
+                calculateTotal();
+            }
+
+            function calculateTotal() {
+                var total = 0;
+                var currency = "";
+                var discountType = -1;
+                var discount = 0;
+                var percentage = 0;
+                var finalTotal = 0;
+
+                $('body').find('.sub-total').each(function () {
+                    var $sub = $(this);
+
+                    total += Number($sub.attr('data-value'));
+                    currency = $sub.attr('data-currency');
                 });
 
-                {% if about_store('show-search') %}
-                $search.on('keyup', function () {
-                    clearTimeout(typingTimer);
-                    searching();
-
-                    typingTimer = setTimeout(function () {
-                        initSearch();
-                    }, doneTypingInterval);
-                });
-
-                $('form.search-box').on('submit', function (evt) {
-                    evt.preventDefault();
-                    searching();
-
-                    setTimeout(function () {
-                        initSearch();
-                    }, 200);
-                });
-
-                function initSearch() {
-                    var $favoritesList = $('.favorites-list');
-                    var i = 0;
-                    var $el;
-
-                    if ((Boolean)($search.val()) && $search.val().length > 1) {
-                        $favoritesList.find('.product-name').each(function () {
-                            var $pName = $(this);
-                            var name = $pName.text().toLowerCase();
-
-                            if (name.includes($search.val().toLowerCase())) {
-                                $pName.closest('.favorite-item').addClass('similar');
-                                $('.divider.' + name.replace(' ', '-')).addClass('similar');
-                                i++;
-                            } else {
-                                $pName.closest('.favorite-item').removeClass('similar');
-                                $('.divider.' + name.replace(' ', '-')).removeClass('similar');
-                            }
-                        });
-
-                        if (i > 0) {
-                            $el = $('.similar');
-
-                            if ($el.length > 0) {
-                                showFavorites();
-                                showElements($el);
-                            } else {
-                                showEmptySearch();
-                            }
-                        } else {
-                            showEmptySearch();
-                        }
-                    } else {
-                        showFavorites();
-
-                        var $currentTaxon = $('.owl-carousel').find('.item.current');
-
-                        if ($currentTaxon.length > 0) {
-                            if ($currentTaxon.hasClass('all')) {
-                                showAllTaxons()
-                            } else {
-                                $el = $('.' + $currentTaxon.data('taxon'));
-
-                                if ($el.length > 1) {
-                                    showElements($el);
-                                } else {
-                                    showEmptySearch();
-                                }
-                            }
-                        }
-                    }
-
-                    searched();
-                }
-
-                function searching() {
-                    $searchBtn.find('span').hide();
-                    $searchBtn.find('img').show();
-                }
-
-                function searched() {
-                    $searchBtn.find('img').hide();
-                    $searchBtn.find('span').show();
-                }
+                {% if cart.orderPromotionTotal %}
+                    {% if get_coupon_action(cart.promotionCoupon.promotion).type == 'order_fixed_discount'  %}
+                        discountType = 1;
+                    {% else %}
+                        discountType = 0;
+                        percentage = {{ get_coupon_action(cart.promotionCoupon.promotion).configuration['percentage']|e('js')  }};
+                    {% endif %}
                 {% endif %}
 
-                function calculateSubtotal($form) {
-                    var quantity = $form.find('input').val();
-                    var priceWithCode = $form.data('price').split(/(\s+)/);
-                    var currency = priceWithCode[0];
-                    var price = priceWithCode[2];
-                    var total = quantity*price;
+                if (discountType >= 0) {
+                    if (discountType === 0) {
+                        discount = total * percentage;
+                    } else {
+                        discount = $('.total .discount').attr('data-first').split(/(\s+)/)[2];
+                    }
 
-                    $form.find('.sub-total').html(currency + ' ' + total.toFixed(2));
+                    finalTotal = total - discount;
+
+                    $('.total .pre-total').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
+                    $('.total .discount').html('-' + currency + ' ' + discount.toFixed(2)).attr('data-value', discount);
+                    $('.total .value').html(currency + ' ' + finalTotal.toFixed(2)).attr('data-value', finalTotal);
+                } else {
+                    $('.total .value').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
                 }
+            }
 
-                // Animated element removal
-                function cuteHide(el) {
-                    el.animate({opacity: '0'}, 150, function(){
-                        el.animate({height: '0px'}, 150, function(){
-                            el.remove();
-                        });
+            // Animated element removal
+            function cuteHide(el) {
+                el.animate({opacity: '0'}, 150, function(){
+                    el.animate({height: '0px'}, 150, function(){
+                        el.remove();
                     });
+                });
 
-                    setTimeout(function () {
-                        findFirstFavorite();
-                    }, 500);
-                }
+                setTimeout(function () {
+                    findFirstProduct();
+                }, 500);
+            }
 
-                function showFavorites() {
-                    $('#empty-search').hide();
-                    $('.favorites-list').fadeIn(450);
-                }
+            function showEmptyCart() {
+                $('.products-exist').remove();
+                $('#empty-cart').fadeIn(450);
+            }
 
-                function showEmptySearch() {
-                    $('.favorites-list').hide();
-                    $('#empty-search').fadeIn(450);
-                }
+            findFirstProduct();
 
-                function showAllTaxons() {
-                    $('.favorites-list .favorite-item').fadeIn(450).addClass('view');
-                    $('.favorites-list .divider').fadeIn(450);
-                    findFirstFavorite();
-                }
+            function findFirstProduct() {
+                var i = 0;
 
-                function showElements($el) {
-                    $el.addClass('view');
-                    $el.fadeIn(450);
+                $productsList.find('.product-item.view').each(function () {
+                    var $product = $(this);
 
-                    $('.favorites-list .favorite-item').not($el).removeClass('view').hide();
-                    $('.favorites-list .divider').not($el).removeClass('view').hide();
-                    findFirstFavorite();
-                }
+                    if (i === 0) {
+                        $product.addClass('first');
+                    } else {
+                        $product.removeClass('first');
+                    }
 
-                function showNoFavorites() {
-                    $('.favorites-exist').remove();
-                    $('#empty-search').remove();
-                    $('#no-favorites').fadeIn(450);
-                }
+                    i++;
+                });
+            }
 
-                findFirstProduct();
+            $('form.delete-product').on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this);
 
-                function findFirstProduct() {
-                    var i = 0;
+                blockPage();
+                $.ajax({
+                    type: 'POST',
+                    url: $this.attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        noItems--;
+                        unblockPage();
 
-                    $('.products-list').find('.product-item.view').each(function () {
-                        var $favorite = $(this);
-
-                        if (i === 0) {
-                            $favorite.addClass('first');
+                        if (noItems > 0) {
+                            cuteHide($('.products-list').find('.product-' + $this.data('id')));
+                            setTimeout(function () {
+                                calculateTotal();
+                            }, 500);
                         } else {
-                            $favorite.removeClass('first');
+                            showEmptyCart();
+                        }
+                    },
+                    error: function (error) {
+                        let recordset = error['responseJSON']['recordset'];
+                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                        if (recordset['errors']) {
+                            errorMsg = recordset['errors']['errors'][0];
                         }
 
-                        i++;
-                    });
-                }
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
             });
-        </script>
-    {% endblock %}
-{% endif %}
+
+            $updateCart.on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+
+                blockPage();
+                $.ajax({
+                    type: 'POST',
+                    url: $this.attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        unblockPage();
+                        var logged = {% if is_granted('ROLE_USER') %}true{% else %}false{% endif %}
+
+                        if (logged) {
+                            window.location.href = "{{ path('sylius_shop_checkout_start') }}";
+                        } else {
+                            window.location.href = "{{ path('sylius_shop_register') }}";
+                        }
+                    },
+                    error: function (error) {
+                        var errorMsg = '{{ 'app.ui.cart.update.error.message'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.update.error'|trans }}');
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
+            });
+        });
+    </script>
+    {% endif %}
+{% endblock %}

@@ -4,11 +4,14 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Taxonomy\Taxon;
-use App\Repository\FavoriteRepository;
+use App\Entity\User\ShopUser;
+use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
+use App\Repository\PromotionBannerRepository;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,12 +66,29 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/forgotten-password/token", name="store_set_token")
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse|Response
      */
     public function setResetTokenAction(Request $request) {
         $this->get('session')->getFlashBag()->clear();
+        $code = $request->get('code', '');
 
-        return $this->render('/frontend/security/setResetToken.html.twig');
+        $form = $this->createForm(TokenPasswordType::class, null,  ['code' => $code]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $token = $form->get('token')->getData();
+
+            /** @var ShopUser|null $user */
+            $user = $this->getDoctrine()->getManager()->getRepository('App:User\ShopUser')->findOneBy(['passwordResetToken' => $token]);
+
+            if ($user instanceof ShopUser) {
+                return $this->redirectToRoute('sylius_shop_password_reset', ['token' => $token]);
+            }
+
+            return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form->createView(), 'error' => 'app.ui.reset_password.check_you_email.message']);
+        }
+
+        return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -151,17 +171,6 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     * @Route("/categories/{slug}", name="store_show_category")
-     * @param Request $request
-     * @param $slug
-     * @param TaxonRepositoryInterface $taxonRepository
-     * @return void
-     */
-    public function showCategoryAction(Request $request, $slug, TaxonRepositoryInterface $taxonRepository) {
-
-    }
-
-    /**
      * @Route("/{code}/products", name="store_products_by_taxon")
      * @param Request $request
      * @param String $code
@@ -190,5 +199,14 @@ class ResourcesController extends AbstractController
         $products = $productRepository->findOffers();
 
         return $this->render('/frontend/pages/widgets/_products.html.twig', ['products' => $products]);
+    }
+
+    /**
+     * @Route("/banners", name="store_banners")
+     * @param PromotionBannerRepository $promotionBannerRepository
+     * @return Response
+     */
+    public function bannersAction(PromotionBannerRepository $promotionBannerRepository) {
+        return $this->render('/frontend/pages/widgets/_banners.html.twig', ['banners' => $promotionBannerRepository->findAvailable()]);
     }
 }
