@@ -130,7 +130,7 @@ class OAuthLoginController extends AbstractFOSRestController
      * @param $provider
      * @param $identifier
      * @param $accessToken
-     * @return string|null
+     * @return array|null
      */
     private function validateAccessToken($provider, $identifier, $accessToken): ?array
     {
