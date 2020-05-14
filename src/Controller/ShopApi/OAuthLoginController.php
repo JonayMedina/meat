@@ -69,8 +69,6 @@ class OAuthLoginController extends AbstractFOSRestController
     public function loginAction(Request $request)
     {
         $identifier = $request->get('identifier');
-        $firstName = $request->get('first_name');
-        $lastName = $request->get('last_name');
         $accessToken = $request->get('access_token');
         $provider = $request->get('provider');
 
@@ -83,7 +81,10 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        $email = $this->validateAccessToken($provider, $identifier, $accessToken);
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
+        $email = $serverResponse['email'];
+        $firstName = $serverResponse['first_name'];
+        $lastName = $serverResponse['last_name'];
 
         if (null === $email) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
@@ -131,7 +132,7 @@ class OAuthLoginController extends AbstractFOSRestController
      * @param $accessToken
      * @return string|null
      */
-    private function validateAccessToken($provider, $identifier, $accessToken): ?string
+    private function validateAccessToken($provider, $identifier, $accessToken): ?array
     {
         if (self::PROVIDER_FACEBOOK === $provider) {
 
@@ -142,14 +143,14 @@ class OAuthLoginController extends AbstractFOSRestController
                     'default_access_token' => $accessToken,
                 ]);
 
-                $response = $fb->get('/me?fields=email');
+                $response = $fb->get('/me?fields=email,first_name,last_name');
                 $decodedBody = $response->getDecodedBody();
 
                 if ($decodedBody['id'] != $identifier) {
                     return null;
                 }
 
-                return $decodedBody['email'];
+                return $decodedBody;
             } catch(FacebookResponseException $exception) {
                 $this->logger->error($exception->getMessage());
 
