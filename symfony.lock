@@ -143,6 +143,9 @@
     "egulias/email-validator": {
         "version": "2.1.5"
     },
+    "facebook/graph-sdk": {
+        "version": "5.7.0"
+    },
     "friends-of-behat/page-object-extension": {
         "version": "0.1"
     },
