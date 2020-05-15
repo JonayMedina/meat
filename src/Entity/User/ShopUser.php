@@ -55,7 +55,7 @@ class ShopUser extends BaseShopUser
     /**
      * @return \DateTime
      */
-    public function getTermsAndConditionsAcceptedAt(): \DateTime
+    public function getTermsAndConditionsAcceptedAt(): ?\DateTime
     {
         return $this->termsAndConditionsAcceptedAt;
     }
@@ -63,7 +63,7 @@ class ShopUser extends BaseShopUser
     /**
      * @param \DateTime $termsAndConditionsAcceptedAt
      */
-    public function setTermsAndConditionsAcceptedAt(\DateTime $termsAndConditionsAcceptedAt): void
+    public function setTermsAndConditionsAcceptedAt(?\DateTime $termsAndConditionsAcceptedAt): void
     {
         $this->termsAndConditionsAcceptedAt = $termsAndConditionsAcceptedAt;
     }
