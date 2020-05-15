@@ -12,7 +12,6 @@ use App\Service\SettingsService;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
-use Sylius\Component\Promotion\Repository\PromotionRepositoryInterface;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
