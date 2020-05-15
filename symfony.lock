@@ -131,6 +131,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "dragonmantank/cron-expression": {
+        "version": "v2.3.0"
+    },
     "econea/nusoap": {
         "version": "v0.9.7"
     },
@@ -1108,5 +1111,8 @@
     },
     "zendframework/zend-stdlib": {
         "version": "3.2.0"
+    },
+    "zenstruck/schedule-bundle": {
+        "version": "v1.0.0"
     }
 }
