@@ -19,12 +19,12 @@
                 <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                     <div class="total row">
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                            <p class="pre-total-title title" {% if not cart.orderPromotionTotal %}style="display: none"{% endif %}>{{ 'app.ui.cart.sub-total'|trans }}</p>
-                            <p class="pre-total-title title" {% if not cart.orderPromotionTotal %}style="display: none"{% endif %}>{{ 'app.ui.cart.discount'|trans }}</p>
+                            <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.sub-total'|trans }}</p>
+                            <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.discount'|trans }}</p>
                             <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
                         </div>
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                            {% if cart.orderPromotionTotal %}
+                            {% if cart.promotionCoupon %}
                                 <p class="pre-total" data-value="0">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
                                 <p class="discount" data-value="0" data-first="{{ money.convertAndFormat(cart.orderPromotionTotal) }}">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
                             {% else %}

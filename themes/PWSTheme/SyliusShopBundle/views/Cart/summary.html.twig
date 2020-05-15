@@ -15,8 +15,6 @@
             <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
         </div>
 
-        {{ dump(get_coupon_action(cart.promotionCoupon.promotion).configuration) }}
-
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
             {% if not cart.empty %}
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
@@ -103,6 +101,10 @@
             var $toPay = $('#to-pay');
             var $updateCart = $('#sylius_cart');
             var $couponAdd = $('#coupon-add');
+            var $discount = $('.total .discount');
+            var discountType = -1;
+            var percentage = 0.6;
+            var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
 
             $('.quantity-up').click(function () {
                 calculateSubtotal($(this).closest('div.form'));
@@ -120,7 +122,7 @@
                 calculateSubtotal($(this).find('.form'));
             });
 
-            {% if cart.orderPromotionTotal %}
+            {% if cart.promotionCoupon %}
                 $('#sylius_cart_promotionCoupon').attr('readonly', true);
             {% endif %}
 
@@ -142,38 +144,57 @@
 
             });
 
-            $couponAdd.click(function () {
-                {% if cart.orderPromotionTotal %}
-                {% else %}
-                blockPage();
-                $.ajax({
-                    type: 'PUT',
-                    url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue }) }}',
-                    data: {
-                        'coupon': $('#sylius_cart_promotionCoupon').val(),
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        unblockPage();
-                    },
-                    error: function (error) {
-                        console.log(error);
+            $couponAdd.click(function (evt) {
+                evt.preventDefault();
 
-                        let recordset = error['responseJSON']['recordset'];
-                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
-                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+                if (withCoupon) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.message'|trans }}');
+                    $modal.modal('show');
+                } else {
+                    blockPage();
+                    $.ajax({
+                        type: 'PUT',
+                        url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue }) }}',
+                        data: {
+                            'coupon': $('#sylius_cart_promotionCoupon').val(),
+                        },
+                        success: function (data) {
+                            var priceWithCode = $('#price').data('price').split(/(\s+)/);
+                            var currency = priceWithCode[0];
 
-                        if (recordset['errors']) {
-                            errorMsg = recordset['errors']['errors'][0];
+
+                            console.log(data['totals']['promotion']);
+
+                            var discount = convertToMoney((String) ((data['totals']['promotion']) * -1));
+
+                            withCoupon = true;
+                            discountType = 0;
+                            $discount.html(currency + discount.toFixed(2)).attr('data-value', discount.toFixed(2));
+
+                            calculateTotal();
+
+                            console.log(data);
+                            unblockPage();
+                        },
+                        error: function (error) {
+                            console.log(error);
+
+                            let recordset = error['responseJSON']['recordset'];
+                            var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                            $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                            if (recordset['errors']) {
+                                errorMsg = recordset['errors']['errors'][0];
+                            }
+
+                            $modal.find('.modal-body').html(errorMsg);
+
+                            unblockPage();
+                            $modal.modal('show');
                         }
-
-                        $modal.find('.modal-body').html(errorMsg);
-
-                        unblockPage();
-                        $modal.modal('show');
-                    }
-                });
-                {% endif %}
+                    });
+                }
             });
 
             $('a.delete').click(function () {
@@ -207,9 +228,7 @@
             function calculateTotal() {
                 var total = 0;
                 var currency = "";
-                var discountType = -1;
                 var discount = 0;
-                var percentage = 0;
                 var finalTotal = 0;
 
                 $('body').find('.sub-total').each(function () {
@@ -219,7 +238,7 @@
                     currency = $sub.attr('data-currency');
                 });
 
-                {% if cart.orderPromotionTotal %}
+                {% if cart.promotionCoupon %}
                     {% if get_coupon_action(cart.promotionCoupon.promotion).type == 'order_fixed_discount'  %}
                         discountType = 1;
                     {% else %}
@@ -232,13 +251,14 @@
                     if (discountType === 0) {
                         discount = total * percentage;
                     } else {
-                        discount = $('.total .discount').attr('data-first').split(/(\s+)/)[2];
+                        discount = $discount.attr('data-first').split(/(\s+)/)[2];
                     }
 
                     finalTotal = total - discount;
 
-                    $('.total .pre-total').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
-                    $('.total .discount').html('-' + currency + ' ' + discount.toFixed(2)).attr('data-value', discount);
+                    $('.title').fadeIn(450);
+                    $('.total .pre-total').html(currency + ' ' + total.toFixed(2)).attr('data-value', total).fadeIn(450);
+                    $discount.html('-' + currency + ' ' + discount.toFixed(2)).attr('data-value', discount).fadeIn(450);
                     $('.total .value').html(currency + ' ' + finalTotal.toFixed(2)).attr('data-value', finalTotal);
                 } else {
                     $('.total .value').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
@@ -261,6 +281,58 @@
             function showEmptyCart() {
                 $('.products-exist').remove();
                 $('#empty-cart').fadeIn(450);
+            }
+
+            function convertToMoney(price) {
+                var length = price.length - 2;
+                var float = price.slice(0, length) + "." + price.slice(-2);
+
+                return parseFloat(float);
+            }
+
+            function getPromotion() {
+                blockPage();
+                $.ajax({
+                    type: 'PUT',
+                    url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue }) }}',
+                    data: {
+                        'coupon': $('#sylius_cart_promotionCoupon').val(),
+                    },
+                    success: function (data) {
+                        var priceWithCode = $('#price').data('price').split(/(\s+)/);
+                        var currency = priceWithCode[0];
+
+
+                        console.log(data['totals']['promotion']);
+
+                        var discount = convertToMoney((String) ((data['totals']['promotion']) * -1));
+
+                        withCoupon = true;
+                        discountType = 0;
+                        $discount.html(currency + discount.toFixed(2)).attr('data-value', discount.toFixed(2));
+
+                        calculateTotal();
+
+                        console.log(data);
+                        unblockPage();
+                    },
+                    error: function (error) {
+                        console.log(error);
+
+                        let recordset = error['responseJSON']['recordset'];
+                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                        if (recordset['errors']) {
+                            errorMsg = recordset['errors']['errors'][0];
+                        }
+
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
             }
 
             findFirstProduct();
