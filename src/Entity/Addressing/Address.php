@@ -11,6 +11,38 @@ use Sylius\Component\Core\Model\Address as BaseAddress;
 /**
  * @ORM\Entity
  * @ORM\Table(name="sylius_address")
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="firstName",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="lastName",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="street",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="city",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="postcode",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      ),
+ *      @ORM\AttributeOverride(name="countryCode",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      )
+ * })
  */
 class Address extends BaseAddress
 {
