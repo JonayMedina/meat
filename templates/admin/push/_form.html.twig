@@ -27,10 +27,34 @@
     </div>
 </div>
 
-<div id="promotion-type-push">
-    {{ UI.row([
-        {'span': 3, 'field': form.promotionCoupon},
-    ]) }}
+<div id="promotion-type-push" class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.promotionType[0]) }}
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.promotionType[1]) }}
+        </div>
+    </div>
+    <div class="col-lg-7"></div>
+
+    <div class="col-lg-1"></div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.promotionCoupon) }}
+            {{ form_errors(form.promotionCoupon) }}
+        </div>
+    </div>
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.promotionBanner) }}
+            {{ form_errors(form.promotionBanner) }}
+        </div>
+    </div>
 </div>
 
 

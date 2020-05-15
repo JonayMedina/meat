@@ -9,3 +9,4 @@ app.ui.segment.enter_fixed_amount: 'Ingrese el monto de compra por mes'
 app.ui.push.select_a_coupon: 'Debe seleccionar un cupón'
 app.ui.forgot_password.email_field_not_blank: 'Ingresa un correo'
 app.ui.forgot_password.token_field_not_blank: "Ingresa\nel código que enviamos a tu correo."
+app.ui.push.select_a_banner: 'Debe seleccionar una promoción'

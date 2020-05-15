@@ -24,6 +24,10 @@ class PushNotification implements ResourceInterface
 
     const TYPE_INFO = 'info';
 
+    const PROMOTION_TYPE_COUPON = 'coupon';
+
+    const PROMOTION_TYPE_BANNER = 'banner';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -76,6 +80,20 @@ class PushNotification implements ResourceInterface
     private $promotionCoupon;
 
     /**
+     * @var PromotionBanner $promotionBanner
+     * @ORM\ManyToOne(
+     *     targetEntity="App\Entity\PromotionBanner",
+     *     inversedBy="pushNotifications"
+     * )
+     * @ORM\JoinColumn(
+     *     name="banner_id",
+     *     referencedColumnName="id",
+     *     nullable=true
+     * )
+     */
+    private $promotionBanner;
+
+    /**
      * @var Segment $segment
      * @ORM\ManyToOne(
      *     targetEntity="App\Entity\Segment",
@@ -88,6 +106,12 @@ class PushNotification implements ResourceInterface
      * )
      */
     private $segment;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=100, nullable=true)
+     */
+    private $promotionType = self::PROMOTION_TYPE_COUPON;
 
     public function getId(): ?int
     {
@@ -199,13 +223,18 @@ class PushNotification implements ResourceInterface
     /**
      * @Assert\Callback
      * @param ExecutionContextInterface $context
-     * @param $payload
      */
-    public function validate(ExecutionContextInterface $context, $payload)
+    public function validate(ExecutionContextInterface $context)
     {
-        if ($this->type == self::TYPE_PROMOTION && !$this->promotionCoupon instanceof PromotionCoupon) {
+        if ($this->type == self::TYPE_PROMOTION && $this->promotionType == self::PROMOTION_TYPE_COUPON && !$this->promotionCoupon instanceof PromotionCoupon) {
             $context->buildViolation('app.ui.push.select_a_coupon')
                 ->atPath('promotionCoupon')
+                ->addViolation();
+        }
+
+        if ($this->type == self::TYPE_PROMOTION && $this->promotionType == self::PROMOTION_TYPE_BANNER && !$this->promotionBanner instanceof PromotionBanner) {
+            $context->buildViolation('app.ui.push.select_a_banner')
+                ->atPath('promotionBanner')
                 ->addViolation();
         }
     }
@@ -254,5 +283,48 @@ class PushNotification implements ResourceInterface
     public function __toString()
     {
         return $this->title;
+    }
+
+    public function getSent(): ?bool
+    {
+        return $this->sent;
+    }
+
+    public function getPromotionBanner(): ?PromotionBanner
+    {
+        return $this->promotionBanner;
+    }
+
+    public function setPromotionBanner(?PromotionBanner $promotionBanner): self
+    {
+        $this->promotionBanner = $promotionBanner;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPromotionType(): ?string
+    {
+        return $this->promotionType;
+    }
+
+    /**
+     * @param string $promotionType
+     * @return PushNotification
+     */
+    public function setPromotionType(?string $promotionType): PushNotification
+    {
+        if (!in_array($promotionType, [
+            self::PROMOTION_TYPE_BANNER,
+            self::PROMOTION_TYPE_COUPON,
+        ])) {
+            throw new BadRequestHttpException('Invalid promotion type');
+        }
+
+        $this->promotionType = $promotionType;
+
+        return $this;
     }
 }

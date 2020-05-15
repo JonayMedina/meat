@@ -747,7 +747,7 @@ app.ui.coupon.apply: Aplicar
 app.ui.coupon.instructions: '¿Tienes algún cupón? <br> Ingrésalo aquí:'
 app.ui.cart.your_total: 'Tu total'
 app.ui.cart.delete_product: 'Eliminar del carrito'
-app.ui.cart.delete_product.are_you_sure?: '¿Estás seguro de eliminar este producto de tu carrito?'
+'app.ui.cart.delete_product.are_you_sure?': '¿Estás seguro de eliminar este producto de tu carrito?'
 app.ui.cart.delete_from: 'Eliminar de mi carrito'
 app.ui.cart.delete_product.error: '¡Error al eliminar el producto!'
 app.ui.cart.delete_product.error.message: 'Un error no permitio eliminar el producto de tu carrito, inténtalo nuevamente...'
@@ -766,8 +766,11 @@ app.ui.reset_password.error.message: 'Un error no permitio enviar el código a t
 app.ui.reset_password.error.not_registered: 'Este correo no ha sido registrado en nuestro sistema. Prueba con otro o registrate.'
 app.ui.reset_password.success: '¡Código envíado!'
 app.ui.reset_password.success.message: 'Hemos envíado un código a tu correo, revisa e ingresa el código en el campo para continuar.'
-app.ui.reset_password.finished: '¡Terminaste!'
+app.ui.reset_password.finished: ¡Terminaste!
 app.ui.reset_password.finished.message: 'Has actualizado tu contraseña correctamente. Ingresa nuevamente a tu cuenta con la nueva contraseña.'
+app.ui.promotion_banner: Promoción
+app.ui.push.promotion_types.banner: Promoción
+app.ui.push.promotion_types.coupon: Cupón
 app.ui.cart.coupon.error.title: '¡Parece que hubo un error!'
 app.ui.cart.coupon.error.message: 'Solo puedes agregar un cupón por carrito, guarda tu cupón e ingresalo en tu próxima compra.'
 app.ui.checkout.title: 'Realiza tu pago'
