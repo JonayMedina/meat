@@ -1,46 +1,23 @@
 zenstruck_schedule:
-
-    # The HttpClient service to use
-    http_client:          http_client # Example: http_client
-
     # The default timezone for tasks (override at task level), null for system default
     timezone:             America/Guatemala
 
+    schedule_extensions:
+        email_on_failure:
+            to: rzavala@praga.ws # optional if configured
+            subject: ~ # optional, leave empty to use default
+
     mailer:
-        enabled:              false
+        enabled:              true
 
         # The mailer service to use
         service:              mailer
 
         # The default "from" email address (use if no mailer default from is configured)
-        default_from:         null
+        default_from:         rzavala@praga.ws
 
         # The default "to" email address (can be overridden by extension)
-        default_to:           null
+        default_to:           rzavala@praga.ws
 
         # The prefix to use for email subjects (use to distinguish between different application schedules)
-        subject_prefix:       null # Example: "[Acme Inc Website]"
-
-    schedule_extensions:
-
-        # Set the environment(s) you only want the schedule to run in.
-        environments:         [] # Example: [prod, staging]
-
-        # Run schedule on only one server
-        on_single_server:
-            enabled:              false
-
-            # Maximum expected lock duration in seconds
-            ttl:                  3600
-
-        # Send email if schedule fails (alternatively enable by passing a "to" email)
-        email_on_failure:
-            enabled:              false
-
-            # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
-            to:                   null
-
-            # Email subject (leave blank to use extension default)
-            subject:              null
-
-        
+        subject_prefix:       "[MeatHouse Ecommerce]" # Example: "[Acme Inc Website]"
