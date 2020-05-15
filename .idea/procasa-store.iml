@@ -20,8 +20,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/coduo/php-to-string" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/container-interop/container-interop" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/cron/cron" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/cron/cron-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/deployer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/phar-update" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/deployer/recipes" />

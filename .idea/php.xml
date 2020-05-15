@@ -253,8 +253,6 @@
       <path value="$PROJECT_DIR$/vendor/knplabs/knp-paginator-bundle" />
       <path value="$PROJECT_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
       <path value="$PROJECT_DIR$/vendor/sylius-labs/polyfill-symfony-event-dispatcher" />
-      <path value="$PROJECT_DIR$/vendor/cron/cron" />
-      <path value="$PROJECT_DIR$/vendor/cron/cron-bundle" />
       <path value="$PROJECT_DIR$/vendor/nyholm/nsa" />
       <path value="$PROJECT_DIR$/vendor/php-translation/symfony-bundle" />
       <path value="$PROJECT_DIR$/vendor/php-translation/common" />

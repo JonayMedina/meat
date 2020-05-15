@@ -62,7 +62,6 @@ return [
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
     FOS\JsRoutingBundle\FOSJsRoutingBundle::class => ['all' => true],
-    Cron\CronBundle\CronCronBundle::class => ['all' => true],
     Translation\Bundle\TranslationBundle::class => ['all' => true],
     Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['all' => true],

@@ -50,12 +50,6 @@
     "container-interop/container-interop": {
         "version": "1.2.0"
     },
-    "cron/cron": {
-        "version": "1.4.2"
-    },
-    "cron/cron-bundle": {
-        "version": "2.3.0"
-    },
     "deployer/deployer": {
         "version": "v6.7.3"
     },

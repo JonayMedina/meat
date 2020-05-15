@@ -29,7 +29,6 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "aws/aws-sdk-php": "^3.133",
-        "cron/cron-bundle": "^2.3",
         "deployer/deployer": "^6.7",
         "deployer/recipes": "^6.2",
         "econea/nusoap": "^0.9.7",
