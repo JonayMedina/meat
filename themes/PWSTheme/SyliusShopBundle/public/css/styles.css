@@ -1759,6 +1759,51 @@ label.icobutton input {
     border-bottom: none;
 }
 
+/* Checkout */
+.checkout .segment {
+    padding: 25px;
+}
+
+.checkout .segment .item {
+    margin-bottom: 24px;
+}
+
+.checkout .segment .item .title {
+    font-size: 16px;
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b;
+    margin-bottom: 30px;
+}
+
+.checkout .segment .item .extra {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.checkout .segment .item .extra p {
+    color: #404040;
+}
+
+.checkout .segment .item .extra p span, .checkout .segment .totals div > div .pre-title {
+    color: #ab162b;
+}
+
+.checkout .segment .item .extra p:last-of-type, .checkout .segment .totals div > div .total {
+    font-family: "Raleway SemiBold", sans-serif;
+}
+
+.checkout .segment .totals div > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.checkout .segment .totals div > div:last-of-type, .checkout .segment .totals div > div p {
+    margin-bottom: 0;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
