@@ -23,6 +23,9 @@ class AddressTypeExtension extends AbstractTypeExtension
             ->remove('city')
             ->remove('postcode')
             ->remove('phoneNumber')
+            ->add('firstName', TextType::class, [
+                'required' => false
+            ])
             ->add('fullAddress', TextareaType::class, [
                 'required' => false,
                 'label' => 'app.form.address.full_address',

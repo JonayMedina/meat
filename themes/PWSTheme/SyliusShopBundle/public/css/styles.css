@@ -1863,7 +1863,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .login .btn-rounded, .register .btn-rounded {
+    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded {
         min-width: 220px;
     }
 }
