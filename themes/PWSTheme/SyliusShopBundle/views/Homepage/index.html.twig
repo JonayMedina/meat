@@ -27,39 +27,7 @@
     </div>
     <div class="container-fluid">
         <div class="row mb-3">
-            <div id="banners-carousel" class="carousel slide carousel-fade w-100 mb-4" data-ride="carousel">
-                <ol class="carousel-indicators mb-5">
-                    <li data-target="#banners-carousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#banners-carousel" data-slide-to="1"></li>
-                    <li data-target="#banners-carousel" data-slide-to="2"></li>
-                </ol>
-                <div class="carousel-inner">
-                    <div class="carousel-item active" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
-                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-flex">
-                            <a><h5>¡Un corte para un día!</h5></a>
-                        </div>
-                    </div>
-                    <div class="carousel-item" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
-                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-flex">
-                            <a><h5>¡Un corte para otro día!</h5></a>
-                        </div>
-                    </div>
-                    <div class="carousel-item" style="background: url('{{ asset('bundles/syliusshop/img/slide.png') }}')">
-                        <img src="{{ asset('bundles/syliusshop/img/slide.png') }}" class="d-block w-100" alt="...">
-                        <div class="carousel-caption d-flex">
-                            <a><h5>¡Un corte para otro día diferente al anterior!</h5></a>
-                        </div>
-                    </div>
-                </div>
-                <a class="carousel-control-prev" href="#banners-carousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </a>
-                <a class="carousel-control-next" href="#banners-carousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </a>
-            </div>
+            {{ render(url('store_banners')) }}
         </div>
     </div>
     <div class="container">
@@ -69,7 +37,7 @@
 
 {% block extrajs %}
     <script>
-        jQuery(document).ready(function () {
+        jQuery(function () {
             (function ($) {
                 $('.taxons-carousel').owlCarousel({
                     loop: false,

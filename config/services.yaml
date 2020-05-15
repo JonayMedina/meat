@@ -31,6 +31,7 @@ services:
             $captchaKey: '%env(CAPTCHA_KEY)%'
             $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
             $fcmServerKey: '%env(FCM_SERVER_KEY)%'
+            $userRepository: '@sylius.repository.shop_user'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
@@ -72,11 +73,21 @@ services:
     App\EventSubscriber\ShopUserSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\OrderSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
 
     app.factory.product.listview:
         class: App\Factory\Product\ListProductViewFactoryExtension
         decorates: sylius.shop_api_plugin.factory.list_product_view_factory
         arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.product_view_factory', '@sylius.shop_api_plugin.factory.product_variant_view_factory']
+        public: false
+
+    app.service.token_generator.password_reset:
+        class: App\Service\UniqueTokenGeneratorExtended
+        decorates: sylius.shop_user.token_generator.password_reset
+        arguments: ['@sylius.random_generator', '@sylius.shop_user.token_uniqueness_checker.password_reset', 10]
         public: false
 
     app.form.extension.type.customer_registration:

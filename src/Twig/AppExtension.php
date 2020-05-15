@@ -4,11 +4,12 @@ namespace App\Twig;
 
 use App\Entity\Channel\ChannelPricing;
 use App\Entity\Product\Product;
+use App\Entity\Promotion\Promotion;
 use App\Entity\Taxonomy\Taxon;
 use App\Service\SettingsService;
 use Exception;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
+use Sylius\Component\Promotion\Model\PromotionActionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -102,7 +103,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('uploaded_banner_asset', [$this, 'getUploadedBannerAssetPath']),
             new TwigFunction('about_store', [$this, 'aboutStore']),
             new TwigFunction('get_price', [$this, 'getPrice']),
-            new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon'])
+            new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon']),
+            new TwigFunction('get_coupon_action', [$this, 'getCouponAction']),
         ];
     }
 
@@ -262,5 +264,18 @@ class AppExtension extends AbstractExtension
         }
 
         return $taxon;
+    }
+
+    /**
+     * @param Promotion $promotion
+     * @return array
+     */
+    public function getCouponAction(Promotion $promotion) {
+        /**
+         * @var PromotionActionInterface[]
+         */
+        $actions = $promotion->getActions();
+
+        return $actions[0];
     }
 }
