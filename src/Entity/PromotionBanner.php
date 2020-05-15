@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use App\Entity\Product\ProductVariant;
@@ -121,6 +122,19 @@ class PromotionBanner implements ResourceInterface
      * @Serializer\Expose()
      */
     public $product = null;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\PushNotification",
+     *     mappedBy="promotionBanner"
+     * )
+     */
+    private $pushNotifications;
+
+    public function __construct()
+    {
+        $this->pushNotifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

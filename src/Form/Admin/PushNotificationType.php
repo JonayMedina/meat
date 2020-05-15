@@ -15,6 +15,8 @@ class PushNotificationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $now = date('Y-m-d H:i:s');
+
         $builder
             ->add('title', null, [
                 'label' => 'app.ui.push_title',
@@ -44,6 +46,14 @@ class PushNotificationType extends AbstractType
                     'app.ui.push.types.'.PushNotification::TYPE_INFO => PushNotification::TYPE_INFO,
                 ],
             ])
+            ->add('promotionType', ChoiceType::class, [
+                'label' => 'app.ui.promotion_type',
+                'expanded' => true,
+                'choices' => [
+                    'app.ui.push.promotion_types.'.PushNotification::PROMOTION_TYPE_COUPON => PushNotification::PROMOTION_TYPE_COUPON,
+                    'app.ui.push.promotion_types.'.PushNotification::PROMOTION_TYPE_BANNER => PushNotification::PROMOTION_TYPE_BANNER,
+                ],
+            ])
             ->add('promotionCoupon', null, [
                 'label' => 'app.ui.coupon',
                 'placeholder' => 'app.ui.select_a_coupon',
@@ -51,6 +61,16 @@ class PushNotificationType extends AbstractType
                     return $er->createQueryBuilder('promotion_coupon')
                         ->andWhere('promotion_coupon.enabled = :enabled')
                         ->setParameter('enabled', true);
+                },
+            ])
+            ->add('promotionBanner', null, [
+                'label' => 'app.ui.promotion_banner',
+                'placeholder' => 'app.ui.select_a_coupon',
+                'query_builder' => function (EntityRepository $er) use ($now) {
+                    return $er->createQueryBuilder('promotion_banner')
+                        ->andWhere('promotion_banner.startDate <= :now')
+                        ->andWhere('promotion_banner.endDate >= :now')
+                        ->setParameter('now', $now);
                 },
             ])
             ->add('segment', null, [
