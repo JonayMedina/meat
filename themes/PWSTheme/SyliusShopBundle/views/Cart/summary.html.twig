@@ -15,8 +15,6 @@
             <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
         </div>
 
-        {{ dump(get_coupon_action(cart.promotionCoupon.promotion).configuration) }}
-
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
             {% if not cart.empty %}
                 {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
@@ -99,36 +97,38 @@
             var $deleteModal = $('#deleteFavorite');
             var $modal = $('#showMessage');
             var $productsList = $('.products-list');
-            var noItems = {{ cart.items|length|e('js') }};
             var $toPay = $('#to-pay');
             var $updateCart = $('#sylius_cart');
+            var $updateCartBtn = $('#sylius-cart-update');
             var $couponAdd = $('#coupon-add');
+            var toCheckout = false;
+            var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
 
             $('.quantity-up').click(function () {
-                calculateSubtotal($(this).closest('div.form'));
+                updateCart();
             });
 
             $('.quantity-down').click(function () {
-                calculateSubtotal($(this).closest('div.form'));
+                updateCart();
             });
 
             $('input[type="number"]').change(function () {
-                calculateSubtotal($(this).closest('div.form'));
+                updateCart();
             });
 
             $productsList.find('.product-item').each(function () {
                 calculateSubtotal($(this).find('.form'));
             });
 
-            {% if cart.orderPromotionTotal %}
+            {% if cart.promotionCoupon %}
                 $('#sylius_cart_promotionCoupon').attr('readonly', true);
             {% endif %}
 
             $toPay.click(function (evt) {
                 evt.preventDefault();
-                var value = $('.total .value').attr('data-value');
+                var value = convertToMoney($('.total .value').attr('data-value'));
 
-                if (value < {{ about_store('min-purchase')|e('js') }}) {
+                if (value < {{ about_store('min-purchase')|e('js') }} && !withCoupon) {
                     $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
                     $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
                     $modal.modal('show');
@@ -137,44 +137,30 @@
                     $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
                     $modal.modal('show');
                 } else {
-                    $('#sylius-cart-update').trigger('click');
+                    toCheckout = true;
+                    $updateCartBtn.trigger('click');
                 }
 
             });
 
-            $couponAdd.click(function () {
-                {% if cart.orderPromotionTotal %}
-                {% else %}
-                blockPage();
-                $.ajax({
-                    type: 'PUT',
-                    url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue }) }}',
-                    data: {
-                        'coupon': $('#sylius_cart_promotionCoupon').val(),
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        unblockPage();
-                    },
-                    error: function (error) {
-                        console.log(error);
+            $couponAdd.click(function (evt) {
+                evt.preventDefault();
 
-                        let recordset = error['responseJSON']['recordset'];
-                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
-                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
-
-                        if (recordset['errors']) {
-                            errorMsg = recordset['errors']['errors'][0];
-                        }
-
-                        $modal.find('.modal-body').html(errorMsg);
-
-                        unblockPage();
-                        $modal.modal('show');
-                    }
-                });
-                {% endif %}
+                if (withCoupon) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.message'|trans }}');
+                    $modal.modal('show');
+                } else {
+                    updateCart();
+                }
             });
+
+            function updateCart() {
+                setTimeout(function () {
+                    toCheckout = false;
+                    $updateCartBtn.trigger('click');
+                }, 500);
+            }
 
             $('a.delete').click(function () {
                 var id = $(this).data('id');
@@ -200,67 +186,6 @@
                 var total = quantity*price;
 
                 $form.find('.sub-total').html(currency + ' ' + total.toFixed(2)).attr('data-currency', currency).attr('data-value', total);
-
-                calculateTotal();
-            }
-
-            function calculateTotal() {
-                var total = 0;
-                var currency = "";
-                var discountType = -1;
-                var discount = 0;
-                var percentage = 0;
-                var finalTotal = 0;
-
-                $('body').find('.sub-total').each(function () {
-                    var $sub = $(this);
-
-                    total += Number($sub.attr('data-value'));
-                    currency = $sub.attr('data-currency');
-                });
-
-                {% if cart.orderPromotionTotal %}
-                    {% if get_coupon_action(cart.promotionCoupon.promotion).type == 'order_fixed_discount'  %}
-                        discountType = 1;
-                    {% else %}
-                        discountType = 0;
-                        percentage = {{ get_coupon_action(cart.promotionCoupon.promotion).configuration['percentage']|e('js')  }};
-                    {% endif %}
-                {% endif %}
-
-                if (discountType >= 0) {
-                    if (discountType === 0) {
-                        discount = total * percentage;
-                    } else {
-                        discount = $('.total .discount').attr('data-first').split(/(\s+)/)[2];
-                    }
-
-                    finalTotal = total - discount;
-
-                    $('.total .pre-total').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
-                    $('.total .discount').html('-' + currency + ' ' + discount.toFixed(2)).attr('data-value', discount);
-                    $('.total .value').html(currency + ' ' + finalTotal.toFixed(2)).attr('data-value', finalTotal);
-                } else {
-                    $('.total .value').html(currency + ' ' + total.toFixed(2)).attr('data-value', total);
-                }
-            }
-
-            // Animated element removal
-            function cuteHide(el) {
-                el.animate({opacity: '0'}, 150, function(){
-                    el.animate({height: '0px'}, 150, function(){
-                        el.remove();
-                    });
-                });
-
-                setTimeout(function () {
-                    findFirstProduct();
-                }, 500);
-            }
-
-            function showEmptyCart() {
-                $('.products-exist').remove();
-                $('#empty-cart').fadeIn(450);
             }
 
             findFirstProduct();
@@ -281,6 +206,13 @@
                 });
             }
 
+            function convertToMoney(price) {
+                var length = price.length - 2;
+                var float = price.slice(0, length) + "." + price.slice(-2);
+
+                return parseFloat(float);
+            }
+
             $('form.delete-product').on('submit', function (e) {
                 e.preventDefault();
                 var $this = $(this);
@@ -291,17 +223,7 @@
                     url: $this.attr('action'),
                     data: $(this).serialize(),
                     success: function () {
-                        noItems--;
-                        unblockPage();
-
-                        if (noItems > 0) {
-                            cuteHide($('.products-list').find('.product-' + $this.data('id')));
-                            setTimeout(function () {
-                                calculateTotal();
-                            }, 500);
-                        } else {
-                            showEmptyCart();
-                        }
+                        updateCart();
                     },
                     error: function (error) {
                         let recordset = error['responseJSON']['recordset'];
@@ -330,19 +252,25 @@
                     url: $this.attr('action'),
                     data: $(this).serialize(),
                     success: function () {
-                        unblockPage();
                         var logged = {% if is_granted('ROLE_USER') %}true{% else %}false{% endif %}
 
                         if (logged) {
-                            window.location.href = "{{ path('sylius_shop_checkout_start') }}";
+                            if (toCheckout) {
+                                window.location.href = "{{ path('sylius_shop_checkout_start') }}";
+                            } else {
+                                location.reload();
+                            }
                         } else {
-                            window.location.href = "{{ path('sylius_shop_register') }}";
+                            if (toCheckout) {
+                                window.location.href = "{{ path('sylius_shop_register_to_checkout') }}";
+                            } else {
+                                location.reload();
+                            }
                         }
                     },
                     error: function (error) {
-                        var errorMsg = '{{ 'app.ui.cart.update.error.message'|trans }}';
                         $modal.find('.modal-title').html('{{ 'app.ui.cart.update.error'|trans }}');
-                        $modal.find('.modal-body').html(errorMsg);
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.update.error.message'|trans }}');
 
                         unblockPage();
                         $modal.modal('show');

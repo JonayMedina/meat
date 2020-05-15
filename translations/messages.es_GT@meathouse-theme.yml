@@ -771,3 +771,5 @@ app.ui.reset_password.finished.message: 'Has actualizado tu contraseña correcta
 app.ui.promotion_banner: Promoción
 app.ui.push.promotion_types.banner: Promoción
 app.ui.push.promotion_types.coupon: Cupón
+app.ui.cart.coupon.error.title: '¡Parece que hubo un error!'
+app.ui.cart.coupon.error.message: 'Solo puedes agregar un cupón por carrito, guarda tu cupón e ingresalo en tu próxima compra.'
