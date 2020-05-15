@@ -4,7 +4,6 @@ namespace App\Controller\FrontendApi;
 
 use App\Controller\ShopApi\ContactUsController;
 use App\Entity\Product\Product;
-use App\Entity\Promotion\Promotion;
 use App\Entity\User\ShopUser;
 use App\Model\APIResponse;
 use App\Service\CaptchaVerificationService;
@@ -83,7 +82,6 @@ class ResourcesController extends AbstractFOSRestController
         $this->productRepository = $productRepository;
         $this->contactUsController = $contactUsController;
         $this->userRepository = $userRepository;
-        $this->promotionRepository = $promotionRepository;
     }
 
     /**
