@@ -1734,8 +1734,11 @@ label.icobutton input {
 }
 
 .cart-summary.page .total p {
-    font-family: "Raleway SemiBold", sans-serif;
     margin-bottom: 0;
+}
+
+.cart-summary.page .total p:last-of-type {
+    font-family: "Raleway SemiBold", sans-serif;
 }
 
 .cart-summary.page .total .title {
@@ -1815,7 +1818,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .btn-rounded {
+    .login .btn-rounded, .register .btn-rounded {
         min-width: 220px;
     }
 }
