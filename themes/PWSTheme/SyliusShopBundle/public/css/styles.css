@@ -1721,6 +1721,8 @@ label.icobutton input {
     max-width: 125px;
     margin-right: -20px;
     border-radius: 15px 0 0 15px !important;
+    padding-left: 10px;
+    padding-right: 25px;
 }
 
 .cart-summary.page #sylius-coupon .input .btn-rounded {

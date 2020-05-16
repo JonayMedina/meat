@@ -23,8 +23,8 @@
                         </div>
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                             {% if cart.promotionCoupon %}
-                                <p class="pre-total xs-text-right">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
-                                <p class="discount xs-text-right">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
+                                <p class="pre-total sub-total xs-text-right" data-value="{{ cart.total + (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
+                                <p class="discount xs-text-right" data-value="{{ (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
                             {% endif %}
                             <p class="value xs-text-right" data-value="{{ cart.total }}">{{ money.convertAndFormat(cart.total) }}</p>
                         </div>
