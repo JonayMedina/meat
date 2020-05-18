@@ -2,66 +2,50 @@
 
 namespace App\Controller\FrontendApi;
 
-use App\Controller\ShopApi\ContactUsController;
-use App\Entity\Product\Product;
-use App\Entity\User\ShopUser;
 use App\Model\APIResponse;
-use App\Service\CaptchaVerificationService;
+use App\Entity\User\ShopUser;
+use App\Entity\Product\Product;
 use App\Service\FavoriteService;
 use App\Service\SettingsService;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Sylius\Component\Mailer\Sender\SenderInterface;
-use Sylius\Component\Product\Repository\ProductRepositoryInterface;
-use Sylius\Component\User\Repository\UserRepositoryInterface;
+use App\Service\CaptchaVerificationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\ShopApi\ContactUsController;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Sylius\Component\User\Repository\UserRepositoryInterface;
+use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 
 class ResourcesController extends AbstractFOSRestController
 {
-    /**
-     * @var SenderInterface
-     */
+    /** @var SenderInterface */
     private $sender;
 
-    /**
-     * @var TranslatorInterface
-     */
+    /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @var CaptchaVerificationService
-     */
+    /** @var CaptchaVerificationService */
     private $captchaVerification;
 
-    /**
-     * @var SettingsService
-     */
+    /** @var SettingsService */
     private $settingsService;
 
-    /**
-     * @var FavoriteService
-     */
+    /** @var FavoriteService */
     private $favoriteService;
 
-    /**
-     * @var ProductRepositoryInterface
-     */
+    /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /**
-     * @var ContactUsController $contactUsController
-     */
+    /** @var ContactUsController $contactUsController */
     private $contactUsController;
 
-    /**
-     * @var UserRepositoryInterface
-     */
+    /** @var UserRepositoryInterface */
     private $userRepository;
 
     /**
-     * QueueController constructor.
+     * ResourcesController constructor.
      * @param SenderInterface $sender
      * @param TranslatorInterface $translator
      * @param CaptchaVerificationService $captchaVerification
@@ -119,6 +103,7 @@ class ResourcesController extends AbstractFOSRestController
      *     options={"expose" = true}
      * )
      * @param Request $request
+     * @return Response
      */
     public function addFavoriteAction(Request $request) {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -185,6 +170,7 @@ class ResourcesController extends AbstractFOSRestController
      *     options={"expose" = true}
      * )
      * @param Request $request
+     * @return Response
      */
     public function removeFavoriteAction(Request $request) {
         $this->denyAccessUnlessGranted('ROLE_USER');

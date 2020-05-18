@@ -116,10 +116,6 @@
                 updateCart();
             });
 
-            $productsList.find('.product-item').each(function () {
-                calculateSubtotal($(this).find('.form'));
-            });
-
             {% if cart.promotionCoupon %}
                 $('#sylius_cart_promotionCoupon').attr('readonly', true);
             {% endif %}
@@ -128,7 +124,21 @@
                 evt.preventDefault();
                 var value = convertToMoney($('.total .value').attr('data-value'));
 
-                if (value < {{ about_store('min-purchase')|e('js') }} && !withCoupon) {
+                if (withCoupon) {
+                    var subTotal = convertToMoney($('.total .sub-total').attr('data-value'));
+
+                    if (subTotal < {{ about_store('min-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
+                        $modal.modal('show');
+                    } else if (value > {{ about_store('max-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.max.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
+                        $modal.modal('show');
+                    } else {
+                        goToCheckout();
+                    }
+                } else if (value < {{ about_store('min-purchase')|e('js') }}) {
                     $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
                     $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
                     $modal.modal('show');
@@ -137,10 +147,8 @@
                     $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
                     $modal.modal('show');
                 } else {
-                    toCheckout = true;
-                    $updateCartBtn.trigger('click');
+                    goToCheckout();
                 }
-
             });
 
             $couponAdd.click(function (evt) {
@@ -162,6 +170,11 @@
                 }, 500);
             }
 
+            function goToCheckout() {
+                toCheckout = true;
+                $updateCartBtn.trigger('click');
+            }
+
             $('a.delete').click(function () {
                 var id = $(this).data('id');
                 var item = $(this).data('item');
@@ -174,19 +187,10 @@
 
             $('#delete').click(function () {
                 var id = $(this).attr('data-id');
+
                 $deleteModal.modal('hide');
                 $('#delete-'+ id).submit();
             });
-
-            function calculateSubtotal($form) {
-                var quantity = $form.find('input').val();
-                var priceWithCode = $form.data('price').split(/(\s+)/);
-                var currency = priceWithCode[0];
-                var price = priceWithCode[2];
-                var total = quantity*price;
-
-                $form.find('.sub-total').html(currency + ' ' + total.toFixed(2)).attr('data-currency', currency).attr('data-value', total);
-            }
 
             findFirstProduct();
 
