@@ -2,23 +2,19 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Entity\Promotion\Promotion;
-use App\Entity\Promotion\PromotionCoupon;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
-use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
-use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionRepository;
-use Sylius\Component\Promotion\Repository\PromotionCouponRepositoryInterface;
-use Sylius\Component\Promotion\Repository\PromotionRepositoryInterface;
-use Sylius\ShopApiPlugin\Controller\Cart\AddCouponAction;
+use App\Entity\Promotion\PromotionCoupon;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Core\Model\OrderInterface;
 use FOS\RestBundle\Controller\Annotations\Route;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Sylius\ShopApiPlugin\Controller\Cart\AddCouponAction;
+use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
+use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
 
 /**
  * CartController
