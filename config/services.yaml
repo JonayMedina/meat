@@ -32,6 +32,7 @@ services:
             $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
             $fcmServerKey: '%env(FCM_SERVER_KEY)%'
             $userRepository: '@sylius.repository.shop_user'
+            $addCouponAction: '@sylius.shop_api_plugin.controller.cart.add_coupon_action'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
@@ -107,6 +108,10 @@ services:
                 
     app.controller.shop.extender:
         class: App\Controller\Shop\ExtenderController
+        tags: ['controller.service_arguments']
+        
+    app.shop_api.cart:
+        class: App\Controller\ShopApi\CartController
         tags: ['controller.service_arguments']
             
     Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'

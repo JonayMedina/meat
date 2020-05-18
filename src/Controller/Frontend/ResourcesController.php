@@ -3,18 +3,18 @@
 
 namespace App\Controller\Frontend;
 
-use App\Entity\Taxonomy\Taxon;
 use App\Entity\User\ShopUser;
+use App\Entity\Taxonomy\Taxon;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use App\Repository\PromotionBannerRepository;
-use Sylius\Component\Product\Repository\ProductRepositoryInterface;
-use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
+use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 
 class ResourcesController extends AbstractController
 {
@@ -30,7 +30,6 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     *
      * @Route("/terms", name="store_terms")
      * @return Response
      */
@@ -42,7 +41,6 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     *
      * @Route("/terms-and-conditions", name="store_terms_page")
      * @return Response
      */

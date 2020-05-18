@@ -36,6 +36,12 @@ meathouse_shop_api:
     prefix:   /shop-api
     defaults:
         _format: json
+        
+sylius_shop_api_add_coupon_to_cart:
+    path: /shop-api/carts/{token}/coupon
+    methods: [PUT]
+    defaults:
+        _controller: app.shop_api.cart:addCouponAction
       
 meathouse_frontend_api:
     resource: "Controller/FrontendApi"
