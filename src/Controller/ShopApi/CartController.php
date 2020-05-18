@@ -13,7 +13,7 @@ use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 
 /**
  * CartController
- * @Route("/carts")
+ * @Route("/sync-carts")
  */
 class CartController extends AbstractFOSRestController
 {
