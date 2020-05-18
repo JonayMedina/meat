@@ -1,16 +1,15 @@
 <?php
 
-
 namespace App\Controller\ShopApi;
 
 use App\Model\APIResponse;
 use App\Service\SettingsService;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use FOS\RestBundle\Controller\Annotations\Route;
-use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations\Route;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 
 /**
  * ContactUsController
