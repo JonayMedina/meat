@@ -124,3 +124,25 @@ sylius_shop_account_change_password:
             template: "@SyliusShop/Account/changePassword.html.twig"
             redirect:
                 method: GET
+                
+sylius_shop_checkout_address:
+    path: /checkout/address
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.order:updateAction
+        _sylius:
+            event: address
+            flash: false
+            template: "@SyliusShop/Checkout/address.html.twig"
+            form:
+                type: Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType
+                options:
+                    customer: expr:service('sylius.context.customer').getCustomer()
+                    validation_groups: ['app_address']
+            repository:
+                method: findCartForAddressing
+                arguments:
+                    - "expr:service('sylius.context.cart').getCart().getId()"
+            state_machine:
+                graph: sylius_order_checkout
+                transition: address

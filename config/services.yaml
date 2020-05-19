@@ -7,6 +7,7 @@ parameters:
     uploads_base_url: 'https://s3.amazonaws.com/%env(AWS_S3_BUCKET_NAME)%'
     fb_client_id: "%env(APP_FB_CLIENT_ID)%"
     fb_client_secret: "%env(APP_FB_SECRET)%"
+    sylius.form.type.address.validation_groups: ['app_address']
 
 services:
     # Default configuration for services in *this* file

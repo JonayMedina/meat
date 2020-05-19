@@ -1,19 +1,18 @@
 <?php
 
-
 namespace App\Form\Extension;
 
-
-use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
-use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AddressTypeExtension extends AbstractTypeExtension
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->remove('firstName')
             ->remove('lastName')
@@ -40,8 +39,7 @@ class AddressTypeExtension extends AbstractTypeExtension
             ]);
     }
 
-    public function getExtendedTypes()
-    {
+    public function getExtendedTypes() {
         return [AddressType::class];
     }
 }

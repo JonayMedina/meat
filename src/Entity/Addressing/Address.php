@@ -7,6 +7,7 @@ namespace App\Entity\Addressing;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Sylius\Component\Core\Model\Address as BaseAddress;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -51,12 +52,14 @@ class Address extends BaseAddress
     /**
      * @var string
      * @ORM\Column(name="full_address", type="text", nullable=true)
+     * @Assert\NotBlank(groups={"app_address"})
      */
     private $fullAddress;
 
     /**
      * @var string
      * @ORM\Column(name="annotations", type="text", nullable=true)
+     * @Assert\NotBlank(groups={"app_address"})
      */
     private $annotations;
 
