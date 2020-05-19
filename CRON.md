@@ -3,78 +3,20 @@
 ## Start using the bundle:
 
 ```shell
-bin/console cron:list
-bin/console cron:run
+bin/console schedule:list
 ```
 
 ## To run your cron jobs automatically, add the following line to your (or whomever's) crontab:
 ```
-* * * * * /path/to/symfony/install/app/console cron:run 1>> /dev/null 2>&1
-```
- **OR**
-  If you don't have a dedicated cron daemon (e.g. in Heroku), you can use:
-```shell
-bin/console cron:start # will run in background mode, use --blocking to run in foreground
-bin/console cron:stop # will stop the background cron daemon
+* * * * * /path/to/symfony/install/bin/console schedule:run >> /dev/null 2>&1
 ```
 
 ## Available commands
 
 ### list
 ```shell
-bin/console cron:list
+bin/console schedule:list
 ```
-Show a list of all jobs. Job names are show with ```[x]``` if they are enabled and ```[ ]``` otherwise.
-
-### create
-```shell
-bin/console cron:create
-```
-Create a new job.
-
-### delete
-```shell
-bin/console cron:delete _jobName_
-```
-Delete a job. For your own protection, the job must be disabled first.
-
-### enable
-```shell
-bin/console cron:enable _jobName_
-```
-Enable a job.
-
-### disable
-```shell
-bin/console cron:disable _jobName_
-```
-Disable a job.
-
-### run
-```shell
-bin/console cron:run [--force] [job]
-```
-> which we borrowed from Symfony. 
-> Make sure to check out [php-cs-fixer](https://github.com/fabpot/PHP-CS-Fixer) as this will help you a lot.  
-> Please note that `--force` forces the job to be executed (even if disabled) based on the job schedule  
-
-### run now, independent of the job schedule
-```shell
-bin/console cron:run --schedule_now [--force] job
-```
-
-### start
-```shell
-bin/console cron:start [--blocking]
-```
-Start the cron as a daemon. By default it forks itself to the background and suppresses any output. The `--blocking` option will keep it in the foreground and will display output. This is useful when you don't have a dedicated cron daemon (e.g. on Heroku).
-
-### stop
-```shell
-bin/console cron:stop
-```
-Stops the background cron daemon started with `cron:start`. This is not applicable when the daemon was started with `--blocking`.
-
 
 ## Recommended Cron jobs
 ```shell
