@@ -67,6 +67,9 @@ services:
     Sylius\Component\Order\Processor\CompositeOrderProcessor:
         alias: 'sylius.order_processing.order_processor.composite'
         
+    Sylius\Component\Core\Factory\AddressFactoryInterface:
+        alias: 'sylius.custom_factory.address'
+        
     Liip\ImagineBundle\Service\FilterService:
         alias: 'liip_imagine.service.filter'
         
