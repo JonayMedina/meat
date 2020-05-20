@@ -65,7 +65,9 @@ class AddressBookController extends AbstractFOSRestController
         $addresses = $this->entityManager->getRepository('App:Addressing\Address')
             ->createQueryBuilder('a')
             ->andWhere('a.customer = :customer')
+            ->andWhere('a.type != :type')
             ->setParameter('customer', $this->getCustomer())
+            ->setParameter('type', '')
             ->getQuery()
             ->getResult();
 
@@ -95,6 +97,8 @@ class AddressBookController extends AbstractFOSRestController
         $askFor = $request->get('ask_for');
         $fullAddress = $request->get('full_address');
         $phoneNumber = $request->get('phone_number');
+        $type = $request->get('type');
+        $taxId = $request->get('tax_id');
 
         if (empty($askFor)) {
             return $this->renderError('Invalid name');
@@ -108,12 +112,29 @@ class AddressBookController extends AbstractFOSRestController
             return $this->renderError('Invalid phone number');
         }
 
+        if (empty($type)) {
+            return $this->renderError('Invalid address type');
+        }
+
+        if (empty($taxId) && $type == Address::TYPE_BILLING) {
+            return $this->renderError('Invalid tax id');
+        }
+
+        if ($type == Address::TYPE_SHIPPING && !empty($taxId)) {
+            $taxId = null;
+        }
+
         /** @var Address $address */
         $address = $this->addressFactory->createNew();
         $address->setFirstName($askFor);
         $address->setFullAddress($fullAddress);
         $address->setPhoneNumber($phoneNumber);
         $address->setCustomer($this->getCustomer());
+        $address->setType($type);
+
+        if (!empty($taxId)) {
+            $address->setTaxId($taxId);
+        }
 
         $this->entityManager->persist($address);
 
@@ -146,6 +167,8 @@ class AddressBookController extends AbstractFOSRestController
         $askFor = $request->get('ask_for');
         $fullAddress = $request->get('full_address');
         $phoneNumber = $request->get('phone_number');
+        $type = $request->get('type');
+        $taxId = $request->get('tax_id');
 
         if (empty($askFor)) {
             return $this->renderError('Invalid name');
@@ -157,6 +180,18 @@ class AddressBookController extends AbstractFOSRestController
 
         if (empty($phoneNumber)) {
             return $this->renderError('Invalid phone number');
+        }
+
+        if (empty($type)) {
+            return $this->renderError('Invalid address type');
+        }
+
+        if (empty($taxId) && $type == Address::TYPE_BILLING) {
+            return $this->renderError('Invalid tax id');
+        }
+
+        if ($type == Address::TYPE_SHIPPING && !empty($taxId)) {
+            $taxId = null;
         }
 
         $id = $request->get('id');
@@ -180,6 +215,14 @@ class AddressBookController extends AbstractFOSRestController
 
         if (!empty($fullAddress)) {
             $address->setFullAddress($fullAddress);
+        }
+
+        if (!empty($type)) {
+            $address->setType($type);
+        }
+
+        if (!empty($taxId)) {
+            $address->setTaxId($taxId);
         }
 
         try {
@@ -271,13 +314,20 @@ class AddressBookController extends AbstractFOSRestController
      */
     private function serializeAddress(Address $address): array
     {
-        return [
+        $serializedAddress = [
             'id' => $address->getId(),
             'ask_for' => $address->getFirstName(),
             'full_address' => $address->getFullAddress(),
             'phone_number' => $address->getPhoneNumber(),
-            'status' => $address->getStatus()
+            'status' => $address->getStatus(),
+            'type' => $address->getType(),
         ];
+
+        if ($address->getType() == Address::TYPE_BILLING) {
+            $serializedAddress['tax_id'] = $address->getTaxId();
+        }
+
+        return $serializedAddress;
     }
 
 }

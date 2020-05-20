@@ -55,6 +55,10 @@ class Address extends BaseAddress
 
     const STATUS_REJECTED = 'rejected';
 
+    const TYPE_SHIPPING = 'shipping';
+
+    const TYPE_BILLING = 'billing';
+
     /**
      * @var string
      * @ORM\Column(name="full_address", type="text", nullable=true)
@@ -72,6 +76,12 @@ class Address extends BaseAddress
      * @ORM\Column(name="tax_id", type="string", length=100, nullable=true)
      */
     private $taxId;
+
+    /**
+     * @var string
+     * @ORM\Column(name="type", type="string", length=100)
+     */
+    private $type = self::TYPE_SHIPPING;
 
     /**
      * @var string
@@ -210,4 +220,32 @@ class Address extends BaseAddress
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Address
+     */
+    public function setType(?string $type): Address
+    {
+        if (!in_array($type, [
+            self::TYPE_BILLING,
+            self::TYPE_SHIPPING,
+        ])) {
+            throw new BadRequestHttpException('Invalid type for address.');
+        }
+
+        $this->type = $type;
+
+        return $this;
+    }
+
+
 }
