@@ -34,7 +34,7 @@ class ShopUserDevice implements ResourceInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(name="`key`", type="string", length=255, nullable=false)
      * @Assert\NotBlank()
      */
     private $key;

@@ -21,7 +21,9 @@ class ShopUser extends BaseShopUser
 {
     use BlameableTrait, IpTraceableTrait;
 
-    const ADDRESS_LIMIT = 3;
+    const SHIPPING_ADDRESS_LIMIT = 3;
+
+    const BILLING_ADDRESS_LIMIT = 1;
 
     /**
      * @ORM\OneToMany(

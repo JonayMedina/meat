@@ -70,6 +70,9 @@ services:
     Sylius\Component\Order\Processor\CompositeOrderProcessor:
         alias: 'sylius.order_processing.order_processor.composite'
         
+    Sylius\Component\Core\Factory\AddressFactoryInterface:
+        alias: 'sylius.custom_factory.address'
+        
     Liip\ImagineBundle\Service\FilterService:
         alias: 'liip_imagine.service.filter'
         
@@ -101,6 +104,12 @@ services:
         class: App\Service\UniqueTokenGeneratorExtended
         decorates: sylius.shop_user.token_generator.password_reset
         arguments: ['@sylius.random_generator', '@sylius.shop_user.token_uniqueness_checker.password_reset', 10]
+        public: false
+        
+    app.factory.shop_user_customer_view_factory:
+        class: App\Factory\ShopApi\CustomerViewFactory
+        decorates: sylius.shop_api_plugin.factory.customer_view_factory
+        arguments: ['App\View\ShopApi\CustomerView']
         public: false
 
     app.form.extension.type.customer_registration:
