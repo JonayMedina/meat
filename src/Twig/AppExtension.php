@@ -3,12 +3,14 @@
 namespace App\Twig;
 
 use App\Entity\Channel\ChannelPricing;
+use App\Entity\Order\Order;
 use App\Entity\Product\Product;
 use App\Entity\Promotion\Promotion;
 use App\Entity\Taxonomy\Taxon;
 use App\Service\SettingsService;
 use Exception;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Promotion\Model\PromotionActionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\TwigFilter;
@@ -59,6 +61,11 @@ class AppExtension extends AbstractExtension
     private $channelContext;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
@@ -67,8 +74,9 @@ class AppExtension extends AbstractExtension
      * @param FavoriteService $favoriteService
      * @param TokenStorageInterface $tokenStorage
      * @param ChannelContextInterface $channelContext
+     * @param OrderRepositoryInterface $orderRepository
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -77,6 +85,7 @@ class AppExtension extends AbstractExtension
         $this->favoriteService = $favoriteService;
         $this->tokenStorage = $tokenStorage;
         $this->channelContext = $channelContext;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -105,6 +114,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_price', [$this, 'getPrice']),
             new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon']),
             new TwigFunction('get_coupon_action', [$this, 'getCouponAction']),
+            new TwigFunction('has_orders', [$this, 'userHasOrders']),
         ];
     }
 
@@ -277,5 +287,11 @@ class AppExtension extends AbstractExtension
         $actions = $promotion->getActions();
 
         return $actions[0];
+    }
+
+    public function userHasOrders(ShopUser $user) {
+        $orders = $this->orderRepository->findBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+
+        return count($orders) > 0;
     }
 }

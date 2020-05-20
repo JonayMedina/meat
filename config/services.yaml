@@ -40,6 +40,8 @@ services:
             autowire: false
         Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType:
             autowire: false
+        App\Controller\Shop\OrderExtendedController:
+            autowire: false
 
     # Makes classes in src/ available to be used as services;
     # this creates a service per class whose id is the fully-qualified class name
@@ -115,10 +117,16 @@ services:
         class: App\Form\Extension\AddressTypeExtension
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\AddressingBundle\Form\Type\AddressType }
+            
+    app.form.extension.type.checkout.address:
+        class: App\Form\Extension\AddressTypeCheckoutExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType }
                 
     app.controller.shop.extender:
         class: App\Controller\Shop\ExtenderController
         tags: ['controller.service_arguments']
+        
         
     app.shop_api.cart:
         class: App\Controller\ShopApi\CartController

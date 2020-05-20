@@ -1,13 +1,17 @@
 <?php
 
-
 namespace App\Controller\Frontend;
 
+use App\Entity\Addressing\Address;
+use App\Entity\Customer\Customer;
+use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use App\Repository\PromotionBannerRepository;
+use Sylius\Component\Core\Repository\AddressRepositoryInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,6 +31,15 @@ class ResourcesController extends AbstractController
      */
     public function __construct($captchaKey) {
         $this->captchaKey = $captchaKey;
+    }
+
+    /**
+     * @Route("/", name="store_homepage")
+     * @return Response
+     */
+    public function indexAction()
+    {
+        return $this->redirectToRoute('sylius_shop_homepage');
     }
 
     /**
@@ -206,5 +219,46 @@ class ResourcesController extends AbstractController
      */
     public function bannersAction(PromotionBannerRepository $promotionBannerRepository) {
         return $this->render('/frontend/pages/widgets/_banners.html.twig', ['banners' => $promotionBannerRepository->findAvailable()]);
+    }
+
+    /**
+     * @Route("/address-cart", name="store_address_in_cart")
+     * @param Request $request
+     * @param OrderRepositoryInterface $orderRepository
+     * @param AddressRepositoryInterface $addressRepository
+     * @return RedirectResponse
+     */
+    public function addAddressInCartAction(Request $request, OrderRepositoryInterface $orderRepository, AddressRepositoryInterface $addressRepository) {
+        $cartId = $request->query->get('id');
+        $em = $this->getDoctrine()->getManager();
+
+        $cart = $orderRepository->find($cartId);
+
+        if ($cart instanceof Order) {
+            /** @var Customer $customer */
+            $customer = $cart->getCustomer();
+            $shippingAddress = $addressRepository->find($cart->getShippingAddress());
+            $billingAddress = $addressRepository->find($cart->getBillingAddress());
+
+            if ($shippingAddress instanceof Address) {
+                $shippingAddress->setCustomer($customer);
+                $em->persist($shippingAddress);
+            }
+
+            if ($billingAddress instanceof Address) {
+                $billingAddress->setCustomer($customer);
+                $em->persist($billingAddress);
+            }
+
+            if (!$customer->getDefaultAddress()) {
+                $customer->setDefaultAddress($shippingAddress);
+            }
+
+            $em->flush();
+
+            return $this->redirectToRoute('sylius_shop_checkout_select_shipping');
+        } else {
+            return $this->redirectToRoute('sylius_shop_checkout_address');
+        }
     }
 }

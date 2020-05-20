@@ -24,4 +24,9 @@
 {#    {{ form_row(form.postcode) }}#}
 {#</div>#}
 {{ form_row(form.phoneNumber) }}
-<p>{{ 'app.ui.checkout.order.phone.message'|trans }}</p>
+
+{% if is_granted("ROLE_USER") %}
+    {% if not has_orders(app.user) %}
+        <p>{{ 'app.ui.checkout.order.phone.message'|trans }}</p>
+    {% endif %}
+{% endif %}
