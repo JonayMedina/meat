@@ -205,6 +205,13 @@ class AboutStore implements ResourceInterface
      */
     public $currencySymbol;
 
+    /**
+     * Settings API Usage.
+     * @var string
+     * @Serializer\Expose()
+     */
+    public $termsAndConditionsUrl;
+
     public function getId(): ?int
     {
         return $this->id;
