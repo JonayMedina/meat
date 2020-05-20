@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Core\Factory\AddressFactoryInterface;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * AddressBookController
@@ -36,16 +38,22 @@ class AddressBookController extends AbstractFOSRestController
     private $addressFactory;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * AddressBookController constructor.
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
      * @param AddressFactoryInterface $addressFactory
      */
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, AddressFactoryInterface $addressFactory)
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, AddressFactoryInterface $addressFactory, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->addressFactory = $addressFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -99,6 +107,18 @@ class AddressBookController extends AbstractFOSRestController
         $phoneNumber = $request->get('phone_number');
         $type = $request->get('type');
         $taxId = $request->get('tax_id');
+
+        if ($type == Address::TYPE_SHIPPING && $this->countAddressByType($type) >= ShopUser::SHIPPING_ADDRESS_LIMIT) {
+            $message = $this->translator->trans('api.address_book.shipping_limit_reached', ['%limit%' => ShopUser::SHIPPING_ADDRESS_LIMIT]);
+
+            throw new TooManyRequestsHttpException(null,$message);
+        }
+
+        if ($type == Address::TYPE_BILLING && $this->countAddressByType($type) >= ShopUser::BILLING_ADDRESS_LIMIT) {
+            $message = $this->translator->trans('api.address_book.billing_limit_reached', ['%limit%' => ShopUser::BILLING_ADDRESS_LIMIT]);
+
+            throw new TooManyRequestsHttpException(null,$message);
+        }
 
         if (empty($askFor)) {
             return $this->renderError('Invalid name');
@@ -328,6 +348,23 @@ class AddressBookController extends AbstractFOSRestController
         }
 
         return $serializedAddress;
+    }
+
+    /**
+     * @param $type
+     * @return int|null
+     */
+    private function countAddressByType($type): ?int
+    {
+        return $this->entityManager->getRepository('App:Addressing\Address')
+            ->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->andWhere('a.customer = :customer')
+            ->andWhere('a.type = :type')
+            ->setParameter('customer', $this->getCustomer())
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 }
