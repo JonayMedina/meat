@@ -115,7 +115,11 @@ class AddressBookController extends AbstractFOSRestController
         }
 
         if ($type == Address::TYPE_BILLING && $this->countAddressByType($type) >= ShopUser::BILLING_ADDRESS_LIMIT) {
-            $message = $this->translator->trans('api.address_book.billing_limit_reached', ['%limit%' => ShopUser::BILLING_ADDRESS_LIMIT]);
+            if (ShopUser::BILLING_ADDRESS_LIMIT == 1) {
+                $message = $this->translator->trans('api.address_book.billing_one_address_limit_reached');
+            } else {
+                $message = $this->translator->trans('api.address_book.billing_limit_reached', ['%limit%' => ShopUser::BILLING_ADDRESS_LIMIT]);
+            }
 
             throw new TooManyRequestsHttpException(null,$message);
         }
