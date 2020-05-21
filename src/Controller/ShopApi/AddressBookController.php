@@ -11,10 +11,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
+use FOS\RestBundle\Request\ParamFetcherInterface;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Core\Factory\AddressFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * AddressBookController
@@ -63,19 +65,31 @@ class AddressBookController extends AbstractFOSRestController
      *     methods={"GET"}
      * )
      *
+     * @QueryParam(name="type", default="", nullable=true, description="Address type filter")
+     *
+     * @param ParamFetcherInterface $paramFetcher
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(ParamFetcherInterface $paramFetcher)
     {
         $list = [];
+        $type = $paramFetcher->get('type');
 
-        /** @var Address[] $addresses */
-        $addresses = $this->entityManager->getRepository('App:Addressing\Address')
+        $addressesQuery = $this->entityManager->getRepository('App:Addressing\Address')
             ->createQueryBuilder('a')
             ->andWhere('a.customer = :customer')
             ->andWhere('a.type != :type')
             ->setParameter('customer', $this->getCustomer())
-            ->setParameter('type', '')
+            ->setParameter('type', '');
+
+        if (!empty($type)) {
+            $addressesQuery
+                ->andWhere('a.type = :filterType')
+                ->setParameter('filterType', $type);
+        }
+
+        /** @var Address[] $addresses */
+        $addresses = $addressesQuery
             ->getQuery()
             ->getResult();
 
