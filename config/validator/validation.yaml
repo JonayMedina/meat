@@ -1,5 +1,8 @@
 Sylius\Component\Addressing\Model\Address:
     properties:
+        firstName:
+            -   NotBlank:
+                    groups: ['app_address']
         phoneNumber:
             - NotBlank:
                   groups: ['app_address']

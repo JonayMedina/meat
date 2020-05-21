@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Addressing;
 
-use App\Model\BlameableTrait;
 use DateTime;
+use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sylius\Component\Core\Model\Address as BaseAddress;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -250,6 +250,4 @@ class Address extends BaseAddress
 
         return $this;
     }
-
-
 }

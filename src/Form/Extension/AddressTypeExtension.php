@@ -22,18 +22,18 @@ class AddressTypeExtension extends AbstractTypeExtension
             ->remove('postcode')
             ->remove('phoneNumber')
             ->add('fullAddress', TextareaType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'app.form.address.full_address',
                 'attr' => [
                     'placeholder' => 'app.ui.address.full_address.instructions'
                 ]
             ])
-            ->add('annotations', TextareaType::class, [
-                'required' => false,
+            ->add('firstName', TextType::class, [
+                'required' => true,
                 'label' => 'app.form.address.annotations'
             ])
             ->add('phoneNumber', TextType::class, [
-                'required' => false,
+                'required' => true,
                 'label' => 'app.form.address.phone_number',
             ]);
     }

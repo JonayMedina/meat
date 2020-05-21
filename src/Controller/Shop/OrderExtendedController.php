@@ -2,15 +2,17 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\Customer\Customer;
+use DateTime;
 use App\Entity\Order\Order;
-use Sylius\Bundle\OrderBundle\Controller\OrderController;
 use FOS\RestBundle\View\View;
-use Sylius\Component\Resource\Exception\UpdateHandlingException;
-use Sylius\Component\Resource\ResourceActions;
+use App\Entity\Customer\Customer;
+use App\Entity\Addressing\Address;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sylius\Component\Resource\ResourceActions;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Sylius\Bundle\OrderBundle\Controller\OrderController;
+use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
 class OrderExtendedController extends OrderController
 {
@@ -24,16 +26,50 @@ class OrderExtendedController extends OrderController
 
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
+
+        if ($request->request->get('sylius_checkout_address')) {
+            $scheduledDate = $request->request->get('sylius_checkout_address')['scheduledDate'];
+            $preferredTime = $request->request->get('sylius_checkout_address')['preferredTime'];
+
+            if ($scheduledDate) {
+                $resource->setScheduledDeliveryDate(New DateTime($scheduledDate));
+            } else {
+                $resource->setScheduledDeliveryDate(null);
+            }
+
+            if ($preferredTime) {
+                if ($preferredTime >= 1) {
+                    if ($preferredTime == 3) {
+                        $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third');
+                    } else if ($preferredTime == 2) {
+                        $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second');
+                    } else {
+                        $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first');
+                    }
+
+                    $resource->setPreferredDeliveryTime($text);
+                } else {
+                    $resource->setPreferredDeliveryTime(null);
+                }
+            } else {
+                $resource->setPreferredDeliveryTime(null);
+            }
+        }
+
         /** @var Customer $customer */
         $customer = $resource->getCustomer();
 
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
+        /** @var Address $shippingAddress */
         $shippingAddress = $resource->getShippingAddress();
         $shippingAddress->setCustomer($customer);
+        $shippingAddress->setType(Address::TYPE_SHIPPING);
 
+        /** @var Address $billingAddress */
         $billingAddress = $resource->getBillingAddress();
         $billingAddress->setCustomer($customer);
+        $billingAddress->setType(Address::TYPE_BILLING);
 
         if (!$customer->getDefaultAddress()) {
             $customer->setDefaultAddress($shippingAddress);

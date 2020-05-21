@@ -1806,6 +1806,29 @@ label.icobutton input {
     margin-bottom: 0;
 }
 
+#show-scheduled {
+    display: block;
+}
+
+.checkout .dropdown .grouped {
+    flex-wrap: wrap;
+}
+
+.checkout .dropdown .grouped .field {
+    width: 100%;
+}
+
+.checkout .scheduled-date .close-btn {
+    -webkit-appearance: none;
+    border: none;
+    position: absolute;
+    right: 0;
+}
+
+.checkout .scheduled-date .close-btn img {
+    max-width: 15px;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

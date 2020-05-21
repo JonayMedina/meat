@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity\Order;
 
-use App\Entity\Customer\Customer;
+use DateTime;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Customer\Customer;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
@@ -56,7 +57,7 @@ class Order extends BaseOrder
     private $daysInAdvanceToPurchase = 0;
 
     /**
-     * @var \DateTime $estimatedDeliveryDate
+     * @var DateTime $estimatedDeliveryDate
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $estimatedDeliveryDate;
@@ -66,6 +67,12 @@ class Order extends BaseOrder
      * @ORM\Column(type="string", length=150, nullable=true)
      */
     private $preferredDeliveryTime;
+
+    /**
+     * @var DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $scheduledDeliveryDate;
 
     /**
      * @return int
@@ -180,7 +187,7 @@ class Order extends BaseOrder
         $this->daysInAdvanceToPurchase = $daysInAdvanceToPurchase;
 
         /** Update estimated delivery date */
-        $stop_date = new \DateTime(date('Y-m-d H:i:s'));
+        $stop_date = new DateTime(date('Y-m-d H:i:s'));
         // TODO: Check hour, after 12PM, move to next day if $this->dayInAdvanceToPurchase is == 0
         $stop_date->modify('+'. $this->daysInAdvanceToPurchase .' day');
 
@@ -190,18 +197,18 @@ class Order extends BaseOrder
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getEstimatedDeliveryDate(): ?\DateTime
+    public function getEstimatedDeliveryDate(): ?DateTime
     {
         return $this->estimatedDeliveryDate;
     }
 
     /**
-     * @param \DateTime $estimatedDeliveryDate
+     * @param DateTime $estimatedDeliveryDate
      * @return Order
      */
-    public function setEstimatedDeliveryDate(?\DateTime $estimatedDeliveryDate): Order
+    public function setEstimatedDeliveryDate(?DateTime $estimatedDeliveryDate): Order
     {
         $this->estimatedDeliveryDate = $estimatedDeliveryDate;
 
@@ -247,5 +254,24 @@ class Order extends BaseOrder
         setlocale(LC_ALL,"es_ES");
 
         return strftime('%A %e de %B %Y', (int)$this->getEstimatedDeliveryDate()->format('U'));
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getScheduledDeliveryDate(): ?DateTime
+    {
+        return $this->scheduledDeliveryDate;
+    }
+
+    /**
+     * @param DateTime $scheduledDeliveryDate
+     * @return ORder
+     */
+    public function setScheduledDeliveryDate(?DateTime $scheduledDeliveryDate): Order
+    {
+        $this->scheduledDeliveryDate = $scheduledDeliveryDate;
+
+        return $this;
     }
 }

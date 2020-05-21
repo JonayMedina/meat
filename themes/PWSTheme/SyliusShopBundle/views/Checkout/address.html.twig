@@ -35,8 +35,6 @@
 
                                         {% include '@SyliusShop/Checkout/Address/_form.html.twig' %}
 
-                                        <a>{{ 'app.ui.checkout.order.schedule'|trans }}</a>
-
                                         {{ sonata_block_render_event('sylius.shop.checkout.address.before_navigation', {'order': order}) }}
 
                                         {% include '@SyliusShop/Checkout/Address/_navigation.html.twig' %}
@@ -70,4 +68,59 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            let $radio = $('input[type="radio"]');
+            let $showScheduled = $('#show-scheduled');
+            let $scheduled = $('.scheduled-date');
+            var $preferred = 0;
+
+            {% if order.preferredDeliveryTime %}
+                {% set preferred = order.preferredDeliveryTime %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.first'|trans %}
+                    $preferred = 1;
+                {% endif %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.second'|trans %}
+                    $preferred = 2;
+                {% endif %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.third'|trans %}
+                    $preferred = 3;
+                {% endif %}
+            {% endif %}
+
+            if ($radio.closest('div.toggle').find('label').length <=0 ) {
+                $radio.closest('div.toggle').append("<label></label>");
+            }
+
+            $('input[type="radio"]:first-of-type').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.none'|trans }}</p>");
+            $('input[type="radio"][value="1"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.first'|trans }}</p>");
+            $('input[type="radio"][value="2"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.second'|trans }}</p>");
+            $('input[type="radio"][value="3"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.third'|trans }}</p>");
+            $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            if ($preferred > 0) {
+                $('input[type="radio"][value="' + $preferred + '"]').prop('checked', true).change();
+            }
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
+            $showScheduled.click(function () {
+                $(this).hide();
+                $scheduled.slideDown(450);
+            });
+
+            $('.scheduled-date .close-btn').click(function () {
+                $scheduled.find('input').val(null);
+                $scheduled.hide();
+                $showScheduled.slideDown(450);
+            });
+        });
+    </script>
 {% endblock %}
