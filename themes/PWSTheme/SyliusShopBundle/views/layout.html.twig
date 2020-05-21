@@ -227,6 +227,25 @@
             $.blockUI({ message: '<img src="{{ asset('bundles/syliusshop/img/loader.gif') }}">' });
         }
 
+        /**
+         * Datepicker JS defaults
+         * */
+        if ($.datepicker) {
+            $.datepicker.setDefaults( $.datepicker.regional[ "{{ app.request.locale|slice(0, 2) }}" ] );
+            $.datepicker.setDefaults({
+                dayNames: ["{{ 'app.ui.dates.sunday' | trans }}", "{{ 'app.ui.dates.monday' | trans }}", "{{ 'app.ui.dates.tuesday' | trans }}", "{{ 'app.ui.dates.wednesday' | trans }}", "{{ 'app.ui.dates.thursday' | trans }}", "{{ 'app.ui.dates.friday' | trans }}", "{{ 'app.ui.dates.saturday' | trans }}"],
+                dayNamesShort: ["{{ 'app.ui.dates.sun' | trans }}", "{{ 'app.ui.dates.mon' | trans }}", "{{ 'app.ui.dates.tue' | trans }}", "{{ 'app.ui.dates.wed' | trans }}", "{{ 'app.ui.dates.thu' | trans }}", "{{ 'app.ui.dates.fri' | trans }}", "{{ 'app.ui.dates.sat' | trans }}"],
+                dayNamesMin: ["{{ 'app.ui.dates.su' | trans }}", "{{ 'app.ui.dates.mo' | trans }}", "{{ 'app.ui.dates.tu' | trans }}", "{{ 'app.ui.dates.we' | trans }}", "{{ 'app.ui.dates.th' | trans }}", "{{ 'app.ui.dates.fr' | trans }}", "{{ 'app.ui.dates.sa' | trans }}"],
+                monthNames: ["{{ 'app.ui.dates.january' | trans }}", "{{ 'app.ui.dates.february' | trans }}", "{{ 'app.ui.dates.march' | trans }}", "{{ 'app.ui.dates.april' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.june' | trans }}", "{{ 'app.ui.dates.july' | trans }}", "{{ 'app.ui.dates.august' | trans }}", "{{ 'app.ui.dates.september' | trans }}", "{{ 'app.ui.dates.october' | trans }}", "{{ 'app.ui.dates.november' | trans }}", "{{ 'app.ui.dates.december' | trans }}"],
+                monthNamesShort: ["{{ 'app.ui.dates.jan' | trans }}", "{{ 'app.ui.dates.feb' | trans }}", "{{ 'app.ui.dates.mar' | trans }}", "{{ 'app.ui.dates.apr' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.jun' | trans }}", "{{ 'app.ui.dates.jul' | trans }}", "{{ 'app.ui.dates.aug' | trans }}", "{{ 'app.ui.dates.sep' | trans }}", "{{ 'app.ui.dates.oct' | trans }}", "{{ 'app.ui.dates.nov' | trans }}", "{{ 'app.ui.dates.dec' | trans }}"],
+                prevText: "<",
+                nextText: ">",
+                dateFormat: "dd/mm/yy",
+                hideIfNoPrevNext: true,
+                showOtherMonths: true,
+            });
+        }
+
         $(function () {
             let $modal = $('#product-in-cart');
             let $errorModal = $('#showErrorMessage');

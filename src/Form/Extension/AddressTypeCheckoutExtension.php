@@ -2,15 +2,11 @@
 
 namespace App\Form\Extension;
 
-use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerGuestType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType;
-use Symfony\Component\Validator\Constraints\Valid;
 
 class AddressTypeCheckoutExtension extends AbstractTypeExtension
 {

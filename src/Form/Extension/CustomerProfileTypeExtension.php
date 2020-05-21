@@ -1,15 +1,13 @@
 <?php
 
-
 namespace App\Form\Extension;
 
-
-use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
-use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
-use Sylius\Component\Customer\Model\CustomerInterface;
-use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Sylius\Component\Customer\Model\CustomerInterface;
+use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 
 class CustomerProfileTypeExtension extends AbstractTypeExtension
 {

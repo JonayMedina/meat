@@ -1829,6 +1829,62 @@ label.icobutton input {
     max-width: 15px;
 }
 
+/* Datepicker */
+.ui-datepicker {
+    background: #ebe7e7;
+    padding: 15px;
+    border-radius: 15px;
+    user-select: none;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    position: absolute;
+    left: 15px;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    right: 15px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker .ui-datepicker-calendar thead span {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    color: #404040;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a, .ui-datepicker .ui-datepicker-calendar tbody span {
+    font-family: "Raleway Regular", sans-serif;
+    color: #000000 !important;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody span {
+    color: #917171 !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a.ui-state-active, .ui-datepicker .ui-datepicker-calendar tbody a.ui-state-highlight, .ui-datepicker .ui-datepicker-calendar tbody a.ui-state-active.ui-state-highlight {
+    background: rgba(171, 22, 43, .31);
+    border-radius: 50px;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a.ui-state-highlight {
+    background: rgba(145, 113, 113, 0.31);
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

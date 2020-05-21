@@ -2,7 +2,6 @@
 
 namespace App\Form\Extension;
 
-use App\Entity\Customer\Customer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
