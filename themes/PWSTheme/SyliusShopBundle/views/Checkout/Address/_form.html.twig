@@ -13,6 +13,8 @@
 
     {{ form_row(form.preferredTime) }}
 
+    <p class="mh-color">{{ 'app.ui.checkout.order.estimated_date'|trans }}</p>
+
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
 </div>
 {#<div id="sylius-billing-address">#}

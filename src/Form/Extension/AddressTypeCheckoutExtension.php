@@ -6,6 +6,7 @@ use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerGuestType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType;
@@ -15,11 +16,14 @@ class AddressTypeCheckoutExtension extends AbstractTypeExtension
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
-            ->add('scheduledDate', BirthdayType::class, [
+            ->add('scheduledDate', TextType::class, [
                 'mapped' => false,
                 'required' => false,
-                'widget' => 'single_text',
-                'label' => 'app.ui.checkout.form.scheduled_date'
+                'label' => 'app.ui.checkout.form.scheduled_date',
+                'attr' => [
+                    'class' => 'datepicker',
+                    'placeholder' => 'DD/MM/YY'
+                ]
             ])
             ->add('preferredTime', ChoiceType::class, [
                 'mapped' => false,

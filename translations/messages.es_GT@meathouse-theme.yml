@@ -795,3 +795,4 @@ api.address_book.billing_limit_reached: 'El límite de %limit% direcciones de fa
 api.address_book.billing_one_address_limit_reached: 'Solo puedes tener una dirección de facturación.'
 app.ui.cart.coupon.error.add_code.message: 'Debes ingresar un código de cupón para agregarlo a tu carrito.'
 app.ui.checkout.form.scheduled_date: 'Programar mi orden para el'
+app.ui.checkout.order.estimated_date: 'Tu orden llegará el ...'
