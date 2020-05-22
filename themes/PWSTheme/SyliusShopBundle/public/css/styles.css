@@ -206,6 +206,10 @@ strong, .table thead th {
     max-width: 30% !important;
 }
 
+.text-underline {
+    text-decoration: underline;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -1816,6 +1820,7 @@ label.icobutton input {
 
 .checkout .dropdown .grouped .field {
     width: 100%;
+    margin-bottom: 0 !important;
 }
 
 .checkout .scheduled-date .close-btn {
@@ -1823,6 +1828,7 @@ label.icobutton input {
     border: none;
     position: absolute;
     right: 0;
+    background: transparent;
 }
 
 .checkout .scheduled-date .close-btn img {
@@ -1835,6 +1841,7 @@ label.icobutton input {
     padding: 15px;
     border-radius: 15px;
     user-select: none;
+    display: none;
 }
 
 .ui-datepicker .ui-datepicker-prev {
