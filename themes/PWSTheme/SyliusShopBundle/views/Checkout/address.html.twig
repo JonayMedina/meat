@@ -122,7 +122,14 @@
                 $showScheduled.slideDown(450);
             });
 
-            $('.datepicker').datepicker();
+            var min = new Date();
+            var max = new Date();
+            max.setDate(min.getDate() + {{ about_store('days-to-choose')|default(0)|e('js') }});
+
+            $('.datepicker').datepicker({
+                minDate: min,
+                maxDate: max
+            });
         });
     </script>
 {% endblock %}
