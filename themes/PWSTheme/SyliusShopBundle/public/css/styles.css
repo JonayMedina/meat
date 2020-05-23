@@ -50,6 +50,7 @@ form label, .form label {
     font-family: "Raleway SemiBold", sans-serif;
     font-size: 16px !important;
     text-align: left;
+    color: #404040 !important;
 }
 
 form input, form textarea, .form input, .form textarea {
@@ -208,6 +209,10 @@ strong, .table thead th {
 
 .text-underline {
     text-decoration: underline;
+}
+
+.font-semi-bold {
+    font-family: "Raleway SemiBold",sans-serif;
 }
 
 /* Custom */
@@ -1835,6 +1840,25 @@ label.icobutton input {
     max-width: 15px;
 }
 
+.checkout .sylius-validation-error, .checkout .ui.red.label {
+    background-color: transparent !important;
+    border: none !important;
+    color: #ab162b !important;
+    font-size: 14px;
+    font-family: "Raleway Italic",sans-serif;
+    letter-spacing: .61px;
+    margin-top: 0;
+}
+
+.checkout .sylius-validation-error:before, .checkout .ui.pointing.label:before {
+    content: "*";
+    left: 0;
+    transform: none;
+    border: 0;
+    top: inherit;
+    font-size: 20px;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -1951,7 +1975,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded {
+    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted {
         min-width: 220px;
     }
 }

@@ -34,7 +34,12 @@ class AddressTypeExtension extends AbstractTypeExtension
             ->add('phoneNumber', TextType::class, [
                 'required' => true,
                 'label' => 'app.form.address.phone_number',
-            ]);
+            ])
+            ->add('taxId', TextType::class, [
+                'required' => false,
+                'label' => 'app.ui.checkout.billing.tax_id',
+            ])
+        ;
     }
 
     public function getExtendedTypes() {

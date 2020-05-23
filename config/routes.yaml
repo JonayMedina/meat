@@ -146,3 +146,26 @@ sylius_shop_checkout_address:
             state_machine:
                 graph: sylius_order_checkout
                 transition: address
+            redirect: sylius_shop_checkout_billing
+                
+sylius_shop_checkout_billing:
+    path: /checkout/billing
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.order:billingAction
+        _sylius:
+            event: address
+            flash: false
+            template: "@SyliusShop/Checkout/billing.html.twig"
+            form:
+                type: App\Form\Shop\BillingCheckoutType
+                options:
+                    validation_groups: ['app_billing']
+            repository:
+                method: findCartForAddressing
+                arguments:
+                    - "expr:service('sylius.context.cart').getCart().getId()"
+            state_machine:
+                graph: sylius_order_checkout
+                transition: address
+            redirect: sylius_shop_checkout_select_payment

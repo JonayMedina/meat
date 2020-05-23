@@ -1,8 +1,27 @@
 Sylius\Component\Addressing\Model\Address:
     properties:
         firstName:
-            -   NotBlank:
-                    groups: ['app_address']
+            - NotBlank:
+                  message: 'app.ui.checkout.address.add_name'
+                  groups: ['app_address']
+            - NotBlank:
+                  message: 'app.ui.checkout.billing.add_name'
+                  groups: ['app_billing']
         phoneNumber:
             - NotBlank:
+                  message: 'app.ui.checkout.address.add_phone'
                   groups: ['app_address']
+                  
+App\Entity\Addressing\Address:
+    properties:
+        fullAddress:
+            - NotBlank:
+                  message: 'app.ui.checkout.address.add_address'
+                  groups: ['app_address']
+            - NotBlank:
+                  message: 'app.ui.checkout.billing.add_address'
+                  groups: ['app_billing']
+        taxId:
+            - NotBlank:
+                  message: 'Ingresa el NIT para la factura.'
+                  groups: ['app_billing']

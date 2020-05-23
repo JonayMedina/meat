@@ -8,7 +8,7 @@
         <button type="button" class="close-btn">
             <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
         </button>
-        {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate|date("d/m/Y")|default('')}) }}
+        {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate ? order.scheduledDeliveryDate|date("d/m/Y") : 'now'|date_modify("+1 day")|date("d/m/Y")}) }}
     </div>
 
     {{ form_row(form.preferredTime) }}
@@ -17,11 +17,3 @@
 
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
 </div>
-{#<div id="sylius-billing-address">#}
-{#    <div class="ui hidden divider"></div>#}
-{#    {% include '@SyliusShop/Checkout/Address/_addressBookSelect.html.twig' %}#}
-{#    <h3 class="ui dividing header">{{ 'sylius.ui.billing_address'|trans }}</h3>#}
-{#    {% include '@SyliusShop/Common/Form/_address.html.twig' with {'form': form.billingAddress, 'order': order} %}#}
-
-{#    {{ sonata_block_render_event('sylius.shop.checkout.address.billing_address_form', {'order': order}) }}#}
-{#</div>#}

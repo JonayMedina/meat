@@ -478,6 +478,7 @@ app.ui.add_your_information: 'Agrega tu información'
 app.ui.profile.update.optional_fields_to_offers: 'Agrega tu fecha de nacimiento y género para recibir promociones especiales.'
 app.form.address.full_address: 'Dirección de entrega'
 app.form.address.annotations: 'Preguntar por'
+app.form.address.ask_for: 'Preguntar por'
 app.form.address.phone_number: 'Teléfono de contacto'
 app.ui.address.full_address.instructions: 'Ingresa tu dirección exacta, códigos de accesso y/o indicaciones para encontrarla.'
 app.ui.add_another_address: 'Agregar otra dirección'
@@ -797,3 +798,8 @@ app.ui.cart.coupon.error.add_code.message: 'Debes ingresar un código de cupón 
 app.ui.checkout.form.scheduled_date: 'Programar mi orden para el'
 app.ui.checkout.order.estimated_date: 'Tu orden llegará el ...'
 app.ui.checkout.view_details: 'Ver detalle'
+app.ui.checkout.date: Fecha
+app.ui.checkout.schedule: Horario
+app.ui.checkout.billing.name: 'Nombre en Factura'
+app.ui.checkout.billing.tax_id: NIT
+app.ui.checkout.billing.address: 'Dirección en factura'

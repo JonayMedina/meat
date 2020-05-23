@@ -1,0 +1,19 @@
+<div class="field">
+    {{ form_label(form.firstName, 'app.ui.checkout.billing.name') }}
+    {{ form_widget(form.firstName) }}
+    <small>{{ form_help(form.firstName) }}</small>
+    <div class="form-error">
+        {{ form_errors(form.firstName) }}
+    </div>
+</div>
+
+{{ form_row(form.taxId) }}
+
+<div class="field text">
+    {{ form_label(form.fullAddress, 'app.ui.checkout.billing.address') }}
+    {{ form_widget(form.fullAddress, {'attr': {'placeholder': ''} }) }}
+    <small>{{ form_help(form.fullAddress) }}</small>
+    <div class="form-error">
+        {{ form_errors(form.fullAddress) }}
+    </div>
+</div>

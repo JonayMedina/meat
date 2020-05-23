@@ -64,14 +64,12 @@ class Address extends BaseAddress
     /**
      * @var string
      * @ORM\Column(name="full_address", type="text", nullable=true)
-     * @Assert\NotBlank(groups={"app_address"})
      */
     private $fullAddress;
 
     /**
      * @var string
      * @ORM\Column(name="annotations", type="text", nullable=true)
-     * @Assert\NotBlank(groups={"app_address"})
      */
     private $annotations;
 
@@ -111,7 +109,7 @@ class Address extends BaseAddress
      * @param string $annotations
      * @return Address
      */
-    public function setAnnotations(string $annotations): self
+    public function setAnnotations(?string $annotations): self
     {
         $this->annotations = $annotations;
 
@@ -130,7 +128,7 @@ class Address extends BaseAddress
      * @param string $fullAddress
      * @return Address
      */
-    public function setFullAddress(string $fullAddress): self
+    public function setFullAddress(?string $fullAddress): self
     {
         $this->fullAddress = $fullAddress;
 
