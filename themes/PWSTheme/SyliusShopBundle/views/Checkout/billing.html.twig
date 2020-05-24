@@ -3,8 +3,6 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block extracontent %}
-{#    {% include '@SyliusShop/Checkout/_steps.html.twig' %}#}
-
     {{ sonata_block_render_event('sylius.shop.checkout.address.after_steps', {'order': order}) }}
 
     <div class="row profile pt-4 checkout checkout-address billing">

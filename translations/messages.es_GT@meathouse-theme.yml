@@ -805,3 +805,5 @@ app.ui.checkout.billing.tax_id: NIT
 app.ui.checkout.billing.address: 'Dirección en factura'
 app.ui.checkout.billing.add_data: 'Ingresar datos'
 app.ui.checkout.billing.cf: 'Consumidor Final'
+app.ui.checkout.billing.cf.short: 'CF'
+app.ui.checkout.complete_order: 'Completar tu compra'
