@@ -50,6 +50,7 @@ form label, .form label {
     font-family: "Raleway SemiBold", sans-serif;
     font-size: 16px !important;
     text-align: left;
+    color: #404040 !important;
 }
 
 form input, form textarea, .form input, .form textarea {
@@ -204,6 +205,14 @@ strong, .table thead th {
 
 .mw-30-i {
     max-width: 30% !important;
+}
+
+.text-underline {
+    text-decoration: underline;
+}
+
+.font-semi-bold {
+    font-family: "Raleway SemiBold",sans-serif;
 }
 
 /* Custom */
@@ -1806,6 +1815,120 @@ label.icobutton input {
     margin-bottom: 0;
 }
 
+#show-scheduled {
+    display: block;
+}
+
+.checkout .dropdown .grouped {
+    flex-wrap: wrap;
+}
+
+.checkout .dropdown .grouped .field {
+    width: 100%;
+    margin-bottom: 0 !important;
+}
+
+.checkout .scheduled-date .close-btn {
+    -webkit-appearance: none;
+    border: none;
+    position: absolute;
+    right: 0;
+    background: transparent;
+}
+
+.checkout .scheduled-date .close-btn img {
+    max-width: 15px;
+}
+
+.checkout .sylius-validation-error, .checkout .ui.red.label {
+    background-color: transparent !important;
+    border: none !important;
+    color: #ab162b !important;
+    font-size: 14px;
+    font-family: "Raleway Italic",sans-serif;
+    letter-spacing: .61px;
+    margin-top: 0;
+}
+
+.checkout .sylius-validation-error:before, .checkout .ui.pointing.label:before {
+    content: "*";
+    left: 0;
+    transform: none;
+    border: 0;
+    top: inherit;
+    font-size: 20px;
+}
+
+.checkout .your-info > .row > div {
+    margin-bottom: 10px;
+}
+
+.billing .grouped {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.billing .grouped .field:first-of-type {
+    margin-right: 15px !important;
+}
+
+/* Datepicker */
+.ui-datepicker {
+    background: #ebe7e7;
+    padding: 15px;
+    border-radius: 15px;
+    user-select: none;
+    display: none;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    position: absolute;
+    left: 15px;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    right: 15px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.ui-datepicker .ui-datepicker-calendar thead span {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    color: #404040;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a, .ui-datepicker .ui-datepicker-calendar tbody span {
+    font-family: "Raleway Regular", sans-serif;
+    color: #000000 !important;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody span {
+    color: #917171 !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a.ui-state-active, .ui-datepicker .ui-datepicker-calendar tbody a.ui-state-highlight, .ui-datepicker .ui-datepicker-calendar tbody a.ui-state-active.ui-state-highlight {
+    background: rgba(171, 22, 43, .31);
+    border-radius: 50px;
+}
+
+.ui-datepicker .ui-datepicker-calendar tbody a.ui-state-highlight {
+    background: rgba(145, 113, 113, 0.31);
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -1865,7 +1988,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded {
+    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted {
         min-width: 220px;
     }
 }
@@ -2077,6 +2200,10 @@ label.icobutton input {
 
     .cart-summary.page #sylius-coupon br {
         display: none;
+    }
+
+    .checkout .btn-rounded, .checkout .btn-rounded.inverted {
+        min-width: 220px;
     }
 }
 
@@ -2341,6 +2468,10 @@ label.icobutton input {
 
     .cart-summary.page .favorite-item p.sub-total {
         align-items: initial;
+    }
+
+    .billing .grouped .field {
+        width: 100%;
     }
 }
 

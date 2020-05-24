@@ -1,9 +1,6 @@
 {% extends '@SyliusShop/layout.html.twig' %}
-
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
-
 {% import '@SyliusUi/Macro/messages.html.twig' as messages %}
-
 {% set header = 'sylius.ui.your_shopping_cart' %}
 
 {% block title %}{{ parent() }} | {{ header|trans }}{% endblock %}
@@ -33,13 +30,6 @@
                         <a id="to-pay" class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
-
-{#                <div class="five wide column">#}
-{#                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_totals', {'cart': cart}) }}#}
-{#                    {% include '@SyliusShop/Cart/Summary/_totals.html.twig' %}#}
-{#                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_totals', {'cart': cart}) }}#}
-{#                    {% include '@SyliusShop/Cart/Summary/_checkout.html.twig' %}#}
-{#                </div>#}
 
                 {{ sonata_block_render_event('sylius.shop.cart.summary.before_suggestions', {'cart': cart}) }}
 
@@ -103,6 +93,7 @@
             var $couponAdd = $('#coupon-add');
             var toCheckout = false;
             var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
+            var $coupon = $('#sylius_cart_promotionCoupon');
 
             $('.quantity-up').click(function () {
                 updateCart();
@@ -117,7 +108,7 @@
             });
 
             {% if cart.promotionCoupon %}
-                $('#sylius_cart_promotionCoupon').attr('readonly', true);
+                $coupon.attr('readonly', true);
             {% endif %}
 
             $toPay.click(function (evt) {
@@ -159,7 +150,39 @@
                     $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.message'|trans }}');
                     $modal.modal('show');
                 } else {
-                    updateCart();
+
+                    if (!(Boolean) ($coupon.val())) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.add_code.message'|trans }}');
+                        $modal.modal('show');
+                    } else {
+                        blockPage();
+                        $.ajax({
+                            type: 'PUT',
+                            url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue}) }}',
+                            data: {
+                                'coupon': $coupon.val()
+                            },
+                            success: function () {
+                                withCoupon = true;
+                                updateCart();
+                            },
+                            error: function (error) {
+                                let recordset = error['responseJSON'];
+                                var errorMsg = '{{ 'app.api.cart.coupon.error'|trans }}';
+                                $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+
+                                if (recordset['message']) {
+                                    errorMsg = recordset['message'];
+                                }
+
+                                $modal.find('.modal-body').html(errorMsg);
+
+                                unblockPage();
+                                $modal.modal('show');
+                            }
+                        });
+                    }
                 }
             });
 
@@ -248,6 +271,11 @@
 
             $updateCart.on('submit', function (e) {
                 e.preventDefault();
+
+                if (!withCoupon) {
+                    $coupon.val(null);
+                }
+
                 var $this = $(this);
 
                 blockPage();

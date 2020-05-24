@@ -1,27 +1,9 @@
-{#<div class="two fields">#}
-{#    {{ form_row(form.firstName) }}#}
-{#    {{ form_row(form.lastName) }}#}
-{#</div>#}
 {{ form_row(form.fullAddress) }}
-{{ form_row(form.annotations) }}
-
-{#{% include '@SyliusShop/Common/Form/_countryCode.html.twig' with {'form': form.countryCode} %}#}
-
-{#<div class="province-container field" data-url="{{ path('sylius_shop_ajax_render_province_form') }}">#}
-{#    {% if form.provinceCode is defined %}#}
-{#        {{ form_row(form.provinceCode, {'attr': {'class': 'ui dropdown'}}) }}#}
-{#    {% elseif form.provinceName is defined %}#}
-{#        {{ form_row(form.provinceName) }}#}
-{#    {% endif %}#}
-{#</div>#}
-
-{#{% if form.provinceCode is defined %}#}
-{#    {{ form_errors(form) }}#}
-{#{% endif %}#}
-
-{#<div class="two fields">#}
-{#    {{ form_row(form.city) }}#}
-{#    {{ form_row(form.postcode) }}#}
-{#</div>#}
+{{ form_row(form.firstName) }}
 {{ form_row(form.phoneNumber) }}
-<p>{{ 'app.ui.checkout.order.phone.message'|trans }}</p>
+
+{% if is_granted("ROLE_USER") %}
+    {% if not has_orders(app.user) %}
+        <p class="mh-color">{{ about_store('first-purchase-ms')|default('app.ui.checkout.order.phone.message'|trans) }}</p>
+    {% endif %}
+{% endif %}
