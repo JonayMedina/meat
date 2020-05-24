@@ -803,3 +803,5 @@ app.ui.checkout.schedule: Horario
 app.ui.checkout.billing.name: 'Nombre en Factura'
 app.ui.checkout.billing.tax_id: NIT
 app.ui.checkout.billing.address: 'Dirección en factura'
+app.ui.checkout.billing.add_data: 'Ingresar datos'
+app.ui.checkout.billing.cf: 'Consumidor Final'

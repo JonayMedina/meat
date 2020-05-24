@@ -1,7 +1,6 @@
 <div id="sylius-shipping-address">
 {#    {% include '@SyliusShop/Checkout/Address/_addressBookSelect.html.twig' %}#}
     {% include '@SyliusShop/Common/Form/_address.html.twig' with {'form': form.shippingAddress, 'order': order} %}
-{#    {{ form_row(form.differentBillingAddress, {'attr': {'data-toggles': 'sylius-billing-address'}}) }}#}
 
     <a id="show-scheduled" class="mt-3 mb-3" {% if order.scheduledDeliveryDate %}style="display: none"{% endif %}>{{ 'app.ui.checkout.order.schedule'|trans }}</a>
     <div class="scheduled-date mb-3" {% if not order.scheduledDeliveryDate %}style="display: none"{% endif %}>
@@ -16,4 +15,12 @@
     <p class="mh-color">{{ 'app.ui.checkout.order.estimated_date'|trans }}</p>
 
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
+</div>
+
+<div class="d-none">
+    {{ form_row(form.differentBillingAddress, {'attr': {'data-toggles': 'sylius-billing-address'}}) }}
+    {{ form_row(form.billingAddress.fullAddress, {'value': order.billingAddress.fullAddress|default('-')}) }}
+    {{ form_row(form.billingAddress.firstName, {'value': order.billingAddress.firstName|default('-')}) }}
+    {{ form_row(form.billingAddress.phoneNumber, {'value': order.billingAddress.phoneNumber|default('-')}) }}
+    {{ form_row(form.billingAddress.taxId, {'value': order.billingAddress.taxId|default('')}) }}
 </div>

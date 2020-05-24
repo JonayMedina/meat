@@ -73,9 +73,6 @@ class OrderExtendedController extends OrderController
             $billingAddress = $resource->getBillingAddress();
             $billingAddress->setCustomer($customer);
             $billingAddress->setType(Address::TYPE_BILLING);
-            $billingAddress->setFirstName(null);
-            $billingAddress->setPhoneNumber(null);
-            $billingAddress->setFullAddress(null);
 
             if (!$customer->getDefaultAddress()) {
                 $customer->setDefaultAddress($shippingAddress);
@@ -172,59 +169,17 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
-//            if ($request->request->get('sylius_checkout_address')) {
-//                $scheduledDate = $request->request->get('sylius_checkout_address')['scheduledDate'];
-//                $preferredTime = $request->request->get('sylius_checkout_address')['preferredTime'];
-//
-//                if ($scheduledDate) {
-//                    $time = strtotime($scheduledDate);
-//                    $date = date('Y-m-d', $time);
-//
-//                    $resource->setScheduledDeliveryDate(New DateTime($date));
-//                } else {
-//                    $resource->setScheduledDeliveryDate(null);
-//                }
-//
-//                if ($preferredTime) {
-//                    if ($preferredTime >= 1) {
-//                        if ($preferredTime == 3) {
-//                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third');
-//                        } else if ($preferredTime == 2) {
-//                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second');
-//                        } else {
-//                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first');
-//                        }
-//
-//                        $resource->setPreferredDeliveryTime($text);
-//                    } else {
-//                        $resource->setPreferredDeliveryTime(null);
-//                    }
-//                } else {
-//                    $resource->setPreferredDeliveryTime(null);
-//                }
-//            }
-//
-//            /** @var Customer $customer */
-//            $customer = $resource->getCustomer();
-//
-//            /** @var Address $shippingAddress */
-//            $shippingAddress = $resource->getShippingAddress();
-//            $shippingAddress->setCustomer($customer);
-//            $shippingAddress->setType(Address::TYPE_SHIPPING);
-//
-//            /** @var Address $billingAddress */
-//            $billingAddress = $resource->getBillingAddress();
-//            $billingAddress->setCustomer($customer);
-//            $billingAddress->setType(Address::TYPE_BILLING);
-//            $billingAddress->setFirstName(null);
-//            $billingAddress->setPhoneNumber(null);
-//            $billingAddress->setFullAddress(null);
-//
-//            if (!$customer->getDefaultAddress()) {
-//                $customer->setDefaultAddress($shippingAddress);
-//            }
-//
-//            $em->flush();
+            if (!$request->request->get('add_data')) {
+                /** @var Address $billingAddress */
+                $billingAddress = $resource->getBillingAddress();
+                $billingAddress->setType(Address::TYPE_BILLING);
+                $billingAddress->setFirstName(null);
+                $billingAddress->setPhoneNumber(null);
+                $billingAddress->setFullAddress(null);
+                $billingAddress->setTaxId('CF');
+
+                $em->flush();
+            }
 
             $resource = $form->getData();
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);

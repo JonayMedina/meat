@@ -7,7 +7,7 @@
 
     {{ sonata_block_render_event('sylius.shop.checkout.address.after_steps', {'order': order}) }}
 
-    <div class="row profile pt-4 checkout checkout-address">
+    <div class="row profile pt-4 checkout checkout-address billing">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
             <h1 class="text-center">{{ 'app.ui.checkout.title'|trans }}</h1>
         </div>
@@ -32,50 +32,50 @@
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                         <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                                                         <p>{{ order.shippingAddress.fullAddress }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                         <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                                                         <p>{{ order.shippingAddress.firstName }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                         <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                                                         <p>{{ order.shippingAddress.phoneNumber }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                         <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                                                         <p>{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                         <p class="font-semi-bold">{{ 'app.ui.checkout.schedule'|trans }}</p>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
                                                         <p>{{ order.preferredDeliveryTime|default('app.ui.checkout.order.preferred_time.none'|trans) }}</p>
                                                     </div>
                                                 </div>
@@ -130,37 +130,8 @@
 {% block extrajs %}
     <script>
         $(function () {
-            let $radio = $('input[type="radio"]');
-            let $showScheduled = $('#show-scheduled');
-            let $scheduled = $('.scheduled-date');
-            var $preferred = 0;
-
-            {% if order.preferredDeliveryTime %}
-                {% set preferred = order.preferredDeliveryTime %}
-                {% if preferred == 'app.ui.checkout.order.preferred_time.first'|trans %}
-                    $preferred = 1;
-                {% endif %}
-                {% if preferred == 'app.ui.checkout.order.preferred_time.second'|trans %}
-                    $preferred = 2;
-                {% endif %}
-                {% if preferred == 'app.ui.checkout.order.preferred_time.third'|trans %}
-                    $preferred = 3;
-                {% endif %}
-            {% endif %}
-
-            if ($radio.closest('div.toggle').find('label').length <=0 ) {
-                $radio.closest('div.toggle').append("<label></label>");
-            }
-
-            $('input[type="radio"]:first-of-type').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.none'|trans }}</p>");
-            $('input[type="radio"][value="1"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.first'|trans }}</p>");
-            $('input[type="radio"][value="2"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.second'|trans }}</p>");
-            $('input[type="radio"][value="3"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.third'|trans }}</p>");
-            $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
-
-            if ($preferred > 0) {
-                $('input[type="radio"][value="' + $preferred + '"]').prop('checked', true).change();
-            }
+            var $form = $('form');
+            var $skipForm = $('.skip-form');
 
             $('.radio').click(function () {
                 var $input = $(this).find('input');
@@ -168,27 +139,14 @@
                 $input.prop('checked', true).change();
             });
 
-            $showScheduled.click(function () {
-                $(this).hide();
-                $scheduled.slideDown(450);
+            $('#skip-step').click(function () {
+                $skipForm.fadeOut(450);
+
+                setTimeout(function () {
+                    $('#next-step').trigger('click');
+                }, 500);
             });
 
-            $('.scheduled-date .close-btn').click(function () {
-                $scheduled.find('input').val(null);
-                $scheduled.hide();
-                $showScheduled.slideDown(450);
-            });
-
-            var today = new Date();
-            var min = new Date();
-            var max = new Date();
-            min.setDate(today.getDate() + 1);
-            max.setDate(today.getDate() + {{ about_store('days-to-choose')|default(0)|e('js') }});
-
-            $('.datepicker').datepicker({
-                minDate: min,
-                maxDate: max
-            });
         });
     </script>
 {% endblock %}

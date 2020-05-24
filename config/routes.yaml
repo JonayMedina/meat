@@ -167,5 +167,5 @@ sylius_shop_checkout_billing:
                     - "expr:service('sylius.context.cart').getCart().getId()"
             state_machine:
                 graph: sylius_order_checkout
-                transition: address
+                transition: skip_shipping
             redirect: sylius_shop_checkout_select_payment

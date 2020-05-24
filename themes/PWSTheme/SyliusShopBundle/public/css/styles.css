@@ -1859,6 +1859,19 @@ label.icobutton input {
     font-size: 20px;
 }
 
+.checkout .your-info > .row > div {
+    margin-bottom: 10px;
+}
+
+.billing .grouped {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.billing .grouped .field:first-of-type {
+    margin-right: 15px !important;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2188,6 +2201,10 @@ label.icobutton input {
     .cart-summary.page #sylius-coupon br {
         display: none;
     }
+
+    .checkout .btn-rounded, .checkout .btn-rounded.inverted {
+        min-width: 220px;
+    }
 }
 
 @media (max-width: 767px) {
@@ -2451,6 +2468,10 @@ label.icobutton input {
 
     .cart-summary.page .favorite-item p.sub-total {
         align-items: initial;
+    }
+
+    .billing .grouped .field {
+        width: 100%;
     }
 }
 
