@@ -2,24 +2,24 @@
 
 namespace App\Twig;
 
-use App\Entity\Channel\ChannelPricing;
-use App\Entity\Order\Order;
-use App\Entity\Product\Product;
-use App\Entity\Promotion\Promotion;
-use App\Entity\Taxonomy\Taxon;
-use App\Service\SettingsService;
 use Exception;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use App\Entity\Order\Order;
+use App\Entity\User\ShopUser;
+use App\Entity\Taxonomy\Taxon;
+use App\Entity\Product\Product;
+use App\Service\UploaderHelper;
+use App\Service\FavoriteService;
+use App\Service\SettingsService;
+use App\Entity\Promotion\Promotion;
+use Twig\Extension\AbstractExtension;
+use App\Entity\Channel\ChannelPricing;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Promotion\Model\PromotionActionInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-use App\Entity\User\ShopUser;
-use App\Service\UploaderHelper;
-use App\Service\FavoriteService;
-use Twig\Extension\AbstractExtension;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
