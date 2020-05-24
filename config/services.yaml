@@ -136,7 +136,6 @@ services:
         class: App\Controller\Shop\ExtenderController
         tags: ['controller.service_arguments']
         
-        
     app.shop_api.cart:
         class: App\Controller\ShopApi\CartController
         tags: ['controller.service_arguments']
