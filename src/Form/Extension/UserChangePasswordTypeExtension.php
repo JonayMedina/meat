@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Form\Extension;
 
-
-use Sylius\Bundle\UserBundle\Form\Type\UserChangePasswordType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Sylius\Bundle\UserBundle\Form\Type\UserChangePasswordType;
 
 class UserChangePasswordTypeExtension extends AbstractTypeExtension
 {

@@ -3,7 +3,7 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block extracontent %}
-    {{ sonata_block_render_event('sylius.shop.checkout.select_payment.after_steps', {'order': order}) }}
+    {{ sonata_block_render_event('sylius.shop.checkout.address.after_steps', {'order': order}) }}
 
     <div class="row profile pt-4 checkout checkout-address billing">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
@@ -92,42 +92,19 @@
                                     <div class="col-12">
                                         <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
                                     </div>
-                                    <div class="col-12 your-info">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p>{{ order.billingAddress.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p>{{ order.billingAddress.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p>{{ order.billingAddress.fullAddress }}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 text-center">
-                                        <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                    <div class="col-12">
+                                        {{ form_start(form, {'action': path('sylius_shop_checkout_billing'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+                                        {#                        {{ form_errors(form) }}#}
+                                        <input type="hidden" name="_method" value="PUT" />
+
+                                        {% include '@SyliusShop/Checkout/Billing/_form.html.twig' %}
+
+                                        {{ sonata_block_render_event('sylius.shop.checkout.address.before_navigation', {'order': order}) }}
+
+                                        {% include '@SyliusShop/Checkout/Address/_navigation.html.twig' %}
+
+                                        {{ form_row(form._token) }}
+                                        {{ form_end(form, {'render_rest': false}) }}
                                     </div>
                                 </div>
                             </div>
@@ -136,21 +113,7 @@
                             <div class="segment">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h2>{{ 'app.ui.checkout.third.title'|trans }}</h2>
-                                    </div>
-                                    <div class="col-12">
-                                        {{ sonata_block_render_event('sylius.shop.checkout.select_payment.before_form', {'order': order}) }}
-
-                                        {{ form_start(form, {'action': path('sylius_shop_checkout_select_payment'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-                                        <input type="hidden" name="_method" value="PUT" />
-
-                                        {% include '@SyliusShop/Checkout/SelectPayment/_form.html.twig' %}
-
-                                        {{ sonata_block_render_event('sylius.shop.checkout.select_payment.before_navigation', {'order': order}) }}
-                                        {% include '@SyliusShop/Checkout/SelectPayment/_navigation.html.twig' %}
-
-                                        {{ form_row(form._token) }}
-                                        {{ form_end(form, {'render_rest': false}) }}
+                                        <h2 class="mb-0">{{ 'app.ui.checkout.third.title'|trans }}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -160,4 +123,28 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            var $form = $('form');
+            var $skipForm = $('.skip-form');
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
+            $('#skip-step').click(function () {
+                $skipForm.fadeOut(450);
+
+                setTimeout(function () {
+                    $('#next-step').trigger('click');
+                }, 500);
+            });
+
+        });
+    </script>
 {% endblock %}

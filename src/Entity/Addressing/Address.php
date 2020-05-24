@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity\Addressing;
 
+use DateTime;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sylius\Component\Core\Model\Address as BaseAddress;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -90,7 +92,7 @@ class Address extends BaseAddress
     private $status = self::STATUS_PENDING;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
@@ -107,7 +109,7 @@ class Address extends BaseAddress
      * @param string $annotations
      * @return Address
      */
-    public function setAnnotations(string $annotations): self
+    public function setAnnotations(?string $annotations): self
     {
         $this->annotations = $annotations;
 
@@ -126,7 +128,7 @@ class Address extends BaseAddress
      * @param string $fullAddress
      * @return Address
      */
-    public function setFullAddress(string $fullAddress): self
+    public function setFullAddress(?string $fullAddress): self
     {
         $this->fullAddress = $fullAddress;
 
@@ -186,7 +188,7 @@ class Address extends BaseAddress
     public function validate(): self
     {
         $this->status = self::STATUS_VALIDATED;
-        $this->validatedAt = new \DateTime();
+        $this->validatedAt = new DateTime();
 
         return $this;
     }
@@ -203,18 +205,18 @@ class Address extends BaseAddress
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getValidatedAt(): ?\DateTime
+    public function getValidatedAt(): ?DateTime
     {
         return $this->validatedAt;
     }
 
     /**
-     * @param \DateTime $validatedAt
+     * @param DateTime $validatedAt
      * @return Address
      */
-    public function setValidatedAt(?\DateTime $validatedAt): Address
+    public function setValidatedAt(?DateTime $validatedAt): Address
     {
         $this->validatedAt = $validatedAt;
 
@@ -246,6 +248,4 @@ class Address extends BaseAddress
 
         return $this;
     }
-
-
 }
