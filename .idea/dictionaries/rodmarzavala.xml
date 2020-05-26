@@ -3,16 +3,19 @@
     <words>
       <w>birthdate</w>
       <w>clearfix</w>
+      <w>epay</w>
       <w>expdate</w>
       <w>ibox</w>
       <w>inputmask</w>
       <w>meathouse</w>
       <w>metismenu</w>
+      <w>pagerfanta</w>
       <w>passwd</w>
       <w>paymentgw</w>
       <w>praga</w>
       <w>recordset</w>
       <w>summernote</w>
+      <w>visanet</w>
     </words>
   </dictionary>
 </component>

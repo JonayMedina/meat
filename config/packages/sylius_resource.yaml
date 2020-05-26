@@ -50,3 +50,8 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: App\Entity\PromotionBanner
+                
+        app.notification:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Notification

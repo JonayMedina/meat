@@ -34,6 +34,11 @@ services:
             $fcmServerKey: '%env(FCM_SERVER_KEY)%'
             $userRepository: '@sylius.repository.shop_user'
             $addCouponAction: '@sylius.shop_api_plugin.controller.cart.add_coupon_action'
+            $epayGateWayIP: '%env(EPAY_GATEWAY_IP)%'
+            $epayTerminalID: '%env(EPAY_TERMINAL_ID)%'
+            $epayMerchant: '%env(EPAY_MERCHANT)%'
+            $epayMerchantUser: '%env(EPAY_MERCHANT_USER)%'
+            $epayMerchantPassword: '%env(EPAY_MERCHANT_PASSWORD)%'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
@@ -72,6 +77,9 @@ services:
         
     Sylius\Component\Core\Factory\AddressFactoryInterface:
         alias: 'sylius.custom_factory.address'
+        
+    SM\Factory\Factory:
+        alias: 'sm.factory'
         
     Liip\ImagineBundle\Service\FilterService:
         alias: 'liip_imagine.service.filter'

@@ -8,6 +8,7 @@ use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Promotion\PromotionCoupon;
+use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
@@ -197,6 +198,41 @@ class CartController extends AbstractFOSRestController
             $statusCode = Response::HTTP_NOT_FOUND;
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.not_found'));
         }
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{token}/complete.{_format}",
+     *     name="shop_api_pay_cart",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @param PaymentGatewayService $paymentService
+     * @return Response
+     */
+    public function payAction(Request $request, PaymentGatewayService $paymentService) {
+        $token = $request->get('token');
+        $statusCode = Response::HTTP_OK;
+
+        /** @var Order $order */
+        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+        $cardHolder = $request->get('card_holder');
+        $cardNumber = $request->get('card_number');
+        $expDate = $request->get('exp_date');
+        $cvv = $request->get('cvv');
+
+        $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+
+        if ('00' !== $result['responseCode']) {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+        }
+
+        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
 
         $view = $this->view($response, $statusCode);
 

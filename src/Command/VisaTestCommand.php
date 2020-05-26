@@ -41,23 +41,15 @@ class VisaTestCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $result = $this->paymentService
-            ->configureSell()
-            ->setPan("4000000000000416")
-            ->setExpDate("1912")
-            ->setAmount("1500")
-            ->setCvv2("123")
-            ->setMerchantUser("76B925EF7BEC821780B4B21479CE6482EA415896CF43006050B1DAD101669921")
-            ->setMerchantPasswd("DD1791DB5B28DDE6FBC2B9951DFED4D97B82EFD622B411F1FC16B88B052232C7")
-            ->request();
-
-        $response = $result['response'];
+        $response = $this->paymentService
+            ->useTestEnvironment()
+            ->pay("1500", "MeatHouse User", "4000000000000416", "1912", "123");
 
         $table = new Table($output);
         $table
-            ->setHeaders(['Audit Number', 'Reference Number', 'Authorization Number', 'Response Code', 'message Type'])
+            ->setHeaders(['Card Holder', 'Card Number', 'Audit Number', 'Reference Number', 'Authorization Number', 'Response Code', 'Response Message', 'message Type'])
             ->setRows([
-                [$response['auditNumber'], $response['referenceNumber'], $response['authorizationNumber'], $response['responseCode'], $response['messageType']],
+                [$response['cardHolder'], $response['cardNumber'], $response['auditNumber'], $response['referenceNumber'], $response['authorizationNumber'], $response['responseCode'], $response['responseMessage'], $response['messageType']],
             ]);
 
         $table->render();

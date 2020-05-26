@@ -139,6 +139,7 @@ security:
         - { path: "%sylius_shop_api.security.regex%/me", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/favorites", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/devices", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/notifications", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/orders/.*/rating", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/carts", role: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER]}
             
