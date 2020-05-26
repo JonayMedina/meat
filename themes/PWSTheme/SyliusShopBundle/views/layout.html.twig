@@ -91,6 +91,8 @@
         {% block extracss %}{% endblock %}
     {% endblock %}
 
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
 </head>
 
@@ -194,6 +196,27 @@
         </div>
     </div>
 
+    <div class="modal smaller add-favorites fade" id="showCartModal" tabindex="-1" role="dialog" aria-labelledby="showCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="{{ asset('bundles/syliusshop/img/icons/add-to-favorites.png') }}" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                    <h5 class="modal-title text-center" id="showCartModalLabel">{{ 'app.ui.cart.abandoned.title'|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="text-center">{{ 'app.ui.cart.abandoned.message'|trans }}</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button id="delete-cart" class="btn-rounded inverted">{{ 'app.ui.cart.abandoned.delete'|trans }}</button>
+                    <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.cart.abandoned.got_to_cart'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% block modals %}
     {% endblock %}
 
@@ -205,7 +228,6 @@
 {% block javascripts %}
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
     <script src="{{ asset('bundles/syliusshop/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/bootstrap.bundle.min.js') }}"></script>
@@ -244,6 +266,12 @@
                 hideIfNoPrevNext: true,
                 showOtherMonths: true,
             });
+        }
+
+        window.onbeforeunload = showedFalse;
+
+        function showedFalse() {
+            localStorage.setItem('showed', '');
         }
 
         $(function () {
@@ -286,6 +314,7 @@
                             $modal.find('.product-image').attr('src', $this.data('img'));
                             $modal.find('.quantity-text').html(quantity + ' ' + $this.data('measure'));
                             $modal.find('.total-text').html(currency + ' ' + total.toFixed(2));
+                            $('#go-to-cart div.cart-icon').addClass('not-empty');
 
                             unblockPage();
 

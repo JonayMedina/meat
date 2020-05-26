@@ -1956,6 +1956,21 @@ label.icobutton input {
     background: rgba(145, 113, 113, 0.31);
 }
 
+/* Short Cart Modal */
+#showCartModal .modal-content {
+    padding: 30px !important;
+}
+
+#showCartModal .modal-footer {
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#showCartModal .modal-footer .btn-rounded {
+    width: calc(50% - 10px);
+    padding: inherit;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -2499,6 +2514,11 @@ label.icobutton input {
 
     .billing .grouped .field {
         width: 100%;
+    }
+
+    #showCartModal .modal-footer .btn-rounded {
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
 
