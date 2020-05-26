@@ -350,4 +350,26 @@ class OrderExtendedController extends OrderController
 
         return $this->viewHandler->handle($configuration, $view);
     }
+
+    public function thankYouAction(Request $request): Response
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
+
+        /** @var Order $resource */
+        $resource = $this->findOr404($configuration);
+
+        $view = View::create()
+            ->setData([
+                'configuration' => $configuration,
+                'metadata' => $this->metadata,
+                'resource' => $resource,
+                $this->metadata->getName() => $resource
+            ])
+            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
+        ;
+
+        return $this->viewHandler->handle($configuration, $view);
+    }
 }
