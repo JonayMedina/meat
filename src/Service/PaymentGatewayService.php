@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\AboutStore;
+use App\Repository\AboutStoreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -14,8 +17,6 @@ class PaymentGatewayService
     const MESSAGE_TYPE_ANNULMENT = "0202";
 
     const MESSAGE_TYPE_REVERSE = "0400";
-
-    const PAYMENT_GATEWAY_IP = "190.149.69.135";
 
     const POS_MODE_NORMAL = "012";
 
@@ -104,18 +105,95 @@ class PaymentGatewayService
     private $additionalData = "";
 
     /**
-     * PaymentGatewayService constructor.
+     * @var bool
      */
-    public function __construct()
+    private $isTestEnvironment = false;
+
+    /**
+     * Response code collection.
+     * @var string[]
+     */
+    private $responseCodes = [
+        "00" => 'Aprobada',
+        "01" => 'Refiérase al Emisor',
+        "02" => 'Refiérase al Emisor',
+        "05" => 'Transacción No Aceptada',
+        "13" => 'Monto Inválido',
+        "19" => 'Transacción no realizada, intente de nuevo',
+        "31" => 'Tarjeta no soportada por switch',
+        "35" => 'Transacción ya ha sido ANULADA',
+        "36" => 'Transacción a ANULAR no EXISTE',
+        "37" => 'Transacción de ANULACION REVERSADA',
+        "38" => 'Transacción a ANULAR con Error',
+        "41" => 'Tarjeta Extraviada',
+        "43" => 'Tarjeta Robada',
+        "51" => 'No tiene fondos disponibles',
+        "58" => 'Transacción no permitida en la terminal',
+        "89" => 'Terminal inválida',
+        "91" => 'Emisor no disponible',
+        "94" => 'Transacción duplicada',
+        "96" => 'Error del sistema, intente más tarde',
+    ];
+
+    /**
+     * @var AboutStoreRepository
+     */
+    private $repository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * PaymentGatewayService constructor.
+     * @param AboutStoreRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @param $epayGateWayIP
+     * @param $epayTerminalID
+     * @param $epayMerchant
+     * @param $epayMerchantUser
+     * @param $epayMerchantPassword
+     */
+    public function __construct(AboutStoreRepository $repository, EntityManagerInterface $entityManager, $epayGateWayIP, $epayTerminalID, $epayMerchant, $epayMerchantUser, $epayMerchantPassword)
     {
-        $this->auditNumber = $this->generateAuditNumber();
+        $this->repository = $repository;
+        $this->entityManager = $entityManager;
+
         $this->shopperIP = $this->findShopperIP();
         $this->merchantServerIP = $this->findMerchantServerIP();
         $this->posEntryMode = self::POS_MODE_NORMAL;
 
-        $this->paymentgwIP = self::PAYMENT_GATEWAY_IP;
-        $this->terminalId = "77788881";
-        $this->merchant = "00575123";
+        /** We are using Dependency injection here... */
+        $this->paymentgwIP = $epayGateWayIP;
+        $this->terminalId = $epayTerminalID;
+        $this->merchant = $epayMerchant;
+        $this->merchantUser = $epayMerchantUser;
+        $this->merchantPasswd = $epayMerchantPassword;
+    }
+
+    public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv): array
+    {
+        $response = $this
+            ->configureSell()
+            ->configureAuditNumber()
+            ->setPan($cardNumber)
+            ->setExpDate("$expDate")
+            ->setAmount($amount)
+            ->setCvv2($cvv)
+            ->request();
+
+        $response['response']['responseMessage'] = $this->getResponseMessage($response['response']['responseCode']);
+        $response['response']['cardHolder'] = $cardHolder;
+        $response['response']['cardNumber'] = $this->maskCreditCard($cardNumber);
+        $response['response']['dateTime'] = date('c');
+
+        return $response['response'];
+    }
+
+    public function reverse($amount, $cardNumber, $expDate, $cvv)
+    {
+        // TODO: Implement a reverse method configuration here.
     }
 
     /**
@@ -162,10 +240,10 @@ class PaymentGatewayService
                     'paymentgwIP' => $this->getPaymentgwIP(),
                     'shopperIP' => $this->getShopperIP(),
                     'merchantServerIP' => $this->getMerchantServerIP(),
-                    'merchantUser' => $this->getMerchantUser(),
-                    'merchantPasswd' => $this->getMerchantPasswd(),
-                    'terminalId' => $this->getTerminalId(),
-                    'merchant' => $this->getMerchant(),
+                    'merchantUser' => $this->merchantUser,
+                    'merchantPasswd' => $this->merchantPasswd,
+                    'terminalId' => $this->terminalId,
+                    'merchant' => $this->merchant,
                     'messageType' => $this->getMessageType(),
                     'auditNumber' => $this->getAuditNumber(),
                     'additionalData' => $this->getAdditionalData(),
@@ -353,58 +431,6 @@ class PaymentGatewayService
     /**
      * @return string
      */
-    public function getMerchantUser(): ?string
-    {
-        return $this->merchantUser;
-    }
-
-    /**
-     * @param string $merchantUser
-     * @return PaymentGatewayService
-     */
-    public function setMerchantUser(?string $merchantUser): PaymentGatewayService
-    {
-        $this->merchantUser = $merchantUser;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMerchantPasswd(): ?string
-    {
-        return $this->merchantPasswd;
-    }
-
-    /**
-     * @param string $merchantPasswd
-     * @return PaymentGatewayService
-     */
-    public function setMerchantPasswd(?string $merchantPasswd): PaymentGatewayService
-    {
-        $this->merchantPasswd = $merchantPasswd;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTerminalId(): ?string
-    {
-        return $this->terminalId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMerchant(): ?string
-    {
-        return $this->merchant;
-    }
-
-    /**
-     * @return string
-     */
     public function getMessageType(): ?string
     {
         return $this->messageType;
@@ -455,12 +481,48 @@ class PaymentGatewayService
     }
 
     /**
+     * @return PaymentGatewayService
+     */
+    public function useTestEnvironment(): PaymentGatewayService
+    {
+        $this->isTestEnvironment = true;
+
+        /** Test variables */
+        $this->paymentgwIP = "190.149.69.135";
+        $this->terminalId = "77788881";
+        $this->merchant = "00575123";
+        $this->merchantUser = "76B925EF7BEC821780B4B21479CE6482EA415896CF43006050B1DAD101669921";
+        $this->merchantPasswd = "DD1791DB5B28DDE6FBC2B9951DFED4D97B82EFD622B411F1FC16B88B052232C7";
+
+        return $this;
+    }
+
+    /**
      * Generate audit number.
      * @return string
      */
     private function generateAuditNumber()
     {
-        // TODO: Implement a real audit number generator.
+        $aboutStore = $this->repository->findLatest();
+
+        if (!$aboutStore instanceof AboutStore) {
+            throw new BadRequestHttpException('Invalid audit number. (Try to create a new settings entity.)');
+        }
+
+        if (!$this->isTestEnvironment) {
+            $lastAuditNumber = $aboutStore->getLastAuditNumber();
+            $newAuditNumber = str_pad((int)$lastAuditNumber+1, 6, '0', STR_PAD_LEFT);
+
+            if ((int)$newAuditNumber > 999999) {
+                $newAuditNumber = str_pad(1, 6, '0', STR_PAD_LEFT);
+            }
+
+            $aboutStore->setLastAuditNumber($newAuditNumber);
+            $this->entityManager->flush();
+
+            return $newAuditNumber;
+        }
+
         return "990628";
     }
 
@@ -480,5 +542,35 @@ class PaymentGatewayService
     private function findMerchantServerIP()
     {
         return gethostbyname(gethostname());
+    }
+
+    /**
+     * Return message as string.
+     * @param $code
+     * @return string|null
+     */
+    private function getResponseMessage($code): ?string
+    {
+        return $this->responseCodes[$code] ?? null;
+    }
+
+    /**
+     * Mask credit card number.
+     * @param $number
+     * @param string $maskingCharacter
+     * @return string
+     */
+    private function maskCreditCard($number, $maskingCharacter = 'X') {
+        return chunk_split(str_repeat($maskingCharacter, strlen($number) - 4) . substr($number, -4), 4, ' ');
+    }
+
+    /**
+     * Configure audit number.
+     */
+    private function configureAuditNumber(): self
+    {
+        $this->auditNumber = $this->generateAuditNumber();
+
+        return $this;
     }
 }

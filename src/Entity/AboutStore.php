@@ -212,6 +212,12 @@ class AboutStore implements ResourceInterface
      */
     public $termsAndConditionsUrl;
 
+    /**
+     * @var string
+     * @ORM\Column(name="last_audit_number", type="string", length=21, nullable=true)
+     */
+    private $lastAuditNumber = "000000";
+
     public function getId(): ?int
     {
         return $this->id;
@@ -671,6 +677,25 @@ class AboutStore implements ResourceInterface
     public function setPhoneNumber(?string $phoneNumber): AboutStore
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastAuditNumber(): ?string
+    {
+        return $this->lastAuditNumber;
+    }
+
+    /**
+     * @param string $lastAuditNumber
+     * @return AboutStore
+     */
+    public function setLastAuditNumber(?string $lastAuditNumber): AboutStore
+    {
+        $this->lastAuditNumber = $lastAuditNumber;
 
         return $this;
     }
