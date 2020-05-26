@@ -215,6 +215,14 @@ strong, .table thead th {
     font-family: "Raleway SemiBold",sans-serif;
 }
 
+.primary-color {
+    color: #AB162B;
+}
+
+.primary-color-i {
+    color: #AB162B !important;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -1863,13 +1871,32 @@ label.icobutton input {
     margin-bottom: 10px;
 }
 
-.billing .grouped {
+.billing .grouped, .payment .grouped {
     display: flex !important;
     flex-wrap: wrap;
 }
 
 .billing .grouped .field:first-of-type {
     margin-right: 15px !important;
+}
+
+.billing textarea {
+    min-height: 43px !important;
+    max-height: 43px !important;
+}
+
+.payment .primary-color-i {
+    font-family: "Raleway SemiBold", sans-serif;
+    margin-bottom: 0 !important;
+}
+
+.payment .grouped .field {
+    margin: 0 35px 0 0 !important;
+    width: auto;
+}
+
+.payment .grouped .field:last-of-type {
+    margin-right: 0;
 }
 
 /* Datepicker */

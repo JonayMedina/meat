@@ -1,5 +1,22 @@
-{% for payment_form in form.payments %}
-    {% include '@SyliusShop/Checkout/SelectPayment/_payment.html.twig' with {'form': payment_form} %}
+{% if form %}
+    <div class="grouped fields">
+        <div class="field">
+            <div class="radio"><input type="radio" class="add-data" name="payment_type" value="card" checked="checked"><label><p>{{ 'app.ui.checkout.order.payment.card'|trans }}</p></label><span class="check-mark"></span></div>
+        </div>
+        <div class="field">
+            <div id="skip-payment" class="radio"><input type="radio" class="add-data" name="payment_type" value="cash_on_delivery"><label><p>{{ 'app.ui.checkout.order.payment.cash_on_delivery'|trans }}</p></label><span class="check-mark"></span></div>
+        </div>
+    </div>
+
+    <div class="payment-form">
+        <div class="card-wrapper mt-4 mb-4"></div>
+        <div class="form-container">
+            {{ form_row(form.number) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.expirationDate) }}
+            {{ form_row(form.cvv) }}
+        </div>
+    </div>
 {% else %}
     {% include '@SyliusShop/Checkout/SelectPayment/_unavailable.html.twig' %}
-{% endfor %}
+{% endif %}
