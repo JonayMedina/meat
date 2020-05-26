@@ -621,22 +621,6 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     background: #917171;
 }
 
-.profile h2 {
-    font-size: 24px;
-    color: #404040;
-    font-family: "Raleway Medium", sans-serif;
-    margin-bottom: 20px;
-}
-
-.profile .segment {
-    padding-bottom: 1em;
-    border-radius: 15px;
-}
-
-.profile .segment.h-100 {
-    height: calc(100% - 28px) !important;
-}
-
 #settings-collapse {
     display: flex;
     flex-direction: row;
@@ -1430,11 +1414,11 @@ body.blocked {
     margin-right: 15px;
 }
 
-.favorites.page .favorite-item a.sold-out, #deleteFavorite .modal-body a.sold-out {
+.favorites.page .favorite-item a.sold-out, .profile .favorites .product a.sold-out, #deleteFavorite .modal-body a.sold-out {
     position: relative;
 }
 
-.favorites.page .favorite-item a.sold-out .sold-out, #deleteFavorite .modal-body a.sold-out .sold-out {
+.favorites.page .favorite-item a.sold-out .sold-out, .profile .favorites .product a.sold-out .sold-out, #deleteFavorite .modal-body a.sold-out .sold-out {
     position: absolute;
     top: 0;
     width: 100%;
@@ -1899,6 +1883,62 @@ label.icobutton input {
     margin-right: 0;
 }
 
+/* Profile */
+.profile h2 {
+    font-size: 24px;
+    color: #404040;
+    font-family: "Raleway Medium", sans-serif;
+    margin-bottom: 20px;
+}
+
+.profile .segment {
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.profile .segment.h-100 {
+    height: calc(100% - 28px) !important;
+}
+
+.profile .favorites .image-container a {
+    margin-bottom: 10px;
+    background-position: center !important;
+    background-size: cover !important;
+}
+
+.profile .favorites .image-container img {
+    max-width: 60px;
+    visibility: hidden;
+}
+
+.profile .favorites .price {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+}
+
+.profile .favorites .price span, .profile .favorites .product .name, .profile .favorites .product .name p {
+    display: block;
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+}
+
+.profile .favorites .price span.offer, .profile .favorites .product .name, .profile .favorites .product .name p {
+    color: #ab162b;
+}
+
+.profile .favorites .product .divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.profile .favorites .product:last-of-type .divider {
+    display: none;
+}
+
+.profile .favorites .product form {
+    text-align: right !important;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2246,6 +2286,14 @@ label.icobutton input {
 
     .checkout .btn-rounded, .checkout .btn-rounded.inverted {
         min-width: 220px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .profile .favorites button.btn-rounded {
+        padding-right: 0;
+        padding-left: 0;
+        width: 100%;
     }
 }
 
@@ -2694,6 +2742,12 @@ label.icobutton input {
 
     .cart-summary.page .buttons a:first-of-type {
         order: 1;
+    }
+
+    .profile .favorites button.btn-rounded {
+        padding-right: 0;
+        padding-left: 0;
+        width: 100%;
     }
 }
 

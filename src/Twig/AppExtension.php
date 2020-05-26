@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Repository\FavoriteRepository;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -66,6 +67,11 @@ class AppExtension extends AbstractExtension
     private $orderRepository;
 
     /**
+     * @var FavoriteRepository
+     */
+    private $favoriteRepository;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
@@ -75,8 +81,9 @@ class AppExtension extends AbstractExtension
      * @param TokenStorageInterface $tokenStorage
      * @param ChannelContextInterface $channelContext
      * @param OrderRepositoryInterface $orderRepository
+     * @param FavoriteRepository $favoriteRepository
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -86,6 +93,7 @@ class AppExtension extends AbstractExtension
         $this->tokenStorage = $tokenStorage;
         $this->channelContext = $channelContext;
         $this->orderRepository = $orderRepository;
+        $this->favoriteRepository = $favoriteRepository;
     }
 
     /**
@@ -115,6 +123,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon']),
             new TwigFunction('get_coupon_action', [$this, 'getCouponAction']),
             new TwigFunction('has_orders', [$this, 'userHasOrders']),
+            new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
         ];
     }
 
@@ -293,5 +302,14 @@ class AppExtension extends AbstractExtension
         $orders = $this->orderRepository->findBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
 
         return count($orders) > 0;
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param $limit
+     * @return mixed
+     */
+    public function getNFavorites(ShopUser $user, $limit) {
+        return $this->favoriteRepository->findBy(['shopUser' => $user], null, $limit);
     }
 }

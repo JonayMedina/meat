@@ -1,4 +1,5 @@
 {% extends '@SyliusShop/Account/layout.html.twig' %}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 
 {% block subcontent %}
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_content_header', {'customer': customer}) }}
@@ -116,19 +117,60 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-12 col-md-5 col-lg-5 r-pr-15 pr-0">
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5  r-pr-15 pr-0">
                     <div class="row">
                         <div class="segment ml-3 r-ml-0 w-100">
                             <div class="row">
-                                <div class="col-12"><h2>{{ 'app.ui.my_favorites'|trans }}</h2></div>
-                                <div class="col-12 text-center mt-5 mb-5">
-                                    <p class="text-center">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
-                                    <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                {% set favs = get_n_favorites(customer.user, 3) %}
+                                <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+                                    <h2 class="mb-0">{{ 'app.ui.my_favorites'|trans }}</h2>
+                                    {% if favs|length > 0 %}
+                                        <a class="text-underline" href="{{ path('user_favorites') }}">{{ 'app.ui.view_all'|trans }}</a>
+                                    {% endif %}
                                 </div>
+                                {% if favs|length > 0 %}
+                                    <div class="col-12 favorites">
+                                        <div class="row">
+                                            {% for fav in favs %}
+                                                {% set product = fav.product %}
+                                                {% set available = true %}
+
+                                                <div class="col-12 product">
+                                                    <div class="row">
+                                                        <div class="col-4 col-sm-3 col-md-4 col-lg-3 image-container">
+                                                            <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                                                                <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                                                {% if not available %}
+                                                                    <div class="sold-out">{{ 'app.ui.sold_out'|trans }}</div>
+                                                                {% endif %}
+                                                            </a>
+                                                            <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                                                                {% if get_price(product)['isOffer'] %}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                {% else %}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8 col-sm-9 col-md-8 col-lg-9 d-flex flex-column justify-content-between">
+                                                            <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
+                                                            {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithoutTitle.html.twig', 'productId': product.id})) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="divider"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 text-center mt-5 mb-5 xs-mt-0 xs-mb-0">
+                                        <p class="text-center xs-pt-1">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
+                                        <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
