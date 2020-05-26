@@ -3,9 +3,25 @@
 namespace App\Service;
 
 use App\Entity\AboutStore;
+use App\Entity\Order\Order;
+use App\Entity\Payment\GatewayConfig;
+use App\Entity\Payment\Payment;
+use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use SM\Factory\Factory;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
+use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
+use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class PaymentGatewayService
@@ -146,19 +162,68 @@ class PaymentGatewayService
     private $entityManager;
 
     /**
+     * @var PaymentFactoryInterface
+     */
+    private $paymentFactory;
+
+    /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
+
+    /**
+     * @var PaymentMethodFactoryInterface
+     */
+    private $paymentMethodFactory;
+
+    /**
+     * @var PaymentMethodRepository
+     */
+    private $paymentMethodRepository;
+
+    /**
+     * @var ChannelContextInterface
+     */
+    private $channelContext;
+
+    /**
+     * @var CurrencyContextInterface
+     */
+    private $currencyContext;
+
+    /**
+     * @var Factory
+     */
+    private $stateMachineFactory;
+
+    /**
      * PaymentGatewayService constructor.
      * @param AboutStoreRepository $repository
      * @param EntityManagerInterface $entityManager
+     * @param PaymentFactoryInterface $paymentFactory
+     * @param PaymentRepository $paymentRepository
+     * @param PaymentMethodFactoryInterface $paymentMethodFactory
+     * @param PaymentMethodRepository $paymentMethodRepository
+     * @param ChannelContextInterface $channelContext
+     * @param CurrencyContextInterface $currencyContext
+     * @param Factory $stateMachineFactory
      * @param $epayGateWayIP
      * @param $epayTerminalID
      * @param $epayMerchant
      * @param $epayMerchantUser
      * @param $epayMerchantPassword
      */
-    public function __construct(AboutStoreRepository $repository, EntityManagerInterface $entityManager, $epayGateWayIP, $epayTerminalID, $epayMerchant, $epayMerchantUser, $epayMerchantPassword)
+    public function __construct(AboutStoreRepository $repository, EntityManagerInterface $entityManager, PaymentFactoryInterface $paymentFactory, PaymentRepository $paymentRepository, PaymentMethodFactoryInterface $paymentMethodFactory, PaymentMethodRepository $paymentMethodRepository, ChannelContextInterface $channelContext, CurrencyContextInterface $currencyContext, Factory $stateMachineFactory, $epayGateWayIP, $epayTerminalID, $epayMerchant, $epayMerchantUser, $epayMerchantPassword)
     {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
+        $this->paymentFactory = $paymentFactory;
+        $this->paymentRepository = $paymentRepository;
+        $this->paymentMethodFactory = $paymentMethodFactory;
+        $this->paymentMethodRepository = $paymentMethodRepository;
+        $this->channelContext = $channelContext;
+        $this->currencyContext = $currencyContext;
+        $this->stateMachineFactory = $stateMachineFactory;
 
         $this->shopperIP = $this->findShopperIP();
         $this->merchantServerIP = $this->findMerchantServerIP();
@@ -170,6 +235,69 @@ class PaymentGatewayService
         $this->merchant = $epayMerchant;
         $this->merchantUser = $epayMerchantUser;
         $this->merchantPasswd = $epayMerchantPassword;
+    }
+
+    public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
+    {
+        if ($order->getState() != OrderInterface::STATE_NEW) {
+            throw new AccessDeniedHttpException('Invalid cart state.');
+        }
+
+        if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
+            throw new AccessDeniedHttpException('This cart is already paid.');
+        }
+
+        $amount = $order->getTotal();
+
+        /** Recalculate here... */
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
+
+        /** Pay using Visa Epay... */
+        $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv);
+
+        /**
+         * Retrieve epay payment method
+         */
+        $paymentMethod = $this->getPaymentMethod();
+
+        /** Get Currency */
+        $currency = $this->currencyContext->getCurrencyCode();
+
+        /**
+         * Register payment in sylius.
+         * @var Payment $payment
+         */
+        $payment = $this->paymentFactory->createNew();
+
+        $payment->setOrder($order);
+        $payment->setDetails($response);
+        $payment->setCurrencyCode($currency);
+        $payment->setMethod($paymentMethod);
+        $payment->setAmount($amount);
+
+        /** cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
+
+        /** new -> complete */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+
+        $this->paymentRepository->add($payment);
+
+        /** Mark as paid */
+        if ('00' === $response['responseCode']) {
+            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+
+            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+
+            $this->entityManager->flush();
+        }
+
+        return $response;
     }
 
     public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv): array
@@ -572,5 +700,42 @@ class PaymentGatewayService
         $this->auditNumber = $this->generateAuditNumber();
 
         return $this;
+    }
+
+    /**
+     * Return Payment Method.
+     * @return PaymentMethod
+     */
+    private function getPaymentMethod(): PaymentMethod
+    {
+        $code = 'epay';
+        $gatewayName = 'visanet';
+        $factoryName = 'sylius_payment';
+
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+
+        if (!$paymentMethod instanceof PaymentMethod) {
+            /** @var PaymentMethod $paymentMethod */
+            $paymentMethod = $this->paymentMethodFactory->createNew();
+            $paymentMethod->setCode($code);
+            $paymentMethod->addChannel($this->channelContext->getChannel());
+
+            $this->paymentMethodRepository->add($paymentMethod);
+        }
+
+        /** Configure Gateway here... */
+        $gatewayConfig = $this->entityManager->getRepository('App:Payment\GatewayConfig')
+            ->findOneBy(['factoryName' => $factoryName, 'gatewayName' => $gatewayName]);
+
+        if (!$gatewayConfig instanceof GatewayConfig) {
+            $gatewayConfig = new GatewayConfig();
+            $gatewayConfig->setFactoryName($factoryName);
+            $gatewayConfig->setGatewayName($gatewayName);
+        }
+
+        $paymentMethod->setGatewayConfig($gatewayConfig);
+        $this->paymentMethodRepository->add($paymentMethod);
+
+        return $paymentMethod;
     }
 }

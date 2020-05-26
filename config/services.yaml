@@ -78,6 +78,9 @@ services:
     Sylius\Component\Core\Factory\AddressFactoryInterface:
         alias: 'sylius.custom_factory.address'
         
+    SM\Factory\Factory:
+        alias: 'sm.factory'
+        
     Liip\ImagineBundle\Service\FilterService:
         alias: 'liip_imagine.service.filter'
         
