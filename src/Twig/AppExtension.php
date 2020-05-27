@@ -126,6 +126,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_coupon_action', [$this, 'getCouponAction']),
             new TwigFunction('has_orders', [$this, 'userHasOrders']),
             new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
+            new TwigFunction('last_order', [$this, 'getLastOrder']),
         ];
     }
 
@@ -329,5 +330,13 @@ class AppExtension extends AbstractExtension
         }
 
         return $new;
+    }
+
+    /**
+     * @param ShopUser $user
+     * @return object|null
+     */
+    public function getLastOrder(ShopUser $user) {
+        return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
     }
 }

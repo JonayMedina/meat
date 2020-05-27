@@ -285,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-12 col-md-5 col-lg-5  r-pr-15 pr-0">
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 r-pr-15 pr-0">
                     <div class="row">
                         <div class="segment ml-3 r-ml-0 w-100">
                             <div class="row">
@@ -339,6 +339,41 @@
                             </div>
                         </div>
                     </div>
+
+                    {% set lastOrder = last_order(customer.user) %}
+                    {% if lastOrder %}
+                        <div class="row">
+                            <div class="segment ml-3 r-ml-0 w-100">
+                                <div class="row">
+                                    <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+                                        <h2 class="mb-0">{{ 'app.ui.last_order'|trans }}</h2>
+                                        <a class="text-underline" href="{{ path('sylius_shop_account_order_index') }}">{{ 'app.ui.view_history'|trans }}</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            {% for item in lastOrder.items %}
+                                                <div class="col-12 item">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <p class="title">{{ item.getVariant.product.name }}</p>
+                                                        </div>
+                                                        <div class="col-12 extra">
+                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ item.quantity }} {{ 'app.ui.pound'|trans }}</p>
+                                                            <p>{{ money.convertAndFormat(item.subtotal) }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="divider"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a class="btn-rounded d-inline-block">{{ 'app.ui.buy_back'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

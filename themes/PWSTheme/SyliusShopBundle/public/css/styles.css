@@ -1953,6 +1953,39 @@ label.icobutton input {
     margin-bottom: 5px;
 }
 
+.profile .item .title {
+    font-size: 16px;
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b;
+    margin-bottom: 20px;
+}
+
+.profile .item .extra {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile .item .extra p {
+    color: #404040;
+}
+
+.profile .item .extra p span {
+    color: #ab162b;
+}
+
+.profile .item .extra p:last-of-type {
+    font-family: "Raleway SemiBold", sans-serif;
+}
+
+.profile .item .divider {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.profile .item:last-of-type .divider {
+    margin-bottom: 0;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2585,6 +2618,11 @@ label.icobutton input {
 
     .profile .address .status {
         text-align: left;
+    }
+
+    .profile .segment {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
 
