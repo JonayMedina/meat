@@ -2,7 +2,9 @@
 
 namespace App\Controller\Frontend;
 
+use App\Controller\ShopApi\SearchController;
 use App\Entity\Order\Order;
+use App\Entity\Product\Product;
 use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
 use App\Entity\Customer\Customer;
@@ -10,6 +12,7 @@ use App\Entity\Addressing\Address;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use App\Repository\PromotionBannerRepository;
+use App\Service\ProductService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -222,43 +225,26 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     * @Route("/address-cart", name="store_address_in_cart")
+     * @Route("/search", name="store_search")
      * @param Request $request
-     * @param OrderRepositoryInterface $orderRepository
-     * @param AddressRepositoryInterface $addressRepository
-     * @return RedirectResponse
+     * @param $search
+     * @param ProductRepositoryInterface $productRepository
+     * @param ProductService $productService
+     * @return Response
      */
-    public function addAddressInCartAction(Request $request, OrderRepositoryInterface $orderRepository, AddressRepositoryInterface $addressRepository) {
-        $cartId = $request->query->get('id');
-        $em = $this->getDoctrine()->getManager();
+    public function searchAction(Request $request, ProductRepositoryInterface $productRepository, ProductService $productService) {
+        $list = [];
+        $locale = $request->getLocale();
+        $search = $request->query->get('search');
 
-        $cart = $orderRepository->find($cartId);
+        /** @var Product[] $products */
+        $products = $productRepository
+            ->searchQuery($search, $locale)
+            ->getQuery()
+            ->getResult();
 
-        if ($cart instanceof Order) {
-            /** @var Customer $customer */
-            $customer = $cart->getCustomer();
-            $shippingAddress = $addressRepository->find($cart->getShippingAddress());
-            $billingAddress = $addressRepository->find($cart->getBillingAddress());
+        $list = $products;
 
-            if ($shippingAddress instanceof Address) {
-                $shippingAddress->setCustomer($customer);
-                $em->persist($shippingAddress);
-            }
-
-            if ($billingAddress instanceof Address) {
-                $billingAddress->setCustomer($customer);
-                $em->persist($billingAddress);
-            }
-
-            if (!$customer->getDefaultAddress()) {
-                $customer->setDefaultAddress($shippingAddress);
-            }
-
-            $em->flush();
-
-            return $this->redirectToRoute('sylius_shop_checkout_select_shipping');
-        } else {
-            return $this->redirectToRoute('sylius_shop_checkout_address');
-        }
+        return $this->render('/frontend/pages/search.html.twig', ['results' => $list, 'search' => $search]);
     }
 }
