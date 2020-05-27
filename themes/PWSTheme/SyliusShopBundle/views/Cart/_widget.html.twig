@@ -1,8 +1,45 @@
-{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
-
-<a href="{{ path('sylius_shop_cart_summary') }}" class="ui circular cart button">
+<a id="go-to-cart" href="{{ path('sylius_shop_cart_summary') }}" class="ui circular cart button">
     <div class="cart-icon {% if not cart.empty %}not-empty{% endif %}">
         <img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}">
     </div>
     {{ 'app.ui.cart'|trans }}
 </a>
+
+{% if not cart.empty %}
+    <script>
+        $(function () {
+            let $errorModal = $('#showErrorMessage');
+
+            $('#delete-cart').click(function () {
+                $('#showCartModal').modal('hide');
+                blockPage();
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ path('sylius_shop_api_drop_cart', {'token': cart.tokenValue}) }}',
+                    data: $(this).serialize(),
+                    success: function () {
+                        location.reload();
+                        unblockPage();
+                    },
+                    error: function (data) {
+                        $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
+                        $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
+
+                        unblockPage();
+                        $errorModal.modal('show');
+                    }
+                });
+            });
+
+            if (!(Boolean) (localStorage.getItem('showed'))) {
+                if (localStorage.getItem('cart') !== '{{ cart.tokenValue }}') {
+                    $('#showCartModal').modal('show');
+                    localStorage.setItem('cart', '{{ cart.tokenValue }}');
+                    localStorage.setItem('showed', 'true');
+                } else {
+                    localStorage.setItem('showed', '');
+                }
+            }
+        });
+    </script>
+{% endif %}

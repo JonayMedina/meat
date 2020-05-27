@@ -2,6 +2,8 @@
 
 namespace App\Twig;
 
+use App\Entity\Addressing\Address;
+use App\Repository\FavoriteRepository;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -66,6 +68,11 @@ class AppExtension extends AbstractExtension
     private $orderRepository;
 
     /**
+     * @var FavoriteRepository
+     */
+    private $favoriteRepository;
+
+    /**
      * AppExtension constructor.
      * @param ContainerInterface $container
      * @param UploaderHelper $uploaderHelper
@@ -75,8 +82,9 @@ class AppExtension extends AbstractExtension
      * @param TokenStorageInterface $tokenStorage
      * @param ChannelContextInterface $channelContext
      * @param OrderRepositoryInterface $orderRepository
+     * @param FavoriteRepository $favoriteRepository
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -86,6 +94,7 @@ class AppExtension extends AbstractExtension
         $this->tokenStorage = $tokenStorage;
         $this->channelContext = $channelContext;
         $this->orderRepository = $orderRepository;
+        $this->favoriteRepository = $favoriteRepository;
     }
 
     /**
@@ -98,6 +107,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('base64', [$this, 'imageToBase64']),
             new TwigFilter('translated_roles', [$this, 'translatedRoles']),
             new TwigFilter('is_favorite', [$this, 'isFavorite']),
+            new TwigFilter('shipping', [$this, 'getShippingAddresses']),
         ];
     }
 
@@ -115,6 +125,8 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_principal_taxon', [$this, 'getPrincipalTaxon']),
             new TwigFunction('get_coupon_action', [$this, 'getCouponAction']),
             new TwigFunction('has_orders', [$this, 'userHasOrders']),
+            new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
+            new TwigFunction('last_order', [$this, 'getLastOrder']),
         ];
     }
 
@@ -293,5 +305,38 @@ class AppExtension extends AbstractExtension
         $orders = $this->orderRepository->findBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
 
         return count($orders) > 0;
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param $limit
+     * @return mixed
+     */
+    public function getNFavorites(ShopUser $user, $limit) {
+        return $this->favoriteRepository->findBy(['shopUser' => $user], null, $limit);
+    }
+
+    /**
+     * @param $addresses
+     * @return array
+     */
+    public function getShippingAddresses($addresses) {
+        $new = [];
+
+        foreach ($addresses as $address ) {
+            if ($address->getType() == Address::TYPE_SHIPPING) {
+                $new = $address;
+            }
+        }
+
+        return $new;
+    }
+
+    /**
+     * @param ShopUser $user
+     * @return object|null
+     */
+    public function getLastOrder(ShopUser $user) {
+        return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
     }
 }
