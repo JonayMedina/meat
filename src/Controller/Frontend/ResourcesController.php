@@ -237,13 +237,17 @@ class ResourcesController extends AbstractController
         $locale = $request->getLocale();
         $search = $request->query->get('search');
 
-        /** @var Product[] $products */
-        $products = $productRepository
-            ->searchQuery($search, $locale)
-            ->getQuery()
-            ->getResult();
+        if ($search) {
+            /** @var Product[] $products */
+            $products = $productRepository
+                ->searchQuery($search, $locale)
+                ->getQuery()
+                ->getResult();
 
-        $list = $products;
+            $list = $products;
+        } else {
+            $search = '';
+        }
 
         return $this->render('/frontend/pages/search.html.twig', ['results' => $list, 'search' => $search]);
     }
