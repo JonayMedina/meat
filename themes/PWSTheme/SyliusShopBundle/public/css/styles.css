@@ -215,6 +215,14 @@ strong, .table thead th {
     font-family: "Raleway SemiBold",sans-serif;
 }
 
+.primary-color {
+    color: #AB162B;
+}
+
+.primary-color-i {
+    color: #AB162B !important;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -611,22 +619,6 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
     height: 1px;
     margin: 0 auto;
     background: #917171;
-}
-
-.profile h2 {
-    font-size: 24px;
-    color: #404040;
-    font-family: "Raleway Medium", sans-serif;
-    margin-bottom: 20px;
-}
-
-.profile .segment {
-    padding-bottom: 1em;
-    border-radius: 15px;
-}
-
-.profile .segment.h-100 {
-    height: calc(100% - 28px) !important;
 }
 
 #settings-collapse {
@@ -1422,11 +1414,11 @@ body.blocked {
     margin-right: 15px;
 }
 
-.favorites.page .favorite-item a.sold-out, #deleteFavorite .modal-body a.sold-out {
+.favorites.page .favorite-item a.sold-out, .profile .favorites .product a.sold-out, #deleteFavorite .modal-body a.sold-out {
     position: relative;
 }
 
-.favorites.page .favorite-item a.sold-out .sold-out, #deleteFavorite .modal-body a.sold-out .sold-out {
+.favorites.page .favorite-item a.sold-out .sold-out, .profile .favorites .product a.sold-out .sold-out, #deleteFavorite .modal-body a.sold-out .sold-out {
     position: absolute;
     top: 0;
     width: 100%;
@@ -1863,13 +1855,135 @@ label.icobutton input {
     margin-bottom: 10px;
 }
 
-.billing .grouped {
+.billing .grouped, .payment .grouped {
     display: flex !important;
     flex-wrap: wrap;
 }
 
 .billing .grouped .field:first-of-type {
     margin-right: 15px !important;
+}
+
+.billing textarea {
+    min-height: 43px !important;
+    max-height: 43px !important;
+}
+
+.payment .primary-color-i {
+    font-family: "Raleway SemiBold", sans-serif;
+    margin-bottom: 0 !important;
+}
+
+.payment .grouped .field {
+    margin: 0 35px 0 0 !important;
+    width: auto;
+}
+
+.payment .grouped .field:last-of-type {
+    margin-right: 0;
+}
+
+/* Profile */
+.profile h2 {
+    font-size: 24px;
+    color: #404040;
+    font-family: "Raleway Medium", sans-serif;
+    margin-bottom: 20px;
+}
+
+.profile .segment {
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.profile .segment.h-100 {
+    height: calc(100% - 28px) !important;
+}
+
+.profile .favorites .image-container a {
+    margin-bottom: 10px;
+    background-position: center !important;
+    background-size: cover !important;
+}
+
+.profile .favorites .image-container img {
+    max-width: 60px;
+    visibility: hidden;
+}
+
+.profile .favorites .price {
+    font-family: "Raleway Regular", sans-serif;
+    font-size: 16px;
+}
+
+.profile .favorites .price span, .profile .favorites .product .name, .profile .favorites .product .name p {
+    display: block;
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+}
+
+.profile .favorites .price span.offer, .profile .favorites .product .name, .profile .favorites .product .name p {
+    color: #ab162b;
+}
+
+.profile .favorites .product .divider {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.profile .favorites .product:last-of-type .divider, .profile .address:last-of-type .divider {
+    display: none;
+}
+
+.profile .favorites .product form {
+    text-align: right !important;
+}
+
+.profile .address .status {
+    display: block;
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    color: #ab162b;
+    margin: 10px 0;
+    text-align: right;
+}
+
+.profile .address .divider {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.profile .item .title {
+    font-size: 16px;
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b;
+    margin-bottom: 20px;
+}
+
+.profile .item .extra {
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile .item .extra p {
+    color: #404040;
+}
+
+.profile .item .extra p span {
+    color: #ab162b;
+}
+
+.profile .item .extra p:last-of-type {
+    font-family: "Raleway SemiBold", sans-serif;
+}
+
+.profile .item .divider {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.profile .item:last-of-type .divider {
+    margin-bottom: 0;
 }
 
 /* Datepicker */
@@ -1927,6 +2041,21 @@ label.icobutton input {
 
 .ui-datepicker .ui-datepicker-calendar tbody a.ui-state-highlight {
     background: rgba(145, 113, 113, 0.31);
+}
+
+/* Short Cart Modal */
+#showCartModal .modal-content {
+    padding: 30px !important;
+}
+
+#showCartModal .modal-footer {
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#showCartModal .modal-footer .btn-rounded {
+    width: calc(50% - 10px);
+    padding: inherit;
 }
 
 /* Responsive */
@@ -1988,7 +2117,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted {
+    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted, .profile .btn-rounded.inverted {
         min-width: 220px;
     }
 }
@@ -2202,8 +2331,16 @@ label.icobutton input {
         display: none;
     }
 
-    .checkout .btn-rounded, .checkout .btn-rounded.inverted {
+    .checkout .btn-rounded, .checkout .btn-rounded.inverted, .profile .btn-rounded.inverted {
         min-width: 220px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .profile .favorites button.btn-rounded {
+        padding-right: 0;
+        padding-left: 0;
+        width: 100%;
     }
 }
 
@@ -2473,6 +2610,20 @@ label.icobutton input {
     .billing .grouped .field {
         width: 100%;
     }
+
+    #showCartModal .modal-footer .btn-rounded {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .profile .address .status {
+        text-align: left;
+    }
+
+    .profile .segment {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2647,6 +2798,12 @@ label.icobutton input {
 
     .cart-summary.page .buttons a:first-of-type {
         order: 1;
+    }
+
+    .profile .favorites button.btn-rounded {
+        padding-right: 0;
+        padding-left: 0;
+        width: 100%;
     }
 }
 

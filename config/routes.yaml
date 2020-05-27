@@ -169,3 +169,21 @@ sylius_shop_checkout_billing:
                 graph: sylius_order_checkout
                 transition: skip_shipping
             redirect: sylius_shop_checkout_select_payment
+            
+sylius_shop_checkout_select_payment:
+    path: /checkout/select-payment
+    methods: [GET, PUT]
+    defaults:
+        _controller: sylius.controller.order:paymentAction
+        _sylius:
+            event: payment
+            flash: false
+            template: "@SyliusShop/Checkout/selectPayment.html.twig"
+            form: App\Form\Shop\PaymentCardCheckoutType
+            repository:
+                method: findCartForSelectingPayment
+                arguments:
+                    - "expr:service('sylius.context.cart').getCart().getId()"
+            state_machine:
+                graph: sylius_order_checkout
+                transition: select_payment

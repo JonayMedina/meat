@@ -1,0 +1,40 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+{% set product = order_item.variant.product %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+<div class="add-to-cart" id="sylius-product-selecting-variant">
+    {{ sonata_block_render_event('sylius.shop.product.show.before_add_to_cart', {'product': product, 'order_item': order_item}) }}
+    {% set available = true %}
+    {% set class = 'available' %}
+
+    {% if product.variants.first.onHand < 1 %}
+        {% set available = false %}
+        {% set class = 'unavailable' %}
+    {% endif %}
+
+    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
+        'class': 'ui loadable form text-center product-buy ' ~ class, 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
+        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': 'app.ui.package'|trans }}) }}
+    {{ form_errors(form) }}
+    <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
+    <div class="d-none">
+        {% if not product.simple %}
+            {% if product.variantSelectionMethodChoice %}
+                {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
+            {% else %}
+                {% include '@SyliusShop/Product/Show/_options.html.twig' %}
+            {% endif %}
+        {% endif %}
+
+        <div class="required field">
+            {{ form_widget(form.cartItem.quantity, {'value': 1}) }}
+        </div>
+    </div>
+
+    {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
+
+    <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

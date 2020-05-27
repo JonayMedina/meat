@@ -1,4 +1,5 @@
 {% extends '@SyliusShop/Account/layout.html.twig' %}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
 
 {% block subcontent %}
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_content_header', {'customer': customer}) }}
@@ -55,13 +56,147 @@
                                         {% endif %}
                                     {% endif %}
                                 </div>
-                                <div class="col-12 text-center mb-5 mt-5">
-                                    {% if customer.addresses|length > 0 %}
+
+                                {% if customer.defaultAddress or customer.addresses|length > 0 %}
+                                    {% set index = 0 %}
+                                    {% set id = -1 %}
+                                    {% set shippingAddresses = customer.addresses|shipping %}
+
+                                    {% if customer.defaultAddress %}
+                                        {% set id = customer.defaultAddress.id %}
+                                        <div class="col-12 mt-3">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <h2 class="mb-0">{{ 'app.ui.customer.default_address'|trans }}</h2>
+                                                </div>
+
+                                                {% set index = index + 1 %}
+                                                <div class="col-12 address">
+                                                    <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                            <p>{{ customer.defaultAddress.fullAddress }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                            <p>{{ customer.defaultAddress.firstName }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-2">
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                            <p>{{ customer.defaultAddress.phoneNumber }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if shippingAddresses|length > 1 %}
+                                            <div class="col-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h2 class="mb-0">{{ 'app.ui.customer.addresses'|trans }}</h2>
+                                                    </div>
+
+                                                    {% for address in shippingAddresses %}
+                                                        {% if address.id != id %}
+                                                            {% set index = index + 1 %}
+                                                            <div class="col-12 address">
+                                                                <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                        <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
+                                                                    </div>
+                                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                        <p>{{ customer.defaultAddress.fullAddress }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                        <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                                                    </div>
+                                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                        <p>{{ customer.defaultAddress.firstName }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                        <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                                                    </div>
+                                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                        <p>{{ customer.defaultAddress.phoneNumber }}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="divider"></div>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     {% else %}
+                                        {% if shippingAddresses|length > 0 %}
+                                            <div class="col-12 mt-3">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h2 class="mb-0">{{ 'app.ui.customer.addresses'|trans }}</h2>
+                                                    </div>
+
+                                                    {% for address in shippingAddresses %}
+                                                        {% set index = index + 1 %}
+                                                        <div class="col-12 address">
+                                                            <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                            <div class="row mb-2">
+                                                                <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                    <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
+                                                                </div>
+                                                                <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                    <p>{{ customer.defaultAddress.fullAddress }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                    <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                                                </div>
+                                                                <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                    <p>{{ customer.defaultAddress.firstName }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-2">
+                                                                <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                    <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                                                </div>
+                                                                <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                    <p>{{ customer.defaultAddress.phoneNumber }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="divider"></div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.edit'|trans }}</a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 text-center mb-5 mt-5">
                                         <p class="text-center">{{ 'app.ui.profile.add_delivery_information'|trans|raw }}</p>
                                         <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
-                                    {% endif %}
-                                </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -70,10 +205,44 @@
                         <div class="col-12 segment">
                             <div class="row">
                                 <div class="col-12"><h2>{{ 'app.ui.billing_data'|trans }}</h2></div>
-                                <div class="col-12 text-center mt-5 mb-5">
-                                    <p class="text-center">{{ 'app.ui.you_dont_have_billing_data'|trans|raw }}</p>
-                                    <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
-                                </div>
+
+                                {% if customer.defaultBillingAddress %}
+                                    <div class="col-12 your-info">
+                                        <div class="row mb-2">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                <p>{{ customer.defaultBillingAddress.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                <p>{{ customer.defaultBillingAddress.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                <p>{{ customer.defaultBillingAddress.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.edit'|trans }}</a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 text-center mt-5 mb-5">
+                                        <p class="text-center">{{ 'app.ui.you_dont_have_billing_data'|trans|raw }}</p>
+                                        <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -120,15 +289,91 @@
                     <div class="row">
                         <div class="segment ml-3 r-ml-0 w-100">
                             <div class="row">
-                                <div class="col-12"><h2>{{ 'app.ui.my_favorites'|trans }}</h2></div>
-                                <div class="col-12 text-center mt-5 mb-5">
-                                    <p class="text-center">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
-                                    <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                {% set favs = get_n_favorites(customer.user, 3) %}
+                                <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+                                    <h2 class="mb-0">{{ 'app.ui.my_favorites'|trans }}</h2>
+                                    {% if favs|length > 0 %}
+                                        <a class="text-underline" href="{{ path('user_favorites') }}">{{ 'app.ui.view_all'|trans }}</a>
+                                    {% endif %}
                                 </div>
+                                {% if favs|length > 0 %}
+                                    <div class="col-12 favorites">
+                                        <div class="row">
+                                            {% for fav in favs %}
+                                                {% set product = fav.product %}
+                                                {% set available = true %}
+
+                                                <div class="col-12 product">
+                                                    <div class="row">
+                                                        <div class="col-4 col-sm-3 col-md-4 col-lg-3 image-container">
+                                                            <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                                                                <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                                                {% if not available %}
+                                                                    <div class="sold-out">{{ 'app.ui.sold_out'|trans }}</div>
+                                                                {% endif %}
+                                                            </a>
+                                                            <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                                                                {% if get_price(product)['isOffer'] %}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                {% else %}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8 col-sm-9 col-md-8 col-lg-9 d-flex flex-column justify-content-between">
+                                                            <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
+                                                            {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithoutTitle.html.twig', 'productId': product.id})) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="divider"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-12 text-center mt-5 mb-5 xs-mt-0 xs-mb-0">
+                                        <p class="text-center xs-pt-1">{{ 'app.ui.you_dont_have_favorites'|trans|raw }}</p>
+                                        <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded d-inline-block">{{ 'app.ui.to_catalog'|trans }}</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
 
+                    {% set lastOrder = last_order(customer.user) %}
+                    {% if lastOrder %}
+                        <div class="row">
+                            <div class="segment ml-3 r-ml-0 w-100">
+                                <div class="row">
+                                    <div class="col-12 mb-3 d-flex justify-content-between align-items-center">
+                                        <h2 class="mb-0">{{ 'app.ui.last_order'|trans }}</h2>
+                                        <a class="text-underline" href="{{ path('sylius_shop_account_order_index') }}">{{ 'app.ui.view_history'|trans }}</a>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            {% for item in lastOrder.items %}
+                                                <div class="col-12 item">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <p class="title">{{ item.getVariant.product.name }}</p>
+                                                        </div>
+                                                        <div class="col-12 extra">
+                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ item.quantity }} {{ 'app.ui.pound'|trans }}</p>
+                                                            <p>{{ money.convertAndFormat(item.subtotal) }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="divider"></div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a class="btn-rounded d-inline-block">{{ 'app.ui.buy_back'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

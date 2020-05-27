@@ -2,10 +2,14 @@
 
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
+{% block extracss %}
+    <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/card/card.css') }}">
+{% endblock %}
+
 {% block extracontent %}
     {{ sonata_block_render_event('sylius.shop.checkout.select_payment.after_steps', {'order': order}) }}
 
-    <div class="row profile pt-4 checkout checkout-address billing">
+    <div class="row profile pt-4 checkout payment">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
             <h1 class="text-center">{{ 'app.ui.checkout.title'|trans }}</h1>
         </div>
@@ -160,4 +164,52 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{{ asset('bundles/syliusshop/js/card/jquery.card.js') }}"></script>
+    <script>
+        $(function () {
+            let $radio = $('input[type="radio"]');
+
+            if ($radio.closest('div.radio').find('label').length <=0 ) {
+                $radio.closest('div.radio').append("<label></label>");
+            }
+
+            $radio.closest('div.ui').removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+            $('input[type="radio"][value="cash_on_delivery"]').closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.cash_on_delivery'|trans }}</p>");
+            $('input[type="radio"][value="bank_transfer"]').closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.bank_transfer'|trans }}</p>");
+            $('input[type="radio"][value="card"]').prop('checked', true).change().closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.card'|trans }}</p>");
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
+            $('form').card({
+                container: '.card-wrapper',
+                formSelectors: {
+                    numberInput: 'input#payment_card_checkout_number', // optional — default input[name="number"]
+                    expiryInput: 'input#payment_card_checkout_expirationDate', // optional — default input[name="expiry"]
+                    cvcInput: 'input#payment_card_checkout_cvv', // optional — default input[name="cvc"]
+                    nameInput: 'input#payment_card_checkout_name' // optional - defaults input[name="name"]
+                },
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    name: '{{ 'app.ui.form.payment.name'|trans }}',
+                    expiry: '••/••',
+                    cvc: '•••'
+                },
+            });
+
+            $('#skip-payment').click(function () {
+                $('.payment-form').fadeOut(450);
+
+                setTimeout(function () {
+                    $('#next-step').trigger('click');
+                }, 500);
+            });
+        });
+    </script>
 {% endblock %}
