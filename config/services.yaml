@@ -101,6 +101,10 @@ services:
     App\EventSubscriber\OrderSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\NotificationSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
 
     app.factory.product.listview:
         class: App\Factory\Product\ListProductViewFactoryExtension

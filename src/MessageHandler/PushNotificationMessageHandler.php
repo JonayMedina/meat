@@ -2,14 +2,13 @@
 
 namespace App\MessageHandler;
 
-use App\Entity\Promotion\PromotionCoupon;
 use App\Entity\Segment;
-use App\Service\FCMService;
+use App\Entity\Notification;
+use Doctrine\ORM\QueryBuilder;
 use App\Entity\PushNotification;
 use App\Message\PushNotificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PushNotificationRepository;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -19,13 +18,6 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
  */
 class PushNotificationMessageHandler implements MessageHandlerInterface
 {
-    const CHUNK_SIZE = 1000;
-
-    /**
-     * @var FCMService
-     */
-    private $fcmService;
-
     /**
      * @var EntityManagerInterface
      */
@@ -43,14 +35,12 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
 
     /**
      * PushNotificationMessageHandler constructor.
-     * @param FCMService $FCMService
      * @param EntityManagerInterface $entityManager
      * @param PushNotificationRepository $repository
      * @param ContainerInterface $container
      */
-    public function __construct(FCMService $FCMService, EntityManagerInterface $entityManager, PushNotificationRepository $repository, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $entityManager, PushNotificationRepository $repository, ContainerInterface $container)
     {
-        $this->fcmService = $FCMService;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
         $this->container = $container;
@@ -58,25 +48,20 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
 
     public function __invoke(PushNotificationMessage $message)
     {
-        $response = [];
         /** @var PushNotification $pushNotification */
         $pushNotification = $this->repository->find($message->getPushId());
-        $chunks = array_chunk($this->getUsers($pushNotification), self::CHUNK_SIZE);
+        $users = $this->getUsers($pushNotification);
 
-        /** @var PromotionCoupon $coupon */
-        $coupon = $pushNotification->getPromotionCoupon();
-
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $user) {
-                $response[] = $user . ': ' . $pushNotification->getTitle();
-            }
+        foreach ($users as $user) {
+            $notification = new Notification($pushNotification, $user, $pushNotification->getTitle(), $pushNotification->getDescription(), $pushNotification->getType());
+            $this->entityManager->persist($notification);
+            $this->entityManager->flush();
         }
 
         /**
          * Mark as sent
          */
         $pushNotification->setSent(true);
-        $pushNotification->setResponse($response);
 
         $this->entityManager->flush();
     }
@@ -90,19 +75,17 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $segment = $pushNotification->getSegment();
 
         if (!$segment instanceof Segment) {
-            // TODO: Return all users.
+            return $this->entityManager->getRepository('App:User\ShopUser')->findAll();
         }
 
-        $users = $this->getUsersBySegment($segment);
-
-        return ['Tokio', 'Profesor', 'Helsinki', 'Rio', 'Estocolmo', 'Nairobi', 'Berlín', 'Denver', 'Marsella', 'Moscú', 'Oslo'];
+        return $this->getUsersBySegment($segment);
     }
 
     /**
      * Return users by segment.
      * @param Segment $segment
      */
-    private function getUsersBySegment(Segment $segment)
+    private function getUsersBySegment(Segment $segment): array
     {
         $minAge = $segment->getMinAge();
         $maxAge = $segment->getMaxAge();
@@ -149,8 +132,8 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
             // TODO: Create monthly fixed amount filter...
         }
 
-        $users = $queryBuilder
+        return $queryBuilder
             ->getQuery()
-            ->getResults();
+            ->getResult();
     }
 }

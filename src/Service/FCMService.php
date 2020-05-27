@@ -21,20 +21,21 @@ class FCMService
 		$this->fcmServerKey = $fcmServerKey;
 	}
 
-	/**
-	 * Send GCM Request
-	 * @param array $data
-	 * @param array $ids
-	 * @return array
-	 * */
-	public function send(array $data, array $ids)
+    /**
+     * Send GCM Request
+     * @param array $notification
+     * @param array $data
+     * @param array $ids
+     * @return array
+     */
+	public function send(array $notification, array $data, array $ids)
 	{
 		if (!$this->_isCurl()) {
 			return ['error' => 'cURL must be active in this system.'];
 		}
 
 		$apiKey = $this->fcmServerKey;
-		$post = ['registration_ids' => $ids, 'data' => $data];
+		$post = ['registration_ids' => $ids, 'notification' => $notification, 'data' => $data];
 		$headers = ['Authorization: key=' . $apiKey, 'Content-Type: application/json'];
 
 		$ch = curl_init();
@@ -53,7 +54,7 @@ class FCMService
 		return json_decode($result, true);
 	}
 
-	public function _isCurl()
+	private function _isCurl()
 	{
 		return function_exists('curl_version');
 	}

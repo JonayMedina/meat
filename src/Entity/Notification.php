@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User\ShopUser;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
@@ -65,7 +66,7 @@ class Notification implements ResourceInterface
      * @ORM\JoinColumn(
      *     name="push_notification_id",
      *     referencedColumnName="id",
-     *     nullable=false
+     *     nullable=true
      * )
      */
     private $pushNotification;
@@ -82,6 +83,24 @@ class Notification implements ResourceInterface
      * )
      */
     private $user;
+
+    /**
+     * Notification constructor.
+     * @param $pushNotification
+     * @param $user
+     * @param string $title
+     * @param string $text
+     * @param string $type
+     */
+    public function __construct(PushNotification $pushNotification = null, ShopUser $user = null, string $title = null, string $text = null, string $type = null)
+    {
+        $this->pushNotification = $pushNotification;
+        $this->user = $user;
+        $this->title = $title;
+        $this->text = $text;
+        $this->type = $type;
+    }
+
 
     public function getId(): ?int
     {
@@ -192,7 +211,7 @@ class Notification implements ResourceInterface
     }
 
     /**
-     * @return mixed
+     * @return PushNotification
      */
     public function getPushNotification()
     {
@@ -211,7 +230,7 @@ class Notification implements ResourceInterface
     }
 
     /**
-     * @return mixed
+     * @return ShopUser
      */
     public function getUser()
     {
