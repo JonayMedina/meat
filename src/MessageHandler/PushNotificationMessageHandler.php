@@ -2,14 +2,14 @@
 
 namespace App\MessageHandler;
 
-use App\Entity\Promotion\PromotionCoupon;
 use App\Entity\Segment;
-use App\Service\FCMService;
+use App\Entity\Notification;
 use App\Entity\PushNotification;
-use App\Message\PushNotificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Message\PushNotificationMessage;
+use Sylius\Component\Core\OrderPaymentStates;
 use App\Repository\PushNotificationRepository;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -19,13 +19,6 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
  */
 class PushNotificationMessageHandler implements MessageHandlerInterface
 {
-    const CHUNK_SIZE = 1000;
-
-    /**
-     * @var FCMService
-     */
-    private $fcmService;
-
     /**
      * @var EntityManagerInterface
      */
@@ -43,14 +36,12 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
 
     /**
      * PushNotificationMessageHandler constructor.
-     * @param FCMService $FCMService
      * @param EntityManagerInterface $entityManager
      * @param PushNotificationRepository $repository
      * @param ContainerInterface $container
      */
-    public function __construct(FCMService $FCMService, EntityManagerInterface $entityManager, PushNotificationRepository $repository, ContainerInterface $container)
+    public function __construct(EntityManagerInterface $entityManager, PushNotificationRepository $repository, ContainerInterface $container)
     {
-        $this->fcmService = $FCMService;
         $this->entityManager = $entityManager;
         $this->repository = $repository;
         $this->container = $container;
@@ -58,25 +49,20 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
 
     public function __invoke(PushNotificationMessage $message)
     {
-        $response = [];
         /** @var PushNotification $pushNotification */
         $pushNotification = $this->repository->find($message->getPushId());
-        $chunks = array_chunk($this->getUsers($pushNotification), self::CHUNK_SIZE);
+        $users = $this->getUsers($pushNotification);
 
-        /** @var PromotionCoupon $coupon */
-        $coupon = $pushNotification->getPromotionCoupon();
-
-        foreach ($chunks as $chunk) {
-            foreach ($chunk as $user) {
-                $response[] = $user . ': ' . $pushNotification->getTitle();
-            }
+        foreach ($users as $user) {
+            $notification = new Notification($pushNotification, $user, $pushNotification->getTitle(), $pushNotification->getDescription(), $pushNotification->getType());
+            $this->entityManager->persist($notification);
+            $this->entityManager->flush();
         }
 
         /**
          * Mark as sent
          */
         $pushNotification->setSent(true);
-        $pushNotification->setResponse($response);
 
         $this->entityManager->flush();
     }
@@ -90,67 +76,68 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $segment = $pushNotification->getSegment();
 
         if (!$segment instanceof Segment) {
-            // TODO: Return all users.
+            return $this->entityManager->getRepository('App:User\ShopUser')->findAll();
         }
 
-        $users = $this->getUsersBySegment($segment);
-
-        return ['Tokio', 'Profesor', 'Helsinki', 'Rio', 'Estocolmo', 'Nairobi', 'Berlín', 'Denver', 'Marsella', 'Moscú', 'Oslo'];
+        return $this->getUsersBySegment($segment);
     }
 
     /**
      * Return users by segment.
      * @param Segment $segment
      */
-    private function getUsersBySegment(Segment $segment)
+    private function getUsersBySegment(Segment $segment): array
     {
         $minAge = $segment->getMinAge();
         $maxAge = $segment->getMaxAge();
         $gender = $segment->getGender();
         $frequencyType = $segment->getFrequencyType();
-        $fixedAmount = $segment->getFixedAmount();
+        $fixedAmount = $segment->getFixedAmount() * 100; // Fix to match Sylius currency format.
         $purchaseTimes = $segment->getPurchaseTimes();
 
-        // TODO: Make a working query...
+        $rsm = new ResultSetMappingBuilder($this->entityManager);
+        $rsm->addRootEntityFromClassMetadata('App:User\ShopUser', 'u');
 
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = $this->container->get('sylius.repository.shop_user')
-            ->createQueryBuilder('shop_user');
+        $orderCalculator = ($frequencyType == Segment::TYPE_PURCHASE_TIMES) ? 'COUNT(o.id)' : 'AVG(o.total)';
+        $orderFilter = ($frequencyType == Segment::TYPE_PURCHASE_TIMES) ? $purchaseTimes : $fixedAmount;
 
-        /**
-         * Age filter...
-         */
+        if (count($gender) == 0) {
+            $gender[] = 'm';
+            $gender[] = 'f';
+            $gender[] = 'u';
+        }
+
+        if (count($gender) == 2) {
+            $gender[] = 'u';
+        }
+
+        $startDate = date('Y-m-d', strtotime('-1 month'));
+        $endDate = date('Y-m-d', strtotime('now'));
+        $ageRangeDiscriminator = '';
+        $orderFilterDiscriminator = '';
+
         if ($minAge && $maxAge) {
-            // TODO: Create age filter
+            $ageRangeDiscriminator = " AND age BETWEEN ".$minAge." AND ".$maxAge." ";
         }
 
-        /**
-         * Gender filter...
-         */
-        if ($gender) {
-            if (count($gender) == 1) {
-                $queryBuilder
-                    ->andWhere('shop_user.gender = :gender')
-                    ->setParameter('gender', $gender[0]);
-            }
+        if ($frequencyType) {
+            $orderFilterDiscriminator = " AND monthly_purchases >= ".$orderFilter." ";
         }
 
-        /**
-         * Monthly purchase times filter...
-         */
-        if ($frequencyType == Segment::TYPE_PURCHASE_TIMES) {
-            // TODO: Create monthly purchases filter...
-        }
+        $sql = "SELECT u.id, u.username, TIMESTAMPDIFF(YEAR, c.birthday, CURDATE()) AS age, ".$orderCalculator." as monthly_purchases
+            FROM sylius_shop_user u
+            LEFT JOIN sylius_customer c ON u.customer_id = c.id
+            LEFT JOIN sylius_order o ON o.customer_id = c.id
+            WHERE c.gender IN ('".implode ("', '", $gender)."')
+            AND o.payment_state = 'paid'
+            AND o.created_at BETWEEN '".$startDate." 00:00:00' AND '".$endDate." 23:59:59'
+            GROUP BY u.id
+            HAVING 1 = 1
+            ".$ageRangeDiscriminator."
+            ".$orderFilterDiscriminator.";";
 
-        /**
-         * Monthly fixed amount filter...
-         */
-        if ($frequencyType == Segment::TYPE_FIXED_AMOUNT) {
-            // TODO: Create monthly fixed amount filter...
-        }
+        $query = $this->entityManager->createNativeQuery($sql, $rsm);
 
-        $users = $queryBuilder
-            ->getQuery()
-            ->getResults();
+        return $query->getResult();
     }
 }

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Model\TimestampableTrait;
 use App\Entity\Promotion\PromotionCoupon;
@@ -60,12 +62,6 @@ class PushNotification implements ResourceInterface
     private $sent = false;
 
     /**
-     * @var array
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $response;
-
-    /**
      * @var PromotionCoupon $promotionCoupon
      * @ORM\ManyToOne(
      *     targetEntity="App\Entity\Promotion\PromotionCoupon",
@@ -111,7 +107,20 @@ class PushNotification implements ResourceInterface
      * @var string
      * @ORM\Column(type="string", length=100, nullable=true)
      */
-    private $promotionType = self::PROMOTION_TYPE_COUPON;
+    private $promotionType;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Notification",
+     *     mappedBy="pushNotification"
+     * )
+     */
+    private $notifications;
+
+    public function __construct()
+    {
+        $this->notifications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -259,25 +268,6 @@ class PushNotification implements ResourceInterface
     }
 
     /**
-     * @return array
-     */
-    public function getResponse(): array
-    {
-        return $this->response;
-    }
-
-    /**
-     * @param array $response
-     * @return PushNotification
-     */
-    public function setResponse(array $response): PushNotification
-    {
-        $this->response = $response;
-
-        return $this;
-    }
-
-    /**
      * @inheritDoc
      */
     public function __toString()
@@ -324,6 +314,37 @@ class PushNotification implements ResourceInterface
         }
 
         $this->promotionType = $promotionType;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setPushNotification($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+            // set the owning side to null (unless already changed)
+            if ($notification->getPushNotification() === $this) {
+                $notification->setPushNotification(null);
+            }
+        }
 
         return $this;
     }

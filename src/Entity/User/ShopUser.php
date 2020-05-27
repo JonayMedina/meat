@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\User;
 
 use App\Entity\Favorite;
+use App\Entity\Notification;
 use App\Entity\ShopUserDevice;
 use App\Model\BlameableTrait;
 use App\Model\IpTraceableTrait;
@@ -47,11 +48,20 @@ class ShopUser extends BaseShopUser
      */
     private $devices;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Notification",
+     *     mappedBy="user"
+     * )
+     */
+    private $notifications;
+
     public function __construct()
     {
         parent::__construct();
         $this->favorites = new ArrayCollection();
         $this->devices = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
     /**
@@ -148,5 +158,36 @@ class ShopUser extends BaseShopUser
     public function __toString(): string
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+            // set the owning side to null (unless already changed)
+            if ($notification->getUser() === $this) {
+                $notification->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

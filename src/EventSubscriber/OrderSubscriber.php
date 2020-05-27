@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CompanySubscriber
+ * Class OrderSubscriber
  * @package AppBundle\EventSubscriber
  */
 class OrderSubscriber implements EventSubscriber

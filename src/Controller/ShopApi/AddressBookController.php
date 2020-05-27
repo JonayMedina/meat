@@ -164,7 +164,7 @@ class AddressBookController extends AbstractFOSRestController
 
         /** @var Address $address */
         $address = $this->addressFactory->createNew();
-        $address->setFirstName($askFor);
+        $address->setAnnotations($askFor);
         $address->setFullAddress($fullAddress);
         $address->setPhoneNumber($phoneNumber);
         $address->setCustomer($this->getCustomer());
@@ -244,7 +244,7 @@ class AddressBookController extends AbstractFOSRestController
         }
 
         if (!empty($askFor)) {
-            $address->setFirstName($askFor);
+            $address->setAnnotations($askFor);
         }
 
         if (!empty($phoneNumber)) {
@@ -354,7 +354,7 @@ class AddressBookController extends AbstractFOSRestController
     {
         $serializedAddress = [
             'id' => $address->getId(),
-            'ask_for' => $address->getFirstName(),
+            'ask_for' => $address->getAnnotations(),
             'full_address' => $address->getFullAddress(),
             'phone_number' => $address->getPhoneNumber(),
             'status' => $address->getStatus(),
