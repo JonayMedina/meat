@@ -30,7 +30,7 @@
             <div class="divider mt-5 mb-5"></div>
 
             <div class="address">
-                {{ form_row(form.defaultAddress) }}
+                {{ form_row(form.address) }}
 
                 <div class="text-right">
                     <a class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
@@ -54,11 +54,23 @@
 
 {% block extrajs %}
     <script>
-        jQuery(document).ready(function ($) {
+        $(function () {
+            let $radio = $('input[type="radio"]');
+
+            if ($radio.closest('div.toggle').find('label').length <=0 ) {
+                $radio.closest('div.toggle').append("<label></label>");
+            }
+
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
         });
     </script>
 {% endblock %}
