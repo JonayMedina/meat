@@ -2044,6 +2044,10 @@ label.icobutton input {
 }
 
 /* Short Cart Modal */
+#search {
+    position: relative;
+}
+
 #showCartModal .modal-content {
     padding: 30px !important;
 }
@@ -2056,6 +2060,27 @@ label.icobutton input {
 #showCartModal .modal-footer .btn-rounded {
     width: calc(50% - 10px);
     padding: inherit;
+}
+
+/* Autocomplete */
+.autocomplete-items {
+    width: 80%;
+    margin-left: 20px;
+    background: #ffffff;
+    border: 2px solid #ffffff;
+    position: absolute;
+    top: 50px;
+    z-index: 5;
+}
+
+.autocomplete-items > div {
+    padding: 10px 15px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.autocomplete-items > div:hover, .autocomplete-active {
+    background: #FAF5F6;
 }
 
 /* Responsive */
@@ -2473,6 +2498,10 @@ label.icobutton input {
     #deleteFavorite .modal-body a.image {
         max-width: 170px;
         margin: 0 auto;
+    }
+
+    .autocomplete-items {
+        width: calc(100% - 40px);
     }
 }
 

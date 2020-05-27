@@ -277,6 +277,9 @@
         $(function () {
             let $modal = $('#product-in-cart');
             let $errorModal = $('#showErrorMessage');
+            var typingTimer;
+            var doneTypingInterval = 1000;
+            var $search = $('#site-search');
 
             $modal.find('.custom-overlay-container .custom-overlay form button').click(function () {
                 $modal.modal('hide');
@@ -377,6 +380,38 @@
                     spinner.find("input").trigger("change");
                 });
             });
+
+            $search.on('keyup', function () {
+                clearTimeout(typingTimer);
+
+                typingTimer = setTimeout(function () {
+                    initSearch();
+                }, doneTypingInterval);
+            });
+
+            function initSearch() {
+                var suggestions = [];
+                var url = '{{ path('shop_api_search', {'term': 'term-val'}) }}';
+
+                url = url.replace('term-val', $search.val());
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        data['recordset'].forEach(function (item) {
+                            suggestions.push(item['name']);
+                        });
+
+                        autocomplete(document.getElementById("site-search"), suggestions);
+
+                        $('#autocomplete-list div').click(function () {
+                            $('#search button').trigger('click');
+                        });
+                    },
+                    error: function (error) {}
+                });
+            }
         });
     </script>
     {% block extrajs %}{% endblock %}
