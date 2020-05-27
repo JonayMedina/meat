@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Addressing\Address;
 use App\Repository\FavoriteRepository;
 use Exception;
 use Twig\TwigFilter;
@@ -106,6 +107,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('base64', [$this, 'imageToBase64']),
             new TwigFilter('translated_roles', [$this, 'translatedRoles']),
             new TwigFilter('is_favorite', [$this, 'isFavorite']),
+            new TwigFilter('shipping', [$this, 'getShippingAddresses']),
         ];
     }
 
@@ -311,5 +313,21 @@ class AppExtension extends AbstractExtension
      */
     public function getNFavorites(ShopUser $user, $limit) {
         return $this->favoriteRepository->findBy(['shopUser' => $user], null, $limit);
+    }
+
+    /**
+     * @param $addresses
+     * @return array
+     */
+    public function getShippingAddresses($addresses) {
+        $new = [];
+
+        foreach ($addresses as $address ) {
+            if ($address->getType() == Address::TYPE_SHIPPING) {
+                $new = $address;
+            }
+        }
+
+        return $new;
     }
 }

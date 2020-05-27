@@ -1931,12 +1931,26 @@ label.icobutton input {
     margin-bottom: 15px;
 }
 
-.profile .favorites .product:last-of-type .divider {
+.profile .favorites .product:last-of-type .divider, .profile .address:last-of-type .divider {
     display: none;
 }
 
 .profile .favorites .product form {
     text-align: right !important;
+}
+
+.profile .address .status {
+    display: block;
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 16px;
+    color: #ab162b;
+    margin: 10px 0;
+    text-align: right;
+}
+
+.profile .address .divider {
+    margin-top: 15px;
+    margin-bottom: 5px;
 }
 
 /* Datepicker */
@@ -2070,7 +2084,7 @@ label.icobutton input {
         padding: 50px 0;
     }
 
-    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted {
+    .login .btn-rounded, .register .btn-rounded, .checkout .btn-rounded, .login .btn-rounded.inverted, .register .btn-rounded.inverted, .checkout .btn-rounded.inverted, .profile .btn-rounded.inverted {
         min-width: 220px;
     }
 }
@@ -2284,7 +2298,7 @@ label.icobutton input {
         display: none;
     }
 
-    .checkout .btn-rounded, .checkout .btn-rounded.inverted {
+    .checkout .btn-rounded, .checkout .btn-rounded.inverted, .profile .btn-rounded.inverted {
         min-width: 220px;
     }
 }
@@ -2567,6 +2581,10 @@ label.icobutton input {
     #showCartModal .modal-footer .btn-rounded {
         width: 100%;
         margin-bottom: 10px;
+    }
+
+    .profile .address .status {
+        text-align: left;
     }
 }
 

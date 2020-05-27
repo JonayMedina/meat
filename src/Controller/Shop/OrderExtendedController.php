@@ -78,6 +78,10 @@ class OrderExtendedController extends OrderController
                 $customer->setDefaultAddress($shippingAddress);
             }
 
+            if (!$customer->getDefaultBillingAddress()) {
+                $customer->setDefaultBillingAddress($billingAddress);
+            }
+
             $em->flush();
 
             $resource = $form->getData();
