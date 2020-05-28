@@ -43,7 +43,7 @@ class OrderService
      * @return Carbon
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate)
+    public function getNextAvailableDay($preferredDeliveryDate = "", $scheduledDeliveryDate = "")
     {
         $today = Carbon::now();
         $aboutStore = $this->aboutStoreRepository->findLatest();
@@ -174,6 +174,13 @@ class OrderService
             return $nextAvailableDay
                 ->setHours($chunks[0])
                 ->setMinutes($chunks[1])
+                ->setSeconds(00);
+        }
+
+        if ($nextAvailableDay->isSaturday()) {
+            return $nextAvailableDay
+                ->setHours(13)
+                ->setMinutes(00)
                 ->setSeconds(00);
         }
 
