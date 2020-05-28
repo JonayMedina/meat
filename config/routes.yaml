@@ -56,6 +56,12 @@ user_favorites:
     defaults:
         _controller: app.controller.shop.extender:favoritesAction
 
+user_changed_password:
+    path: /account/changed-password
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:changedPassword
+
 sylius_shop_login:
     path: /store/login
     methods: [GET]
@@ -122,8 +128,7 @@ sylius_shop_account_change_password:
         _controller: sylius.controller.shop_user:changePasswordAction
         _sylius:
             template: "@SyliusShop/Account/changePassword.html.twig"
-            redirect:
-                method: GET
+            redirect: user_changed_password
                 
 sylius_shop_checkout_address:
     path: /checkout/address
