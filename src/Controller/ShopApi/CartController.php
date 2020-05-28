@@ -2,22 +2,16 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Entity\Order\OrderItem;
-use App\Entity\Product\ProductVariant;
+use Carbon\Carbon;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
-use App\Entity\Promotion\PromotionCoupon;
 use App\Service\OrderService;
 use App\Service\PaymentGatewayService;
-use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
-use Sylius\Component\Core\Factory\CartItemFactoryInterface;
-use Sylius\Component\Order\Processor\CompositeOrderProcessor;
+use App\Entity\Promotion\PromotionCoupon;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sylius\Component\Core\Model\OrderInterface;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -51,26 +45,6 @@ class CartController extends AbstractFOSRestController
     private $entityManager;
 
     /**
-     * @var OrderRepository
-     */
-    private $orderRepository;
-
-    /**
-     * @var CartItemFactoryInterface
-     */
-    private $orderItemFactory;
-
-    /**
-     * @var LimitingOrderItemQuantityModifier
-     */
-    private $itemQuantityModifier;
-
-    /**
-     * @var CompositeOrderProcessor
-     */
-    private $compositeOrderProcessor;
-
-    /**
      * @var OrderService
      */
     private $orderService;
@@ -82,22 +56,15 @@ class CartController extends AbstractFOSRestController
      * @param AddCouponAction $addCouponAction
      * @param TranslatorInterface $translator
      * @param EntityManagerInterface $entityManager
-     * @param OrderRepository $orderRepository
-     * @param CartItemFactoryInterface $cartItemFactory
-     * @param LimitingOrderItemQuantityModifier $itemQuantityModifier
-     * @param CompositeOrderProcessor $compositeOrderProcessor
+     * @param OrderService $orderService
      */
-    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderRepository $orderRepository, CartItemFactoryInterface $cartItemFactory, LimitingOrderItemQuantityModifier $itemQuantityModifier, CompositeOrderProcessor $compositeOrderProcessor, OrderService $orderService)
+    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderService $orderService)
     {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
         $this->addCouponAction = $addCouponAction;
         $this->translator = $translator;
         $this->entityManager = $entityManager;
-        $this->orderRepository = $orderRepository;
-        $this->orderItemFactory = $cartItemFactory;
-        $this->itemQuantityModifier = $itemQuantityModifier;
-        $this->compositeOrderProcessor = $compositeOrderProcessor;
         $this->orderService = $orderService;
     }
 
@@ -112,58 +79,11 @@ class CartController extends AbstractFOSRestController
      */
     public function indexAction()
     {
-        $orders = $this->getOrders();
-        /** @var ProductVariant[] $variants */
-        $variants = [];
-        $mainOrder = $orders[0] ?? null;
-
-        foreach ($orders as $index => $order) {
-            /** No sumar los productos del carrito que no se eliminará... */
-            if ($index > 0) {
-                /** @var OrderItem $orderItem */
-                foreach ($order->getItems() as $orderItem) {
-                    $variant = $orderItem->getVariant();
-                    $variants[$variant->getId()]['variant'] = $variant;
-
-                    /** calculate quantity max always... */
-                    if ($orderItem->getQuantity() > ($variants[$variant->getId()]['quantity'] ?? 0)) {
-                        $variants[$variant->getId()]['quantity'] = $orderItem->getQuantity();
-                    }
-                }
-            }
-        }
-
-        if (!$mainOrder instanceof Order) {
-            $statusCode = Response::HTTP_NOT_FOUND;
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.no_carts_available_for_current_user'));
-            $view = $this->view($response, $statusCode);
-
-            return $this->handleView($view);
-        }
-
-        foreach ($variants as $variant) {
-            /** @var OrderItem $orderItem */
-            $orderItem = $this->orderItemFactory->createNew();
-            $orderItem->setVariant($variant['variant']);
-            $this->itemQuantityModifier->modify($orderItem, $variant['quantity']);
-
-            $this->entityManager->persist($orderItem);
-
-            $mainOrder->addItem($orderItem);
-            $this->compositeOrderProcessor->process($mainOrder);
-        }
-
-        $this->orderRepository->add($mainOrder);
-
-        /** Remove previous carts */
-        foreach ($orders as $index => $order) {
-            if ($index > 0) {
-                $this->orderRepository->remove($order);
-            }
-        }
+        /** @var ShopUser $user */
+        $user = $this->getUser();
 
         try  {
-            $this->entityManager->flush();
+            $mainOrder = $this->orderService->mergeCarts($user);
 
             $statusCode = Response::HTTP_OK;
             $serialized = $this->serializeOrder($mainOrder);
@@ -261,6 +181,7 @@ class CartController extends AbstractFOSRestController
      * )
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function scheduleMyDeliveryAction(Request $request) {
         $token = $request->get('token');
@@ -286,30 +207,6 @@ class CartController extends AbstractFOSRestController
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Return customer's orders.
-     * @return Order[]
-     */
-    private function getOrders()
-    {
-        /** @var ShopUser $user */
-        $user = $this->getUser();
-
-        /** @var Order[] $orders */
-        $orders = $this->repository
-            ->createQueryBuilder('o')
-            ->andWhere('o.customer = :customer')
-            ->andWhere('o.tokenValue IS NOT NULL')
-            ->andWhere('o.state = :state')
-            ->setParameter('customer', $user->getCustomer())
-            ->setParameter('state', OrderInterface::STATE_CART)
-            ->orderBy('o.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult();
-
-        return $orders;
     }
 
     /**
