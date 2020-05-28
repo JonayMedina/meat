@@ -259,7 +259,7 @@
                                     <p>{{ customer.email }}</p>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.change_email'|trans }}</a>
+                                    <a href="{{ path('user_change_email') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.change_email'|trans }}</a>
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -379,5 +379,39 @@
         </div>
     </div>
 
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{ sonata_block_render_event('sylius.shop.account.dashboard.after_information', {'customer': customer}) }}
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            let $showMessage = $('#showMessage');
+
+            if (getParameterByName('success')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.verified.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.verified.message'|trans }}');
+                $showMessage.modal('show');
+            }
+
+            if (getParameterByName('error')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.error.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.error.message'|trans }}');
+                $showMessage.modal('show');
+            }
+        });
+    </script>
 {% endblock %}

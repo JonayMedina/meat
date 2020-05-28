@@ -40,3 +40,7 @@ sylius_mailer:
             subject: app.email.admin_password_request
             template: "Email/admin/password_request_token.html.twig"
             enabled: true
+        change_email_verification:
+            subject: app.email.change_email.subject
+            template: "Email/changeEmailVerification.html.twig"
+            enabled: true

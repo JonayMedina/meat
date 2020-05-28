@@ -143,6 +143,7 @@ strong, .table thead th {
     text-decoration: none;
     cursor: pointer;
     user-select: none;
+    border: none;
 }
 
 .btn-rounded:hover {
@@ -215,12 +216,27 @@ strong, .table thead th {
     font-family: "Raleway SemiBold",sans-serif;
 }
 
-.primary-color {
+.primary-color, .text-danger {
     color: #AB162B;
 }
 
-.primary-color-i {
+.primary-color-i, .text-danger-i {
     color: #AB162B !important;
+}
+
+.text-danger-light {
+    font-family: "Raleway Light", sans-serif;
+    color: #ab162b;
+}
+
+.text-danger-light-i {
+    font-family: "Raleway Light", sans-serif !important;
+    color: #ab162b !important;
+}
+
+.invalid-feedback {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 13px !important;
 }
 
 /* Custom */

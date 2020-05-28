@@ -67,6 +67,12 @@ user_billing:
     methods: [GET, POST]
     defaults:
         _controller: app.controller.shop.extender:updateBillingAction
+        
+user_change_email:
+    path: /account/change-email
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:changeEmailAction
 
 sylius_shop_login:
     path: /store/login
