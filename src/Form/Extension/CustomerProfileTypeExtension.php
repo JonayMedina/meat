@@ -2,6 +2,7 @@
 
 namespace App\Form\Extension;
 
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Sylius\Component\Customer\Model\CustomerInterface;
@@ -26,6 +27,7 @@ class CustomerProfileTypeExtension extends AbstractTypeExtension
                 'multiple' => false,
                 'expanded' => true
             ])
+            ->add('defaultAddress', TextType::class)
             ->add('address', AddressType::class, [
                 'mapped' => false,
                 'required' => false,

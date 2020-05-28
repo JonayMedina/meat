@@ -30,7 +30,9 @@
             <div class="divider mt-5 mb-5"></div>
 
             <div class="address">
-                {{ form_row(form.address) }}
+                <div id="address-container">
+
+                </div>
 
                 <div class="text-right">
                     <a class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
@@ -40,6 +42,7 @@
             {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
             <div class="d-none">
                 {{ form_row(form.email) }}
+                {{ form_widget(form.defaultAddress, {'value': customer.defaultAddress.id|default('')}) }}
             </div>
             <input type="hidden" name="_method" value="PUT" />
             <div class="divider mt-5 mb-3"></div>
@@ -53,6 +56,9 @@
 {% endblock %}
 
 {% block extrajs %}
+    <script id="address-template" type="x-tmpl-mustache">
+        {{ form_row(form.address) }}
+    </script>
     <script>
         $(function () {
             let $radio = $('input[type="radio"]');
