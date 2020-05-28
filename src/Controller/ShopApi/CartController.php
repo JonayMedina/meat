@@ -105,7 +105,7 @@ class CartController extends AbstractFOSRestController
      * @Route(
      *     ".{_format}",
      *     name="shop_api_get_cart",
-     *     methods={"POST"}
+     *     methods={"GET"}
      * )
      *
      * @return Response
@@ -133,18 +133,24 @@ class CartController extends AbstractFOSRestController
             }
         }
 
-        if ($mainOrder instanceof Order) {
-            foreach ($variants as $variant) {
-                /** @var OrderItem $orderItem */
-                $orderItem = $this->orderItemFactory->createNew();
-                $orderItem->setVariant($variant['variant']);
-                $this->itemQuantityModifier->modify($orderItem, $variant['quantity']);
+        if (!$mainOrder instanceof Order) {
+            $statusCode = Response::HTTP_NOT_FOUND;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.no_carts_available_for_current_user'));
+            $view = $this->view($response, $statusCode);
 
-                $this->entityManager->persist($orderItem);
+            return $this->handleView($view);
+        }
 
-                $mainOrder->addItem($orderItem);
-                $this->compositeOrderProcessor->process($mainOrder);
-            }
+        foreach ($variants as $variant) {
+            /** @var OrderItem $orderItem */
+            $orderItem = $this->orderItemFactory->createNew();
+            $orderItem->setVariant($variant['variant']);
+            $this->itemQuantityModifier->modify($orderItem, $variant['quantity']);
+
+            $this->entityManager->persist($orderItem);
+
+            $mainOrder->addItem($orderItem);
+            $this->compositeOrderProcessor->process($mainOrder);
         }
 
         $this->orderRepository->add($mainOrder);
@@ -168,7 +174,7 @@ class CartController extends AbstractFOSRestController
 
         } catch (\Exception $exception) {
             $statusCode = Response::HTTP_NOT_FOUND;
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_not_found'));
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage());
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
