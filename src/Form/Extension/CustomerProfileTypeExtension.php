@@ -26,7 +26,8 @@ class CustomerProfileTypeExtension extends AbstractTypeExtension
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('defaultAddress', AddressType::class, [
+            ->add('address', AddressType::class, [
+                'mapped' => false,
                 'required' => false,
                 'label' => false
                 ]
