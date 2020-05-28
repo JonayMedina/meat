@@ -2,16 +2,15 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\Addressing\Address;
-use App\Entity\Customer\Customer;
 use App\Entity\User\ShopUser;
-use App\Form\Admin\TokenPasswordType;
+use App\Entity\Customer\Customer;
+use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
-use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ExtenderController extends AbstractController

@@ -155,7 +155,7 @@
                                                     {% for address in shippingAddresses %}
                                                         {% set index = index + 1 %}
                                                         <div class="col-12 address">
-                                                            <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                            <span class="status">{% if customer.defaultAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
                                                             <div class="row mb-2">
                                                                 <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                                     <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
