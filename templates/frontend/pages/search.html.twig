@@ -8,20 +8,27 @@
         {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
 
         <div class="row home pt-5">
-            {% include '/frontend/pages/widgets/_search.html.twig' with {'search': ''} %}
+            {% include '/frontend/pages/widgets/_search.html.twig' with {'search': search} %}
         </div>
 
         {{ render(url('store_categories')) }}
 
         {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
-    </div>
-    <div class="container-fluid">
-        <div class="row mb-3">
-            {{ render(url('store_banners')) }}
+
+        <div class="row">
+            {% if results|length > 0 %}
+                <div class="col-12 mt-3">
+                    {% include'/frontend/pages/widgets/_products.html.twig' with {'products': results}  %}
+                </div>
+            {% else %}
+                <div id="empty-search" class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 xs-mt-3">
+                    <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0 sm-pl-0 sm-pr-0">
+                        <img src="{{ asset('bundles/syliusshop/img/icons/empty-search.png') }}" title="{{ 'app.ui.search.empty'|trans }}" alt="{{ 'app.ui.search.empty'|trans }}" width="auto" height="auto">
+                        <p class="mt-4 mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 md-pl-0 md-pr-0 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.search.empty.message'|trans }}</p>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
-    <div class="container">
-        {{ render(url('store_offers')) }}
     </div>
 {% endblock %}
 

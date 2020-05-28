@@ -2,17 +2,7 @@
 
 {% block extracontent %}
     <div class="row taxon pt-5">
-        {% if about_store('show-search') %}
-            <div class="col-12 mb-4">
-                <form class="search-box form d-flex" role="search" method="get" action="">
-                    <label>
-                        <img src="{{ asset('bundles/syliusshop/img/icons/search.svg') }}" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
-                        <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.search.placeholder'|trans }}">
-                    </label>
-                    <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block">{{ 'app.ui.search'|trans }}</button>
-                </form>
-            </div>
-        {% endif %}
+        {% include '/frontend/pages/widgets/_search.html.twig' with {'search': ''} %}
 
         <div class="col-12">
             {{ render(url('store_categories', {'current': get_principal_taxon(taxon).code })) }}
@@ -94,7 +84,6 @@
             });
             owl.trigger('to.owl.carousel', $('#{{ get_principal_taxon(taxon).code }}').data('position'));
 
-
             /* Load more elements */
             var $loadMore = $('#load-more');
             var $elements = $('.taxon .elements');
@@ -141,13 +130,13 @@
                 });
             {% endif %}
 
-            showStikcy();
+            showSticky();
 
             $(window).resize(function () {
-                showStikcy();
+                showSticky();
             });
 
-            function showStikcy() {
+            function showSticky() {
                 if (window.innerWidth < 576) {
                     $sticky.show();
 

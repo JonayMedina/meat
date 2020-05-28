@@ -24,7 +24,8 @@ class Customer extends BaseCustomer
      *
      * @ORM\ManyToOne(
      *     targetEntity="App\Entity\Addressing\Address",
-     *     inversedBy="customer"
+     *     inversedBy="customer",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(
      *     name="default_billing_address_id",
@@ -37,7 +38,7 @@ class Customer extends BaseCustomer
     /**
      * @return Address
      */
-    public function getDefaultBillingAddress(): Address
+    public function getDefaultBillingAddress(): ?Address
     {
         return $this->defaultBillingAddress;
     }
@@ -46,7 +47,7 @@ class Customer extends BaseCustomer
      * @param Address $defaultBillingAddress
      * @return Customer
      */
-    public function setDefaultBillingAddress(Address $defaultBillingAddress): Customer
+    public function setDefaultBillingAddress(?Address $defaultBillingAddress): Customer
     {
         $this->defaultBillingAddress = $defaultBillingAddress;
 
