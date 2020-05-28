@@ -51,12 +51,6 @@ class Order extends BaseOrder
     private $ratingComment;
 
     /**
-     * @var int $daysInAdvanceToPurchase
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $daysInAdvanceToPurchase = 0;
-
-    /**
      * @var DateTime $estimatedDeliveryDate
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -168,32 +162,6 @@ class Order extends BaseOrder
         } else {
             return null;
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getDaysInAdvanceToPurchase(): ?int
-    {
-        return $this->daysInAdvanceToPurchase;
-    }
-
-    /**
-     * @param int $daysInAdvanceToPurchase
-     * @return Order
-     */
-    public function setDaysInAdvanceToPurchase(?int $daysInAdvanceToPurchase): Order
-    {
-        $this->daysInAdvanceToPurchase = $daysInAdvanceToPurchase;
-
-        /** Update estimated delivery date */
-        $stop_date = new DateTime(date('Y-m-d H:i:s'));
-        // TODO: Check hour, after 12PM, move to next day if $this->dayInAdvanceToPurchase is == 0
-        $stop_date->modify('+'. $this->daysInAdvanceToPurchase .' day');
-
-        $this->setEstimatedDeliveryDate($stop_date);
-
-        return $this;
     }
 
     /**

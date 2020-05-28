@@ -98,6 +98,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/namshi/jose" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nelmio/alice" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nesbot/carbon" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nette/finder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nette/robot-loader" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nette/utils" />
@@ -178,7 +179,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/block-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/core-bundle" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/datagrid-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/doctrine-extensions" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sonata-project/intl-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/squizlabs/php_codesniffer" />

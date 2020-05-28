@@ -368,6 +368,9 @@
             "ref": "5ef2976310e8f9621c1a722a73bfbe115c1559a3"
         }
     },
+    "nesbot/carbon": {
+        "version": "2.34.2"
+    },
     "nette/finder": {
         "version": "v2.4.2"
     },
@@ -676,9 +679,6 @@
             "version": "3.9",
             "ref": "2f69bd1995730b73a5211a9707622fb25a925df7"
         }
-    },
-    "sonata-project/datagrid-bundle": {
-        "version": "2.3.1"
     },
     "sonata-project/doctrine-extensions": {
         "version": "1.1.0"
