@@ -50,16 +50,16 @@
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.addressing_step'|trans }}</strong></td>
                                                     <td>
-                                                        {{ order.shippingAddress.street }}, {{ order.shippingAddress.city }} {{ order.shippingAddress.postCode }}
+                                                        {{ order.shippingAddress.fullAddress|default('app.ui.n/a'|trans) }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.annotations'|trans }}</strong></td>
-                                                    <td>{{ order.shippingAddress.firstName }} {{ order.shippingAddress.lastName }}</td>
+                                                    <td>{{ order.shippingAddress.firstName|default('app.ui.n/a'|trans) }} {{ order.shippingAddress.lastName|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.phone_number'|trans }}</strong></td>
-                                                    <td>{{ order.shippingAddress.phoneNumber }}</td>
+                                                    <td>{{ order.shippingAddress.phoneNumber|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.date'|trans }}</strong></td>
@@ -71,7 +71,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.name_in_tax'|trans }}</strong></td>
-                                                    <td>{{ order.billingAddress.firstName }} {{ order.billingAddress.lastName }}</td>
+                                                    <td>{{ order.billingAddress.firstName|default('app.ui.n/a'|trans) }} {{ order.billingAddress.lastName|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.nit'|trans }}</strong></td>
@@ -80,7 +80,7 @@
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.address_in_tax'|trans }}</strong></td>
                                                     <td>
-                                                        {{ order.billingAddress.street }}, {{ order.billingAddress.city }} {{ order.billingAddress.postCode }}
+                                                        {{ order.billingAddress.fullAddress|default('app.ui.n/a'|trans) }}
                                                     </td>
                                                 </tr>
                                                 <tr>

@@ -156,7 +156,6 @@
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-doctrine" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-shim" />
       <path value="$PROJECT_DIR$/vendor/polishsymfonycommunity/symfony-mocker-container" />
-      <path value="$PROJECT_DIR$/vendor/sonata-project/datagrid-bundle" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/intl-bundle" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/cache" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/core-bundle" />
@@ -286,6 +285,7 @@
       <path value="$PROJECT_DIR$/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/vendor/zenstruck/schedule-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/lock" />
+      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

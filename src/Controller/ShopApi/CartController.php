@@ -8,7 +8,9 @@ use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Promotion\PromotionCoupon;
+use App\Service\OrderService;
 use App\Service\PaymentGatewayService;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
@@ -69,6 +71,11 @@ class CartController extends AbstractFOSRestController
     private $compositeOrderProcessor;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
      * CartController constructor.
      * @param OrderRepository $repository
      * @param PromotionCouponRepository $couponRepository
@@ -80,7 +87,7 @@ class CartController extends AbstractFOSRestController
      * @param LimitingOrderItemQuantityModifier $itemQuantityModifier
      * @param CompositeOrderProcessor $compositeOrderProcessor
      */
-    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderRepository $orderRepository, CartItemFactoryInterface $cartItemFactory, LimitingOrderItemQuantityModifier $itemQuantityModifier, CompositeOrderProcessor $compositeOrderProcessor)
+    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderRepository $orderRepository, CartItemFactoryInterface $cartItemFactory, LimitingOrderItemQuantityModifier $itemQuantityModifier, CompositeOrderProcessor $compositeOrderProcessor, OrderService $orderService)
     {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
@@ -91,6 +98,7 @@ class CartController extends AbstractFOSRestController
         $this->orderItemFactory = $cartItemFactory;
         $this->itemQuantityModifier = $itemQuantityModifier;
         $this->compositeOrderProcessor = $compositeOrderProcessor;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -233,6 +241,41 @@ class CartController extends AbstractFOSRestController
         }
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{token}/schedule-my-delivery.{_format}",
+     *     name="shop_api_pay_cart",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function scheduleMyDeliveryAction(Request $request) {
+        $token = $request->get('token');
+
+        $statusCode = Response::HTTP_OK;
+        $preferredDeliveryDate = $request->get('preferred_delivery_date');
+        $scheduledDeliveryDate = $request->get('scheduled_delivery_date');
+
+        $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
+
+        /** @var Order $order */
+        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+        $order->setEstimatedDeliveryDate($nextAvailableDay);
+        $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
+        $this->entityManager->flush();
+
+        $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+            'token' => $order->getTokenValue(),
+            'estimated_delivery_date' => $order->getEstimatedDeliveryDate()
+        ]);
 
         $view = $this->view($response, $statusCode);
 

@@ -38,6 +38,7 @@
         "knplabs/knp-paginator-bundle": "^5.1",
         "league/flysystem-aws-s3-v3": "^1.0",
         "mpdf/mpdf": "^8.0",
+        "nesbot/carbon": "^2.34",
         "oneup/flysystem-bundle": "^3.4",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/httplug-bundle": "^1.13",

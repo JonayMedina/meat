@@ -11,6 +11,7 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
+ * @ORM\Table(name="app_notification")
  * @ORM\Entity(repositoryClass=NotificationRepository::class)
  */
 class Notification implements ResourceInterface
