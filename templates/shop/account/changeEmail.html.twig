@@ -38,7 +38,7 @@
 
                     <div class="divider mt-5 mb-3"></div>
 
-                    <button type="submit" class="btn-rounded">{{ 'app.ui.save'|trans }}</button>
+                    <button type="submit" class="btn-rounded">{{ 'app.ui.account.change_email.send'|trans }}</button>
                     {{ form_row(form._token) }}
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="modal-body text-center">{{ 'app.ui.account.change_email.success.message_%email%'|trans({'%email%': user.email}) }}</div>
                 <div class="modal-footer text-center">
-                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="btn-rounded">{{ 'app.ui.account.change_email.send'|trans }}</a>
+                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="btn-rounded">{{ 'app.ui.agreed'|trans }}</a>
                 </div>
             </div>
         </div>

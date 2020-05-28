@@ -3,8 +3,10 @@
 namespace App\Twig;
 
 use App\Entity\Addressing\Address;
+use App\Entity\User\UserOAuth;
 use App\Repository\FavoriteRepository;
 use Exception;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Order\Order;
@@ -127,6 +129,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('has_orders', [$this, 'userHasOrders']),
             new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
             new TwigFunction('last_order', [$this, 'getLastOrder']),
+            new TwigFunction('connected_to_provider', [$this, 'isConnectedToProvider']),
         ];
     }
 
@@ -338,5 +341,21 @@ class AppExtension extends AbstractExtension
      */
     public function getLastOrder(ShopUser $user) {
         return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param $provider
+     * @return bool
+     */
+    public function isConnectedToProvider(ShopUser $user, $provider) {
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => $provider, 'identifier' => $user]);
+
+        if ($oauthUser instanceof UserOAuth) {
+            return true;
+        }
+
+        return false;
     }
 }

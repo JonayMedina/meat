@@ -275,10 +275,17 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-12 text-center">
-                                    <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with d-inline-block facebook">
-                                        <i class="fab fa-facebook-square"></i>
-                                        {{ 'app.ui.connect_with_%name%'|trans({'%name%':'Facebook'}) }}
-                                    </a>
+                                    {% if connected_to_provider(customer.user, constant('App\\Controller\\ShopApi\\OAuthLoginController::PROVIDER_FACEBOOK')) %}
+                                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with d-inline-block facebook">
+                                            <i class="fab fa-facebook-square"></i>
+                                            {{ 'app.ui.deconnect_from_%name%'|trans({'%name%':'Facebook'}) }}
+                                        </a>
+                                    {% else %}
+                                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with d-inline-block facebook">
+                                            <i class="fab fa-facebook-square"></i>
+                                            {{ 'app.ui.connect_with_%name%'|trans({'%name%':'Facebook'}) }}
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
