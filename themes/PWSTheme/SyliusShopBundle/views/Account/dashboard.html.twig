@@ -235,12 +235,12 @@
                                     </div>
 
                                     <div class="col-12 text-center">
-                                        <a href="{{ path('sylius_shop_account_profile_update') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.edit'|trans }}</a>
+                                        <a href="{{ path('user_billing') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.edit'|trans }}</a>
                                     </div>
                                 {% else %}
                                     <div class="col-12 text-center mt-5 mb-5">
                                         <p class="text-center">{{ 'app.ui.you_dont_have_billing_data'|trans|raw }}</p>
-                                        <a href="#" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
+                                        <a href="{{ path('user_billing') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.add'|trans }}</a>
                                     </div>
                                 {% endif %}
                             </div>

@@ -61,6 +61,12 @@ user_changed_password:
     methods: [GET]
     defaults:
         _controller: app.controller.shop.extender:changedPassword
+        
+user_billing:
+    path: /account/billing
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:updateBillingAction
 
 sylius_shop_login:
     path: /store/login

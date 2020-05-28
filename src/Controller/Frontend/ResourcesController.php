@@ -2,23 +2,17 @@
 
 namespace App\Controller\Frontend;
 
-use App\Controller\ShopApi\SearchController;
-use App\Entity\Order\Order;
-use App\Entity\Product\Product;
 use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
-use App\Entity\Customer\Customer;
-use App\Entity\Addressing\Address;
+use App\Service\ProductService;
+use App\Entity\Product\Product;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use App\Repository\PromotionBannerRepository;
-use App\Service\ProductService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Sylius\Component\Core\Repository\OrderRepositoryInterface;
-use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
