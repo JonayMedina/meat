@@ -33,8 +33,8 @@ class OrderExtendedController extends OrderController
                 $preferredTime = $request->request->get('sylius_checkout_address')['preferredTime'];
 
                 if ($scheduledDate) {
-                    $time = strtotime($scheduledDate);
-                    $date = date('Y-m-d', $time);
+                    $formatted = DateTime::createFromFormat('d/m/Y', $scheduledDate);
+                    $date = $formatted->format('Y-m-d');
 
                     $resource->setScheduledDeliveryDate(New DateTime($date));
                 } else {
