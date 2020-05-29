@@ -3,7 +3,8 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block subcontent %}
-    <div class="row register profile pt-5">
+    {% set limitAddress = constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT') %}
+    <div class="row register profile edit pt-5">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
             <a href="{{ path('sylius_shop_account_dashboard') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_profile'|trans }}</a>
         </div>
@@ -13,7 +14,7 @@
         </div>
 
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
-            {{ form_start(form, {'action': path('sylius_shop_account_profile_update'), 'attr': {'class': 'ui loadable form margin-0-auto pt-5', 'novalidate': 'novalidate'}}) }}
+            {{ form_start(form, {'action': path('sylius_shop_account_profile_update'), 'attr': {'class': 'ui loadable form margin-0-auto pt-5 profile-update', 'novalidate': 'novalidate'}}) }}
             {{ sonata_block_render_event('sylius.shop.account.profile.update.after_content_header', {'customer': customer, 'form': form}) }}
 
             <div class="two fields mb-5">
@@ -23,18 +24,23 @@
 
             <div class="two fields flex-wrap">
                 <p class="w-100 mh-color f-rl-light">{{ 'app.ui.profile.update.optional_fields_to_offers' | trans }}</p>
-                <div class="field">{{ form_row(form.birthday) }}</div>
+                <div class="field">{{ form_row(form.birthday, {'value': customer.birthday|date("d/m/Y")}) }}</div>
                 <div class="field">{{ form_row(form.gender) }}</div>
             </div>
 
-            <div class="divider mt-5 mb-5"></div>
+            <div class="row">
+                <div class="col-12 divider mt-5 mb-5"></div>
+            </div>
 
-            <div class="address">
-                {{ form_row(form.address) }}
+            <div class="address-container">
+                <div id="address-container"></div>
 
-                <div class="text-right">
-                    <a class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
-                </div>
+                {% if customer.addresses|shipping|length  < limitAddress %}
+                    <div class="text-right">
+                        <a class="cancel-address text-underline d-none">{{ 'app.ui.cancel'|trans }}</a>
+                        <a id="add-address" class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
+                    </div>
+                {% endif %}
             </div>
 
             {{ sonata_block_render_event('sylius.shop.account.profile.update.form', {'customer': customer, 'form': form}) }}
@@ -42,20 +48,141 @@
                 {{ form_row(form.email) }}
             </div>
             <input type="hidden" name="_method" value="PUT" />
-            <div class="divider mt-5 mb-3"></div>
+            <div class="row">
+                <div class="col-12 divider mt-5 mb-5"></div>
+            </div>
             <div class="text-center">
-                <button type="submit" class="btn-rounded pl-5 pr-5">{{ 'app.ui.save'|trans }}</button>
+                <button type="submit" class="btn-rounded submit pl-5 pr-5">{{ 'app.ui.save'|trans }}</button>
             </div>
             {{ form_row(form._token) }}
             {{ form_end(form, {'render_rest': false}) }}
         </div>
     </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
+    <script src="{{ asset('bundles/syliusshop/js/mustache/mustache.min.js') }}"></script>
+    <script id="address-template" type="x-tmpl-mustache">
+        <div class="address address-{{ '{{ index }}' }}" data-index="{{ '{{ index }}' }}">
+            {{ form_row(form.address.fullAddress, {'value': '{{ fullAddress }}'}) }}
+            {{ form_row(form.address.annotations, {'value': '{{ askFor }}'}) }}
+            {{ form_row(form.address.phoneNumber, {'value': '{{ phoneNumber }}'}) }}
+            <div class="extra d-none">
+                <input class="d-none" type="text" name="sylius_customer_profile[address][id]" value="{{ '{{ id }}' }}">
+                <input class="d-none default" type="text" name="sylius_customer_profile[address][default]" value="{{ '{{ default }}' }}">
+                <div class="radio address-default"><input type="radio" class="default" name="default_address" value="{{ '{{ id }}' }}" {{ '{{ checked }}' }}><label><p class"text-italic">{{ 'app.ui.form.profile.this_my_default_address'|trans }}</p></label><span class="check-mark"></span></div>
+                <a class="delete-address text-underline" data-id="{{ '{{ id }}' }}" data-index="{{ '{{ index }}' }}">{{ 'app.ui.account.delete_address'|trans }}</a>
+            </div>
+            <div class="row">
+                <div class="col-12 divider mt-5 mb-5"></div>
+            </div>
+        </div>
+    </script>
     <script>
+        {% set addresses = customer.addresses|shipping %}
+        {% set defaultAddress = customer.defaultAddress %}
+        {% set i = 0 %}
         $(function () {
             let $radio = $('input[type="radio"]');
+            var nAddresses = {{ addresses|length|e('js') + nonAddresses|length|e('js')  }};
+            var limitOfAddress = {{ constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')|e('js') }};
+            var $addAddress = $('#add-address');
+            var $addressContainer = $('#address-container');
+            var $cancel = $('.cancel-address');
+            var $addressTemplate = $('#address-template');
+            var address = {};
+            var addresses = [];
+            var $modal = $('#showMessage');
+
+            {% if defaultAddress %}
+                address = {
+                    index: '{{ i }}',
+                    fullAddress: '{{ defaultAddress.fullAddress }}',
+                    askFor: '{{ defaultAddress.annotations }}',
+                    phoneNumber: '{{ defaultAddress.phoneNumber }}',
+                    id: '{{ defaultAddress.id }}',
+                    checked: 'checked',
+                    default: 'true'
+                }
+
+                addresses.push(address);
+                {% set i = i + 1 %}
+            {% endif %}
+
+            {% if addresses|length > 0 %}
+                {% for address in addresses %}
+                    {% if defaultAddress %}
+                        {% if defaultAddress.id != address.id %}
+                            address = {
+                                index: '{{ i }}',
+                                fullAddress: '{{ address.fullAddress }}',
+                                askFor: '{{ address.annotations }}',
+                                phoneNumber: '{{ address.phoneNumber }}',
+                                id: '{{ address.id }}',
+                                checked: '',
+                                default: ''
+                            }
+
+                            addresses.push(address);
+                            {% set i = i + 1 %}
+                        {% endif %}
+                    {% else %}
+                        address = {
+                            index: '{{ i }}',
+                            fullAddress: '{{ address.fullAddress }}',
+                            askFor: '{{ address.annotations }}',
+                            phoneNumber: '{{ address.phoneNumber }}',
+                            id: '{{ address.id }}',
+                            checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
+                            default: {% if i == 0 %}'true'{% else %}'false'{% endif %}
+                        }
+
+                        addresses.push(address);
+                        {% set i = i + 1 %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if nonAddresses|length > 0 %}
+                {% for address in nonAddresses %}
+                    address = {
+                        index: '{{ i }}',
+                        fullAddress: '{{ address.fullAddress }}',
+                        askFor: '{{ address.annotations }}',
+                        phoneNumber: '{{ address.phoneNumber }}',
+                        id: '{{ address.id }}',
+                        checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
+                        default: {% if i == 0 %}'true'{% else %}'false'{% endif %}
+                    }
+
+                    addresses.push(address);
+                    {% set i = i + 1 %}
+                {% endfor %}
+            {% endif %}
+
+            var index = {{ i - 1 }};
+
+            if (addresses.length > 0) {
+                nAddresses--;
+                addresses.forEach(function (address) {
+                    appendTo($addressContainer, Mustache.render($addressTemplate.html(), address));
+                });
+            } else {
+                addEmptyAddress();
+            }
 
             if ($radio.closest('div.toggle').find('label').length <=0 ) {
                 $radio.closest('div.toggle').append("<label></label>");
@@ -64,13 +191,144 @@
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
-            $('input[type="radio"]').closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+            $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
 
-            $('.radio').click(function () {
-                var $input = $(this).find('input');
+            enableRadios();
 
-                $input.prop('checked', true).change();
+            function enableRadios() {
+                $('.radio').click(function () {
+                    var $input = $(this).find('input');
+
+                    $input.prop('checked', true).change();
+
+                    if ($(this).hasClass('address-default')) {
+                        $('#address-container').find('.default').attr('value', 'false');
+                        $(this).closest('.extra').find('.default').attr('value', 'true');
+                    }
+                });
+            }
+
+            $('.datepicker').datepicker();
+
+            $addAddress.click(function () {
+                addEmptyAddress();
             });
+
+            function addEmptyAddress() {
+                var defaultAddress = {
+                    index: index,
+                    fullAddress: '',
+                    askFor: '',
+                    phoneNumber: '',
+                    id: '',
+                    checked: ''
+                };
+
+                var $address = Mustache.render($addressTemplate.html(), defaultAddress);
+
+                appendTo($addressContainer, $address);
+            }
+
+            function appendTo($container, $address) {
+                $container.append($address);
+                refactorAddresses();
+                index++;
+                nAddresses++;
+            }
+
+            $('.delete-address').click(function () {
+                let $input = $(this);
+                var id = $input.attr('data-id');
+                var $index = $input.attr('data-index');
+
+                if ((Boolean) (id)) {
+                    blockPage();
+
+                    $.ajax({
+                        url: Routing.generate("store_api_address_delete", { version: 1 }),
+                        data: JSON.stringify({
+                            address: id
+                        }),
+                        method: "DELETE",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    })
+                    .done(function (data) {
+                        removeAddress($index);
+                        unblockPage();
+                    })
+                    .fail(function (error) {
+                        let recordset = error['responseJSON']['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    });
+                } else {
+                    $input.closest('.address').remove();
+                }
+            });
+
+            $cancel.click(function () {
+                $('div.address-' + (index <= 1 ? index : index - 2)).find('.delete-address').trigger('click');
+            });
+
+            function removeAddress($id) {
+                $('div.address-' + $id).remove();
+                index--;
+                nAddresses--;
+                refactorAddresses();
+            }
+
+            function renameInputs() {
+                $addressContainer.find('.address').each(function () {
+                    var $input = $(this);
+                    var index = $input.attr('data-index');
+
+                    if (!$input.hasClass('refactored')) {
+                        $input.find('textarea').each(function () {
+                            var $name = $(this).attr('name');
+                            $name = $name.replace('address', 'address_' + index);
+
+                            $(this).attr('name', $name);
+                        });
+
+                        $input.find('input[type="text"]').each(function () {
+                            var $name = $(this).attr('name');
+                            $name = $name.replace('address', 'address_' + index);
+
+                            $(this).attr('name', $name);
+                        });
+
+                        $input.addClass('refactored');
+                    }
+                });
+            }
+
+            function refactorAddresses() {
+                $('#address-container').find('.default').attr('value', 'false');
+                $('.address-0 .extra').find('.default').attr('value', 'true').prop('checked', true).change();
+
+                if (nAddresses >= limitOfAddress) {
+                    $addAddress.removeClass('d-inline-block').addClass('d-none');
+                    $cancel.removeClass('d-none').addClass('d-inline-block');
+                } else if (nAddresses >= 2) {
+                    $addAddress.removeClass('d-none').addClass('d-inline-block');
+                    $cancel.removeClass('d-none').addClass('d-inline-block');
+                } else {
+                    $addAddress.removeClass('d-none').addClass('d-inline-block');
+                    $cancel.removeClass('d-inline-block').addClass('d-none');
+                }
+
+                if (nAddresses > 1) {
+                    $('.address .extra').removeClass('d-none');
+                    $('.address-' + (index-1) + ' .extra .delete-address').addClass('d-none');
+                }
+
+                renameInputs();
+                enableRadios();
+            }
         });
     </script>
 {% endblock %}

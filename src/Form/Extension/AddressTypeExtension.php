@@ -4,6 +4,7 @@ namespace App\Form\Extension;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -27,6 +28,13 @@ class AddressTypeExtension extends AbstractTypeExtension
                     'placeholder' => 'app.ui.address.full_address.instructions'
                 ]
             ])
+            ->add('annotations', TextareaType::class, [
+                'required' => true,
+                'label' => 'app.form.address.ask_for',
+                'attr' => [
+                    'class' => 'annotations'
+                ]
+            ])
             ->add('firstName', TextType::class, [
                 'required' => true,
                 'label' => 'app.form.address.annotations'
@@ -44,5 +52,14 @@ class AddressTypeExtension extends AbstractTypeExtension
 
     public function getExtendedTypes() {
         return [AddressType::class];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'allow_extra_fields' => true
+        ]);
     }
 }

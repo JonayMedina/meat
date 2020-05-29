@@ -61,8 +61,14 @@ form input, form textarea, .form input, .form textarea {
 
 form textarea {
     resize: none !important;
-    max-height: 80px !important;
+    min-height: 85px !important;
+    max-height: 90px !important;
     overflow-y: scroll !important;
+}
+
+form textarea.annotations {
+    min-height: 70px !important;
+    max-height: 70px !important;
 }
 
 form textarea::-webkit-scrollbar {
@@ -143,6 +149,7 @@ strong, .table thead th {
     text-decoration: none;
     cursor: pointer;
     user-select: none;
+    border: none;
 }
 
 .btn-rounded:hover {
@@ -215,12 +222,31 @@ strong, .table thead th {
     font-family: "Raleway SemiBold",sans-serif;
 }
 
-.primary-color {
+.primary-color, .text-danger {
     color: #AB162B;
 }
 
-.primary-color-i {
+.primary-color-i, .text-danger-i {
     color: #AB162B !important;
+}
+
+.text-danger-light {
+    font-family: "Raleway Light", sans-serif;
+    color: #ab162b;
+}
+
+.text-danger-light-i {
+    font-family: "Raleway Light", sans-serif !important;
+    color: #ab162b !important;
+}
+
+.invalid-feedback {
+    font-family: "Raleway SemiBold", sans-serif;
+    font-size: 13px !important;
+}
+
+.text-italic {
+    font-family: "Raleway Italic", sans-serif;
 }
 
 /* Custom */
@@ -268,6 +294,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 .navbar-nav li:last-of-type a {
     padding-right: 0 !important;
 }
+
 .sub-navbar-nav ul, .navbar-nav {
     padding: 15px !important;
 }
@@ -1986,6 +2013,27 @@ label.icobutton input {
     margin-bottom: 0;
 }
 
+.profile .profile-update .address:last-of-type .divider {
+    display: none;
+}
+
+.profile-update .extra {
+    text-align: right;
+}
+
+.profile-update .address-default {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.profile-update .address-default label {
+    margin-left: 10px;
+}
+
+.profile-update .cancel-address {
+    margin-right: 15px;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2503,6 +2551,10 @@ label.icobutton input {
     .autocomplete-items {
         width: calc(100% - 40px);
     }
+
+    .profile.edit .form div.divider {
+        padding-top: 0;
+    }
 }
 
 @media (max-width: 575px) {
@@ -2652,6 +2704,18 @@ label.icobutton input {
     .profile .segment {
         padding-left: 15px;
         padding-right: 15px;
+    }
+
+    .profile.edit .form div.divider {
+        padding-top: 0;
+        max-width: calc(100% - 30px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile.edit .submit {
+        margin-top: 0;
+        min-width: 220px;
     }
 }
 

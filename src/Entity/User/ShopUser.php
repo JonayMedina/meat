@@ -6,8 +6,8 @@ namespace App\Entity\User;
 
 use App\Entity\Favorite;
 use App\Entity\Notification;
-use App\Entity\ShopUserDevice;
 use App\Model\BlameableTrait;
+use App\Entity\ShopUserDevice;
 use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -55,6 +55,12 @@ class ShopUser extends BaseShopUser
      * )
      */
     private $notifications;
+
+    /**
+     * @var string
+     * @ORM\Column(name="temp_email", type="string", length=100, nullable=true)
+     */
+    private $tempEmail;
 
     public function __construct()
     {
@@ -187,6 +193,25 @@ class ShopUser extends BaseShopUser
                 $notification->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTempEmail(): ?string
+    {
+        return $this->tempEmail;
+    }
+
+    /**
+     * @param string $tempEmail
+     * @return ShopUser
+     */
+    public function setTempEmail(?string $tempEmail): ShopUser
+    {
+        $this->tempEmail = $tempEmail;
 
         return $this;
     }

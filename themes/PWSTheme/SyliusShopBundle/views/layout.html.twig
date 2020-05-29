@@ -268,11 +268,11 @@
             });
         }
 
-        window.onbeforeunload = showedFalse;
-
-        function showedFalse() {
-            localStorage.setItem('showed', '');
-        }
+        // window.onbeforeunload = showedFalse;
+        //
+        // function showedFalse() {
+        //     localStorage.setItem('showed', '');
+        // }
 
         $(function () {
             let $modal = $('#product-in-cart');
@@ -321,6 +321,7 @@
 
                             unblockPage();
 
+                            localStorage.setItem('showed', 'true');
                             $modal.find('.custom-overlay-container').removeClass('show');
                             $modal.find('.custom-overlay').attr('style', 'display: none;');
                             $modal.modal('show');

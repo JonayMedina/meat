@@ -2,20 +2,21 @@
 
 namespace App\Twig;
 
-use App\Entity\Addressing\Address;
-use App\Repository\FavoriteRepository;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
+use App\Entity\User\UserOAuth;
 use App\Entity\Taxonomy\Taxon;
 use App\Entity\Product\Product;
 use App\Service\UploaderHelper;
 use App\Service\FavoriteService;
 use App\Service\SettingsService;
+use App\Entity\Addressing\Address;
 use App\Entity\Promotion\Promotion;
 use Twig\Extension\AbstractExtension;
+use App\Repository\FavoriteRepository;
 use App\Entity\Channel\ChannelPricing;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -127,6 +128,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('has_orders', [$this, 'userHasOrders']),
             new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
             new TwigFunction('last_order', [$this, 'getLastOrder']),
+            new TwigFunction('connected_to_provider', [$this, 'isConnectedToProvider']),
         ];
     }
 
@@ -325,7 +327,7 @@ class AppExtension extends AbstractExtension
 
         foreach ($addresses as $address ) {
             if ($address->getType() == Address::TYPE_SHIPPING) {
-                $new = $address;
+                $new[] = $address;
             }
         }
 
@@ -338,5 +340,21 @@ class AppExtension extends AbstractExtension
      */
     public function getLastOrder(ShopUser $user) {
         return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param $provider
+     * @return bool
+     */
+    public function isConnectedToProvider(ShopUser $user, $provider) {
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => $provider, 'identifier' => $user]);
+
+        if ($oauthUser instanceof UserOAuth) {
+            return true;
+        }
+
+        return false;
     }
 }

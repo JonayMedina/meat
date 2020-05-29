@@ -10,8 +10,9 @@ sylius_mailer:
             subject: sylius.emails.contact_request.subject
             template: "@SyliusShop/Email/contactRequest.html.twig"
         order_confirmation:
-            subject: sylius.emails.order_confirmation.subject
-            template: "@SyliusShop/Email/orderConfirmation.html.twig"
+            subject: app.email.order.confirmation
+            template: "Email/orderConfirmation.html.twig"
+            enabled: true
         user_registration:
             subject: sylius.emails.user_registration.subject
             template: "Email/userRegistration.html.twig"
@@ -39,4 +40,8 @@ sylius_mailer:
         admin_forgot_password_request_token:
             subject: app.email.admin_password_request
             template: "Email/admin/password_request_token.html.twig"
+            enabled: true
+        change_email_verification:
+            subject: app.email.change_email.subject
+            template: "Email/changeEmailVerification.html.twig"
             enabled: true

@@ -1,0 +1,19 @@
+{% extends 'Email/base.html.twig' %}
+
+{% block subject %}
+    {{ 'app.email.change_email.subject'|trans }}
+{% endblock %}
+
+{% block title %}
+    {{ 'app.email.hello_%name%'|trans({'%name%': user.customer.firstName }) }}
+{% endblock %}
+
+{% block content %}
+    <td class="content-block text-center">
+        <p class="text-left">{{ 'app.email.change_email.instructions'|trans }}</p>
+    </td>
+{% endblock %}
+
+{% block button %}
+    <a class="btn-primary" href="{{ absolute_url(path('user_verify_email_token', {'token': user.emailVerificationToken})) }}">{{ 'app.email.change_email.validate'|trans }}</a>
+{% endblock %}

@@ -68,6 +68,7 @@ class OrderExtendedController extends OrderController
             $shippingAddress->setCustomer($customer);
             $shippingAddress->setType(Address::TYPE_SHIPPING);
             $shippingAddress->setTaxId('CF');
+            $shippingAddress->setFirstName($shippingAddress->getAnnotations());
 
             /** @var Address $billingAddress */
             $billingAddress = $resource->getBillingAddress();

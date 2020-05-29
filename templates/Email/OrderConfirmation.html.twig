@@ -1,0 +1,17 @@
+{% extends 'Email/base.html.twig' %}
+
+{% block subject %}
+    {{ 'app.email.order.confirmation'|trans }}
+{% endblock %}
+
+{% block title %}
+    {{ 'app.email.order.message%code%'|trans({'%code%': order.number }) }}
+{% endblock %}
+
+{% block content %}
+    <td class="content-block">
+        {{ 'app.email.order.message%date%'|trans({'%code%': order.number, '%date%': order.estimatedDeliveryDate}) }}
+    </td>
+{% endblock %}
+
+{% block button %}{% endblock %}

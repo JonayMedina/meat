@@ -13,7 +13,7 @@ class PaymentCardCheckoutType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('number', NumberType::class, [
+            ->add('number', TextType::class, [
                 'label' => 'app.ui.form.payment.number',
                 'mapped' => false
             ])

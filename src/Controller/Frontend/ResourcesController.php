@@ -6,6 +6,7 @@ use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
 use App\Service\ProductService;
 use App\Entity\Product\Product;
+use App\Entity\Customer\Customer;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use App\Repository\PromotionBannerRepository;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
@@ -97,6 +99,39 @@ class ResourcesController extends AbstractController
         }
 
         return $this->render('/frontend/security/setResetToken.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/verify/{token}", name="user_verify_email_token")
+     * @param $token
+     * @param UserRepositoryInterface $userRepository
+     * @return RedirectResponse
+     */
+    public function validateToken($token, UserRepositoryInterface $userRepository) {
+        $em = $this->getDoctrine()->getManager();
+        $user = $userRepository->findOneBy(['emailVerificationToken' => $token]);
+
+        if ($user instanceof ShopUser) {
+            /** @var Customer $customer */
+            $customer = $user->getCustomer();
+            $newEmail = $user->getTempEmail();
+
+            try {
+                $user->setEmail($newEmail);
+                $user->setEmailCanonical($newEmail);
+                $customer->setEmail($newEmail);
+                $customer->setEmailCanonical($newEmail);
+                $user->setEmailVerificationToken(null);
+                $user->setTempEmail(null);
+
+                $em->flush();
+                return $this->redirectToRoute('sylius_shop_account_dashboard', ['success' => true]);
+            } catch (\Exception $e) {
+                return $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]);
+            }
+        } else {
+            return $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]);
+        }
     }
 
     /**
