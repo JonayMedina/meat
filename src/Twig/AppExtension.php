@@ -328,7 +328,7 @@ class AppExtension extends AbstractExtension
 
         foreach ($addresses as $address ) {
             if ($address->getType() == Address::TYPE_SHIPPING) {
-                $new = $address;
+                $new[] = $address;
             }
         }
 

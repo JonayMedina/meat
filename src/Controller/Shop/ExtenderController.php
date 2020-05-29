@@ -8,6 +8,9 @@ use App\Entity\Addressing\Address;
 use App\Form\Shop\ChangeEmailType;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
+use DateTime;
+use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
+use Sylius\ShopApiPlugin\Controller\Customer\CustomerController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -121,6 +124,87 @@ class ExtenderController extends AbstractController
         }
 
         return $this->render('shop/account/changeEmail.html.twig', ['user' => $user, 'form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    public function updateCustomerAction(Request $request, AddressRepositoryInterface $addressRepository) {
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        /** @var Customer $customer */
+        $customer = $user->getCustomer();
+        $em = $this->getDoctrine()->getManager();
+        $addresses = [];
+
+        if ($request->request->get('sylius_customer_profile')) {
+            $profile = $request->request->get('sylius_customer_profile');
+            $time = strtotime($profile['birthday']);
+            $date = date('Y-m-d', $time);
+
+            $profile['birthday'] = New DateTime($date);
+
+            $request->request->set('sylius_customer_profile', $profile);
+
+            for ($i=0; $i<ShopUser::SHIPPING_ADDRESS_LIMIT; $i++) {
+                if (isset($profile['address_' . $i])) {
+                    $address = $profile['address_' . $i];
+
+                    if (!$address['id']) {
+                        if ($address['fullAddress'] && $address['annotations'] && $address['phoneNumber']) {
+                            $addresses[] = $address;
+                        }
+                    }
+                }
+            }
+        }
+
+        $form = $this->createForm(CustomerProfileType::class, $customer);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $profile = $request->request->get('sylius_customer_profile');
+
+//            dump($profile);
+//            exit;
+
+            for ($i=0; $i<ShopUser::SHIPPING_ADDRESS_LIMIT; $i++) {
+                if (isset($profile['address_' . $i])) {
+                    $address = $profile['address_' . $i];
+
+                    if (!$address['id']) {
+                        $addressN = new Address();
+                        $addressN->setFullAddress($address['fullAddress']);
+                        $addressN->setAnnotations($address['annotations']);
+                        $addressN->setPhoneNumber($address['phoneNumber']);
+                        $addressN->setType(Address::TYPE_SHIPPING);
+                        $addressN->setCustomer($customer);
+
+                        $em->persist($addressN);
+
+                        if ($address['default'] == 'true') {
+                            $em->flush();
+                            $customer->setDefaultAddress($addressN);
+                        }
+                    } else {
+                        /** @var Address $addressE */
+                        $addressE = $addressRepository->find($address['id']);
+
+                        $addressE->setFullAddress($address['fullAddress']);
+                        $addressE->setAnnotations($address['annotations']);
+                        $addressE->setPhoneNumber($address['phoneNumber']);
+
+
+                        if ($address['default'] == 'true') {
+                            $customer->setDefaultAddress($addressE);
+                        }
+                    }
+                }
+            }
+
+            $em->flush();
+
+            return $this->redirectToRoute('sylius_shop_account_dashboard');
+        }
+
+        return $this->render('@SyliusShop/Account/profileUpdate.html.twig', ['customer' => $customer,'form' => $form->createView(), 'nonAddresses' => $addresses]);
     }
 
     /**

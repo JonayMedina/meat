@@ -72,7 +72,7 @@
 
                                                 {% set index = index + 1 %}
                                                 <div class="col-12 address">
-                                                    <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                    <span class="status">{% if customer.defaultAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
                                                     <div class="row mb-2">
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
@@ -86,7 +86,7 @@
                                                             <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                            <p>{{ customer.defaultAddress.firstName }}</p>
+                                                            <p>{{ customer.defaultAddress.annotations }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-2">
@@ -112,13 +112,13 @@
                                                         {% if address.id != id %}
                                                             {% set index = index + 1 %}
                                                             <div class="col-12 address">
-                                                                <span class="status">{% if customer.defaultAddress.validatedAt %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                                <span class="status">{% if address.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
                                                                 <div class="row mb-2">
                                                                     <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                                         <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
                                                                     </div>
                                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                        <p>{{ customer.defaultAddress.fullAddress }}</p>
+                                                                        <p>{{ address.fullAddress }}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -126,7 +126,7 @@
                                                                         <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
                                                                     </div>
                                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                        <p>{{ customer.defaultAddress.firstName }}</p>
+                                                                        <p>{{ address.annotations }}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -134,7 +134,7 @@
                                                                         <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
                                                                     </div>
                                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                        <p>{{ customer.defaultAddress.phoneNumber }}</p>
+                                                                        <p>{{ address.phoneNumber }}</p>
                                                                     </div>
                                                                 </div>
                                                                 <div class="divider"></div>
@@ -155,13 +155,13 @@
                                                     {% for address in shippingAddresses %}
                                                         {% set index = index + 1 %}
                                                         <div class="col-12 address">
-                                                            <span class="status">{% if customer.defaultAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
+                                                            <span class="status">{% if address.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}{{ 'app.ui.address.validated'|trans }}{% else %}{{ 'app.ui.address.not_validated'|trans }}{% endif %}</span>
                                                             <div class="row mb-2">
                                                                 <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                                     <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }} {{ index }}</p>
                                                                 </div>
                                                                 <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                    <p>{{ customer.defaultAddress.fullAddress }}</p>
+                                                                    <p>{{ address.fullAddress }}</p>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -169,7 +169,7 @@
                                                                     <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
                                                                 </div>
                                                                 <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                    <p>{{ customer.defaultAddress.firstName }}</p>
+                                                                    <p>{{ address.firstName }}</p>
                                                                 </div>
                                                             </div>
                                                             <div class="row mb-2">
@@ -177,7 +177,7 @@
                                                                     <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
                                                                 </div>
                                                                 <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                    <p>{{ customer.defaultAddress.phoneNumber }}</p>
+                                                                    <p>{{ address.phoneNumber }}</p>
                                                                 </div>
                                                             </div>
                                                             <div class="divider"></div>

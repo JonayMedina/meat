@@ -858,3 +858,5 @@ app.ui.account.change_email.verified.message: 'El cambio de tu correo fue realiz
 app.ui.account.change_email.error.title: 'Hubo un error al realizar el cambio'
 app.ui.account.change_email.error.message: 'Un error no permitio finalizar el proceso de cambio de correo, inténtalo nuevamente...'
 app.ui.agreed: 'De acuerdo'
+app.ui.account.delete_address: 'Eliminar dirección'
+app.ui.form.profile.this_my_default_address: 'Esta es mi dirección predeterminada'

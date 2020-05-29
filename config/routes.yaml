@@ -141,6 +141,12 @@ sylius_shop_account_change_password:
         _sylius:
             template: "@SyliusShop/Account/changePassword.html.twig"
             redirect: user_changed_password
+            
+sylius_shop_account_profile_update:
+    path: /account/profile/edit
+    methods: [GET, PUT]
+    defaults:
+        _controller: app.controller.shop.extender:updateCustomerAction
                 
 sylius_shop_checkout_address:
     path: /checkout/address

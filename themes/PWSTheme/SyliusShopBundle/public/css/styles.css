@@ -2002,6 +2002,10 @@ label.icobutton input {
     margin-bottom: 0;
 }
 
+.profile .profile-update .address:last-of-type .divider {
+    display: none;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
