@@ -135,8 +135,8 @@ class ExtenderController extends AbstractController
 
         if ($request->request->get('sylius_customer_profile')) {
             $profile = $request->request->get('sylius_customer_profile');
-            $time = strtotime($profile['birthday']);
-            $date = date('Y-m-d', $time);
+            $formatted = DateTime::createFromFormat('d/m/Y', $profile['birthday']);
+            $date = $formatted->format('Y-m-d');
 
             $profile['birthday'] = New DateTime($date);
 
@@ -188,7 +188,6 @@ class ExtenderController extends AbstractController
                         $addressE->setFullAddress($address['fullAddress']);
                         $addressE->setAnnotations($address['annotations']);
                         $addressE->setPhoneNumber($address['phoneNumber']);
-
 
                         if ($address['default'] == 'true') {
                             $customer->setDefaultAddress($addressE);

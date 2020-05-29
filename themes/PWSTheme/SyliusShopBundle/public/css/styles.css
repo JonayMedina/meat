@@ -1910,6 +1910,11 @@ label.icobutton input {
     margin-right: 0;
 }
 
+.payment .warning {
+    font-family: "Raleway SemiBold", sans-serif;
+    color: #ab162b !important;
+}
+
 /* Profile */
 .profile h2 {
     font-size: 24px;
@@ -2041,6 +2046,7 @@ label.icobutton input {
     border-radius: 15px;
     user-select: none;
     display: none;
+    z-index: 3 !important;
 }
 
 .ui-datepicker .ui-datepicker-prev {
@@ -2059,6 +2065,24 @@ label.icobutton input {
     font-size: 16px;
     text-align: center;
     margin-bottom: 10px;
+}
+
+.ui-datepicker .ui-datepicker-title select {
+    background: none;
+    border: none;
+    color: #ab162b;
+    -moz-appearance:none; /* Firefox */
+    -webkit-appearance:none; /* Safari and Chrome */
+    appearance:none;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 3px;
+}
+
+.ui-datepicker .ui-datepicker-title select:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
 }
 
 .ui-datepicker .ui-datepicker-calendar thead span {

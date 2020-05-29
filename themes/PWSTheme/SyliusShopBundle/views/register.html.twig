@@ -20,7 +20,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     {{ sonata_block_render_event('sylius.shop.register.before_form') }}
 
-                    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
+                    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable register form margin-0-auto', 'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
                     {% include '@SyliusShop/Register/_form.html.twig' %}
 
                     {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
@@ -84,9 +84,11 @@
 {% block extrajs %}
     <script>
         jQuery(function ($) {
-            let $form = $("form");
+            let $form = $("form.register");
             let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
             let $radio = $('input[type="radio"]');
+            let $register = $('#create-btn');
+            let $birthday = $('#sylius_customer_registration_birthday');
 
             $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
 
@@ -127,6 +129,10 @@
                 }
             });
 
+            if ($('body').find('.field.error').length > 0) {
+                $terms.prop('checked', false).change();
+            }
+
             $form.submit(function (e) {
                 if (!$terms.prop('checked')) {
                     e.preventDefault();
@@ -135,21 +141,42 @@
                 }
             });
 
+            $register.click(function (evt) {
+                evt.preventDefault();
+                formatToYMD($birthday);
+
+                $form.trigger('submit');
+            });
+
             function checkTerms(changed = false) {
                 if (changed) {
                     $terms.prop('checked', !$terms.prop('checked'));
                 }
 
                 if (!$terms.prop('checked')) {
-                    $('#create-btn').prop('disabled', true).change();
+                    $register.prop('disabled', true).change();
                     $terms.closest('label').addClass('error');
                 } else {
-                    $('#create-btn').prop('disabled', false).change();
+                    $register.prop('disabled', false).change();
                     $terms.closest('label').removeClass('error');
                 }
             }
 
-            $('.datepicker').datepicker();
+            function formatToYMD($input) {
+                $input.val($input.val().split('/').reverse().join("-"))
+            }
+
+            function formatToDMY($input) {
+                $input.val($input.val().split('-').reverse().join("/"))
+            }
+
+            $('.datepicker').prop('type', 'text').datepicker({
+                changeYear: true,
+                changeMonth: true,
+                yearRange: "-65:-6",
+            });
+
+            formatToDMY($birthday);
         });
     </script>
 {% endblock %}

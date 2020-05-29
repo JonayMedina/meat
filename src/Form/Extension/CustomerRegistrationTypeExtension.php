@@ -6,9 +6,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Sylius\Component\Customer\Model\CustomerInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
 
 class CustomerRegistrationTypeExtension extends AbstractTypeExtension
@@ -29,8 +29,9 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('birthday', TextType::class, [
+            ->add('birthday', BirthdayType::class, [
                 'label' => 'sylius.form.customer.birthday',
+                'widget' => 'single_text',
                 'attr' => [
                     'class' => 'datepicker',
                     'placeholder' => 'DD/MM/YY'

@@ -37,7 +37,7 @@
                         <div class="col-12 favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                                    <div class="row p-{{ product.id }}">
+                                    <div class="row prt-{{ product.id }}">
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
                                             <div class="row">
                                                 <div class="col-6 col-sm-6 col-md-6 col-lg-12 image-container">
@@ -243,7 +243,7 @@
 
                 $('a.delete').click(function () {
                     var id = $(this).data('id');
-                    var $content = $('.favorites-list').find('.p-' + id)[0].outerHTML;
+                    var $content = $('.favorites-list').find('.prt-' + id)[0].outerHTML;
 
                     $deleteModal.find('.content').html($content);
                     $deleteModal.find('#delete').attr('data-id', id);

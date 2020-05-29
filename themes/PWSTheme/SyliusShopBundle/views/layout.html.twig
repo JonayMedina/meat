@@ -242,6 +242,8 @@
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/animocons/mo.min.js') }}"></script>
     <script src="{{ asset('bundles/syliusshop/js/animocons/animocon.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/moment/moment-with-locales.min.js') }}"></script>
     {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/syliusshop/js/app.min.js'} %}
     <script>
         function blockPage() {
@@ -307,9 +309,8 @@
                             var message = '{{ 'app.ui.added_%product%_to_cart'|trans({'%product%': '&nbsp;<span class="mh-red">product-name</span>&nbsp;'})|raw }}';
                             var quantity = $this.find('input').val();
                             var dataPrice = (String) ($this.data('price'));
-                            var priceWithCode = dataPrice.split(/(\s+)/);
-                            var currency = priceWithCode[0];
-                            var price = priceWithCode[2];
+                            var currency = dataPrice.slice(0, 1);
+                            var price = dataPrice.replace(/\D/g, "")/100;
                             var total = quantity*price;
 
                             message = message.replace('product-name', $this.data('name'));

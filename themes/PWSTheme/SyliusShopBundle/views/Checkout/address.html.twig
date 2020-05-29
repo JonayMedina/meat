@@ -117,6 +117,19 @@
             </div>
         </div>
     </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
@@ -126,6 +139,8 @@
             let $showScheduled = $('#show-scheduled');
             let $scheduled = $('.scheduled-date');
             var $preferred = 0;
+            var $modal = $('#showMessage');
+            let $scheduledInput = $('#sylius_checkout_address_scheduledDate');
 
             {% if order.preferredDeliveryTime %}
                 {% set preferred = order.preferredDeliveryTime %}
@@ -183,6 +198,53 @@
             });
 
             $('#sylius_checkout_address_differentBillingAddress').prop('checked', true).change();
+
+            estimateDate();
+
+            $('#sylius_checkout_address_preferredTime .radio').click(function () {
+                estimateDate();
+            });
+
+            $scheduledInput.change(function () {
+                estimateDate();
+            });
+
+            function estimateDate() {
+                var $estimated = $('#estimated');
+                blockPage();
+                $estimated.fadeOut(450);
+
+                $.ajax({
+                    url: Routing.generate("store_api_cart_estimated_date", { version: 1, token: '{{ order.tokenValue }}' }),
+                    method: "POST",
+                    data: JSON.stringify({
+                        preferred: $("#sylius_checkout_address_preferredTime input[type='radio']:checked").val(),
+                        scheduled: $scheduledInput.val(),
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function (data) {
+                    moment.locale('es');
+                    let recordset = data['recordset'];
+                    var message = '{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'date'}) }}';
+                    var date = new Date(recordset['estimated'])
+                    message = message.replace('date', moment(date).format('LLLL'));
+
+                    $estimated.text(message);
+                    $estimated.fadeIn(450);
+
+                    unblockPage();
+                })
+                .fail(function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                });
+            }
         });
     </script>
 {% endblock %}

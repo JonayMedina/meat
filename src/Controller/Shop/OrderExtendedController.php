@@ -33,8 +33,8 @@ class OrderExtendedController extends OrderController
                 $preferredTime = $request->request->get('sylius_checkout_address')['preferredTime'];
 
                 if ($scheduledDate) {
-                    $time = strtotime($scheduledDate);
-                    $date = date('Y-m-d', $time);
+                    $formatted = DateTime::createFromFormat('d/m/Y', $scheduledDate);
+                    $date = $formatted->format('Y-m-d');
 
                     $resource->setScheduledDeliveryDate(New DateTime($date));
                 } else {
@@ -44,19 +44,19 @@ class OrderExtendedController extends OrderController
                 if ($preferredTime) {
                     if ($preferredTime >= 1) {
                         if ($preferredTime == 3) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
                         } else if ($preferredTime == 2) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
                         } else {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
                         }
 
                         $resource->setPreferredDeliveryTime($text);
                     } else {
-                        $resource->setPreferredDeliveryTime(null);
+                        $resource->setPreferredDeliveryTime($this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'));
                     }
                 } else {
-                    $resource->setPreferredDeliveryTime(null);
+                    $resource->setPreferredDeliveryTime($this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'));
                 }
             }
 
@@ -275,15 +275,21 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         $cardType = $request->request->get('payment_type') == 'card';
+        $this->get('session')->set('payment', $request->request->get('payment_type'));
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $cardType) {
             if ($form->handleRequest($request)->isValid()) {
                 $resource = $form->getData();
+                $card = $request->request->get('payment_card_checkout');
+
+                $this->get('session')->set('card', $card);
+
                 $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
                 if ($event->isStopped() && !$configuration->isHtmlRequest()) {
                     throw new HttpException($event->getErrorCode(), $event->getMessage());
                 }
+
                 if ($event->isStopped()) {
                     $this->flashHelper->addFlashFromEvent($configuration, $event);
 

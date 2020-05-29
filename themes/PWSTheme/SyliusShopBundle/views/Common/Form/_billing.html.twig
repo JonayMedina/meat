@@ -8,20 +8,21 @@
 </div>
 
 <div class="skip-form">
+    {% set defaultBilling = order.customer.defaultBillingAddress %}
     <div class="field">
         {{ form_label(form.firstName, 'app.ui.checkout.billing.name') }}
-        {{ form_widget(form.firstName) }}
+        {{ form_widget(form.firstName, {'value': defaultBilling ? defaultBilling.firstName : ''}) }}
         <small>{{ form_help(form.firstName) }}</small>
         <div class="form-error">
             {{ form_errors(form.firstName) }}
         </div>
     </div>
 
-    {{ form_row(form.taxId) }}
+    {{ form_row(form.taxId, {'value': defaultBilling ? defaultBilling.taxId : ''}) }}
 
     <div class="field text">
         {{ form_label(form.fullAddress, 'app.ui.checkout.billing.address') }}
-        {{ form_widget(form.fullAddress, {'attr': {'placeholder': ''} }) }}
+        {{ form_widget(form.fullAddress, {'attr': {'placeholder': ''}, 'value': defaultBilling ? defaultBilling.fullAddress : '' }) }}
         <small>{{ form_help(form.fullAddress) }}</small>
         <div class="form-error">
             {{ form_errors(form.fullAddress) }}
