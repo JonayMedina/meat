@@ -24,7 +24,7 @@ class Customer extends BaseCustomer
      *
      * @ORM\ManyToOne(
      *     targetEntity="App\Entity\Addressing\Address",
-     *     inversedBy="customer",
+     *     inversedBy="customers",
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(

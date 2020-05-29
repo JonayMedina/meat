@@ -2,16 +2,25 @@
 
 namespace App\Service;
 
-use App\Entity\AboutStore;
-use App\Entity\Holiday;
-use App\Model\APIResponse;
-use App\Repository\AboutStoreRepository;
-use App\Repository\HolidayRepository;
 use Carbon\Carbon;
+use App\Entity\Holiday;
+use App\Entity\AboutStore;
+use App\Entity\Order\Order;
+use App\Entity\User\ShopUser;
+use App\Entity\Order\OrderItem;
+use App\Repository\HolidayRepository;
+use App\Entity\Product\ProductVariant;
+use App\Repository\AboutStoreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Carbon\Exceptions\InvalidFormatException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Sylius\Component\Core\Model\OrderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
+use Sylius\Component\Core\Factory\CartItemFactoryInterface;
+use Sylius\Component\Order\Processor\CompositeOrderProcessor;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
 
 class OrderService
 {
@@ -26,14 +35,55 @@ class OrderService
     private $aboutStoreRepository;
 
     /**
+     * @var OrderRepository
+     */
+    private $repository;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var LimitingOrderItemQuantityModifier
+     */
+    private $itemQuantityModifier;
+
+    /**
+     * @var CompositeOrderProcessor
+     */
+    private $compositeOrderProcessor;
+
+    /**
+     * @var CartItemFactoryInterface
+     */
+    private $cartItemFactory;
+
+    /**
      * OrderService constructor.
      * @param HolidayRepository $holidayRepository
      * @param AboutStoreRepository $aboutStoreRepository
+     * @param OrderRepository $repository
+     * @param TranslatorInterface $translator
+     * @param EntityManagerInterface $entityManager
+     * @param LimitingOrderItemQuantityModifier $itemQuantityModifier
+     * @param CompositeOrderProcessor $compositeOrderProcessor
      */
-    public function __construct(HolidayRepository $holidayRepository, AboutStoreRepository $aboutStoreRepository)
+    public function __construct(HolidayRepository $holidayRepository, AboutStoreRepository $aboutStoreRepository, OrderRepository $repository, TranslatorInterface $translator, EntityManagerInterface $entityManager, LimitingOrderItemQuantityModifier $itemQuantityModifier, CompositeOrderProcessor $compositeOrderProcessor, CartItemFactoryInterface $cartItemFactory)
     {
         $this->holidayRepository = $holidayRepository;
         $this->aboutStoreRepository = $aboutStoreRepository;
+        $this->repository = $repository;
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->itemQuantityModifier = $itemQuantityModifier;
+        $this->compositeOrderProcessor = $compositeOrderProcessor;
+        $this->cartItemFactory = $cartItemFactory;
     }
 
     /**
@@ -74,6 +124,68 @@ class OrderService
     }
 
     /**
+     * Merge available carts and return merged cart.
+     * @param ShopUser $user
+     * @return Order
+     */
+    public function mergeCarts(ShopUser $user): Order
+    {
+        $orders = $this->getOrders($user);
+        /** @var ProductVariant[] $variants */
+        $variants = [];
+        $mainOrder = $orders[0] ?? null;
+
+        foreach ($orders as $index => $order) {
+            /** No sumar los productos del carrito que no se eliminará... */
+            if ($index > 0) {
+                /** @var OrderItem $orderItem */
+                foreach ($order->getItems() as $orderItem) {
+                    $variant = $orderItem->getVariant();
+                    $variants[$variant->getId()]['variant'] = $variant;
+
+                    /** calculate quantity max always... */
+                    if ($orderItem->getQuantity() > ($variants[$variant->getId()]['quantity'] ?? 0)) {
+                        $variants[$variant->getId()]['quantity'] = $orderItem->getQuantity();
+                    }
+                }
+            }
+        }
+
+        if (!$mainOrder instanceof Order) {
+            throw new NotFoundHttpException($this->translator->trans('app.api.cart.no_carts_available_for_current_user'));
+        }
+
+        foreach ($variants as $variant) {
+            /** @var OrderItem $orderItem */
+            $orderItem = $this->cartItemFactory->createNew();
+            $orderItem->setVariant($variant['variant']);
+            $this->itemQuantityModifier->modify($orderItem, $variant['quantity']);
+
+            $this->entityManager->persist($orderItem);
+
+            $mainOrder->addItem($orderItem);
+            $this->compositeOrderProcessor->process($mainOrder);
+        }
+
+        $this->repository->add($mainOrder);
+
+        /** Remove previous carts */
+        foreach ($orders as $index => $order) {
+            if ($index > 0) {
+                $this->repository->remove($order);
+            }
+        }
+
+        try {
+            $this->entityManager->flush();
+
+            return $mainOrder;
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
+
+    /**
      * @param Carbon $date
      * @return bool
      */
@@ -101,6 +213,7 @@ class OrderService
 
     /**
      * @param Carbon $scheduledDeliveryDate
+     * @param string $start
      * @return Carbon
      */
     private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = 'now'): Carbon
@@ -148,6 +261,7 @@ class OrderService
      * @param Carbon $nextAvailableDay
      * @param $preferredDeliveryDate
      * @return Carbon
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function setTimeToAvailableDay(Carbon $nextAvailableDay, $preferredDeliveryDate): Carbon
     {
@@ -188,5 +302,28 @@ class OrderService
             ->setHours(17)
             ->setMinutes(00)
             ->setSeconds(00);
+    }
+
+
+    /**
+     * Return customer's orders.
+     * @param ShopUser $user
+     * @return Order[]
+     */
+    private function getOrders(ShopUser $user)
+    {
+        /** @var Order[] $orders */
+        $orders = $this->repository
+            ->createQueryBuilder('o')
+            ->andWhere('o.customer = :customer')
+            ->andWhere('o.tokenValue IS NOT NULL')
+            ->andWhere('o.state = :state')
+            ->setParameter('customer', $user->getCustomer())
+            ->setParameter('state', OrderInterface::STATE_CART)
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $orders;
     }
 }

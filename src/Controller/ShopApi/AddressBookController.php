@@ -177,6 +177,11 @@ class AddressBookController extends AbstractFOSRestController
         $this->entityManager->persist($address);
 
         try {
+            /** Auto validate billing address */
+            if ($address->getType() == Address::TYPE_BILLING) {
+                $address->setStatus(Address::STATUS_VALIDATED);
+            }
+
             $this->entityManager->flush();
 
             $statusCode = Response::HTTP_CREATED;
@@ -205,8 +210,10 @@ class AddressBookController extends AbstractFOSRestController
         $askFor = $request->get('ask_for');
         $fullAddress = $request->get('full_address');
         $phoneNumber = $request->get('phone_number');
-        $type = $request->get('type');
         $taxId = $request->get('tax_id');
+
+        $id = $request->get('id');
+        $address = $this->entityManager->getRepository('App:Addressing\Address')->find($id);
 
         if (empty($askFor)) {
             return $this->renderError('Invalid name');
@@ -220,20 +227,13 @@ class AddressBookController extends AbstractFOSRestController
             return $this->renderError('Invalid phone number');
         }
 
-        if (empty($type)) {
-            return $this->renderError('Invalid address type');
-        }
-
-        if (empty($taxId) && $type == Address::TYPE_BILLING) {
+        if (empty($taxId) && $address->getType() == Address::TYPE_BILLING) {
             return $this->renderError('Invalid tax id');
         }
 
-        if ($type == Address::TYPE_SHIPPING && !empty($taxId)) {
+        if ($address->getType() == Address::TYPE_SHIPPING && !empty($taxId)) {
             $taxId = null;
         }
-
-        $id = $request->get('id');
-        $address = $this->entityManager->getRepository('App:Addressing\Address')->find($id);
 
         if (!$address instanceof Address) {
             return $this->renderError('Not found', Response::HTTP_NOT_FOUND);
@@ -253,10 +253,6 @@ class AddressBookController extends AbstractFOSRestController
 
         if (!empty($fullAddress)) {
             $address->setFullAddress($fullAddress);
-        }
-
-        if (!empty($type)) {
-            $address->setType($type);
         }
 
         if (!empty($taxId)) {
