@@ -2046,6 +2046,7 @@ label.icobutton input {
     border-radius: 15px;
     user-select: none;
     display: none;
+    z-index: 3 !important;
 }
 
 .ui-datepicker .ui-datepicker-prev {
@@ -2075,6 +2076,7 @@ label.icobutton input {
     appearance:none;
     cursor: pointer;
     user-select: none;
+    padding: 0 3px;
 }
 
 .ui-datepicker .ui-datepicker-title select:focus {

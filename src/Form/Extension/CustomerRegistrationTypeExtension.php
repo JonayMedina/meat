@@ -2,6 +2,8 @@
 
 namespace App\Form\Extension;
 
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -29,8 +31,9 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
                 'multiple' => false,
                 'expanded' => true
             ])
-            ->add('birthday', TextType::class, [
+            ->add('birthday', BirthdayType::class, [
                 'label' => 'sylius.form.customer.birthday',
+                'widget' => 'single_text',
                 'attr' => [
                     'class' => 'datepicker',
                     'placeholder' => 'DD/MM/YY'
