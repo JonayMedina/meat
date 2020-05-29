@@ -155,12 +155,14 @@
                    $a.find('span').text('{{ 'app.ui.product.add_to_favorites'|trans }}');
                } else {
                    if (window.innerWidth > 991) {
+                       $('#favPopover').popover('enable');
                        $navbarPopover.attr('data-content', '{{ 'app.ui.product.added_to_favorites_%name%'|trans({'%name%': '<span class="mh-color">' ~ product.name ~ '</span>'})|raw }}');
                        $('#favPopover').popover('show');
                        $('.popover-body').html('{{ 'app.ui.product.added_to_favorites_%name%'|trans({'%name%': '<span class="mh-red">' ~ product.name ~ '</span>'})|raw }}');
 
                        setTimeout(function () {
                            $('#favPopover').popover('hide');
+                           $('#favPopover').popover('disable');
                        }, 3000);
                    }
 

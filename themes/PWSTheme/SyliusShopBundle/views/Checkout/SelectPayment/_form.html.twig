@@ -16,6 +16,8 @@
             {{ form_row(form.expirationDate) }}
             {{ form_row(form.cvv) }}
         </div>
+
+        <p class="warning text-center mt-4">{{ 'app.ui.checkout.payment.warning'|trans }}</p>
     </div>
 {% else %}
     {% include '@SyliusShop/Checkout/SelectPayment/_unavailable.html.twig' %}

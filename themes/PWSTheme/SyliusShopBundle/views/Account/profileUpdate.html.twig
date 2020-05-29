@@ -208,7 +208,10 @@
                 });
             }
 
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({
+                changeYear: true,
+                changeMonth: true,
+            });
 
             $addAddress.click(function () {
                 addEmptyAddress();

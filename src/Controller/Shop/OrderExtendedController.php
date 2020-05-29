@@ -275,15 +275,21 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         $cardType = $request->request->get('payment_type') == 'card';
+        $this->get('session')->set('payment', $request->request->get('payment_type'));
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $cardType) {
             if ($form->handleRequest($request)->isValid()) {
                 $resource = $form->getData();
+                $card = $request->request->get('payment_card_checkout');
+
+                $this->get('session')->set('card', $card);
+
                 $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
                 if ($event->isStopped() && !$configuration->isHtmlRequest()) {
                     throw new HttpException($event->getErrorCode(), $event->getMessage());
                 }
+
                 if ($event->isStopped()) {
                     $this->flashHelper->addFlashFromEvent($configuration, $event);
 
@@ -307,6 +313,9 @@ class OrderExtendedController extends OrderController
 
                     $this->flashHelper->addErrorFlash($configuration, $exception->getFlash());
 
+                    dump($configuration);
+                    exit;
+
                     return $this->redirectHandler->redirectToReferer($configuration);
                 }
 
@@ -328,7 +337,7 @@ class OrderExtendedController extends OrderController
                     return $postEventResponse;
                 }
 
-                return $this->redirectHandler->redirectToResource($configuration, $resource);
+                return $this->redirectHandler->redirectToResource($configuration, $card);
             }
         }
 

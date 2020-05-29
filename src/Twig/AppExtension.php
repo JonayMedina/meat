@@ -109,6 +109,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('translated_roles', [$this, 'translatedRoles']),
             new TwigFilter('is_favorite', [$this, 'isFavorite']),
             new TwigFilter('shipping', [$this, 'getShippingAddresses']),
+            new TwigFilter('card_mask', [$this, 'creditMask']),
         ];
     }
 
@@ -332,6 +333,18 @@ class AppExtension extends AbstractExtension
         }
 
         return $new;
+    }
+
+    /**
+     * @param $text
+     * @return string
+     */
+    public function creditMask($text) {
+        $text = str_replace(" ", "", $text);
+        $mask = str_repeat("*", strlen($text)-4) . substr($text, -4);
+        $array = str_split($mask, 4);
+
+        return implode(" ", $array);
     }
 
     /**
