@@ -334,7 +334,7 @@ class OrderExtendedController extends OrderController
                     return $postEventResponse;
                 }
 
-                return $this->redirectHandler->redirectToResource($configuration, $card);
+                return $this->redirectHandler->redirectToResource($configuration, $resource);
             }
         }
 

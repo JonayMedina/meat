@@ -12,7 +12,7 @@
 
     {{ form_row(form.preferredTime) }}
 
-    <p id="estimated" class="mh-color" style="display: none">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date$': 'now'|date('d/m/y')}) }}</p>
+    <p id="estimated" class="mh-color" style="display: none">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'now'|date('d/m/y')}) }}</p>
 
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
 </div>
