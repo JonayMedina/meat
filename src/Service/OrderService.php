@@ -13,6 +13,7 @@ use App\Entity\Product\ProductVariant;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Carbon\Exceptions\InvalidFormatException;
+use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
@@ -91,7 +92,7 @@ class OrderService
      * @param $preferredDeliveryDate
      * @param $scheduledDeliveryDate
      * @return Carbon
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function getNextAvailableDay($preferredDeliveryDate = "", $scheduledDeliveryDate = "")
     {
@@ -186,8 +187,33 @@ class OrderService
     }
 
     /**
+     * Return serialized order object.
+     * @param Order|null $order
+     * @return array
+     */
+    public function serializeOrder(?Order $order)
+    {
+        return [
+            'id' => $order->getId(),
+            'number' => $order->getNumber(),
+            'items_total' => $order->getTotalQuantity(),
+            'token_value' => $order->getTokenValue(),
+            'created_at' => $order->getCreatedAt()->format('c'),
+            'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
+            'status' => $order->getStatus(),
+            'order_state' => $order->getState(),
+            'checkout_state' => $order->getCheckoutState(),
+            'payment_state' => $order->getPaymentState(),
+            'shipping_state' => $order->getShippingState(),
+            'rating' => $order->getRating(),
+            'rating_comment' => $order->getRatingComment(),
+        ];
+    }
+
+    /**
      * @param Carbon $date
      * @return bool
+     * @throws NonUniqueResultException
      */
     private function isHoliday(Carbon $date): bool
     {
@@ -261,7 +287,7 @@ class OrderService
      * @param Carbon $nextAvailableDay
      * @param $preferredDeliveryDate
      * @return Carbon
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     private function setTimeToAvailableDay(Carbon $nextAvailableDay, $preferredDeliveryDate): Carbon
     {

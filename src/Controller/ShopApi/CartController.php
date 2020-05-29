@@ -86,7 +86,7 @@ class CartController extends AbstractFOSRestController
             $mainOrder = $this->orderService->mergeCarts($user);
 
             $statusCode = Response::HTTP_OK;
-            $serialized = $this->serializeOrder($mainOrder);
+            $serialized = $this->orderService->serializeOrder($mainOrder);
             $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Merged...', $serialized);
             $view = $this->view($response, $statusCode);
 
@@ -207,21 +207,5 @@ class CartController extends AbstractFOSRestController
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * Return serialized order object.
-     * @param Order|null $order
-     * @return array
-     */
-    private function serializeOrder(?Order $order)
-    {
-        return [
-            'id' => $order->getId(),
-            'number' => $order->getNumber(),
-            'items_total' => $order->getTotalQuantity(),
-            'token_value' => $order->getTokenValue(),
-            'created_at' => $order->getCreatedAt()->format('c'),
-        ];
     }
 }

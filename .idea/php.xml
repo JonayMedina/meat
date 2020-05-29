@@ -286,6 +286,7 @@
       <path value="$PROJECT_DIR$/vendor/zenstruck/schedule-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/lock" />
       <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/vendor/sylius/customer-reorder-plugin" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
