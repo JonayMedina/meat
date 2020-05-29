@@ -6,12 +6,10 @@ use Doctrine\ORM\Cache;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Product\Product;
-use Sylius\Component\Core\OrderCheckoutStates;
 use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Core\OrderShippingStates;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
-use Sylius\Component\Shipping\Model\ShipmentInterface;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -150,9 +148,7 @@ class DashboardService
     {
         $queryBuilder = $this->container->get('sylius.repository.order')
             ->createQueryBuilder('o')
-            ->select('COUNT(o)')
-            ->andWhere('o.checkoutState = :checkoutState')
-            ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
+            ->select('COUNT(o)');
 
         try {
             if ($returnQueryBuilder) {
@@ -265,14 +261,14 @@ class DashboardService
     private function retrievePurchasesByUserChartData(): self
     {
         // with no purchases
-        $sql = "SELECT COUNT(DISTINCT c.id) FROM sylius_customer c LEFT JOIN sylius_order o ON c.id = o.customer_id WHERE o.id IS NULL OR o.state != '". OrderInterface::STATE_FULFILLED ."' OR o.payment_state = '". PaymentInterface::STATE_REFUNDED ."' OR o.payment_state = '" . PaymentInterface::STATE_FAILED . "' OR o.payment_state = '". PaymentInterface::STATE_CANCELLED ."'";
+        $sql = "SELECT COUNT(DISTINCT c.id) FROM sylius_customer c LEFT JOIN sylius_order o ON c.id = o.customer_id WHERE o.id IS NULL OR o.state = '". OrderInterface::STATE_CART ."' OR o.payment_state != '". OrderPaymentStates::STATE_PAID ."'";
         $connection = $this->container->get('doctrine')->getManager()->getConnection();
         $stmt = $connection->prepare($sql);
         $stmt->execute();
         $noPurchases = $stmt->fetchColumn();
 
         // with purchases
-        $sql = "SELECT COUNT(DISTINCT c.id) FROM sylius_customer c LEFT JOIN sylius_order o ON c.id = o.customer_id WHERE o.state = '". OrderInterface::STATE_FULFILLED ."' AND o.payment_state != '". PaymentInterface::STATE_REFUNDED ."' AND o.shipping_state = '". ShipmentInterface::STATE_SHIPPED ."'";
+        $sql = "SELECT COUNT(DISTINCT c.id) FROM sylius_customer c LEFT JOIN sylius_order o ON c.id = o.customer_id WHERE  o.payment_state = '". OrderPaymentStates::STATE_PAID ."' ";
         $connection = $this->container->get('doctrine')->getManager()->getConnection();
         $stmt = $connection->prepare($sql);
         $stmt->execute();
@@ -280,7 +276,7 @@ class DashboardService
 
         $data = [
             'purchases' => $withPurchases,
-            'no_purchases' => $noPurchases
+            'no_purchases' => ($noPurchases - $withPurchases)
         ];
 
         $this->purchasesByUserData = $data;
@@ -300,8 +296,10 @@ class DashboardService
             $pending = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
-                ->andWhere('o.paymentState = :status')
-                ->setParameter('status', OrderPaymentStates::STATE_AWAITING_PAYMENT)
+                ->andWhere('o.state = :state')
+                ->andWhere('o.shippingState != :shippingState')
+                ->setParameter('state', OrderInterface::STATE_NEW)
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
                 ->getQuery()
                 ->setCacheable(true)
                 ->setCacheMode(Cache::MODE_NORMAL)
@@ -311,9 +309,8 @@ class DashboardService
             $cancelled = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
-                ->andWhere('o.paymentState = :status OR o.paymentState = :refundedState')
-                ->setParameter('status', OrderInterface::STATE_CANCELLED)
-                ->setParameter('refundedState', 'refunded')
+                ->andWhere('o.state = :state')
+                ->setParameter('state', OrderInterface::STATE_CANCELLED)
                 ->getQuery()
                 ->setCacheable(true)
                 ->setCacheMode(Cache::MODE_NORMAL)
@@ -323,10 +320,8 @@ class DashboardService
             $fulfilled = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
-                ->andWhere('o.state = :status')
-                ->andWhere('o.paymentState != :refundedState')
-                ->setParameter('status', OrderInterface::STATE_FULFILLED)
-                ->setParameter('refundedState', 'refunded')
+                ->andWhere('o.shippingState = :shippingState')
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
                 ->getQuery()
                 ->setCacheable(true)
                 ->setCacheMode(Cache::MODE_NORMAL)
@@ -337,7 +332,10 @@ class DashboardService
             $data[OrderInterface::STATE_FULFILLED] = $fulfilled;
 
         } catch (\Exception $exception) {
-            $number = null;
+            $data[OrderPaymentStates::STATE_AWAITING_PAYMENT] = null;
+            $data[OrderInterface::STATE_CANCELLED] = null;
+            $data[OrderInterface::STATE_FULFILLED] = null;
+
             $this->logger->error($exception->getMessage());
         }
 
@@ -355,8 +353,10 @@ class DashboardService
             $averageRating = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('AVG(o.rating)')
-                ->andWhere('o.checkoutState = :checkoutState')
-                ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
+                ->andWhere('o.paymentState = :paymentState')
+                ->andWhere('o.shippingState = :shippingState')
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
+                ->setParameter('paymentState', OrderPaymentStates::STATE_PAID);
 
             if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
                 $averageRating
@@ -375,8 +375,10 @@ class DashboardService
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
                 ->andWhere('o.rating IS NOT NULL')
-                ->andWhere('o.checkoutState = :checkoutState')
-                ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED);
+                ->andWhere('o.paymentState = :paymentState')
+                ->andWhere('o.shippingState = :shippingState')
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
+                ->setParameter('paymentState', OrderPaymentStates::STATE_PAID);
 
             if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
                 $averageRatingCounter
@@ -434,8 +436,8 @@ class DashboardService
             foreach ($dates as $index => $date) {
                 $counter = $this->orderCount(true)
                     ->andWhere('o.createdAt BETWEEN :start AND :end')
-                    ->andWhere('o.checkoutState = :checkoutState')
-                    ->setParameter('checkoutState', OrderCheckoutStates::STATE_COMPLETED)
+                    ->andWhere('o.paymentState = :paymentState')
+                    ->setParameter('paymentState', OrderPaymentStates::STATE_PAID)
                     ->setParameter('start', $date['start'])
                     ->setParameter('end', $date['end'])
                     ->getQuery()
@@ -469,7 +471,7 @@ class DashboardService
         $code = $this->getChannel()->getCode();
         $locale = $this->container->getParameter('locale');
 
-        $sql = "SELECT p.id, pt.name, pr.price, COUNT(oi.id) as quantity FROM sylius_product p LEFT JOIN sylius_product_variant pv ON p.id=pv.product_id LEFT JOIN sylius_product_translation pt ON (pt.translatable_id = p.id AND pt.locale = '". $locale ."') LEFT JOIN sylius_channel_pricing pr ON pr.product_variant_id = pv.id LEFT JOIN sylius_order_item oi ON oi.variant_id=pv.id LEFT JOIN sylius_order o ON o.id=oi.order_id WHERE p.enabled = true AND pr.channel_code = '". $code ."' AND pv.position = 0 AND o.state='". OrderInterface::STATE_FULFILLED ."' AND o.payment_state='". PaymentInterface::STATE_COMPLETED ."' GROUP BY pr.price, p.id ORDER BY quantity DESC LIMIT ". self::TOP_X_PRODUCTS .";";
+        $sql = "SELECT p.id, pt.name, pr.price, COUNT(oi.id) as quantity FROM sylius_product p LEFT JOIN sylius_product_variant pv ON p.id=pv.product_id LEFT JOIN sylius_product_translation pt ON (pt.translatable_id = p.id AND pt.locale = '". $locale ."') LEFT JOIN sylius_channel_pricing pr ON pr.product_variant_id = pv.id LEFT JOIN sylius_order_item oi ON oi.variant_id=pv.id LEFT JOIN sylius_order o ON o.id=oi.order_id WHERE p.enabled = true AND pr.channel_code = '". $code ."' AND pv.position = 0 AND o.payment_state='". OrderPaymentStates::STATE_PAID ."' GROUP BY pr.price, p.id ORDER BY quantity DESC LIMIT ". self::TOP_X_PRODUCTS .";";
         $connection = $this->container->get('doctrine')->getManager()->getConnection();
         $stmt = $connection->prepare($sql);
         $stmt->execute();
