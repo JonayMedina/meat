@@ -4,10 +4,10 @@ namespace App\Form\Extension;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddressTypeExtension extends AbstractTypeExtension
 {

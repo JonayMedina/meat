@@ -2,7 +2,6 @@
 
 namespace App\Form\Extension;
 
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Sylius\Bundle\OrderBundle\Form\Type\CartType;
 use Symfony\Component\Form\AbstractTypeExtension;

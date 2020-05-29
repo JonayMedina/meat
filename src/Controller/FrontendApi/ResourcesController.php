@@ -2,19 +2,15 @@
 
 namespace App\Controller\FrontendApi;
 
-use App\Entity\Addressing\Address;
-use App\Entity\Customer\Customer;
 use App\Model\APIResponse;
 use App\Entity\User\ShopUser;
 use App\Entity\Product\Product;
 use App\Service\FavoriteService;
 use App\Service\SettingsService;
-use App\Service\CaptchaVerificationService;
-use Doctrine\ORM\EntityManager;
+use App\Entity\Customer\Customer;
+use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Component\Core\Repository\AddressRepositoryInterface;
-use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
-use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use App\Service\CaptchaVerificationService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +19,9 @@ use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Core\Repository\AddressRepositoryInterface;
+use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
 
 class ResourcesController extends AbstractFOSRestController

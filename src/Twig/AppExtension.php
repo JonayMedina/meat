@@ -2,22 +2,21 @@
 
 namespace App\Twig;
 
-use App\Entity\Addressing\Address;
-use App\Entity\User\UserOAuth;
-use App\Repository\FavoriteRepository;
 use Exception;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
+use App\Entity\User\UserOAuth;
 use App\Entity\Taxonomy\Taxon;
 use App\Entity\Product\Product;
 use App\Service\UploaderHelper;
 use App\Service\FavoriteService;
 use App\Service\SettingsService;
+use App\Entity\Addressing\Address;
 use App\Entity\Promotion\Promotion;
 use Twig\Extension\AbstractExtension;
+use App\Repository\FavoriteRepository;
 use App\Entity\Channel\ChannelPricing;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

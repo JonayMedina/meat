@@ -2,20 +2,19 @@
 
 namespace App\Controller\Shop;
 
+use DateTime;
 use App\Entity\User\ShopUser;
 use App\Entity\Customer\Customer;
-use App\Entity\Addressing\Address;
 use App\Form\Shop\ChangeEmailType;
+use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
-use DateTime;
-use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
-use Sylius\ShopApiPlugin\Controller\Customer\CustomerController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
+use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;

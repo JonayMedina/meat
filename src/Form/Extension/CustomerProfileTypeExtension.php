@@ -2,16 +2,14 @@
 
 namespace App\Form\Extension;
 
-use Faker\Provider\Text;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CustomerProfileTypeExtension extends AbstractTypeExtension
 {
