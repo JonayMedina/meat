@@ -121,9 +121,9 @@ security:
             oauth:
                 resource_owners:
                     facebook: "/login/check-facebook"
-                login_path: sylius_shop_login
+                login_path: /login
                 use_forward: false
-                failure_path: sylius_shop_login
+                failure_path: /login
 
                 oauth_user_provider:
                     service: sylius.oauth.user_provider

@@ -239,6 +239,10 @@ strong, .table thead th {
     font-size: 13px !important;
 }
 
+.text-italic {
+    font-family: "Raleway Italic", sans-serif;
+}
+
 /* Custom */
 .top-menu, .top-menu .row {
     background: #404040;
@@ -2006,6 +2010,23 @@ label.icobutton input {
     display: none;
 }
 
+.profile-update .extra {
+    text-align: right;
+}
+
+.profile-update .address-default {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.profile-update .address-default label {
+    margin-left: 10px;
+}
+
+.profile-update .cancel-address {
+    margin-right: 15px;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2523,6 +2544,10 @@ label.icobutton input {
     .autocomplete-items {
         width: calc(100% - 40px);
     }
+
+    .profile.edit .form div.divider {
+        padding-top: 0;
+    }
 }
 
 @media (max-width: 575px) {
@@ -2672,6 +2697,18 @@ label.icobutton input {
     .profile .segment {
         padding-left: 15px;
         padding-right: 15px;
+    }
+
+    .profile.edit .form div.divider {
+        padding-top: 0;
+        max-width: calc(100% - 30px);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile.edit .submit {
+        margin-top: 0;
+        min-width: 220px;
     }
 }
 

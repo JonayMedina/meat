@@ -162,26 +162,25 @@ class ExtenderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $profile = $request->request->get('sylius_customer_profile');
 
-//            dump($profile);
-//            exit;
-
             for ($i=0; $i<ShopUser::SHIPPING_ADDRESS_LIMIT; $i++) {
                 if (isset($profile['address_' . $i])) {
                     $address = $profile['address_' . $i];
 
                     if (!$address['id']) {
-                        $addressN = new Address();
-                        $addressN->setFullAddress($address['fullAddress']);
-                        $addressN->setAnnotations($address['annotations']);
-                        $addressN->setPhoneNumber($address['phoneNumber']);
-                        $addressN->setType(Address::TYPE_SHIPPING);
-                        $addressN->setCustomer($customer);
+                        if ($address['fullAddress'] && $address['annotations'] && $address['phoneNumber']) {
+                            $addressN = new Address();
+                            $addressN->setFullAddress($address['fullAddress']);
+                            $addressN->setAnnotations($address['annotations']);
+                            $addressN->setPhoneNumber($address['phoneNumber']);
+                            $addressN->setType(Address::TYPE_SHIPPING);
+                            $addressN->setCustomer($customer);
 
-                        $em->persist($addressN);
+                            $em->persist($addressN);
 
-                        if ($address['default'] == 'true') {
-                            $em->flush();
-                            $customer->setDefaultAddress($addressN);
+                            if ($address['default'] == 'true') {
+                                $em->flush();
+                                $customer->setDefaultAddress($addressN);
+                            }
                         }
                     } else {
                         /** @var Address $addressE */

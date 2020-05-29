@@ -2,12 +2,19 @@
 
 namespace App\Controller\FrontendApi;
 
+use App\Entity\Addressing\Address;
+use App\Entity\Customer\Customer;
 use App\Model\APIResponse;
 use App\Entity\User\ShopUser;
 use App\Entity\Product\Product;
 use App\Service\FavoriteService;
 use App\Service\SettingsService;
 use App\Service\CaptchaVerificationService;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Core\Repository\AddressRepositoryInterface;
+use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,6 +51,18 @@ class ResourcesController extends AbstractFOSRestController
     /** @var UserRepositoryInterface */
     private $userRepository;
 
+    /** @var AddressRepositoryInterface */
+    private $addressRepository;
+
+    /** @var EntityManagerInterface  */
+    private $em;
+
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
+    /** @var CustomerRepositoryInterface */
+    private $customerRepository;
+
     /**
      * ResourcesController constructor.
      * @param SenderInterface $sender
@@ -54,8 +73,11 @@ class ResourcesController extends AbstractFOSRestController
      * @param ProductRepositoryInterface $productRepository
      * @param ContactUsController $contactUsController
      * @param UserRepositoryInterface $userRepository
+     * @param AddressRepositoryInterface $addressRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param CustomerRepositoryInterface $customerRepository
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -65,6 +87,10 @@ class ResourcesController extends AbstractFOSRestController
         $this->productRepository = $productRepository;
         $this->contactUsController = $contactUsController;
         $this->userRepository = $userRepository;
+        $this->addressRepository = $addressRepository;
+        $this->em = $entityManager;
+        $this->orderRepository = $orderRepository;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -274,6 +300,88 @@ class ResourcesController extends AbstractFOSRestController
                 'title' => $this->translator->trans('app.ui.reset_password.error.title'),
                 'message' => $this->translator->trans('app.ui.reset_password.error.enter_email')
             ]);
+        }
+
+        $view = $this->view($data, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/address/delete.{_format}",
+     *     name="store_api_address_delete",
+     *     methods={"DELETE"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteAddressAction(Request $request) {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data)) {
+            /** @var Address $address */
+            $address = $this->addressRepository->find($data['address']);
+            $op = 'error';
+
+            if ($address instanceof Address) {
+                $orders = $this->orderRepository->findBy(['shippingAddress' => $address]);
+
+                if (count($orders) > 0) {
+                    $op = 'cant-delete';
+                } else {
+                    $customer = $this->customerRepository->findOneBy(['defaultAddress' => $address]);
+
+                    if ($customer instanceof Customer) {
+                        $customer->setDefaultAddress(null);
+                    }
+
+                    try {
+                        $this->em->remove($address);
+                        $this->em->flush();
+
+                        $op = 'success';
+                    }  catch (\Exception $e) {
+                        $op = 'error';
+                    }
+                }
+            } else {
+                $op = 'non-address';
+            }
+        } else {
+            $op = 'non-address';
+        }
+
+        switch($op){
+            case 'success':
+                $statusCode = Response::HTTP_OK;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+                    'title' => $this->translator->trans('app.api.address.remove.success')
+                ]);
+                break;
+            case 'cant-delete':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.address.remove.error.title'),
+                    'message' => $this->translator->trans('app.api.address.remove.error.cant_delete'),
+                ]);
+                break;
+            case 'non-address':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.address.remove.error.title'),
+                    'message' => $this->translator->trans('app.api.address.remove.error.non_exists'),
+                ]);
+                break;
+            case 'error':
+            default:
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.address.remove.error.title'),
+                    'message' => $this->translator->trans('app.api.address.remove.error.message'),
+                ]);
         }
 
         $view = $this->view($data, $statusCode);

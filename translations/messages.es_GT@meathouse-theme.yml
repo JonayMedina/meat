@@ -861,3 +861,8 @@ app.ui.account.change_email.error.message: 'Un error no permitio finalizar el pr
 app.ui.agreed: 'De acuerdo'
 app.ui.account.delete_address: 'Eliminar dirección'
 app.ui.form.profile.this_my_default_address: 'Esta es mi dirección predeterminada'
+app.api.address.remove.success: '¡Dirección eliminada con éxito!'
+app.api.address.remove.error.title: 'Hubo un error'
+app.api.address.remove.error.message: 'Un error no permitio eliminar la dirección'
+app.api.address.remove.error.cant_delete: 'Parece que la dirección ya fue usada en una orden y no podemos eliminarla.'
+app.api.address.remove.error.non_exists: 'La dirección especificada no existe.'
