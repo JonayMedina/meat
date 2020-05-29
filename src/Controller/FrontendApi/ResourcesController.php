@@ -2,11 +2,14 @@
 
 namespace App\Controller\FrontendApi;
 
+use DateTime;
 use App\Model\APIResponse;
+use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
+use App\Service\OrderService;
 use App\Entity\Product\Product;
-use App\Service\FavoriteService;
 use App\Service\SettingsService;
+use App\Service\FavoriteService;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,6 +65,9 @@ class ResourcesController extends AbstractFOSRestController
     /** @var CustomerRepositoryInterface */
     private $customerRepository;
 
+    /** @var OrderService */
+    private $orderService;
+
     /**
      * ResourcesController constructor.
      * @param SenderInterface $sender
@@ -75,8 +81,10 @@ class ResourcesController extends AbstractFOSRestController
      * @param AddressRepositoryInterface $addressRepository
      * @param OrderRepositoryInterface $orderRepository
      * @param CustomerRepositoryInterface $customerRepository
+     * @param EntityManagerInterface $entityManager
+     * @param OrderService $orderService
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager, OrderService $orderService)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -90,6 +98,7 @@ class ResourcesController extends AbstractFOSRestController
         $this->em = $entityManager;
         $this->orderRepository = $orderRepository;
         $this->customerRepository = $customerRepository;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -380,6 +389,93 @@ class ResourcesController extends AbstractFOSRestController
                 $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
                     'title' => $this->translator->trans('app.api.address.remove.error.title'),
                     'message' => $this->translator->trans('app.api.address.remove.error.message'),
+                ]);
+        }
+
+        $view = $this->view($data, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/order/{token}.{_format}",
+     *     name="store_api_cart_estimated_date",
+     *     methods={"POST"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function updateDeliveryTime(Request $request, $token) {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $data = json_decode($request->getContent(), true);
+        $order = $this->orderRepository->findOneBy(['tokenValue' => $token]);
+        $op = 'error';
+        $result = "";
+
+        if ($order instanceof Order) {
+            if (isset($data)) {
+                $preferredTime = $data['preferred'];
+                $scheduled = $data['scheduled'];
+                $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.none');
+                $date = "";
+
+                if ($preferredTime) {
+                    if ($preferredTime >= 1) {
+                        if ($preferredTime == 3) {
+                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.third.short');
+                        } else if ($preferredTime == 2) {
+                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.second.short');
+                        } else {
+                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.first.short');
+                        }
+                    } else {
+                        $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.none');
+                    }
+                }
+
+                if ($scheduled) {
+                    $formatted = DateTime::createFromFormat('d/m/Y', $scheduled);
+                    $date = $formatted->format('Y-m-d');
+                }
+
+                try {
+                    $estimated = $this->orderService->getNextAvailableDay($preferred, $date);
+
+                    $order->setEstimatedDeliveryDate(New DateTime($estimated));
+                    $this->em->flush();
+                    $op = 'success';
+                    $result = $estimated;
+                } catch (\Exception $e) {
+                    $op = 'error';
+                }
+            }
+        } else {
+            $op = 'non-order';
+        }
+
+        switch($op){
+            case 'success':
+                $statusCode = Response::HTTP_OK;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+                    'title' => $this->translator->trans('app.api.cart.estimate.success'),
+                    'estimated' => $result,
+                ]);
+                break;
+            case 'non-order':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.cart.estimate.error.title'),
+                    'message' => $this->translator->trans('app.api.cart.estimate.error.non_exists'),
+                ]);
+                break;
+            case 'error':
+            default:
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.cart.estimate.error.title'),
+                    'message' => $this->translator->trans('app.api.cart.estimate.error.message'),
                 ]);
         }
 

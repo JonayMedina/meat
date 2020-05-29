@@ -44,19 +44,19 @@ class OrderExtendedController extends OrderController
                 if ($preferredTime) {
                     if ($preferredTime >= 1) {
                         if ($preferredTime == 3) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
                         } else if ($preferredTime == 2) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
                         } else {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first');
+                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
                         }
 
                         $resource->setPreferredDeliveryTime($text);
                     } else {
-                        $resource->setPreferredDeliveryTime(null);
+                        $resource->setPreferredDeliveryTime($this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'));
                     }
                 } else {
-                    $resource->setPreferredDeliveryTime(null);
+                    $resource->setPreferredDeliveryTime($this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'));
                 }
             }
 
