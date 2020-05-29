@@ -66,4 +66,5 @@ return [
     Oneup\FlysystemBundle\OneupFlysystemBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['all' => true],
     Zenstruck\ScheduleBundle\ZenstruckScheduleBundle::class => ['all' => true],
+    Sylius\CustomerReorderPlugin\SyliusCustomerReorderPlugin::class => ['all' => true],
 ];

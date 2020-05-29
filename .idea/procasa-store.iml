@@ -188,6 +188,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius-labs/association-hydrator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius-labs/coding-standard" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius-labs/polyfill-symfony-event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/customer-reorder-plugin" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/fixtures-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/grid-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/mailer-bundle" />

@@ -80,6 +80,12 @@ services:
     Sylius\Component\Core\Factory\AddressFactoryInterface:
         alias: 'sylius.custom_factory.address'
         
+    Sylius\CustomerReorderPlugin\Reorder\ReordererInterface:
+        alias: 'Sylius\CustomerReorderPlugin\Reorder\Reorderer'
+        
+    Sylius\Bundle\CoreBundle\Storage\CartSessionStorage:
+        alias: 'Sylius\Component\Core\Storage\CartStorageInterface'
+        
     SM\Factory\Factory:
         alias: 'sm.factory'
         
