@@ -173,10 +173,9 @@
                 {% endfor %}
             {% endif %}
 
-            var index = {{ i - 1 }};
+            var index = {{ i }};
 
             if (addresses.length > 0) {
-                nAddresses--;
                 addresses.forEach(function (address) {
                     appendTo($addressContainer, Mustache.render($addressTemplate.html(), address));
                 });
@@ -195,27 +194,18 @@
 
             enableRadios();
 
-            function enableRadios() {
-                $('.radio').click(function () {
-                    var $input = $(this).find('input');
+            $addAddress.click(function () {
+                addEmptyAddress();
+            });
 
-                    $input.prop('checked', true).change();
-
-                    if ($(this).hasClass('address-default')) {
-                        $('#address-container').find('.default').attr('value', 'false');
-                        $(this).closest('.extra').find('.default').attr('value', 'true');
-                    }
-                });
-            }
+            $cancel.click(function () {
+                deleteAddress($('.address:last-of-type').find('.delete-address'));
+            });
 
             $('.datepicker').datepicker({
                 changeYear: true,
                 changeMonth: true,
                 yearRange: "-65:-6",
-            });
-
-            $addAddress.click(function () {
-                addEmptyAddress();
             });
 
             function addEmptyAddress() {
@@ -228,20 +218,21 @@
                     checked: ''
                 };
 
-                var $address = Mustache.render($addressTemplate.html(), defaultAddress);
-
-                appendTo($addressContainer, $address);
+                appendTo($addressContainer, Mustache.render($addressTemplate.html(), defaultAddress));
             }
 
             function appendTo($container, $address) {
                 $container.append($address);
-                refactorAddresses();
                 index++;
                 nAddresses++;
+                refactorAddresses();
             }
 
             $('.delete-address').click(function () {
-                let $input = $(this);
+                deleteAddress($(this));
+            });
+
+            function deleteAddress($input) {
                 var id = $input.attr('data-id');
                 var $index = $input.attr('data-index');
 
@@ -257,26 +248,35 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                     })
-                    .done(function (data) {
-                        removeAddress($index);
-                        unblockPage();
-                    })
-                    .fail(function (error) {
-                        let recordset = error['responseJSON']['recordset'];
-                        $modal.find('.modal-title').html(recordset['title']);
-                        $modal.find('.modal-body').html(recordset['message']);
+                        .done(function () {
+                            removeAddress($index);
+                            unblockPage();
+                        })
+                        .fail(function (error) {
+                            let recordset = error['responseJSON']['recordset'];
+                            $modal.find('.modal-title').html(recordset['title']);
+                            $modal.find('.modal-body').html(recordset['message']);
 
-                        unblockPage();
-                        $modal.modal('show');
-                    });
+                            unblockPage();
+                            $modal.modal('show');
+                        });
                 } else {
-                    $input.closest('.address').remove();
+                    removeAddress($index);
                 }
-            });
+            }
 
-            $cancel.click(function () {
-                $('div.address-' + (index <= 1 ? index : index - 2)).find('.delete-address').trigger('click');
-            });
+            function enableRadios() {
+                $('.radio').click(function () {
+                    var $input = $(this).find('input');
+
+                    $input.prop('checked', true).change();
+
+                    if ($(this).hasClass('address-default')) {
+                        $('#address-container').find('.default').attr('value', 'false');
+                        $(this).closest('.extra').find('.default').attr('value', 'true');
+                    }
+                });
+            }
 
             function removeAddress($id) {
                 $('div.address-' + $id).remove();
@@ -312,7 +312,7 @@
 
             function refactorAddresses() {
                 $('#address-container').find('.default').attr('value', 'false');
-                $('.address-0 .extra').find('.default').attr('value', 'true').prop('checked', true).change();
+                $('.address:first-of-type .extra').find('.default').attr('value', 'true').prop('checked', true).change();
 
                 if (nAddresses >= limitOfAddress) {
                     $addAddress.removeClass('d-inline-block').addClass('d-none');
@@ -325,8 +325,9 @@
                     $cancel.removeClass('d-inline-block').addClass('d-none');
                 }
 
-                if (nAddresses > 1) {
+                if (nAddresses >= 1) {
                     $('.address .extra').removeClass('d-none');
+                    $('.address .delete-address').removeClass('d-none');
                     $('.address-' + (index-1) + ' .extra .delete-address').addClass('d-none');
                 }
 
