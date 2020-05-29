@@ -31,6 +31,9 @@ class AddressTypeExtension extends AbstractTypeExtension
             ->add('annotations', TextareaType::class, [
                 'required' => true,
                 'label' => 'app.form.address.ask_for',
+                'attr' => [
+                    'class' => 'annotations'
+                ]
             ])
             ->add('firstName', TextType::class, [
                 'required' => true,

@@ -61,8 +61,14 @@ form input, form textarea, .form input, .form textarea {
 
 form textarea {
     resize: none !important;
-    max-height: 80px !important;
+    min-height: 85px !important;
+    max-height: 90px !important;
     overflow-y: scroll !important;
+}
+
+form textarea.annotations {
+    min-height: 70px !important;
+    max-height: 70px !important;
 }
 
 form textarea::-webkit-scrollbar {
@@ -288,6 +294,7 @@ a, .navbar-nav, .sub-navbar-nav ul, .login {
 .navbar-nav li:last-of-type a {
     padding-right: 0 !important;
 }
+
 .sub-navbar-nav ul, .navbar-nav {
     padding: 15px !important;
 }

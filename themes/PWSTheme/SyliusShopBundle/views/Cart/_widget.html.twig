@@ -10,24 +10,27 @@
         $(function () {
             let $errorModal = $('#showErrorMessage');
 
-            $('#delete-cart').click(function () {
-                $('#showCartModal').modal('hide');
+            $('#delete-cart').click(function (evt) {
+                evt.preventDefault();
                 blockPage();
+                $('#showCartModal').modal('hide');
+
                 $.ajax({
                     type: 'DELETE',
                     url: '{{ path('sylius_shop_api_drop_cart', {'token': cart.tokenValue}) }}',
-                    data: $(this).serialize(),
-                    success: function () {
-                        location.reload();
-                        unblockPage();
-                    },
-                    error: function (data) {
-                        $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
-                        $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function (data) {
+                    location.reload();
+                    unblockPage();
+                })
+                .fail(function (error) {
+                    $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
+                    $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
 
-                        unblockPage();
-                        $errorModal.modal('show');
-                    }
+                    unblockPage();
+                    $errorModal.modal('show');
                 });
             });
 
@@ -37,7 +40,7 @@
                     localStorage.setItem('cart', '{{ cart.tokenValue }}');
                     localStorage.setItem('showed', 'true');
                 } else {
-                    localStorage.setItem('showed', '');
+                    localStorage.setItem('showed', 'true');
                 }
             }
         });

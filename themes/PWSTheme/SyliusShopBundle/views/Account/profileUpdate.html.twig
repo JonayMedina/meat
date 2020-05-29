@@ -137,6 +137,7 @@
                             }
 
                             addresses.push(address);
+                            {% set i = i + 1 %}
                         {% endif %}
                     {% else %}
                         address = {
@@ -150,9 +151,8 @@
                         }
 
                         addresses.push(address);
+                        {% set i = i + 1 %}
                     {% endif %}
-
-                    {% set i = i + 1 %}
                 {% endfor %}
             {% endif %}
 
@@ -173,9 +173,10 @@
                 {% endfor %}
             {% endif %}
 
-            var index = {{ i }};
+            var index = {{ i - 1 }};
 
             if (addresses.length > 0) {
+                nAddresses--;
                 addresses.forEach(function (address) {
                     appendTo($addressContainer, Mustache.render($addressTemplate.html(), address));
                 });
@@ -270,12 +271,12 @@
             });
 
             $cancel.click(function () {
-                removeAddress();
+                $('div.address-' + (index <= 1 ? index : index - 2)).find('.delete-address').trigger('click');
             });
 
-            function removeAddress($id = index) {
-                index--;
+            function removeAddress($id) {
                 $('div.address-' + $id).remove();
+                index--;
                 nAddresses--;
                 refactorAddresses();
             }
@@ -308,8 +309,6 @@
             function refactorAddresses() {
                 $('#address-container').find('.default').attr('value', 'false');
                 $('.address-0 .extra').find('.default').attr('value', 'true').prop('checked', true).change();
-
-                console.log(nAddresses);
 
                 if (nAddresses >= limitOfAddress) {
                     $addAddress.removeClass('d-inline-block').addClass('d-none');

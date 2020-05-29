@@ -321,6 +321,7 @@
 
                             unblockPage();
 
+                            localStorage.setItem('showed', 'true');
                             $modal.find('.custom-overlay-container').removeClass('show');
                             $modal.find('.custom-overlay').attr('style', 'display: none;');
                             $modal.modal('show');
