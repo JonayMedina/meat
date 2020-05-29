@@ -313,9 +313,6 @@ class OrderExtendedController extends OrderController
 
                     $this->flashHelper->addErrorFlash($configuration, $exception->getFlash());
 
-                    dump($configuration);
-                    exit;
-
                     return $this->redirectHandler->redirectToReferer($configuration);
                 }
 
