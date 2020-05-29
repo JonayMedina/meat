@@ -76,7 +76,11 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $segment = $pushNotification->getSegment();
 
         if (!$segment instanceof Segment) {
-            return $this->entityManager->getRepository('App:User\ShopUser')->findAll();
+            return $this->entityManager->getRepository('App:User\ShopUser')
+                ->createQueryBuilder('u')
+                ->innerJoin('u.devices', 'devices')
+                ->getQuery()
+                ->getResult();
         }
 
         return $this->getUsersBySegment($segment);
@@ -128,6 +132,7 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
             FROM sylius_shop_user u
             LEFT JOIN sylius_customer c ON u.customer_id = c.id
             LEFT JOIN sylius_order o ON o.customer_id = c.id
+            INNER JOIN app_shop_user_device d ON d.user_id = u.id
             WHERE c.gender IN ('".implode ("', '", $gender)."')
             AND o.payment_state = 'paid'
             AND o.created_at BETWEEN '".$startDate." 00:00:00' AND '".$endDate." 23:59:59'
