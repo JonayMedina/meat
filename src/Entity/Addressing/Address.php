@@ -7,7 +7,9 @@ namespace App\Entity\Addressing;
 use DateTime;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Customer\Customer;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sylius\Component\Core\Model\Address as BaseAddress;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -96,6 +98,20 @@ class Address extends BaseAddress
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $validatedAt;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Customer\Customer",
+     *     mappedBy="defaultBillingAddress"
+     * )
+     */
+    private $customers;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->customers = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -245,6 +261,37 @@ class Address extends BaseAddress
         }
 
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Customer[]
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->setDefaultBillingAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->contains($customer)) {
+            $this->customers->removeElement($customer);
+            // set the owning side to null (unless already changed)
+            if ($customer->getDefaultBillingAddress() === $this) {
+                $customer->setDefaultBillingAddress(null);
+            }
+        }
 
         return $this;
     }
