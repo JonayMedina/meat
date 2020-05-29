@@ -26,6 +26,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class HistoryService
 {
+    const HISTORY_LIMIT = 5;
+
     /**
      * @var OrderRepository
      */
@@ -89,7 +91,6 @@ class HistoryService
     {
         /** @var Order[] $history */
         $history = $this->getOrderHistoryQuery($user)
-            ->orderBy('o.id', 'DESC')
             ->getQuery()
             ->getResult();
 
@@ -146,6 +147,9 @@ class HistoryService
             ->andWhere('o.customer = :customer')
             ->andWhere('o.paymentState = :paymentState')
             ->setParameter('customer', $customer)
-            ->setParameter('paymentState', OrderPaymentStates::STATE_PAID);
+            ->setParameter('paymentState', OrderPaymentStates::STATE_PAID)
+            ->orderBy('o.estimatedDeliveryDate', 'DESC')
+            ->addOrderBy('o.id', 'DESC')
+            ->setMaxResults(self::HISTORY_LIMIT);
     }
 }

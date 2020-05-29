@@ -2,20 +2,19 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Entity\Customer\Customer;
-use App\Entity\Order\Order;
 use App\Model\APIResponse;
-use App\Service\OrderService;
+use App\Entity\Order\Order;
 use Psr\Log\LoggerInterface;
+use App\Service\OrderService;
 use App\Entity\User\ShopUser;
 use App\Service\HistoryService;
-use App\Pagination\PaginationFactory;
+use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -24,8 +23,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class HistoryController extends AbstractFOSRestController
 {
-    const ITEMS_PER_PAGE = 10;
-
     /** @var HistoryService */
     private $historyService;
 
@@ -79,32 +76,24 @@ class HistoryController extends AbstractFOSRestController
      *     methods={"GET"}
      * )
      *
-     * @param Request $request
-     * @param PaginationFactory $paginationFactory
      * @return Response
      */
-    public function historyAction(Request $request, PaginationFactory $paginationFactory)
+    public function historyAction()
     {
         $statusCode = Response::HTTP_OK;
 
         /** @var ShopUser $user */
         $user = $this->getUser();
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', self::ITEMS_PER_PAGE);
-
-        $queryBuilder = $this->historyService->getOrderHistoryQuery($user);
 
         $list = [];
-        $paginatedCollection = $paginationFactory->createCollection($queryBuilder, '', $page, $limit, 'shop_api_history', [], 'Order history list.', $statusCode, 'info');
+        $orders = $this->historyService->getOrderHistory($user);
 
-        foreach ($paginatedCollection->recordset as $item) {
-            /** @var Order $item */
-            $list[] = $this->orderService->serializeOrder($item);
+        foreach ($orders as $order) {
+            $list[] = $this->orderService->serializeOrder($order);
         }
 
-        $paginatedCollection->recordset = $list;
-
-        $view = $this->view($paginatedCollection, $statusCode);
+        $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Order history list', $list);
+        $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
     }
