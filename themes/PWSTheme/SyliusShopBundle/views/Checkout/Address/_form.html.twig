@@ -7,7 +7,7 @@
         <button type="button" class="close-btn">
             <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
         </button>
-        {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate ? order.scheduledDeliveryDate|date("d/m/Y") : 'now'|date_modify("+1 day")|date("d/m/Y")}) }}
+        {{ form_row(form.scheduledDate) }}
     </div>
 
     {{ form_row(form.preferredTime) }}
@@ -20,7 +20,7 @@
 <div class="d-none">
     {{ form_row(form.differentBillingAddress, {'attr': {'data-toggles': 'sylius-billing-address'}}) }}
     {{ form_row(form.billingAddress.fullAddress, {'value': order.billingAddress.fullAddress|default('-')}) }}
-    {{ form_row(form.billingAddress.firstName, {'value': order.billingAddress.firstName|default('-')}) }}
+    {{ form_row(form.billingAddress.annotations, {'value': order.billingAddress.annotations|default('-')}) }}
     {{ form_row(form.billingAddress.phoneNumber, {'value': order.billingAddress.phoneNumber|default('-')}) }}
     {{ form_row(form.billingAddress.taxId, {'value': order.billingAddress.taxId|default('')}) }}
 </div>

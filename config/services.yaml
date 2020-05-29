@@ -47,6 +47,8 @@ services:
             autowire: false
         App\Controller\Shop\OrderExtendedController:
             autowire: false
+        App\Controller\Shop\OrderItemExtendedController:
+            autowire: false
 
     # Makes classes in src/ available to be used as services;
     # this creates a service per class whose id is the fully-qualified class name
@@ -118,6 +120,10 @@ services:
         arguments: ['@sylius.random_generator', '@sylius.shop_user.token_uniqueness_checker.password_reset', 10]
         public: false
         
+    app.service.order:
+        class: App\Service\OrderService
+        public: true
+        
     app.factory.shop_user_customer_view_factory:
         class: App\Factory\ShopApi\CustomerViewFactory
         decorates: sylius.shop_api_plugin.factory.customer_view_factory
@@ -143,6 +149,11 @@ services:
         class: App\Form\Extension\AddressTypeCheckoutExtension
         tags:
             - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType }
+            
+    app.form.extension.type.cart:
+        class: App\Form\Extension\CartTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\OrderBundle\Form\Type\CartType, priority: -5 }
                 
     app.controller.shop.extender:
         class: App\Controller\Shop\ExtenderController

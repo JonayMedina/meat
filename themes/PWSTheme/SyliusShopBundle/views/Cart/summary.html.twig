@@ -271,6 +271,7 @@
 
             $updateCart.on('submit', function (e) {
                 e.preventDefault();
+                e.stopImmediatePropagation();
 
                 if (!withCoupon) {
                     $coupon.val(null);

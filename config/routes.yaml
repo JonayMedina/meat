@@ -210,3 +210,17 @@ sylius_shop_checkout_select_payment:
             state_machine:
                 graph: sylius_order_checkout
                 transition: select_payment
+                
+sylius_shop_cart_save:
+    path: /cart
+    methods: [PUT, PATCH]
+    defaults:
+        _controller: sylius.controller.order:saveAction
+        _sylius:
+            template: "@SyliusShop/Cart/summary.html.twig"
+            redirect: sylius_shop_cart_summary
+            form: 
+                type: Sylius\Bundle\OrderBundle\Form\Type\CartType
+                options:
+                    validation_groups: ['app_cart']
+            flash: sylius.cart.save

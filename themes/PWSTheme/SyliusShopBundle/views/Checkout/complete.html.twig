@@ -2,36 +2,197 @@
 
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
-{% block content %}
-    {% include '@SyliusShop/Checkout/_steps.html.twig' with {'active': 'complete', 'orderTotal': order.total} %}
+{% block extracss %}
+    <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/card/card.css') }}">
+{% endblock %}
 
-    {{ sonata_block_render_event('sylius.shop.checkout.complete.after_steps', {'order': order}) }}
+{% block extracontent %}
+    {{ sonata_block_render_event('sylius.shop.checkout.select_payment.after_steps', {'order': order}) }}
 
-    <div class="ui padded segment">
-        {% include '@SyliusShop/Checkout/Complete/_header.html.twig' %}
+    <div class="row profile pt-4 checkout payment">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+            <h1 class="text-center">{{ 'app.ui.checkout.title'|trans }}</h1>
+        </div>
 
-        {{ sonata_block_render_event('sylius.shop.checkout.complete.after_content_header', {'order': order}) }}
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-pl-0 xs-pr-0 xs-mb-0">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                    <div class="segment">
+                        {% include '@SyliusShop/Checkout/_summary.html.twig' with {'order': order} %}
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="segment">
+                                {{ sonata_block_render_event('sylius.shop.checkout.address.before_form', {'order': order}) }}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2>{{ 'app.ui.checkout.first.title'|trans }}</h2>
+                                    </div>
+                                    <div class="col-12 your-info">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.fullAddress }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.annotations }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.phoneNumber }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.schedule'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.preferredDeliveryTime|default('app.ui.checkout.order.preferred_time.none'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_checkout_address') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="segment">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                    </div>
+                                    <div class="col-12 your-info">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="segment">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2>{{ 'app.ui.checkout.third.title'|trans }}</h2>
+                                    </div>
+                                    <div class="col-12">
+{#                                        {{ sonata_block_render_event('sylius.shop.checkout.select_payment.before_form', {'order': order}) }}#}
 
-        {% include '@SyliusShop/_flashes.html.twig' %}
+{#                                        {{ form_start(form, {'action': path('sylius_shop_checkout_select_payment'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}#}
+{#                                        <input type="hidden" name="_method" value="PUT" />#}
 
-        {{ form_start(form, {'action': path('sylius_shop_checkout_complete'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-            {{ form_errors(form) }}
-            <input type="hidden" name="_method" value="PUT" />
+{#                                        {% include '@SyliusShop/Checkout/SelectPayment/_form.html.twig' %}#}
 
-            {{ sonata_block_render_event('sylius.shop.checkout.complete.before_summary', {'order': order, 'form': form}) }}
+{#                                        {{ sonata_block_render_event('sylius.shop.checkout.select_payment.before_navigation', {'order': order}) }}#}
+{#                                        {% include '@SyliusShop/Checkout/SelectPayment/_navigation.html.twig' %}#}
 
-            {% include '@SyliusShop/Common/Order/_summary.html.twig' %}
+{#                                        {{ form_row(form._token) }}#}
+{#                                        {{ form_end(form, {'render_rest': false}) }}#}
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_start(form, {'action': path('sylius_shop_checkout_complete'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+                            <input type="hidden" name="_method" value="PUT" />
 
-            {{ sonata_block_render_event('sylius.shop.checkout.complete.after_summary', {'order': order}) }}
+                            {% include '@SyliusShop/Checkout/Complete/_navigation.html.twig' %}
 
-            <div class="ui hidden divider"></div>
-            {% include '@SyliusShop/Checkout/Complete/_form.html.twig' %}
-
-            {{ sonata_block_render_event('sylius.shop.checkout.complete.before_navigation', {'order': order}) }}
-
-            {% include '@SyliusShop/Checkout/Complete/_navigation.html.twig' %}
-
-            {{ form_row(form._token) }}
-        {{ form_end(form, {'render_rest': false}) }}
+                            {{ form_row(form._token) }}
+                            {{ form_end(form, {'render_rest': false}) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{{ asset('bundles/syliusshop/js/card/jquery.card.js') }}"></script>
+    <script>
+        $(function () {
+            let $radio = $('input[type="radio"]');
+
+            if ($radio.closest('div.radio').find('label').length <=0 ) {
+                $radio.closest('div.radio').append("<label></label>");
+            }
+
+            $radio.closest('div.ui').removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+            $('input[type="radio"][value="cash_on_delivery"]').closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.cash_on_delivery'|trans }}</p>");
+            $('input[type="radio"][value="bank_transfer"]').closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.bank_transfer'|trans }}</p>");
+            $('input[type="radio"][value="card"]').prop('checked', true).change().closest('div.radio').find('label').html("<p>{{ 'app.ui.checkout.order.payment.card'|trans }}</p>");
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+        });
+    </script>
 {% endblock %}

@@ -107,6 +107,14 @@ class Address extends BaseAddress
      */
     private $customers;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Order\Order",
+     *     mappedBy="shippingAddress"
+     * )
+     */
+    private $orders;
+
     public function __construct()
     {
         parent::__construct();

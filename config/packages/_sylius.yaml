@@ -108,6 +108,7 @@ sylius_order:
         order_item:
             classes:
                 model: App\Entity\Order\OrderItem
+                controller: App\Controller\Shop\OrderItemExtendedController
         order_item_unit:
             classes:
                 model: App\Entity\Order\OrderItemUnit
