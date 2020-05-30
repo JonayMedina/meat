@@ -121,6 +121,7 @@ class AddressBookController extends AbstractFOSRestController
         $phoneNumber = $request->get('phone_number');
         $type = $request->get('type');
         $taxId = $request->get('tax_id');
+        $customer = $this->getCustomer();
 
         if ($type == Address::TYPE_SHIPPING && $this->countAddressByType($type) >= ShopUser::SHIPPING_ADDRESS_LIMIT) {
             $message = $this->translator->trans('api.address_book.shipping_limit_reached', ['%limit%' => ShopUser::SHIPPING_ADDRESS_LIMIT]);
@@ -167,7 +168,7 @@ class AddressBookController extends AbstractFOSRestController
         $address->setAnnotations($askFor);
         $address->setFullAddress($fullAddress);
         $address->setPhoneNumber($phoneNumber);
-        $address->setCustomer($this->getCustomer());
+        $address->setCustomer($customer);
         $address->setType($type);
 
         if (!empty($taxId)) {
@@ -180,6 +181,11 @@ class AddressBookController extends AbstractFOSRestController
             /** Auto validate billing address */
             if ($address->getType() == Address::TYPE_BILLING) {
                 $address->setStatus(Address::STATUS_VALIDATED);
+
+                /** Set default billing address of customer */
+                if (!$customer->getDefaultBillingAddress()) {
+                    $customer->setDefaultBillingAddress($address);
+                }
             }
 
             $this->entityManager->flush();

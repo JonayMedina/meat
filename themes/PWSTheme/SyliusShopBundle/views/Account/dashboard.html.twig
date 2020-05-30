@@ -349,6 +349,7 @@
 
                     {% set lastOrder = last_order(customer.user) %}
                     {% if lastOrder %}
+                        {% set limit = 8 %}
                         <div class="row">
                             <div class="segment ml-3 r-ml-0 w-100">
                                 <div class="row">
@@ -358,7 +359,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="row">
-                                            {% for item in lastOrder.items %}
+                                            {% for item in lastOrder.items|slice(0, limit) %}
                                                 <div class="col-12 item">
                                                     <div class="row">
                                                         <div class="col-12">

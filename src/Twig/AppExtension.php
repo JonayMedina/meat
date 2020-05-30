@@ -9,6 +9,7 @@ use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Taxonomy\Taxon;
+use App\Service\HistoryService;
 use App\Entity\Product\Product;
 use App\Service\UploaderHelper;
 use App\Service\FavoriteService;
@@ -18,6 +19,7 @@ use App\Entity\Promotion\Promotion;
 use Twig\Extension\AbstractExtension;
 use App\Repository\FavoriteRepository;
 use App\Entity\Channel\ChannelPricing;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -73,6 +75,9 @@ class AppExtension extends AbstractExtension
      */
     private $favoriteRepository;
 
+    /** @var HistoryService */
+    private $historyService;
+
     /**
      * AppExtension constructor.
      * @param ContainerInterface $container
@@ -84,8 +89,9 @@ class AppExtension extends AbstractExtension
      * @param ChannelContextInterface $channelContext
      * @param OrderRepositoryInterface $orderRepository
      * @param FavoriteRepository $favoriteRepository
+     * @param HistoryService $historyService
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository, HistoryService $historyService)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -96,6 +102,7 @@ class AppExtension extends AbstractExtension
         $this->channelContext = $channelContext;
         $this->orderRepository = $orderRepository;
         $this->favoriteRepository = $favoriteRepository;
+        $this->historyService = $historyService;
     }
 
     /**
@@ -130,6 +137,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_n_favorites', [$this, 'getNFavorites']),
             new TwigFunction('last_order', [$this, 'getLastOrder']),
             new TwigFunction('connected_to_provider', [$this, 'isConnectedToProvider']),
+            new TwigFunction('get_history', [$this, 'getOrders']),
         ];
     }
 
@@ -350,9 +358,10 @@ class AppExtension extends AbstractExtension
     /**
      * @param ShopUser $user
      * @return object|null
+     * @throws NonUniqueResultException
      */
     public function getLastOrder(ShopUser $user) {
-        return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+        return $this->historyService->getLastOrder($user);
     }
 
     /**
@@ -369,5 +378,13 @@ class AppExtension extends AbstractExtension
         }
 
         return false;
+    }
+
+    /**
+     * @param ShopUser $user
+     * @return Order[]
+     */
+    public function getOrders(ShopUser $user) {
+        return $this->historyService->getOrderHistory($user);
     }
 }
