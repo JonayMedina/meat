@@ -2,8 +2,6 @@
 
 namespace App\Twig;
 
-use App\Service\HistoryService;
-use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -11,6 +9,7 @@ use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Taxonomy\Taxon;
+use App\Service\HistoryService;
 use App\Entity\Product\Product;
 use App\Service\UploaderHelper;
 use App\Service\FavoriteService;
@@ -20,6 +19,7 @@ use App\Entity\Promotion\Promotion;
 use Twig\Extension\AbstractExtension;
 use App\Repository\FavoriteRepository;
 use App\Entity\Channel\ChannelPricing;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;

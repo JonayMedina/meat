@@ -3,13 +3,13 @@
 namespace App\Service;
 
 use App\Entity\Order\Order;
-use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Bundle\CoreBundle\Storage\CartSessionStorage;
