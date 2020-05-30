@@ -2,24 +2,41 @@
 
 {% block extracontent %}
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_content_header', {'orders': orders}) }}
+    {% set history = get_history(app.user) %}
 
-    <div class="row profile pt-4">
+    <div class="row profile history pt-4">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 xs-mb-0">
             <h1 class="text-center">{{ 'app.ui.purchase_history'|trans }}</h1>
+
+            {% if history|length > 0 %}<h3 class="xs-text-center xs-pb-1">{{ 'app.ui.history.your_%n%_last_orders'|trans({'%n%': constant('App\\Service\\HistoryService::HISTORY_LIMIT')}) }}</h3>{% endif %}
         </div>
 
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 segment">
-            <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-2">
-                <img src="{{ asset('bundles/syliusshop/img/icons/empty-history.png') }}" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto">
-                <h2 class="mt-4">{{ 'app.ui.order_history.empty'|trans }}</h2>
-                <p class="text-center xs-text-left mb-0 mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.order_history.empty_instructions'|trans|raw }}</p>
-                <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+        {% if history|length > 0 %}
+            {% for order in history %}
+                <div class="col-12 segment">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-8 info">
+                            <h2>{{  'app.ui.history.order#%number%'|trans({'%number%' : order.number}) }}</h2>
+                            <p>{{ 'app.ui.history.performed_on_%date%'|trans({'%date%': order.checkoutCompletedAt|date('d/m/y')}) }}</p>
+                            <p>{{ order.shippingAddress.fullAddress }}</p>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 link">
+                            <a href="{{ path('sylius_shop_account_order_show', {'number': order.number}) }}" class="btn-rounded">{{ 'app.ui.history.view_order_detail'|trans }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 segment">
+                <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-2">
+                    <img src="{{ asset('bundles/syliusshop/img/icons/empty-history.png') }}" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-4">{{ 'app.ui.order_history.empty'|trans }}</h2>
+                    <p class="text-center xs-text-left mb-0 mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.order_history.empty_instructions'|trans|raw }}</p>
+                    <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
-
-{#    {{ dump(resources) }}#}
-{#    {{ sylius_grid_render(resources, '@SyliusShop/Grid/_default.html.twig') }}#}
 
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_grid', {'orders': orders}) }}
 {% endblock %}

@@ -2039,6 +2039,33 @@ label.icobutton input {
     margin-right: 15px;
 }
 
+/* History */
+.history .segment {
+    padding: 50px;
+}
+
+.history .info h2, .history .info p  {
+    margin-bottom: 2px;
+}
+
+.history .info p:last-of-type {
+    margin-bottom: 0;
+}
+
+.history .link {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.history .link a {
+    display: inline-block;
+    margin-top: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2579,6 +2606,11 @@ label.icobutton input {
     .profile.edit .form div.divider {
         padding-top: 0;
     }
+
+    .history .link {
+        margin-top: 25px;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 575px) {
@@ -2740,6 +2772,15 @@ label.icobutton input {
     .profile.edit .submit {
         margin-top: 0;
         min-width: 220px;
+    }
+
+    .history .segment {
+        padding: 25px;
+    }
+
+    .history .link a {
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
 }
 
