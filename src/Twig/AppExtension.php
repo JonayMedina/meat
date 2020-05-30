@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Service\HistoryService;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -357,9 +358,10 @@ class AppExtension extends AbstractExtension
     /**
      * @param ShopUser $user
      * @return object|null
+     * @throws NonUniqueResultException
      */
     public function getLastOrder(ShopUser $user) {
-        return $this->orderRepository->findOneBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+        return $this->historyService->getLastOrder($user);
     }
 
     /**

@@ -2,13 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\Addressing\Address;
 use App\Entity\Order\Order;
+use Doctrine\ORM\NonUniqueResultException;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\QueryBuilder;
-use Nette\InvalidStateException;
 use App\Entity\Customer\Customer;
+use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -16,8 +16,8 @@ use Sylius\Bundle\CoreBundle\Storage\CartSessionStorage;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\CustomerReorderPlugin\Reorder\ReordererInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class HistoryService
@@ -98,6 +98,20 @@ class HistoryService
     }
 
     /**
+     * @param ShopUser $user
+     * @return int|mixed|string
+     * @throws NonUniqueResultException
+     */
+    public function getLastOrder(ShopUser $user) {
+        /** @var Order $order */
+        $order = $this->getOrderHistoryQuery($user, 1)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return $order;
+    }
+
+    /**
      * @param Order $order
      * @param Customer $customer
      * @return Order|null
@@ -136,9 +150,10 @@ class HistoryService
 
     /**
      * @param ShopUser $user
+     * @param null|int $limit
      * @return QueryBuilder
      */
-    public function getOrderHistoryQuery(ShopUser $user): QueryBuilder
+    public function getOrderHistoryQuery(ShopUser $user, $limit = null): QueryBuilder
     {
         $customer = $user->getCustomer();
 
@@ -150,6 +165,6 @@ class HistoryService
             ->setParameter('paymentState', OrderPaymentStates::STATE_PAID)
             ->orderBy('o.estimatedDeliveryDate', 'DESC')
             ->addOrderBy('o.id', 'DESC')
-            ->setMaxResults(self::HISTORY_LIMIT);
+            ->setMaxResults($limit ? $limit : self::HISTORY_LIMIT);
     }
 }
