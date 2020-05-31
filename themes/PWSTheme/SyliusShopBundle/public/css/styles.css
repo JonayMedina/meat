@@ -2208,6 +2208,32 @@ label.icobutton input {
     max-width: 15px;
 }
 
+/* Default Address */
+#defaultAddressModal {
+    padding: 0 !important;
+}
+
+#defaultAddressModal .modal-content {
+    max-width: 590px;
+    padding: 35px !important;
+}
+
+#defaultAddressModal .modal-header {
+    justify-content: flex-start !important;
+}
+
+#defaultAddressModal .modal-footer {
+    flex-direction: column;
+}
+
+#defaultAddressModal .modal-footer a, #defaultAddressModal .modal-footer button {
+    min-width: 250px;
+}
+
+#defaultAddressModal .modal-footer button {
+    margin-bottom: 15px;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
@@ -3002,6 +3028,11 @@ label.icobutton input {
         padding-right: 0;
         padding-left: 0;
         width: 100%;
+    }
+
+    #defaultAddressModal .modal-content {
+        max-width: 100%;
+        padding: 20px !important;
     }
 }
 

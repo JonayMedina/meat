@@ -197,16 +197,75 @@
             </div>
         </div>
     </div>
-    {% if order.customer.addresses|shipping|length > 0 %}
-        <div class="modal smaller fade" id="defaultAddress" tabindex="-1" role="dialog" aria-labelledby="defaultAddressLabel" aria-hidden="true">
+    {% if order.customer.defaultAddress %}
+        {% set dfAddress = order.customer.defaultAddress %}
+        <div class="modal smaller fade" id="defaultAddressModal" tabindex="-1" role="dialog" aria-labelledby="defaultAddressModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-center" id="defaultAddressLabel"></h5>
+                        <h6 class="modal-title text-center" id="defaultAddressModalLabel">{{ 'app.ui.checkout.your_order_will_be_send_to'|trans }}</h6>
                     </div>
-                    <div class="modal-body text-center"></div>
+                    <div class="modal-body text-center">
+                        <div class="row">
+                            <div class="col-12 your-info">
+                                <div class="row">
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ order.shippingAddress.fullAddress }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ order.shippingAddress.annotations }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ order.shippingAddress.phoneNumber }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y H:i:s') }}">{{ order.estimatedDeliveryDate|date('d/m/y H:i:s') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.schedule'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ order.preferredDeliveryTime|default('app.ui.checkout.order.preferred_time.none'|trans) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal-footer text-center">
-                        <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                        <button id="cleanForm" type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.edit'|trans }}</button>
+                        <a href="{{ path('sylius_shop_checkout_select_payment') }}" class="btn-rounded">{{ 'app.ui.yes_its_correct'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -219,6 +278,7 @@
         $(function () {
             let $radio = $('input[type="radio"]');
             let $showScheduled = $('#show-scheduled');
+            let $addressModal = $('#defaultAddressModal');
             let $scheduled = $('.scheduled-date');
             var $preferred = 0;
             var $modal = $('#showMessage');
@@ -267,6 +327,7 @@
                 $scheduled.find('input').val(null);
                 $scheduled.hide();
                 $showScheduled.slideDown(450);
+                estimateDate();
             });
 
             $('body').find('.to-format-date').each(function () {
@@ -291,6 +352,10 @@
 
             {% if not order.estimatedDeliveryDate %}
                 estimateDate();
+            {% endif %}
+
+            {% if order.customer.defaultAddress %}
+                $addressModal.modal('show');
             {% endif %}
 
             $('#sylius_checkout_address_preferredTime .radio').click(function () {
