@@ -363,6 +363,9 @@ class AddressBookController extends AbstractFOSRestController
      */
     private function serializeAddress(Address $address): array
     {
+        $customer = $this->getCustomer();
+        $isDefault = ($customer->getDefaultAddress() && $customer->getDefaultAddress() == $address);
+
         $serializedAddress = [
             'id' => $address->getId(),
             'ask_for' => $address->getAnnotations(),
@@ -370,6 +373,7 @@ class AddressBookController extends AbstractFOSRestController
             'phone_number' => $address->getPhoneNumber(),
             'status' => $address->getStatus(),
             'type' => $address->getType(),
+            'is_default' => $isDefault
         ];
 
         if ($address->getType() == Address::TYPE_BILLING) {
