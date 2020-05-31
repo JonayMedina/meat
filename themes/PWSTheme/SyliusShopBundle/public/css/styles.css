@@ -1815,22 +1815,22 @@ label.icobutton input {
     color: #404040;
 }
 
-.checkout .segment .item .extra p span, .checkout .segment .totals div > div .pre-title {
+.checkout .segment .item .extra p span, .checkout .segment .totals div > div .pre-title, .history .segment .totals div > div .pre-title {
     color: #ab162b;
 }
 
-.checkout .segment .item .extra p:last-of-type, .checkout .segment .totals div > div .total {
+.checkout .segment .item .extra p:last-of-type, .checkout .segment .totals div > div .total, .history .segment .totals div > div .total {
     font-family: "Raleway SemiBold", sans-serif;
 }
 
-.checkout .segment .totals div > div {
+.checkout .segment .totals div > div, .history .segment .totals div > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.checkout .segment .totals div > div:last-of-type, .checkout .segment .totals div > div p {
+.checkout .segment .totals div > div:last-of-type, .checkout .segment .totals div > div p, .history .segment .totals div > div p {
     margin-bottom: 0;
 }
 
@@ -2064,6 +2064,22 @@ label.icobutton input {
     margin-top: 0;
     padding-top: 15px;
     padding-bottom: 15px;
+}
+
+.history.show .item {
+    margin-bottom: 30px;
+}
+
+.history.show .item:last-of-type {
+    margin-bottom: 0;
+}
+
+.history.show .item .title, .history .segment .totals div > div {
+    margin-bottom: 5px;
+}
+
+.history.show .item .extra p {
+    margin-bottom: 0;
 }
 
 /* Datepicker */
@@ -2610,6 +2626,20 @@ label.icobutton input {
     .history .link {
         margin-top: 25px;
         justify-content: center;
+    }
+
+    .history.show .item {
+        margin-bottom: 0;
+    }
+
+    .history.show .item .divider {
+        display: block !important;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .history.show .item:last-of-type .divider {
+        display: none !important;
     }
 }
 
