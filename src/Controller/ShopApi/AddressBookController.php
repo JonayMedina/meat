@@ -122,6 +122,7 @@ class AddressBookController extends AbstractFOSRestController
         $type = $request->get('type');
         $taxId = $request->get('tax_id');
         $customer = $this->getCustomer();
+        $isDefault = filter_var($request->get('is_default', false), FILTER_VALIDATE_BOOLEAN);
 
         if ($type == Address::TYPE_SHIPPING && $this->countAddressByType($type) >= ShopUser::SHIPPING_ADDRESS_LIMIT) {
             $message = $this->translator->trans('api.address_book.shipping_limit_reached', ['%limit%' => ShopUser::SHIPPING_ADDRESS_LIMIT]);
@@ -178,13 +179,14 @@ class AddressBookController extends AbstractFOSRestController
         $this->entityManager->persist($address);
 
         try {
-            /** Auto validate billing address */
             if ($address->getType() == Address::TYPE_BILLING) {
-                $address->setStatus(Address::STATUS_VALIDATED);
-
                 /** Set default billing address of customer */
                 if (!$customer->getDefaultBillingAddress()) {
                     $customer->setDefaultBillingAddress($address);
+                }
+            } else {
+                if ($isDefault) {
+                    $customer->setDefaultAddress($address);
                 }
             }
 
@@ -217,6 +219,9 @@ class AddressBookController extends AbstractFOSRestController
         $fullAddress = $request->get('full_address');
         $phoneNumber = $request->get('phone_number');
         $taxId = $request->get('tax_id');
+
+        $customer = $this->getCustomer();
+        $isDefault = filter_var($request->get('is_default', false), FILTER_VALIDATE_BOOLEAN);
 
         $id = $request->get('id');
         $address = $this->entityManager->getRepository('App:Addressing\Address')->find($id);
@@ -266,6 +271,10 @@ class AddressBookController extends AbstractFOSRestController
         }
 
         try {
+            if ($isDefault) {
+                $customer->setDefaultAddress($address);
+            }
+
             $this->entityManager->flush();
 
             $statusCode = Response::HTTP_OK;
