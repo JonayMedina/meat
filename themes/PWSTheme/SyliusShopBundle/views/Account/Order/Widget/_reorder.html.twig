@@ -1,0 +1,36 @@
+<script>
+    $(function () {
+        let $reorderModal = $('#reorderMessage');
+        let $errorModal = $('#showErrorMessage');
+
+        $('.re-order').click(function () {
+            var token = $(this).attr('data-token');
+            blockPage();
+
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('store_api_reorder', { version: 1, token: token }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    let recordset = data['recordset'];
+                    $reorderModal.find('.modal-title').html(recordset['title']);
+                    $reorderModal.find('.modal-body').html(recordset['message']);
+                    localStorage.setItem('showed', 'true');
+
+                    unblockPage();
+                    $reorderModal.modal('show');
+                },
+                error: function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $errorModal.find('.modal-title').html(recordset['title']);
+                    $errorModal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $errorModal.modal('show');
+                }
+            });
+        });
+
+    });
+</script>

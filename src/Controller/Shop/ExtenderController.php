@@ -9,6 +9,9 @@ use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -125,7 +128,14 @@ class ExtenderController extends AbstractController
         return $this->render('shop/account/changeEmail.html.twig', ['user' => $user, 'form' => $form->createView(), 'errors' => $errors]);
     }
 
+    /**
+     * @param Request $request
+     * @param AddressRepositoryInterface $addressRepository
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
     public function updateCustomerAction(Request $request, AddressRepositoryInterface $addressRepository) {
+        $this->get('session')->getFlashBag()->clear();
         /** @var ShopUser $user */
         $user = $this->getUser();
         /** @var Customer $customer */
@@ -202,6 +212,18 @@ class ExtenderController extends AbstractController
         }
 
         return $this->render('@SyliusShop/Account/profileUpdate.html.twig', ['customer' => $customer,'form' => $form->createView(), 'nonAddresses' => $addresses]);
+    }
+
+    /**
+     * @param Request $request
+     * @param RedirectController $redirectController
+     * @return Response
+     */
+    public function redirectToCheckoutAddress(Request $request, RedirectController $redirectController) {
+        $this->get('session')->getFlashBag()->clear();
+        $request->getSession()->set('card', null);
+
+        return $redirectController->redirectAction($request, $request->attributes->get('route'));
     }
 
     /**

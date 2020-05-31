@@ -1815,22 +1815,22 @@ label.icobutton input {
     color: #404040;
 }
 
-.checkout .segment .item .extra p span, .checkout .segment .totals div > div .pre-title {
+.checkout .segment .item .extra p span, .checkout .segment .totals div > div .pre-title, .history .segment .totals div > div .pre-title {
     color: #ab162b;
 }
 
-.checkout .segment .item .extra p:last-of-type, .checkout .segment .totals div > div .total {
+.checkout .segment .item .extra p:last-of-type, .checkout .segment .totals div > div .total, .history .segment .totals div > div .total {
     font-family: "Raleway SemiBold", sans-serif;
 }
 
-.checkout .segment .totals div > div {
+.checkout .segment .totals div > div, .history .segment .totals div > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.checkout .segment .totals div > div:last-of-type, .checkout .segment .totals div > div p {
+.checkout .segment .totals div > div:last-of-type, .checkout .segment .totals div > div p, .history .segment .totals div > div p {
     margin-bottom: 0;
 }
 
@@ -2066,6 +2066,22 @@ label.icobutton input {
     padding-bottom: 15px;
 }
 
+.history.show .item {
+    margin-bottom: 30px;
+}
+
+.history.show .item:last-of-type {
+    margin-bottom: 0;
+}
+
+.history.show .item .title, .history .segment .totals div > div {
+    margin-bottom: 5px;
+}
+
+.history.show .item .extra p {
+    margin-bottom: 0;
+}
+
 /* Datepicker */
 .ui-datepicker {
     background: #ebe7e7;
@@ -2180,6 +2196,42 @@ label.icobutton input {
 
 .autocomplete-items > div:hover, .autocomplete-active {
     background: #FAF5F6;
+}
+
+/* Reorder Modal */
+.modal.smaller .modal-header .close {
+    top: 20px;
+    right: 20px;
+}
+
+.modal.smaller .modal-header .close img {
+    max-width: 15px;
+}
+
+/* Default Address */
+#defaultAddressModal {
+    padding: 0 !important;
+}
+
+#defaultAddressModal .modal-content {
+    max-width: 590px;
+    padding: 35px !important;
+}
+
+#defaultAddressModal .modal-header {
+    justify-content: flex-start !important;
+}
+
+#defaultAddressModal .modal-footer {
+    flex-direction: column;
+}
+
+#defaultAddressModal .modal-footer a, #defaultAddressModal .modal-footer button {
+    min-width: 250px;
+}
+
+#defaultAddressModal .modal-footer button {
+    margin-bottom: 15px;
 }
 
 /* Responsive */
@@ -2611,6 +2663,20 @@ label.icobutton input {
         margin-top: 25px;
         justify-content: center;
     }
+
+    .history.show .item {
+        margin-bottom: 0;
+    }
+
+    .history.show .item .divider {
+        display: block !important;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .history.show .item:last-of-type .divider {
+        display: none !important;
+    }
 }
 
 @media (max-width: 575px) {
@@ -2962,6 +3028,11 @@ label.icobutton input {
         padding-right: 0;
         padding-left: 0;
         width: 100%;
+    }
+
+    #defaultAddressModal .modal-content {
+        max-width: 100%;
+        padding: 20px !important;
     }
 }
 

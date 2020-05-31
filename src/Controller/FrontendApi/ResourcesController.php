@@ -7,6 +7,7 @@ use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Service\OrderService;
+use App\Service\HistoryService;
 use App\Entity\Product\Product;
 use App\Service\SettingsService;
 use App\Service\FavoriteService;
@@ -68,6 +69,9 @@ class ResourcesController extends AbstractFOSRestController
     /** @var OrderService */
     private $orderService;
 
+    /** @var HistoryService */
+    private $historyService;
+
     /**
      * ResourcesController constructor.
      * @param SenderInterface $sender
@@ -83,8 +87,9 @@ class ResourcesController extends AbstractFOSRestController
      * @param CustomerRepositoryInterface $customerRepository
      * @param EntityManagerInterface $entityManager
      * @param OrderService $orderService
+     * @param HistoryService $historyService
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager, OrderService $orderService)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager, OrderService $orderService, HistoryService $historyService)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -99,6 +104,7 @@ class ResourcesController extends AbstractFOSRestController
         $this->orderRepository = $orderRepository;
         $this->customerRepository = $customerRepository;
         $this->orderService = $orderService;
+        $this->historyService = $historyService;
     }
 
     /**
@@ -405,6 +411,7 @@ class ResourcesController extends AbstractFOSRestController
      *     options={"expose" = true}
      * )
      * @param Request $request
+     * @param string $token
      * @return Response
      */
     public function updateDeliveryTime(Request $request, $token) {
@@ -476,6 +483,70 @@ class ResourcesController extends AbstractFOSRestController
                 $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
                     'title' => $this->translator->trans('app.api.cart.estimate.error.title'),
                     'message' => $this->translator->trans('app.api.cart.estimate.error.message'),
+                ]);
+        }
+
+        $view = $this->view($data, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/reorder/{token}.{_format}",
+     *     name="store_api_reorder",
+     *     methods={"POST"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @param string $token
+     * @return Response
+     */
+    public function reorderAction(Request $request, string $token) {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        $order = $this->orderRepository->findOneBy(['tokenValue' => $token]);
+        $op = 'error';
+        $result = null;
+
+        if ($order instanceof Order) {
+            /** @var Customer $customer */
+            $customer = $user->getCustomer();
+
+            try {
+                // TODO: Check if order items had change
+                $result = $this->orderService->serializeOrder($this->historyService->reorder($order, $customer));
+                $op = 'success';
+            } catch (\Exception $e) {
+                $op = 'error';
+            }
+        } else {
+            $op = 'non-order';
+        }
+
+        switch($op){
+            case 'success':
+                $statusCode = Response::HTTP_OK;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
+                    'title' => $this->translator->trans('app.api.order.reorder.success'),
+                    'message' => $this->translator->trans('app.api.order.reorder.success.message'),
+                    'order' => $result,
+                ]);
+                break;
+            case 'non-order':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.order.reorder.error.title'),
+                    'message' => $this->translator->trans('app.api.order.reorder.error.non_exists'),
+                ]);
+                break;
+            case 'error':
+            default:
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.order.reorder.error.title'),
+                    'message' => $this->translator->trans('app.api.order.reorder.error'),
                 ]);
         }
 
