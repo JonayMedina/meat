@@ -16,6 +16,7 @@
                     let recordset = data['recordset'];
                     $reorderModal.find('.modal-title').html(recordset['title']);
                     $reorderModal.find('.modal-body').html(recordset['message']);
+                    localStorage.setItem('showed', 'true');
 
                     unblockPage();
                     $reorderModal.modal('show');
