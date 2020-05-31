@@ -25,6 +25,14 @@ class OrderExtendedController extends OrderController
 
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
+
+        /* Add estimated delivery date to the order */
+        $preferredTime = $resource->getPreferredDeliveryTime();
+        $scheduledDate = $resource->getScheduledDeliveryDate();
+        $estimated = $this->get('app.service.order')->getNextAvailableDay($preferredTime ? $preferredTime : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'), $scheduledDate ? $scheduledDate->format('Y-m-d') : "");
+        $resource->setEstimatedDeliveryDate(New DateTime($estimated));
+        $em->flush();
+
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {

@@ -411,6 +411,7 @@ class ResourcesController extends AbstractFOSRestController
      *     options={"expose" = true}
      * )
      * @param Request $request
+     * @param string $token
      * @return Response
      */
     public function updateDeliveryTime(Request $request, $token) {
