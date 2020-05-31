@@ -113,6 +113,10 @@ services:
     App\EventSubscriber\NotificationSubscriber:
         tags:
             - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\AddressSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
 
     app.factory.product.listview:
         class: App\Factory\Product\ListProductViewFactoryExtension
