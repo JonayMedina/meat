@@ -514,7 +514,8 @@ class ResourcesController extends AbstractFOSRestController
             $customer = $user->getCustomer();
 
             try {
-                $result = $this->historyService->reorder($order, $customer);
+                // TODO: Check if order items had change
+                $result = $this->orderService->serializeOrder($this->historyService->reorder($order, $customer));
                 $op = 'success';
             } catch (\Exception $e) {
                 $op = 'error';
@@ -536,7 +537,7 @@ class ResourcesController extends AbstractFOSRestController
                 $statusCode = Response::HTTP_BAD_REQUEST;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
                     'title' => $this->translator->trans('app.api.order.reorder.error.title'),
-                    'message' => $this->translator->trans('app.api.order.reorder.error.message'),
+                    'message' => $this->translator->trans('app.api.order.reorder.error.non_exists'),
                 ]);
                 break;
             case 'error':

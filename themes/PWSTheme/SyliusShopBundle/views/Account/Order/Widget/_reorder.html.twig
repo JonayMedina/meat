@@ -13,7 +13,6 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    console.log(data);
                     let recordset = data['recordset'];
                     $reorderModal.find('.modal-title').html(recordset['title']);
                     $reorderModal.find('.modal-body').html(recordset['message']);

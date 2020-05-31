@@ -2198,6 +2198,16 @@ label.icobutton input {
     background: #FAF5F6;
 }
 
+/* Reorder Modal */
+.modal.smaller .modal-header .close {
+    top: 20px;
+    right: 20px;
+}
+
+.modal.smaller .modal-header .close img {
+    max-width: 15px;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;
