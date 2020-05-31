@@ -10,6 +10,7 @@ use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Bundle\CoreBundle\Storage\CartSessionStorage;
@@ -134,6 +135,12 @@ class HistoryService
             throw new BadRequestHttpException('Esta orden no tiene una dirección de facturación');
         }
 
+        /** Kill previous carts. */
+        $orders = $this->getOrders($customer);
+        foreach ($orders as $index => $order) {
+            $this->entityManager->remove($order);
+        }
+
         try {
             /** @var Order $reorder */
             $reorder = $this->reorderer->reorder($order, $channel, $customer);
@@ -166,5 +173,27 @@ class HistoryService
             ->orderBy('o.estimatedDeliveryDate', 'DESC')
             ->addOrderBy('o.id', 'DESC')
             ->setMaxResults($limit ? $limit : self::HISTORY_LIMIT);
+    }
+
+    /**
+     * Return customer's orders.
+     * @param Customer $customer
+     * @return Order[]
+     */
+    private function getOrders(Customer $customer)
+    {
+        /** @var Order[] $orders */
+        $orders = $this->orderRepository
+            ->createQueryBuilder('o')
+            ->andWhere('o.customer = :customer')
+            ->andWhere('o.tokenValue IS NOT NULL')
+            ->andWhere('o.state = :state')
+            ->setParameter('customer', $customer)
+            ->setParameter('state', OrderInterface::STATE_CART)
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $orders;
     }
 }
