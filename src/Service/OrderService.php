@@ -207,6 +207,8 @@ class OrderService
             'shipping_state' => $order->getShippingState(),
             'rating' => $order->getRating(),
             'rating_comment' => $order->getRatingComment(),
+            'shipping_address' => $order->getShippingAddress(),
+            'billing_address' => $order->getBillingAddress(),
         ];
     }
 
