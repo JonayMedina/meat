@@ -60,21 +60,13 @@ class NotificationSubscriber implements EventSubscriber
                 $deviceIds[] = $device->getKey();
             }
 
-            if (count($deviceIds) > 0) {
-                $response = $this->fcmService->send([
-                    'title' => $entity->getTitle(),
-                    'body' => $entity->getText()
-                ], [
-                    'type' => $entity->getType(),
-                    'notification_id' => $entity->getId(),
-                ], $deviceIds);
-            } else {
-                $response[] = [
-                    'result' => [
-                        'message' => 'No devices found for this user.'
-                    ]
-                ];
-            }
+            $response = $this->fcmService->send([
+                'title' => $entity->getTitle(),
+                'body' => $entity->getText()
+            ], [
+                'type' => $entity->getType(),
+                'notification_id' => $entity->getId(),
+            ], $deviceIds);
 
             $entity->setResponse($response);
             $this->entityManager->flush();
