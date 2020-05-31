@@ -196,6 +196,20 @@
         </div>
     </div>
 
+    <div class="modal smaller fade" id="reorderMessage" tabindex="-1" role="dialog" aria-labelledby="reorderMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="reorderMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded d-inline-block">{{ 'app.ui.go_to_cart'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal smaller add-favorites fade" id="showCartModal" tabindex="-1" role="dialog" aria-labelledby="showCartModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

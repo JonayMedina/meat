@@ -132,7 +132,7 @@
                 <div class="col-12 d-flex flex-wrap justify-content-between align-items-center">
                     <h2 class="mb-0">{{  'app.ui.checkout.order.summary'|trans }}</h2>
                     <a class="d-block d-sm-block d-md-none" data-toggle="collapse" href="#items-collapse" role="button" aria-expanded="true" aria-controls="items-collapse"><i class="fas fa-angle-up fa-2x"></i></a>
-                    <a class="re-order d-none d-md-inline-block btn-rounded mt-0">{{ 'app.ui.buy_back'|trans }}</a>
+                    <a class="re-order d-none d-md-inline-block btn-rounded mt-0" data-token="{{ order.tokenValue }}">{{ 'app.ui.buy_back'|trans }}</a>
                 </div>
                 <div class="col-12 mt-4">
                     <div class="divider"></div>
@@ -174,7 +174,7 @@
                             <p class="total">{{ money.convertAndFormat(order.total) }}</p>
                         </div>
                         <div class="col-12 justify-content-center">
-                            <a class="re-order d-inline-block d-md-none btn-rounded">{{ 'app.ui.buy_back'|trans }}</a>
+                            <a class="re-order d-inline-block d-md-none btn-rounded" data-token="{{ order.tokenValue }}">{{ 'app.ui.buy_back'|trans }}</a>
                         </div>
                     </div>
                 </div>
@@ -182,4 +182,7 @@
         </div>
         {{ sonata_block_render_event('sylius.shop.account.order.show.after_summary', {'order': order}) }}
     </div>
+{% endblock %}
+{% block extrajs %}
+    {% include '@SyliusShop/Account/Order/Widget/_reorder.html.twig'%}
 {% endblock %}
