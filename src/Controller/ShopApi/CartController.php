@@ -2,6 +2,8 @@
 
 namespace App\Controller\ShopApi;
 
+use App\Entity\Addressing\Address;
+use App\Entity\Customer\Customer;
 use Carbon\Carbon;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
@@ -10,9 +12,12 @@ use App\Service\OrderService;
 use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Promotion\PromotionCoupon;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\ShopApiPlugin\Controller\Cart\AddCouponAction;
@@ -50,6 +55,11 @@ class CartController extends AbstractFOSRestController
     private $orderService;
 
     /**
+     * @var AddressRepository
+     */
+    private $addressRepository;
+
+    /**
      * CartController constructor.
      * @param OrderRepository $repository
      * @param PromotionCouponRepository $couponRepository
@@ -57,8 +67,9 @@ class CartController extends AbstractFOSRestController
      * @param TranslatorInterface $translator
      * @param EntityManagerInterface $entityManager
      * @param OrderService $orderService
+     * @param AddressRepository $addressRepository
      */
-    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderService $orderService)
+    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderService $orderService, AddressRepository $addressRepository)
     {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
@@ -66,6 +77,7 @@ class CartController extends AbstractFOSRestController
         $this->translator = $translator;
         $this->entityManager = $entityManager;
         $this->orderService = $orderService;
+        $this->addressRepository = $addressRepository;
     }
 
     /**
@@ -99,6 +111,64 @@ class CartController extends AbstractFOSRestController
 
             return $this->handleView($view);
         }
+    }
+
+    /**
+     * @Route(
+     *     "/{token}/address.{_format}",
+     *     name="shop_api_cart_add_address",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @param string $token
+     * @return Response
+     */
+    public function addAddressAction(Request $request, $token)
+    {
+        $statusCode = Response::HTTP_OK;
+        $response = [];
+
+        $addressId = $request->get('address_id');
+        $type = $request->get('type');
+
+        $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        /** @var Address $address */
+        $address = $this->addressRepository->find($addressId);
+
+        if (!in_array($type, [Address::TYPE_BILLING, Address::TYPE_SHIPPING])) {
+            throw new BadRequestHttpException('Bad address type');
+        }
+
+        if (!$cart instanceof Order) {
+            throw new NotFoundHttpException('Cart not found.');
+        }
+
+        /** @var Customer $customer */
+        $customer = $cart->getCustomer();
+
+        if (!$address instanceof Address || $address->getCustomer() !== $customer) {
+            throw new NotFoundHttpException('Address not found.');
+        }
+
+        $addressCloned = clone $address;
+        $addressCloned->setCustomer(null);
+
+        if (Address::TYPE_BILLING == $type) {
+            $cart->setBillingAddress($addressCloned);
+        }
+
+        if (Address::TYPE_SHIPPING == $type) {
+            $cart->setShippingAddress($addressCloned);
+        }
+
+        $this->entityManager->persist($addressCloned);
+        $this->entityManager->flush();
+
+        $response = $this->orderService->serializeOrder($cart);
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
     }
 
     /**
