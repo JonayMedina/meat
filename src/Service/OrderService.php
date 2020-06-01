@@ -361,8 +361,12 @@ class OrderService
      * @param AddressInterface $address
      * @return array
      */
-    private function serializeAddress(AddressInterface $address): array
+    private function serializeAddress(?AddressInterface $address): array
     {
+        if ($address == null) {
+            return [];
+        }
+
         /** @var Address $address */
         $object = [
             'id' => $address->getId(),
