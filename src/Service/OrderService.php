@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Addressing\Address;
 use Carbon\Carbon;
 use App\Entity\Holiday;
 use App\Entity\AboutStore;
@@ -14,6 +15,7 @@ use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use Doctrine\ORM\NonUniqueResultException;
+use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
@@ -207,8 +209,8 @@ class OrderService
             'shipping_state' => $order->getShippingState(),
             'rating' => $order->getRating(),
             'rating_comment' => $order->getRatingComment(),
-            //'shipping_address' => $order->getShippingAddress(),
-            //'billing_address' => $order->getBillingAddress(),
+            'shipping_address' => $this->serializeAddress($order->getShippingAddress()),
+            'billing_address' => $this->serializeAddress($order->getBillingAddress()),
         ];
     }
 
@@ -353,5 +355,28 @@ class OrderService
             ->getResult();
 
         return $orders;
+    }
+
+    /**
+     * @param AddressInterface $address
+     * @return array
+     */
+    private function serializeAddress(AddressInterface $address): array
+    {
+        /** @var Address $address */
+        $object = [
+            'id' => $address->getId(),
+            'ask_for' => $address->getAnnotations(),
+            'full_address' => $address->getFullAddress(),
+            'phone_number' => $address->getPhoneNumber(),
+            'status' => $address->getStatus(),
+            'type' => $address->getType(),
+        ];
+
+        if (Address::TYPE_BILLING == $address->getType()) {
+            $object['tax_id'] = $address->getTaxId();
+        }
+
+        return $object;
     }
 }
