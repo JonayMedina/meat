@@ -1998,7 +1998,7 @@ label.icobutton input {
     margin-right: 0;
 }
 
-.payment .warning {
+.checkout-address .warning, .billing .warning, .payment .warning {
     font-family: "Raleway SemiBold", sans-serif;
     color: #ab162b !important;
 }

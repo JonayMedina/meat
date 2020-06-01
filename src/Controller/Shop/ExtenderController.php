@@ -3,24 +3,24 @@
 namespace App\Controller\Shop;
 
 use DateTime;
+use Exception;
 use App\Entity\User\ShopUser;
 use App\Entity\Customer\Customer;
 use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
-use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sylius\Component\Mailer\Sender\SenderInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 
 class ExtenderController extends AbstractController
 {
@@ -221,6 +221,7 @@ class ExtenderController extends AbstractController
      */
     public function redirectToCheckoutAddress(Request $request, RedirectController $redirectController) {
         $this->get('session')->getFlashBag()->clear();
+        $request->getSession()->set('payment', null);
         $request->getSession()->set('card', null);
 
         return $redirectController->redirectAction($request, $request->attributes->get('route'));
