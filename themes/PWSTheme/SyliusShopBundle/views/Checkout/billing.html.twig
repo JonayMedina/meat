@@ -94,7 +94,6 @@
                                     </div>
                                     <div class="col-12">
                                         {{ form_start(form, {'action': path('sylius_shop_checkout_billing'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-                                        {#                        {{ form_errors(form) }}#}
                                         <input type="hidden" name="_method" value="PUT" />
 
                                         {% include '@SyliusShop/Checkout/Billing/_form.html.twig' %}
