@@ -244,7 +244,7 @@ class PaymentGatewayService
      */
     public function cashOnDelivery(Order $order): array
     {
-        if ($order->getState() != OrderInterface::STATE_NEW) {
+        if ($order->getState() != OrderInterface::STATE_CART) {
             throw new AccessDeniedHttpException('Invalid cart state.');
         }
 
@@ -302,7 +302,7 @@ class PaymentGatewayService
 
     public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
     {
-        if ($order->getState() != OrderInterface::STATE_NEW) {
+        if ($order->getState() != OrderInterface::STATE_CART) {
             throw new AccessDeniedHttpException('Invalid cart state.');
         }
 
