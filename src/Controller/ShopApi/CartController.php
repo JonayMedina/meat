@@ -217,6 +217,7 @@ class CartController extends AbstractFOSRestController
      * @param Request $request
      * @param PaymentGatewayService $paymentService
      * @return Response
+     * @throws \SM\SMException
      */
     public function payAction(Request $request, PaymentGatewayService $paymentService) {
         $token = $request->get('token');
@@ -225,28 +226,43 @@ class CartController extends AbstractFOSRestController
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
 
-        $cardHolder = $request->get('card_holder');
-        $cardNumber = $request->get('card_number');
-        $expDate = $request->get('exp_date');
-        $cvv = $request->get('cvv');
+        $type = $request->get('type');
 
-        $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+        if ('credit_card' == $type) {
+            $cardHolder = $request->get('card_holder');
+            $cardNumber = $request->get('card_number');
+            $expDate = $request->get('exp_date');
+            $cvv = $request->get('cvv');
 
-        if ('00' !== $result['responseCode']) {
-            $statusCode = Response::HTTP_BAD_REQUEST;
+            $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+
+            if ('00' !== $result['responseCode']) {
+                $statusCode = Response::HTTP_BAD_REQUEST;
+            }
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
+
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
         }
 
-        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
+        if ('cash_on_delivery' == $type) {
+            $result = $paymentService->cashOnDelivery($order);
 
-        $view = $this->view($response, $statusCode);
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['message'] ?? '', $result);
+            $view = $this->view($response, $statusCode);
 
-        return $this->handleView($view);
+            return $this->handleView($view);
+        }
+
+        throw new BadRequestHttpException('Invalid payment type');
     }
 
     /**
      * @Route(
      *     "/{token}/schedule-my-delivery.{_format}",
-     *     name="shop_api_pay_cart",
+     *     name="shop_api_schedule_my_delivery",
      *     methods={"POST"}
      * )
      * @param Request $request

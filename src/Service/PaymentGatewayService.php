@@ -237,6 +237,69 @@ class PaymentGatewayService
         $this->merchantPasswd = $epayMerchantPassword;
     }
 
+    /**
+     * @param Order $order
+     * @return array|string[]
+     * @throws \SM\SMException
+     */
+    public function cashOnDelivery(Order $order): array
+    {
+        if ($order->getState() != OrderInterface::STATE_NEW) {
+            throw new AccessDeniedHttpException('Invalid cart state.');
+        }
+
+        if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
+            throw new AccessDeniedHttpException('This cart is already paid.');
+        }
+
+        $response = [
+            'message' => 'Ok.'
+        ];
+
+        $amount = $order->getTotal();
+        $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
+
+        if (!$paymentMethod instanceof PaymentMethod) {
+            throw new AccessDeniedHttpException('Cash on delivery is not enabled.');
+        }
+
+        /** Get Currency */
+        $currency = $this->currencyContext->getCurrencyCode();
+
+        /**
+         * Register payment in sylius.
+         * @var Payment $payment
+         */
+        $payment = $this->paymentFactory->createNew();
+
+        $payment->setOrder($order);
+        $payment->setDetails([]);
+        $payment->setCurrencyCode($currency);
+        $payment->setMethod($paymentMethod);
+        $payment->setAmount($amount);
+
+        /** cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
+
+        /** new -> complete */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+
+        $this->paymentRepository->add($payment);
+
+        /** Mark as paid */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+
+        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+
+        $this->entityManager->flush();
+
+        return $response;
+    }
+
     public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
     {
         if ($order->getState() != OrderInterface::STATE_NEW) {
@@ -700,6 +763,16 @@ class PaymentGatewayService
         $this->auditNumber = $this->generateAuditNumber();
 
         return $this;
+    }
+
+    private function getCashOnDeliveryPaymentMethod(): PaymentMethod
+    {
+        $code = 'cash_on_delivery';
+
+        /** @var PaymentMethod $paymentMethod */
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+
+        return $paymentMethod;
     }
 
     /**
