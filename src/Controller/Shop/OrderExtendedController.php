@@ -2,9 +2,9 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\User\ShopUser;
 use DateTime;
 use App\Entity\Order\Order;
+use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
@@ -104,7 +104,9 @@ class OrderExtendedController extends OrderController
                 $customerBillingAddress->setFirstName($billingAddress->getFirstName());
                 $customerBillingAddress->setFullAddress($billingAddress->getFullAddress());
                 $customerBillingAddress->setTaxId($billingAddress->getTaxId());
+                $customerBillingAddress->setCustomer($customer);
                 $customerBillingAddress->setType(Address::TYPE_BILLING);
+                $customerBillingAddress->setStatus(Address::STATUS_VALIDATED);
 
                 $em->persist($customerBillingAddress);
 
