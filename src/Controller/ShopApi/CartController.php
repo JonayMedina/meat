@@ -319,6 +319,7 @@ class CartController extends AbstractFOSRestController
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
+        $order->setPreferredDeliveryTime($preferredDeliveryDate);
         $this->entityManager->flush();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [

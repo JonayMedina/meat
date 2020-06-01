@@ -302,20 +302,28 @@ class PaymentGatewayService
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
 
-        /** cart -> new */
+        /** Order: cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+
+        /** Payment: cart -> new */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
 
-        /** new -> complete */
+        /** Payment: new -> complete */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
 
         $this->paymentRepository->add($payment);
 
-        /** Mark as paid */
+        /**
+         * Mark as paid
+         * OrderPayment: cart -> awaiting_payment
+         */
         $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
         $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
+        /** awaiting_payment -> paid */
         $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
         $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
 

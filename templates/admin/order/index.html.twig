@@ -136,7 +136,7 @@
                                             {{ order.deliverDate|default('app.ui.n/a'|trans) }}
                                         </td>
                                         <td>
-                                            {{ order.deliverTime|default('app.ui.n/a'|trans) }}
+                                            {{ order.preferredDeliveryTime|default('app.ui.n/a'|trans) }}
                                         </td>
                                         <td>
                                             <h4>{{ order.total|price|number_format_currency(currency) }}</h4>
