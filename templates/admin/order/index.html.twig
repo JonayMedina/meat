@@ -133,7 +133,11 @@
                                         </td>
                                         <td>{{ order.customerName }}</td>
                                         <td>
-                                            {{ order.deliverDate|default('app.ui.n/a'|trans) }}
+                                            {% if order.estimatedDeliveryDate %}
+                                                {{ order.estimatedDeliveryDate|localizeddate("full", "none") }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
+                                            {% endif %}
                                         </td>
                                         <td>
                                             {{ order.preferredDeliveryTime|default('app.ui.n/a'|trans) }}

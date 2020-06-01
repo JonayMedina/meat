@@ -239,60 +239,68 @@ class CartController extends AbstractFOSRestController
         $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
-        /** @var Order $order */
-        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+        try {
+            /** @var Order $order */
+            $order = $this->repository->findOneBy(['tokenValue' => $token]);
 
-        if (!$order instanceof Order) {
-            throw new NotFoundHttpException('Cart not found');
-        }
-
-        $aboutStore = $this->aboutStoreRepository->findLatest();
-
-        if (($order->getTotal()/100) > $aboutStore->getMaximumPurchaseValue()) {
-            throw new BadRequestHttpException('La orden excede el máximo permitido.');
-        }
-
-        if (($order->getTotal()/100) < $aboutStore->getMinimumPurchaseValue()) {
-            throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
-        }
-
-        $type = $request->get('type');
-
-        if ('credit_card' == $type) {
-            $cardHolder = trim($request->get('card_holder'));
-            $cardNumber = trim($request->get('card_number'));
-            $expDate = trim($request->get('exp_date'));
-            $cvv = trim($request->get('cvv'));
-
-            $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
-
-            if ('00' !== $result['responseCode']) {
-                $statusCode = Response::HTTP_BAD_REQUEST;
+            if (!$order instanceof Order) {
+                throw new NotFoundHttpException('Cart not found');
             }
 
-            /** Inject order into response */
-            $result['order'] = $this->orderService->serializeOrder($order);
+            $aboutStore = $this->aboutStoreRepository->findLatest();
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
+            if (($order->getTotal()/100) > $aboutStore->getMaximumPurchaseValue()) {
+                throw new BadRequestHttpException('La orden excede el máximo permitido.');
+            }
 
+            if (($order->getTotal()/100) < $aboutStore->getMinimumPurchaseValue()) {
+                throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
+            }
+
+            $type = $request->get('type');
+
+            if ('credit_card' == $type) {
+                $cardHolder = trim($request->get('card_holder'));
+                $cardNumber = trim($request->get('card_number'));
+                $expDate = trim($request->get('exp_date'));
+                $cvv = trim($request->get('cvv'));
+
+                $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+
+                if ('00' !== $result['responseCode']) {
+                    $statusCode = Response::HTTP_BAD_REQUEST;
+                }
+
+                /** Inject order into response */
+                $result['order'] = $this->orderService->serializeOrder($order);
+
+                $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
+
+                $view = $this->view($response, $statusCode);
+
+                return $this->handleView($view);
+            }
+
+            if ('cash_on_delivery' == $type) {
+                $result = $paymentService->cashOnDelivery($order);
+
+                /** Inject order into response */
+                $result['order'] = $this->orderService->serializeOrder($order);
+
+                $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
+                $view = $this->view($response, $statusCode);
+
+                return $this->handleView($view);
+            }
+
+            throw new BadRequestHttpException('Invalid payment type');
+        } catch (\Exception $exception) {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage(), []);
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
         }
-
-        if ('cash_on_delivery' == $type) {
-            $result = $paymentService->cashOnDelivery($order);
-
-            /** Inject order into response */
-            $result['order'] = $this->orderService->serializeOrder($order);
-
-            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
-            $view = $this->view($response, $statusCode);
-
-            return $this->handleView($view);
-        }
-
-        throw new BadRequestHttpException('Invalid payment type');
     }
 
     /**
