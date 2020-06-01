@@ -9,6 +9,7 @@ use App\Entity\Payment\Payment;
 use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use SM\Factory\Factory;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
@@ -197,6 +198,11 @@ class PaymentGatewayService
     private $stateMachineFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * PaymentGatewayService constructor.
      * @param AboutStoreRepository $repository
      * @param EntityManagerInterface $entityManager
@@ -207,14 +213,31 @@ class PaymentGatewayService
      * @param ChannelContextInterface $channelContext
      * @param CurrencyContextInterface $currencyContext
      * @param Factory $stateMachineFactory
+     * @param LoggerInterface $logger
      * @param $epayGateWayIP
      * @param $epayTerminalID
      * @param $epayMerchant
      * @param $epayMerchantUser
      * @param $epayMerchantPassword
      */
-    public function __construct(AboutStoreRepository $repository, EntityManagerInterface $entityManager, PaymentFactoryInterface $paymentFactory, PaymentRepository $paymentRepository, PaymentMethodFactoryInterface $paymentMethodFactory, PaymentMethodRepository $paymentMethodRepository, ChannelContextInterface $channelContext, CurrencyContextInterface $currencyContext, Factory $stateMachineFactory, $epayGateWayIP, $epayTerminalID, $epayMerchant, $epayMerchantUser, $epayMerchantPassword)
-    {
+    public function __construct(
+        AboutStoreRepository $repository,
+        EntityManagerInterface $entityManager,
+        PaymentFactoryInterface $paymentFactory,
+        PaymentRepository $paymentRepository,
+        PaymentMethodFactoryInterface $paymentMethodFactory,
+        PaymentMethodRepository $paymentMethodRepository,
+        ChannelContextInterface $channelContext,
+        CurrencyContextInterface $currencyContext,
+        Factory $stateMachineFactory,
+        LoggerInterface $logger,
+        $epayGateWayIP,
+        $epayTerminalID,
+        $epayMerchant,
+        $epayMerchantUser,
+        $epayMerchantPassword
+    ) {
+        $this->logger = $logger;
         $this->repository = $repository;
         $this->entityManager = $entityManager;
         $this->paymentFactory = $paymentFactory;
@@ -303,11 +326,11 @@ class PaymentGatewayService
     public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
     {
         if ($order->getState() != OrderInterface::STATE_CART) {
-            throw new AccessDeniedHttpException('Invalid cart state.');
+            throw new BadRequestHttpException('Invalid cart state.');
         }
 
         if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
-            throw new AccessDeniedHttpException('This cart is already paid.');
+            throw new BadRequestHttpException('This cart is already paid.');
         }
 
         $amount = $order->getTotal();
@@ -351,13 +374,26 @@ class PaymentGatewayService
 
         /** Mark as paid */
         if ('00' === $response['responseCode']) {
-            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+            try {
+                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
-            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
 
-            $this->entityManager->flush();
+                $this->entityManager->flush();
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+
+                /** Reverse transaction */
+                $response = $this->reverse($amount, $cardNumber, $expDate, $cvv);
+
+                $response['responseCode'] = 404;
+                $response['response']['responseMessage'] = 'We cannot fulfill this cart';
+                $response['response']['cardHolder'] = $cardHolder;
+                $response['response']['cardNumber'] = $this->maskCreditCard($cardNumber);
+                $response['response']['dateTime'] = date('c');
+            }
         }
 
         return $response;
@@ -382,9 +418,23 @@ class PaymentGatewayService
         return $response['response'];
     }
 
+    /**
+     * @param $amount
+     * @param $cardNumber
+     * @param $expDate
+     * @param $cvv
+     * @return array
+     */
     public function reverse($amount, $cardNumber, $expDate, $cvv)
     {
-        // TODO: Implement a reverse method configuration here.
+        return $this
+            ->configureReverse()
+            ->configureAuditNumber()
+            ->setPan($cardNumber)
+            ->setExpDate($expDate)
+            ->setAmount($amount)
+            ->setCvv2($cvv)
+            ->request();
     }
 
     /**
@@ -752,7 +802,7 @@ class PaymentGatewayService
      * @return string
      */
     private function maskCreditCard($number, $maskingCharacter = 'X') {
-        return chunk_split(str_repeat($maskingCharacter, strlen($number) - 4) . substr($number, -4), 4, ' ');
+        return trim(chunk_split(str_repeat($maskingCharacter, strlen($number) - 4) . substr($number, -4), 4, ' '));
     }
 
     /**

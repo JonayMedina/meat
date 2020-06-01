@@ -229,10 +229,10 @@ class CartController extends AbstractFOSRestController
         $type = $request->get('type');
 
         if ('credit_card' == $type) {
-            $cardHolder = $request->get('card_holder');
-            $cardNumber = $request->get('card_number');
-            $expDate = $request->get('exp_date');
-            $cvv = $request->get('cvv');
+            $cardHolder = trim($request->get('card_holder'));
+            $cardNumber = trim($request->get('card_number'));
+            $expDate = trim($request->get('exp_date'));
+            $cvv = trim($request->get('cvv'));
 
             $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
 
