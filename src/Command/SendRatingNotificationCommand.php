@@ -62,7 +62,7 @@ class SendRatingNotificationCommand extends Command
             $user = $order->getUser();
 
             if ($user instanceof ShopUser) {
-                $notification = new Notification(null, $user, '', '', PushNotification::TYPE_RATE_ORDER);
+                $notification = new Notification(null, $user, 'Califica nuestro servicio.', 'Califica nuestro servicio respondiendo estas dos breves preguntas.', PushNotification::TYPE_RATE_ORDER);
                 $this->entityManager->persist($notification);
             }
 
