@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Addressing\Address;
 use App\Entity\Order\Order;
+use App\Service\AddressService;
 use Doctrine\ORM\QueryBuilder;
 use Psr\Log\LoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -295,6 +297,24 @@ class OrderController extends AbstractController
             'order' => $order,
             'currency' => $currencyContext->getCurrencyCode(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param AddressService $addressService
+     * @return Response
+     * @Route("/order/{id}/validate", name="orders_validate_address", options={"expose" = "true"})
+     */
+    public function validateAddress(Request $request, AddressService $addressService)
+    {
+        $id = $request->get('id');
+        /** @var Order $order */
+        $order = $this->entityManager->getRepository('App:Order\Order')->find($id);
+        /** @var Address $address */
+        $address = $order->getShippingAddress();
+        $addressService->validate($address);
+
+        return $this->redirectToRoute('orders_show',  ['id' => $id]);
     }
 
     /**

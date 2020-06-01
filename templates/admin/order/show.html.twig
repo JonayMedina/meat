@@ -127,6 +127,15 @@
                     </div>
                     {% endif %}
                 </div>
+                <div class="text-right">
+                    {% if order.shippingAddress and order.shippingAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_PENDING') %}
+                    <a href="{{ path('orders_validate_address', {'id': order.id}) }}" class="btn btn-primary" style="width: 300px;">
+                        <i class="fa fa-user-check"></i>
+                        &nbsp;
+                        {{ 'app.ui.validate_this_address'|trans }}
+                    </a>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="col-lg-4">
