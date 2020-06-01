@@ -5,6 +5,7 @@ namespace App\Twig;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use App\Entity\Holiday;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
@@ -17,6 +18,7 @@ use App\Service\SettingsService;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use App\Entity\Promotion\Promotion;
+use App\Repository\HolidayRepository;
 use Twig\Extension\AbstractExtension;
 use App\Repository\FavoriteRepository;
 use App\Entity\Channel\ChannelPricing;
@@ -79,6 +81,9 @@ class AppExtension extends AbstractExtension
     /** @var HistoryService */
     private $historyService;
 
+    /** @var HolidayRepository */
+    private $holidayRepository;
+
     /**
      * AppExtension constructor.
      * @param ContainerInterface $container
@@ -91,8 +96,9 @@ class AppExtension extends AbstractExtension
      * @param OrderRepositoryInterface $orderRepository
      * @param FavoriteRepository $favoriteRepository
      * @param HistoryService $historyService
+     * @param HolidayRepository $holidayRepository
      */
-    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository, HistoryService $historyService)
+    public function __construct(ContainerInterface $container, UploaderHelper $uploaderHelper, SettingsService $settingsService, TranslatorInterface $translator, FavoriteService $favoriteService, TokenStorageInterface $tokenStorage, ChannelContextInterface $channelContext, OrderRepositoryInterface $orderRepository, FavoriteRepository $favoriteRepository, HistoryService $historyService, HolidayRepository $holidayRepository)
     {
         $this->container = $container;
         $this->uploaderHelper = $uploaderHelper;
@@ -104,6 +110,7 @@ class AppExtension extends AbstractExtension
         $this->orderRepository = $orderRepository;
         $this->favoriteRepository = $favoriteRepository;
         $this->historyService = $historyService;
+        $this->holidayRepository = $holidayRepository;
     }
 
     /**
@@ -139,6 +146,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('last_order', [$this, 'getLastOrder']),
             new TwigFunction('connected_to_provider', [$this, 'isConnectedToProvider']),
             new TwigFunction('get_history', [$this, 'getOrders']),
+            new TwigFunction('get_holidays', [$this, 'getHolidays']),
         ];
     }
 
@@ -336,7 +344,7 @@ class AppExtension extends AbstractExtension
         /** @var Address $address1 */
         $address1 = $addresses[0];
         /** @var Customer $customer */
-        $customer = $address1->getCustomer();
+        $customer = $this->getUser()->getCustomer();
         $default = $customer->getDefaultAddress();
         $new = [];
 
@@ -404,5 +412,12 @@ class AppExtension extends AbstractExtension
      */
     public function getOrders(ShopUser $user) {
         return $this->historyService->getOrderHistory($user);
+    }
+
+    /**
+     * @return Holiday[]
+     */
+    public function getHolidays() {
+        return $this->holidayRepository->findAll();
     }
 }

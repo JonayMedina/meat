@@ -326,8 +326,15 @@
             let $phoneNumber = $('#sylius_checkout_address_shippingAddress_phoneNumber');
             let $addAddress = $('#address-add-change');
             let $firstAddress = $('.dropdown .dropdown-item:first-of-type');
+            let $newAddressMsg = $('.new-address-message');
             let currentAddresses = {{ order.customer.addresses|shipping|length|e('js') }};
             let limit = {{ constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')|e('js') }};
+            {% set holidays = get_holidays() %}
+            var unavailableDates = [
+                {% for holiday in holidays %}
+                "{{ holiday.date|date('d-m-Y') }}",
+                {% endfor %}
+            ];
             moment.locale('es');
 
             {% if order.preferredDeliveryTime %}
@@ -403,7 +410,7 @@
                     $(this).html('{{ 'app.ui.checkout.add_new_address'|trans }}');
                     $addressInput.hide();
                     $addressDropdown.fadeIn(450);
-
+                    $newAddressMsg.hide();
                     selectAddress($('.dropdown-item.selected'));
                 } else {
                     if (currentAddresses < limit) {
@@ -412,6 +419,7 @@
                         $addressDropdown.hide();
                         $addressInput.fadeIn(450);
                         $extraData.fadeIn(450);
+                        $newAddressMsg.fadeIn(450);
                         $annotations.val(null);
                         $phoneNumber.val(null);
                         $(this).addClass('choose');
@@ -497,10 +505,23 @@
             min.setDate(today.getDate() + 1);
             max.setDate(today.getDate() + {{ about_store('days-to-choose')|default(0)|e('js') }});
 
+            function unavailable(date) {
+                var day = date.getDate() < 9 ? "0" + date.getDate() : date.getDate();
+                var month = (date.getMonth() + 1) < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+                var dmy = day + "-" + month + "-" + date.getFullYear();
+
+                if (!unavailableDates.includes(dmy)) {
+                    return [true, ""];
+                } else {
+                    return [false, "", "Unavailable"];
+                }
+            }
+
             $('.datepicker').datepicker({
                 minDate: min,
-                maxDate: max
-            });
+                maxDate: max,
+                beforeShowDay: unavailable
+            }).attr('autocomplete', 'off');
 
             $('#sylius_checkout_address_differentBillingAddress').prop('checked', true).change();
 

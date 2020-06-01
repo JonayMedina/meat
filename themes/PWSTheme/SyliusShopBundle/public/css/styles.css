@@ -1922,6 +1922,7 @@ label.icobutton input {
 }
 
 .checkout.checkout-address form .dropdown .dropdown-menu {
+    width: 100%;
     max-width: calc(100% - 20px);
     margin-left: 10px;
     margin-right: 10px;
