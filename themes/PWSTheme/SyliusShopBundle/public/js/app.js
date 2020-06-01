@@ -94,3 +94,7 @@ function autocomplete(inp, arr) {
     closeAllLists(e.target);
   });
 }
+
+function firstToUpper(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}

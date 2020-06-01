@@ -1,9 +1,28 @@
-{{ form_row(form.fullAddress) }}
-{{ form_row(form.annotations) }}
-{{ form_row(form.phoneNumber) }}
+<div class="field">
+    <div class="add-addresses d-flex justify-content-between align-items-center">
+        {{ form_label(form.fullAddress) }}
+        <a id="address-add-change" class="text-underline-i">{{ 'app.ui.checkout.add_new_address'|trans }}</a>
+    </div>
+
+    {% include '@SyliusShop/Checkout/Address/_addressBookSelect.html.twig' %}
+
+    <div class="address-input" {% if order.customer.addresses|shipping|length > 0 %}style="display: none"{% endif %}>
+        {{ form_widget(form.fullAddress) }}
+    </div>
+
+    <small>{{ form_help(form.fullAddress) }}</small>
+    <div class="form-error">
+        {{ form_errors(form.fullAddress) }}
+    </div>
+</div>
+
+<div class="extra-data" {% if order.customer.addresses|shipping|length > 0 %}style="display: none"{% endif %}>
+    {{ form_row(form.annotations) }}
+    {{ form_row(form.phoneNumber) }}
+</div>
 
 {% if is_granted("ROLE_USER") %}
     {% if not has_orders(app.user) %}
-        <p class="mh-color">{{ about_store('first-purchase-ms')|default('app.ui.checkout.order.phone.message'|trans) }}</p>
+        <p class="mh-color mt-3">{{ about_store('first-purchase-ms')|default('app.ui.checkout.order.phone.message'|trans) }}</p>
     {% endif %}
 {% endif %}
