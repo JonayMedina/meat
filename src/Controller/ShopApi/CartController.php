@@ -270,6 +270,9 @@ class CartController extends AbstractFOSRestController
                 $statusCode = Response::HTTP_BAD_REQUEST;
             }
 
+            /** Inject order into response */
+            $result['order'] = $this->orderService->serializeOrder($order);
+
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
 
             $view = $this->view($response, $statusCode);
@@ -279,6 +282,9 @@ class CartController extends AbstractFOSRestController
 
         if ('cash_on_delivery' == $type) {
             $result = $paymentService->cashOnDelivery($order);
+
+            /** Inject order into response */
+            $result['order'] = $this->orderService->serializeOrder($order);
 
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['message'] ?? '', $result);
             $view = $this->view($response, $statusCode);
