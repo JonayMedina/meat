@@ -268,11 +268,11 @@ class PaymentGatewayService
     public function cashOnDelivery(Order $order): array
     {
         if ($order->getState() != OrderInterface::STATE_CART) {
-            throw new AccessDeniedHttpException('Invalid cart state.');
+            throw new BadRequestHttpException('Invalid cart state.');
         }
 
         if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
-            throw new AccessDeniedHttpException('This cart is already paid.');
+            throw new BadRequestHttpException('This cart is already paid.');
         }
 
         $response = [
