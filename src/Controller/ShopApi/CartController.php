@@ -146,7 +146,7 @@ class CartController extends AbstractFOSRestController
         /** @var Customer $customer */
         $customer = $cart->getCustomer();
 
-        if (!$address instanceof Address || $address->getCustomer() !== $customer) {
+        if (!$address instanceof Address || $address->getCustomer()->getId() != $customer->getId()) {
             throw new NotFoundHttpException('Address not found.');
         }
 
