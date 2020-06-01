@@ -30,6 +30,14 @@ class PushNotification implements ResourceInterface
 
     const PROMOTION_TYPE_BANNER = 'banner';
 
+    const TYPE_RATE_ORDER = 'order_delivered';
+
+    const TYPE_ORDER_SHIPPED = 'order_shipped';
+
+    const TYPE_ADDRESS_VALIDATED = 'address_validated';
+
+    const TYPE_ADDRESS_REJECTED = 'address_rejected';
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

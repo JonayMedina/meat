@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Entity\Order;
 
 use DateTime;
+use App\Entity\Notification;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\Customer;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Core\Model\Order as BaseOrder;
 use Sylius\Component\Shipping\Model\ShipmentInterface;
@@ -67,6 +70,26 @@ class Order extends BaseOrder
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $scheduledDeliveryDate;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="App\Entity\Notification",
+     *     mappedBy="order"
+     * )
+     */
+    private $notifications;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $ratingNotificationSent = false;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->notifications = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -239,6 +262,56 @@ class Order extends BaseOrder
     public function setScheduledDeliveryDate(?DateTime $scheduledDeliveryDate): Order
     {
         $this->scheduledDeliveryDate = $scheduledDeliveryDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Notification[]
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): self
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications[] = $notification;
+            $notification->setOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): self
+    {
+        if ($this->notifications->contains($notification)) {
+            $this->notifications->removeElement($notification);
+            // set the owning side to null (unless already changed)
+            if ($notification->getOrder() === $this) {
+                $notification->setOrder(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRatingNotificationSent(): ?bool
+    {
+        return $this->ratingNotificationSent;
+    }
+
+    /**
+     * @param bool $ratingNotificationSent
+     * @return Order
+     */
+    public function setRatingNotificationSent(?bool $ratingNotificationSent): Order
+    {
+        $this->ratingNotificationSent = $ratingNotificationSent;
 
         return $this;
     }

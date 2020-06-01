@@ -17,6 +17,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\OrderPaymentStates;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
@@ -348,8 +349,16 @@ class OrderService
             ->andWhere('o.customer = :customer')
             ->andWhere('o.tokenValue IS NOT NULL')
             ->andWhere('o.state = :state')
+            ->andWhere('o.paymentState NOT IN (:paymentStatuses)')
             ->setParameter('customer', $user->getCustomer())
             ->setParameter('state', OrderInterface::STATE_CART)
+            ->setParameter('paymentStatuses', [
+                OrderPaymentStates::STATE_PAID,
+                OrderPaymentStates::STATE_CANCELLED,
+                OrderPaymentStates::STATE_REFUNDED,
+                OrderPaymentStates::STATE_PARTIALLY_REFUNDED,
+                OrderPaymentStates::STATE_AWAITING_PAYMENT,
+            ])
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
@@ -361,8 +370,12 @@ class OrderService
      * @param AddressInterface $address
      * @return array
      */
-    private function serializeAddress(AddressInterface $address): array
+    private function serializeAddress(?AddressInterface $address): array
     {
+        if ($address == null) {
+            return [];
+        }
+
         /** @var Address $address */
         $object = [
             'id' => $address->getId(),

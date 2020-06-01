@@ -19,6 +19,7 @@ use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Order\OrderTransitions;
 use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
 use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\Request;
@@ -268,11 +269,11 @@ class PaymentGatewayService
     public function cashOnDelivery(Order $order): array
     {
         if ($order->getState() != OrderInterface::STATE_CART) {
-            throw new AccessDeniedHttpException('Invalid cart state.');
+            throw new BadRequestHttpException('Invalid cart state.');
         }
 
         if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
-            throw new AccessDeniedHttpException('This cart is already paid.');
+            throw new BadRequestHttpException('This cart is already paid.');
         }
 
         $response = [
@@ -362,11 +363,15 @@ class PaymentGatewayService
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
 
-        /** cart -> new */
+        /** Order: cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+
+        /** Payment: cart -> new */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
 
-        /** new -> complete */
+        /** Payment: new -> complete */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
 
@@ -375,9 +380,12 @@ class PaymentGatewayService
         /** Mark as paid */
         if ('00' === $response['responseCode']) {
             try {
+
+                /** PaymentState: cart -> awaiting_payment */
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
                 $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
+                /** PaymentState: awaiting_payment -> paid */
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
                 $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
 
@@ -387,6 +395,10 @@ class PaymentGatewayService
 
                 /** Reverse transaction */
                 $response = $this->reverse($amount, $cardNumber, $expDate, $cvv);
+
+                /** PaymentState: paid -> refunded */
+                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REFUND);
 
                 $response['responseCode'] = 404;
                 $response['response']['responseMessage'] = 'We cannot fulfill this cart';

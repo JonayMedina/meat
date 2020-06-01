@@ -6,6 +6,7 @@ use App\Entity\Notification;
 use App\Entity\Product\Product;
 use App\Entity\Product\ProductVariant;
 use App\Entity\PushNotification;
+use App\Service\OrderService;
 use App\Service\ProductService;
 use Psr\Log\LoggerInterface;
 use App\Pagination\PaginationFactory;
@@ -47,17 +48,30 @@ class NotificationController extends AbstractFOSRestController
     private $productService;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
      * NotificationController constructor.
      * @param NotificationRepository $repository
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
+     * @param ProductService $productService
+     * @param OrderService $orderService
      */
-    public function __construct(NotificationRepository $repository, EntityManagerInterface $entityManager, LoggerInterface $logger, ProductService $productService)
-    {
+    public function __construct(
+        NotificationRepository $repository,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        ProductService $productService,
+        OrderService $orderService
+    ) {
         $this->entityManager = $entityManager;
         $this->repository = $repository;
         $this->logger = $logger;
         $this->productService = $productService;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -223,6 +237,11 @@ class NotificationController extends AbstractFOSRestController
 
         /** @var PushNotification $pushNotification */
         $pushNotification = $notification->getPushNotification();
+
+        if (($notification->getType() == PushNotification::TYPE_RATE_ORDER || $notification->getType() == PushNotification::TYPE_ORDER_SHIPPED) && $notification->getOrder()) {
+            $order = $notification->getOrder();
+            $object['order'] = $this->orderService->serializeOrder($order);
+        }
 
         if ($notification->getType() == PushNotification::TYPE_PROMOTION && $pushNotification->getPromotionType() == PushNotification::PROMOTION_TYPE_BANNER) {
             $banner = $pushNotification->getPromotionBanner();

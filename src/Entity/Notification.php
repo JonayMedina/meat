@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Model\BlameableTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -84,6 +85,19 @@ class Notification implements ResourceInterface
      * )
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="App\Entity\Order\Order",
+     *     inversedBy="notifications"
+     * )
+     * @ORM\JoinColumn(
+     *     name="order_id",
+     *     referencedColumnName="id",
+     *     nullable=true
+     * )
+     */
+    private $order;
 
     /**
      * Notification constructor.
@@ -245,6 +259,23 @@ class Notification implements ResourceInterface
     public function setUser($user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getSeen(): ?bool
+    {
+        return $this->seen;
+    }
+
+    public function getOrder(): ?Order
+    {
+        return $this->order;
+    }
+
+    public function setOrder(?Order $order): self
+    {
+        $this->order = $order;
 
         return $this;
     }

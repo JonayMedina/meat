@@ -4,6 +4,7 @@ namespace App\Controller\ShopApi;
 
 use App\Entity\Addressing\Address;
 use App\Entity\Customer\Customer;
+use App\Repository\AboutStoreRepository;
 use Carbon\Carbon;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
@@ -60,6 +61,11 @@ class CartController extends AbstractFOSRestController
     private $addressRepository;
 
     /**
+     * @var AboutStoreRepository
+     */
+    private $aboutStoreRepository;
+
+    /**
      * CartController constructor.
      * @param OrderRepository $repository
      * @param PromotionCouponRepository $couponRepository
@@ -68,9 +74,18 @@ class CartController extends AbstractFOSRestController
      * @param EntityManagerInterface $entityManager
      * @param OrderService $orderService
      * @param AddressRepository $addressRepository
+     * @param AboutStoreRepository $aboutStoreRepository
      */
-    public function __construct(OrderRepository $repository, PromotionCouponRepository $couponRepository, AddCouponAction $addCouponAction, TranslatorInterface $translator, EntityManagerInterface $entityManager, OrderService $orderService, AddressRepository $addressRepository)
-    {
+    public function __construct(
+        OrderRepository $repository,
+        PromotionCouponRepository $couponRepository,
+        AddCouponAction $addCouponAction,
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        OrderService $orderService,
+        AddressRepository $addressRepository,
+        AboutStoreRepository $aboutStoreRepository
+    ) {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
         $this->addCouponAction = $addCouponAction;
@@ -78,6 +93,7 @@ class CartController extends AbstractFOSRestController
         $this->entityManager = $entityManager;
         $this->orderService = $orderService;
         $this->addressRepository = $addressRepository;
+        $this->aboutStoreRepository = $aboutStoreRepository;
     }
 
     /**
@@ -146,7 +162,7 @@ class CartController extends AbstractFOSRestController
         /** @var Customer $customer */
         $customer = $cart->getCustomer();
 
-        if (!$address instanceof Address || $address->getCustomer() !== $customer) {
+        if (!$address instanceof Address || $address->getCustomer()->getId() != $customer->getId()) {
             throw new NotFoundHttpException('Address not found.');
         }
 
@@ -226,6 +242,20 @@ class CartController extends AbstractFOSRestController
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
 
+        if (!$order instanceof Order) {
+            throw new NotFoundHttpException('Cart not found');
+        }
+
+        $aboutStore = $this->aboutStoreRepository->findLatest();
+
+        if (($order->getTotal()/100) > $aboutStore->getMaximumPurchaseValue()) {
+            throw new BadRequestHttpException('La orden excede el máximo permitido.');
+        }
+
+        if (($order->getTotal()/100) < $aboutStore->getMinimumPurchaseValue()) {
+            throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
+        }
+
         $type = $request->get('type');
 
         if ('credit_card' == $type) {
@@ -240,7 +270,10 @@ class CartController extends AbstractFOSRestController
                 $statusCode = Response::HTTP_BAD_REQUEST;
             }
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
+            /** Inject order into response */
+            $result['order'] = $this->orderService->serializeOrder($order);
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
 
             $view = $this->view($response, $statusCode);
 
@@ -250,7 +283,10 @@ class CartController extends AbstractFOSRestController
         if ('cash_on_delivery' == $type) {
             $result = $paymentService->cashOnDelivery($order);
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['message'] ?? '', $result);
+            /** Inject order into response */
+            $result['order'] = $this->orderService->serializeOrder($order);
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
