@@ -54,7 +54,17 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $users = $this->getUsers($pushNotification);
 
         foreach ($users as $user) {
-            $notification = new Notification($pushNotification, $user, $pushNotification->getTitle(), $pushNotification->getDescription(), $pushNotification->getType());
+            $type = $pushNotification->getPromotionType();
+
+            if (empty($type)) {
+                $type = $pushNotification->getType();
+            }
+
+            if ($type == 'banner') {
+                $type = 'promotion';
+            }
+
+            $notification = new Notification($pushNotification, $user, $pushNotification->getTitle(), $pushNotification->getDescription(), $type);
             $this->entityManager->persist($notification);
             $this->entityManager->flush();
         }
