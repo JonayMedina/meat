@@ -349,7 +349,7 @@ class OrderService
             ->andWhere('o.customer = :customer')
             ->andWhere('o.tokenValue IS NOT NULL')
             ->andWhere('o.state = :state')
-            ->andWhere('o.paymentStatus NOT IN (:paymentStatuses)')
+            ->andWhere('o.paymentState NOT IN (:paymentStatuses)')
             ->setParameter('customer', $user->getCustomer())
             ->setParameter('state', OrderInterface::STATE_CART)
             ->setParameter('paymentStatuses', [
