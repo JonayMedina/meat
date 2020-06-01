@@ -93,11 +93,11 @@ class AddressService
 
             if ($parentAddress instanceof Address) {
                 $this->validate($parentAddress);
-            }
 
-            /** Find children and enable those addresses. */
-            foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
-                $this->validate($childrenAddress);
+                /** Find children and enable those addresses. */
+                foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
+                    $this->validate($childrenAddress);
+                }
             }
         }
     }
