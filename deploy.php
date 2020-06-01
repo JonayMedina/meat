@@ -12,13 +12,13 @@ require 'recipe/sentry.php';
 set('application', 'Meat House');
 
 /** Symfony shared dirs */
-set('shared_dirs', ['var/logs', 'public/uploads', 'public/media', 'public/assets', 'public/bundles', 'node_modules', 'config/jwt']);
+set('shared_dirs', ['var/log', 'public/uploads', 'public/media', 'public/assets', 'public/bundles', 'node_modules', 'config/jwt']);
 
 /** Symfony shared files */
 set('shared_files', ['.env.local']);
 
 /** Symfony writable dirs */
-set('writable_dirs', ['var/cache', 'var/logs', 'public/uploads', 'public/media']);
+set('writable_dirs', ['var/cache', 'var/log', 'public/uploads', 'public/media']);
 
 /** Project repository */
 set('repository', 'git@bitbucket.org:bakingthecookie/meathouse-ecommerce.git');

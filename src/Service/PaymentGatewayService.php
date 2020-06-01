@@ -302,20 +302,28 @@ class PaymentGatewayService
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
 
-        /** cart -> new */
+        /** Order: cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+
+        /** Payment: cart -> new */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
 
-        /** new -> complete */
+        /** Payment: new -> complete */
         $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
         $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
 
         $this->paymentRepository->add($payment);
 
-        /** Mark as paid */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+        /**
+         * Mark as paid
+         * OrderPayment: cart -> awaiting_payment
+         */
+//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
+        /** awaiting_payment -> paid */
         $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
         $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
 
@@ -351,39 +359,38 @@ class PaymentGatewayService
         /** Get Currency */
         $currency = $this->currencyContext->getCurrencyCode();
 
-        /**
-         * Register payment in sylius.
-         * @var Payment $payment
-         */
-        $payment = $this->paymentFactory->createNew();
-
-        $payment->setOrder($order);
-        $payment->setDetails($response);
-        $payment->setCurrencyCode($currency);
-        $payment->setMethod($paymentMethod);
-        $payment->setAmount($amount);
-
-        /** Order: cart -> new */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
-
-        /** Payment: cart -> new */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-        $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
-
-        /** Payment: new -> complete */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-        $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
-
-        $this->paymentRepository->add($payment);
-
         /** Mark as paid */
         if ('00' === $response['responseCode']) {
             try {
+                /**
+                 * Register payment in sylius.
+                 * @var Payment $payment
+                 */
+                $payment = $this->paymentFactory->createNew();
+
+                $payment->setOrder($order);
+                $payment->setDetails($response);
+                $payment->setCurrencyCode($currency);
+                $payment->setMethod($paymentMethod);
+                $payment->setAmount($amount);
+
+                /** Order: cart -> new */
+                $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+                $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+
+                /** Payment: cart -> new */
+                $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+                $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
+
+                /** Payment: new -> complete */
+                $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+                $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+
+                $this->paymentRepository->add($payment);
 
                 /** PaymentState: cart -> awaiting_payment */
-                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+//                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+//                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
                 /** PaymentState: awaiting_payment -> paid */
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
