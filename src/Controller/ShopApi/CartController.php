@@ -273,7 +273,7 @@ class CartController extends AbstractFOSRestController
             /** Inject order into response */
             $result['order'] = $this->orderService->serializeOrder($order);
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['responseMessage'], $result);
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
 
             $view = $this->view($response, $statusCode);
 
@@ -286,7 +286,7 @@ class CartController extends AbstractFOSRestController
             /** Inject order into response */
             $result['order'] = $this->orderService->serializeOrder($order);
 
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $result['message'] ?? '', $result);
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
