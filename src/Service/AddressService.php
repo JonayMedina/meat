@@ -85,7 +85,7 @@ class AddressService
 
             if (!$user instanceof ShopUser) {
                 $user = $this->entityManager->getRepository('App:User\ShopUser')
-                    ->findOneBy(['email' => $address->getCreatedBy()]);
+                    ->findOneBy(['username' => $address->getCreatedBy()]);
             }
 
             if ($user instanceof ShopUser) {
