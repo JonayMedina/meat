@@ -1,8 +1,8 @@
 {% extends '@SyliusShop/layout.html.twig' %}
+{% set history = get_history(app.user) %}
 
 {% block extracontent %}
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_content_header', {'orders': orders}) }}
-    {% set history = get_history(app.user) %}
 
     <div class="row profile history pt-4">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 xs-mb-0">
@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-8 info">
                             <h2>{{  'app.ui.history.order#%number%'|trans({'%number%' : order.number}) }}</h2>
-                            <p>{{ 'app.ui.history.performed_on_%date%'|trans({'%date%': order.checkoutCompletedAt|date('d/m/y')}) }}</p>
+                            <p>{{ 'app.ui.history.performed_on_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m-d-y H:i:s') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
                             <p>{{ order.shippingAddress.fullAddress }}</p>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 link">
@@ -39,5 +39,22 @@
     </div>
 
     {{ sonata_block_render_event('sylius.shop.account.order.index.after_grid', {'orders': orders}) }}
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            moment.locale('es');
+
+            {% if history|length > 0 %}
+                $('body').find('.to-format-date').each(function () {
+                    var $input = $(this);
+                    var date = $input.data('date');
+
+                    $input.text(moment(date).format('LL'));
+                });
+            {% endif %}
+        });
+    </script>
 {% endblock %}
 

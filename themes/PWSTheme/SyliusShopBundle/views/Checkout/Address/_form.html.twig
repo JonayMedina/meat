@@ -1,5 +1,4 @@
 <div id="sylius-shipping-address">
-{#    {% include '@SyliusShop/Checkout/Address/_addressBookSelect.html.twig' %}#}
     {% include '@SyliusShop/Common/Form/_address.html.twig' with {'form': form.shippingAddress, 'order': order} %}
 
     <a id="show-scheduled" class="mt-3 mb-3" {% if order.scheduledDeliveryDate %}style="display: none"{% endif %}>{{ 'app.ui.checkout.order.schedule'|trans }}</a>

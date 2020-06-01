@@ -3,8 +3,6 @@
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
 {% block extracontent %}
-{#    {% include '@SyliusShop/Checkout/_steps.html.twig' %}#}
-
     {{ sonata_block_render_event('sylius.shop.checkout.address.after_steps', {'order': order}) }}
 
     <div class="row profile pt-4 checkout checkout-address">
@@ -30,7 +28,6 @@
                                     </div>
                                     <div class="col-12">
                                         {{ form_start(form, {'action': path('sylius_shop_checkout_address'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
-                                        {#                        {{ form_errors(form) }}#}
                                         <input type="hidden" name="_method" value="PUT" />
 
                                         {% include '@SyliusShop/Checkout/Address/_form.html.twig' %}
@@ -215,7 +212,7 @@
                                                 <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-8 col-lg-7">
-                                                <p>{{ order.shippingAddress.fullAddress }}</p>
+                                                <p>{{ dfAddress.fullAddress }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -225,7 +222,7 @@
                                                 <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-8 col-lg-7">
-                                                <p>{{ order.shippingAddress.annotations }}</p>
+                                                <p>{{ dfAddress.annotations }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -235,7 +232,7 @@
                                                 <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-8 col-lg-7">
-                                                <p>{{ order.shippingAddress.phoneNumber }}</p>
+                                                <p>{{ dfAddress.phoneNumber }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -245,7 +242,7 @@
                                                 <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-8 col-lg-7">
-                                                <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y H:i:s') }}">{{ order.estimatedDeliveryDate|date('d/m/y H:i:s') }}</p>
+                                                <p class="to-format-date-without-time" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -271,18 +268,61 @@
             </div>
         </div>
     {% endif %}
+
+    {% if order.customer.addresses|shipping|length > 0  %}
+        <div class="modal smaller fade" id="deleteAddressModal" tabindex="-1" role="dialog" aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-center" id="deleteAddressModalLabel">{{ 'app.ui.checkout.address.limit'|trans }}</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <p>{{ 'app.ui.checkout.address.limit.instructions'|trans }}</p>
+                            <div class="col-12 list">
+                                {% for address in order.customer.addresses|shipping %}
+                                    <div class="radio">
+                                        <input type="radio" name="delete_address" value="{{ address.id }}">
+                                        <label><p>{{ address.fullAddress }}</p></label>
+                                        <span class="check-mark"></span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <p class="error-message mt-4 mh-color" style="display: none">{{ 'app.ui.checkout.address.delete.select_one_address'|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button id="cleanForm" type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.cancel'|trans }}</button>
+                        <a id="delete-address" class="btn-rounded">{{ 'app.ui.account.delete_address'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block extrajs %}
     <script>
         $(function () {
+            let $body = $('body');
             let $radio = $('input[type="radio"]');
             let $showScheduled = $('#show-scheduled');
             let $addressModal = $('#defaultAddressModal');
+            let $deleteAddressModal = $('#deleteAddressModal');
             let $scheduled = $('.scheduled-date');
             var $preferred = 0;
             var $modal = $('#showMessage');
+            let $extraData = $('.extra-data');
+            let $addressDropdown = $('#addressDropdown');
+            let $addressInput = $('.address-input');
             let $scheduledInput = $('#sylius_checkout_address_scheduledDate');
+            let $fullAddress = $('#sylius_checkout_address_shippingAddress_fullAddress');
+            let $annotations = $('#sylius_checkout_address_shippingAddress_annotations');
+            let $phoneNumber = $('#sylius_checkout_address_shippingAddress_phoneNumber');
+            let $addAddress = $('#address-add-change');
+            let $firstAddress = $('.dropdown .dropdown-item:first-of-type');
+            let currentAddresses = {{ order.customer.addresses|shipping|length|e('js') }};
+            let limit = {{ constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')|e('js') }};
             moment.locale('es');
 
             {% if order.preferredDeliveryTime %}
@@ -330,12 +370,122 @@
                 estimateDate();
             });
 
-            $('body').find('.to-format-date').each(function () {
+            $body.find('.to-format-date').each(function () {
                 var $input = $(this);
                 var date = $input.data('date');
 
                 $input.text(moment(date).format('LLLL'));
             });
+
+            $body.find('.to-format-date-without-time').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
+            });
+
+            $firstAddress.addClass('selected');
+
+            $('.dropdown-item').click(function () {
+                selectAddress($(this));
+            });
+
+            $('.dropdown-item i').tooltip();
+
+            $addAddress.click(function () {
+                if ($(this).hasClass('choose')) {
+                    $(this).removeClass('choose');
+                    $(this).html('{{ 'app.ui.checkout.add_new_address'|trans }}');
+                    $addressInput.hide();
+                    $addressDropdown.fadeIn(450);
+
+                    selectAddress($('.dropdown-item.selected'));
+                } else {
+                    if (currentAddresses < limit) {
+                        $(this).html('{{ 'app.ui.checkout.choose_address'|trans }}');
+                        $fullAddress.val(null);
+                        $addressDropdown.hide();
+                        $addressInput.fadeIn(450);
+                        $extraData.fadeIn(450);
+                        $annotations.val(null);
+                        $phoneNumber.val(null);
+                    } else {
+                        $deleteAddressModal.modal('show');
+                    }
+
+                    $(this).addClass('choose');
+                }
+            });
+
+            if ($('#sylius-shipping-address').find('.sylius-validation-error').length > 0) {
+                $addAddress.trigger('click');
+            } else {
+                selectAddress($firstAddress, true);
+            }
+
+            $deleteAddressModal.find('.radio').click(function () {
+                $deleteAddressModal.find('.radio input').removeClass('checked');
+                $(this).find('input').addClass('checked');
+            });
+
+            $('#delete-address').click(function (evt) {
+                evt.preventDefault();
+
+                if ($deleteAddressModal.find('input.checked').length > 0) {
+                    $deleteAddressModal.find('.error-message').hide();
+
+                    deleteAddress($deleteAddressModal.find('input.checked'));
+                } else {
+                    $deleteAddressModal.find('.error-message').fadeIn(450);
+                }
+            });
+
+            function selectAddress($this, notShow = false) {
+                $('.dropdown .dropdown-item').removeClass('selected');
+                $this.addClass('selected');
+
+                $this.closest('.dropdown').find('button span').html($this.data('full-address'));
+                $fullAddress.val($this.data('full-address'));
+                $annotations.val($this.data('annotations'));
+                $phoneNumber.val($this.data('phone-number'));
+
+                if (!notShow) {
+                    $extraData.fadeIn(450);
+                }
+            }
+
+            function deleteAddress($input) {
+                var id = $input.val();
+
+                $deleteAddressModal.modal('hide');
+                blockPage();
+                $.ajax({
+                    url: Routing.generate("store_api_address_delete", { version: 1 }),
+                    data: JSON.stringify({
+                        address: id
+                    }),
+                    method: "DELETE",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function () {
+                    $addressDropdown.find('.address-' + id).remove();
+                    currentAddresses--;
+                    $addAddress.trigger('click');
+                    $('.dropdown-item').removeClass('selected');
+                    $('.dropdown-item:first-of-type').addClass('selected');
+
+                    unblockPage();
+                })
+                .fail(function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                });
+            }
 
             var today = new Date();
             var min = new Date();

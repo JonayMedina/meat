@@ -892,3 +892,11 @@ app.api.order.reorder.success.changed.message: 'Hay algúnos productos que se ac
 app.ui.go_to_cart: 'Ir al carrito'
 app.ui.checkout.your_order_will_be_send_to: 'Tu orden se enviará a:'
 app.ui.yes_its_correct: 'Sí, es correcto'
+app.ui.checkout.add_new_address: 'Agregar nueva dirección'
+app.ui.checkout.choose_address: 'Escoger una guardada'
+app.ui.address.status.pending: Pendiente
+app.ui.address.status.validated: Validada
+app.ui.address.status.rejected: Rechazada
+app.ui.checkout.address.limit: 'Has alcanzado tu límite de direcciones por perfil'
+app.ui.checkout.address.limit.instructions: 'Para agregar una por favor elige cuál de estas direcciones deseas eliminar'
+app.ui.checkout.address.delete.select_one_address: 'Debes seleccionar una dirección para eleminar'
