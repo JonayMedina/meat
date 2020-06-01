@@ -2,28 +2,30 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\Order\Order;
-use App\Service\PaymentGatewayService;
 use DateTime;
 use Exception;
+use SM\SMException;
+use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Customer\Customer;
 use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
-use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use App\Service\PaymentGatewayService;
+use Sylius\Component\Core\OrderCheckoutStates;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
+use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
 
 class ExtenderController extends AbstractController
 {
@@ -34,8 +36,7 @@ class ExtenderController extends AbstractController
      * ExtenderController constructor.
      * @param UserRepositoryInterface $userRepository
      */
-    public function __construct(UserRepositoryInterface $userRepository)
-    {
+    public function __construct(UserRepositoryInterface $userRepository) {
         $this->userRepository = $userRepository;
     }
 
@@ -44,11 +45,8 @@ class ExtenderController extends AbstractController
      * @param FavoriteRepository $favoriteRepository
      * @return Response
      */
-    public function favoritesAction(FavoriteRepository $favoriteRepository)
-    {
-        /**
-         * @var ShopUser $user
-         */
+    public function favoritesAction(FavoriteRepository $favoriteRepository) {
+        /** @var ShopUser $user */
         $user = $this->getUser();
 
         return $this->render('shop/account/favorites.html.twig', ['favorites' => $favoriteRepository->findBy(['shopUser' => $user])]);
@@ -233,25 +231,80 @@ class ExtenderController extends AbstractController
     /**
      * @param Request $request
      * @param string $tokenValue
+     * @param OrderRepositoryInterface $orderRepository
+     * @param PaymentGatewayService $paymentGateway
+     * @return RedirectResponse
+     * @throws SMException
      */
-    public function payOrderAction(Request $request, $tokenValue, OrderRepositoryInterface $orderRepository, PaymentGatewayService $paymentGateway) {
-        $payment = $request->getSession()->get('payment');
-        $card = $request->getSession()->get('card');
+    public function payOrderAction(Request $request, $tokenValue, OrderRepositoryInterface $orderRepository, PaymentGatewayService $paymentGateway, SenderInterface $sender) {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $payment = $session->get('payment');
+        $card = $session->get('card');
         $order = $orderRepository->findOneBy(['tokenValue' => $tokenValue]);
-
-        dump($card);
 
         if ($order instanceof Order) {
             $order->setState(Order::STATE_CART);
+
             if ($payment == 'card') {
-                $expDate = explode("/", $card['expirationDate']);
-                $result = $paymentGateway->orderPayment($order, $card['name'], $card['number'], $expDate[1].$expDate[0], $card['cvv']);
+                $expDate = explode("/", str_replace(" ", "", $card['expirationDate']));
+                $formattedDate = $expDate[1].$expDate[0];
+                $result = $paymentGateway->orderPayment($order, $card['name'], str_replace(" ", "", $card['number']), $formattedDate, $card['cvv']);
+
+                if ($result['responseCode'] == "00") {
+                    $session->set('tokenValue', $order->getTokenValue());
+                    $session->set('payment', null);
+                    $session->set('card', null);
+                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                    return $this->redirectToRoute('sylius_shop_order_thank_you');
+                } else {
+                    $order->setCheckoutState(OrderCheckoutStates::STATE_PAYMENT_SELECTED);
+                    $em->flush();
+
+                    return $this->redirectToRoute('sylius_shop_checkout_complete', ['error' => $result['responseCode']]);
+                }
             } else {
                 $result = $paymentGateway->cashOnDelivery($order);
-            }
 
-            dump($result);
-            exit;
+                if ($result['message']) {
+                    $session->set('tokenValue', $order->getTokenValue());
+                    $session->set('payment', null);
+                    $session->set('card', null);
+                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                    return $this->redirectToRoute('sylius_shop_order_thank_you');
+                } else {
+                    $order->setCheckoutState(OrderCheckoutStates::STATE_PAYMENT_SELECTED);
+                    $em->flush();
+
+                    return $this->redirectToRoute('sylius_shop_checkout_complete', ['error' => true]);
+                }
+            }
+        } else {
+            return $this->redirectToRoute('sylius_shop_cart_summary', ['error' => true]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param OrderRepositoryInterface $orderRepository
+     * @return RedirectResponse|Response
+     */
+    public function thankYouAction(Request $request, OrderRepositoryInterface $orderRepository) {
+        $session = $request->getSession();
+
+        if ($session->get('tokenValue')) {
+            $order = $orderRepository->findOneBy(['tokenValue' => $session->get('tokenValue')]);
+            $session->set('tokenValue', null);
+
+            if ($order instanceof Order) {
+                return $this->render('@SyliusShop/Order/thankYou.html.twig', ['order' => $order]);
+            } else {
+                return $this->redirectToRoute('sylius_shop_homepage');
+            }
+        } else {
+            return $this->redirectToRoute('sylius_shop_homepage');
         }
     }
 

@@ -222,6 +222,19 @@
             </div>
         </div>
     </div>
+    <div class="modal smaller fade" id="showResponseModal" tabindex="-1" role="dialog" aria-labelledby="showErrorMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showErrorMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
@@ -230,6 +243,7 @@
         $(function () {
             var $body = $('body');
             let $radio = $('input[type="radio"]');
+            let $modal = $('#showResponseModal');
             moment.locale('es');
 
             if ($radio.closest('div.radio').find('label').length <=0 ) {
@@ -253,6 +267,19 @@
 
                 $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
             });
+
+            if (getParameterByName('error')) {
+                var error = getParameterByName('error');
+
+                $modal.find('.modal-title').html('{{ 'app.ui.payment.response.error'|trans }}');
+                if (error !== '1') {
+                    $modal.find('.modal-body').html(getPaymentResponse(error));
+                } else {
+                    $modal.find('.modal-body').html('{{ 'app.ui.payment.response.error.message'|trans }}');
+                }
+
+                $modal.modal('show');
+            }
         });
     </script>
 {% endblock %}

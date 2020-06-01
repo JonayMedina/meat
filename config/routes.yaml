@@ -252,6 +252,14 @@ sylius_shop_order_pay:
             redirect:
                 route: sylius_shop_order_after_pay
                 
+sylius_shop_order_thank_you:
+    path: /thank-you
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:thankYouAction
+        _sylius:
+            template: "@SyliusShop/Order/thankYou.html.twig"
+                
 sylius_shop_cart_save:
     path: /cart
     methods: [PUT, PATCH]

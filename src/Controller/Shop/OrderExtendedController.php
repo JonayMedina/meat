@@ -28,6 +28,12 @@ class OrderExtendedController extends OrderController
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
 
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+
+        /** @var Customer $customer */
+        $customer = $user->getCustomer();
+
         /* Add estimated delivery date to the order */
         if ($resource->getPreferredDeliveryTime()) {
             $preferredTime = $resource->getPreferredDeliveryTime();
@@ -43,8 +49,13 @@ class OrderExtendedController extends OrderController
 
         $estimated = $this->get('app.service.order')->getNextAvailableDay($preferredTime, $scheduled);
         $resource->setEstimatedDeliveryDate(New DateTime($estimated));
-        $em->flush();
 
+        /* Add customer to order if this doesn't have */
+        if (!$resource->getCustomer()) {
+            $resource->setCustomer($customer);
+        }
+
+        $em->flush();
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
@@ -80,9 +91,6 @@ class OrderExtendedController extends OrderController
                 }
             }
 
-            /** @var Customer $customer */
-            $customer = $resource->getCustomer();
-
             /** @var Address $shippingAddress */
             $shippingAddress = $resource->getShippingAddress();
             $shippingAddress->setType(Address::TYPE_SHIPPING);
@@ -93,6 +101,7 @@ class OrderExtendedController extends OrderController
             $billingAddress = $resource->getBillingAddress();
             $billingAddress->setType(Address::TYPE_BILLING);
 
+            /* Clone shipping address to customer if the limit is not reached yet */
             if (count($this->getShippingAddresses($customer)) < ShopUser::SHIPPING_ADDRESS_LIMIT) {
                 $customerShippingAddress = new Address();
                 $customerShippingAddress->setAnnotations($shippingAddress->getAnnotations());
@@ -104,11 +113,13 @@ class OrderExtendedController extends OrderController
 
                 $em->persist($customerShippingAddress);
 
+                /* If customer doesn't have default shipping address add the cloned address */
                 if (!$customer->getDefaultAddress()) {
                     $customer->setDefaultAddress($customerShippingAddress);
                 }
             }
 
+            /* Clone billing address to customer if this doesn't have */
             if (!$customer->getDefaultBillingAddress()) {
                 $customerBillingAddress = new Address();
                 $customerBillingAddress->setFirstName($billingAddress->getFirstName());
@@ -204,7 +215,6 @@ class OrderExtendedController extends OrderController
 
     public function billingAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
@@ -306,12 +316,16 @@ class OrderExtendedController extends OrderController
         $cardType = $paymentType == 'card';
         $this->get('session')->set('payment', $paymentType);
 
-        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $cardType) {
-            if ($form->handleRequest($request)->isValid()) {
-                $resource = $form->getData();
-                $card = $request->request->get('payment_card_checkout');
+        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
+            if ($paymentType) {
+                if ($cardType) {
+                    if ($form->handleRequest($request)->isValid()) {
+                        $resource = $form->getData();
+                        $card = $request->request->get('payment_card_checkout');
 
-                $this->get('session')->set('card', $card);
+                        $this->get('session')->set('card', $card);
+                    }
+                }
 
                 $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
@@ -362,9 +376,9 @@ class OrderExtendedController extends OrderController
                 if (null !== $postEventResponse) {
                     return $postEventResponse;
                 }
-
-                return $this->redirectHandler->redirectToResource($configuration, $resource);
             }
+
+            return $this->redirectHandler->redirectToResource($configuration, $resource);
         }
 
         if (!$configuration->isHtmlRequest()) {
