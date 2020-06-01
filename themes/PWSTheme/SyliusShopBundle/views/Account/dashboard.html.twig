@@ -376,7 +376,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 text-center">
-                                        <a class="btn-rounded d-inline-block">{{ 'app.ui.buy_back'|trans }}</a>
+                                        <a class="re-order btn-rounded d-inline-block" data-token="{{ lastOrder.tokenValue }}">{{ 'app.ui.buy_back'|trans }}</a>
                                     </div>
                                 </div>
                             </div>
@@ -405,6 +405,7 @@
 {% endblock %}
 
 {% block extrajs %}
+    {% include '@SyliusShop/Account/Order/Widget/_reorder.html.twig'%}
     <script>
         $(function () {
             let $showMessage = $('#showMessage');
