@@ -83,6 +83,11 @@ class AddressService
         if ($customer instanceof Customer) {
             $user = $customer->getUser();
 
+            if (!$user instanceof ShopUser) {
+                $user = $this->entityManager->getRepository('App:User\ShopUser')
+                    ->findOneBy(['email' => $address->getCreatedBy()]);
+            }
+
             if ($user instanceof ShopUser) {
                 $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
                 $this->entityManager->persist($notification);
