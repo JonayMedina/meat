@@ -433,6 +433,10 @@
                 }, doneTypingInterval);
             });
 
+            $('.block-page').click(function () {
+                blockPage();
+            });
+
             function initSearch() {
                 var suggestions = [];
                 var url = '{{ path('shop_api_search', {'term': 'term-val'}) }}';

@@ -390,9 +390,9 @@
 
                 function calculateSubtotal($form) {
                     var quantity = $form.find('input').val();
-                    var priceWithCode = $form.data('price').split(/(\s+)/);
-                    var currency = priceWithCode[0];
-                    var price = priceWithCode[2];
+                    var dataPrice = (String) ($form.data('price'));
+                    var currency = dataPrice.slice(0, 1);
+                    var price = dataPrice.replace(/\D/g, "")/100;
                     var total = quantity*price;
 
                     $form.find('.sub-total').html(currency + ' ' + total.toFixed(2));
