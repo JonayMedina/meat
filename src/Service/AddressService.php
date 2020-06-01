@@ -8,6 +8,7 @@ use App\Entity\PushNotification;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 
 /**
@@ -27,14 +28,24 @@ class AddressService
     private $entityManager;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * AddressService constructor.
      * @param AddressRepositoryInterface $addressRepository
      * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
      */
-    public function __construct(AddressRepositoryInterface $addressRepository, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        AddressRepositoryInterface $addressRepository,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
         $this->addressRepository = $addressRepository;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     public function reject(Address $address)
@@ -68,12 +79,69 @@ class AddressService
          * @var ShopUser $user
          */
         $customer = $address->getCustomer();
-        $user = $customer->getUser();
 
-        if ($user instanceof ShopUser) {
-            $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
-            $this->entityManager->persist($notification);
-            $this->entityManager->flush();
+        if ($customer instanceof Customer) {
+            $user = $customer->getUser();
+
+            if ($user instanceof ShopUser) {
+                $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
+                $this->entityManager->persist($notification);
+                $this->entityManager->flush();
+            }
+        } else {
+            $parentAddress = $this->findParentAddress($address);
+            $this->validate($parentAddress);
+
+            /** Find children and enable those addresses. */
+            foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
+                $this->validate($childrenAddress);
+            }
+        }
+    }
+
+    /**
+     * @param Address $parentAddress
+     * @return Address[]
+     */
+    private function findChildrenAddresses(Address $parentAddress): array
+    {
+        return $this->addressRepository
+            ->createQueryBuilder('a')
+            ->andWhere('a.annotations = :annotations')
+            ->andWhere('a.type = :type')
+            ->andWhere('a.fullAddress = :fullAddress')
+            ->andWhere('a.customer IS NULL')
+            ->andWhere('a.status = :status')
+            ->setParameter('annotations', $parentAddress->getAnnotations())
+            ->setParameter('type', $parentAddress->getType())
+            ->setParameter('fullAddress', $parentAddress->getFullAddress())
+            ->setParameter('status', Address::STATUS_PENDING)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param Address $address
+     * @return Address|null
+     */
+    private function findParentAddress(Address $address): ?Address
+    {
+        try {
+            return $this->addressRepository
+                ->createQueryBuilder('a')
+                ->andWhere('a.annotations = :annotations')
+                ->andWhere('a.type = :type')
+                ->andWhere('a.fullAddress = :fullAddress')
+                ->andWhere('a.customer IS NOT NULL')
+                ->setParameter('annotations', $address->getAnnotations())
+                ->setParameter('type', $address->getType())
+                ->setParameter('fullAddress', $address->getFullAddress())
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+
+            return null;
         }
     }
 

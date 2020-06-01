@@ -777,7 +777,7 @@ app.ui.cart.coupon.error.title: '¡Parece que hubo un error!'
 app.ui.cart.coupon.error.message: 'Solo puedes agregar un cupón por carrito, guarda tu cupón e ingresalo en tu próxima compra.'
 app.ui.checkout.title: 'Realiza tu pago'
 app.ui.checkout.order.quantity: 'Cantidad:'
-app.ui.checkout.order.total: 'Total'
+app.ui.checkout.order.total: Total
 app.ui.checkout.order.summary: 'Tu compra'
 app.ui.checkout.first.title: 'Paso 1: Tu información'
 app.ui.checkout.second.title: 'Paso 2: Datos de facturación'
@@ -809,17 +809,17 @@ app.ui.checkout.billing.tax_id: NIT
 app.ui.checkout.billing.address: 'Dirección en factura'
 app.ui.checkout.billing.add_data: 'Ingresar datos'
 app.ui.checkout.billing.cf: 'Consumidor Final'
-app.ui.checkout.billing.cf.short: 'CF'
-app.ui.checkout.billing.city: 'Ciudad'
+app.ui.checkout.billing.cf.short: CF
+app.ui.checkout.billing.city: Ciudad
 app.ui.checkout.complete_order: 'Completar tu compra'
 app.ui.checkout.order.payment.cash_on_delivery: Efectivo
 app.ui.checkout.order.payment.bank_transfer: 'Transferencia bancaria'
 app.ui.checkout.order.payment.card: Tarjeta
 app.ui.checkout.order.payment.card.message: 'No guardaremos la información de tu tarjeta'
 app.ui.form.payment.number: 'Número de tarjeta'
-app.ui.form.payment.name: 'Nombre'
+app.ui.form.payment.name: Nombre
 app.ui.form.payment.expiration_date: 'Fecha de vencimiento'
-app.ui.form.payment.cvv: 'CVV'
+app.ui.form.payment.cvv: CVV
 app.ui.order.completed.title: '¡Gracias por tu compra!'
 app.ui.order.completed.message: 'Tu número de orden es <strong>#%order%</strong>. Hemos enviado el comprobante de tu compra al correo <strong>%email%</strong> que ingresaste.'
 app.ui.checkout.payment.method: 'Método de pago'
@@ -876,10 +876,10 @@ app.api.cart.estimate.error.non_exists: 'La orden especificada no existe.'
 app.email.order.confirmation: 'Confirmación de orden'
 app.email.order.message%code%: 'Tu orden #%code% fue recibida con éxito.'
 app.email.order.message%date%: 'Tu orden #%code% será entregada el %date%'
-app.ui.checkout.payment.method.title: 'Pago'
+app.ui.checkout.payment.method.title: Pago
 app.ui.checkout.payment.warning: 'No guardaremos la información de tu tarjeta'
 app.ui.history.your_%n%_last_orders: 'Tus últimas %n% compras'
-app.ui.history.order#%number%: 'Orden #%number%'
+'app.ui.history.order#%number%': 'Orden #%number%'
 app.ui.history.performed_on_%date%: 'Realizada el %date%'
 app.ui.history.view_order_detail: 'Ver detalle de compra'
 app.ui.back_to_history: 'Regresar al historial'
@@ -900,3 +900,4 @@ app.ui.address.status.rejected: Rechazada
 app.ui.checkout.address.limit: 'Has alcanzado tu límite de direcciones por perfil'
 app.ui.checkout.address.limit.instructions: 'Para agregar una por favor elige cuál de estas direcciones deseas eliminar'
 app.ui.checkout.address.delete.select_one_address: 'Debes seleccionar una dirección para eleminar'
+app.ui.validate_this_address: 'Validar esta dirección de entrega'
