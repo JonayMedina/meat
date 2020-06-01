@@ -68,7 +68,7 @@
                                                         <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p>{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                                        <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -228,7 +228,9 @@
     <script src="{{ asset('bundles/syliusshop/js/card/jquery.card.js') }}"></script>
     <script>
         $(function () {
+            var $body = $('body');
             let $radio = $('input[type="radio"]');
+            moment.locale('es');
 
             if ($radio.closest('div.radio').find('label').length <=0 ) {
                 $radio.closest('div.radio').append("<label></label>");
@@ -243,6 +245,13 @@
                 var $input = $(this).find('input');
 
                 $input.prop('checked', true).change();
+            });
+
+            $body.find('.to-format-date').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
             });
         });
     </script>

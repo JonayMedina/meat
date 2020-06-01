@@ -64,7 +64,7 @@
                                                         <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p>{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                                        <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -112,9 +112,80 @@
                         <div class="col-12">
                             <div class="segment">
                                 <div class="row">
-                                    <div class="col-12">
-                                        <h2 class="mb-0">{{ 'app.ui.checkout.third.title'|trans }}</h2>
-                                    </div>
+                                    {% set type = app.session.get('payment') %}
+                                        {% if not type %}
+                                        <div class="col-12">
+                                            <h2 class="mb-0">{{ 'app.ui.checkout.third.title'|trans }}</h2>
+                                        </div>
+                                    {% else %}
+                                        {% set card = app.session.get('card') %}
+                                        <div class="col-12">
+                                            <h2>{{ 'app.ui.checkout.third.title'|trans }}</h2>
+                                        </div>
+                                        <div class="col-12 your-info">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <p class="font-semi-bold">{{ 'app.ui.checkout.payment.method.title'|trans }}</p>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                            <p>{{ ('app.ui.checkout.order.payment.' ~ type)|trans|default('app.ui.checkout.order.payment.card'|trans) }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% if type == 'card' %}
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.number'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.number|default('')|card_mask }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.name'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.name|default('') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.expiration_date'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.expirationDate|default('') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.cvv'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.cvv|default('') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <p class="warning text-center mt-4">{{ 'app.ui.checkout.payment.warning'|trans }}</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 text-center">
+                                            <a href="{{ path('sylius_shop_checkout_select_payment') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -128,8 +199,9 @@
 {% block extrajs %}
     <script>
         $(function () {
-            var $form = $('form');
+            var $body = $('body');
             var $skipForm = $('.skip-form');
+            moment.locale('es');
 
             $('.radio').click(function () {
                 var $input = $(this).find('input');
@@ -138,7 +210,9 @@
             });
 
             $('#skip-step').click(function () {
-                $skipForm.find('input').val('CF');
+                $('#billing_checkout_billingAddress_firstName').val('{{ 'app.ui.checkout.billing.cf'|trans }}');
+                $('#billing_checkout_billingAddress_taxId').val('{{ 'app.ui.checkout.billing.cf.short'|trans }}');
+                $('#billing_checkout_billingAddress_fullAddress').val('{{ 'app.ui.checkout.billing.city'|trans }}');
                 $skipForm.fadeOut(450);
 
                 setTimeout(function () {
@@ -146,6 +220,12 @@
                 }, 500);
             });
 
+            $body.find('.to-format-date').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
+            });
         });
     </script>
 {% endblock %}

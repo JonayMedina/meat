@@ -4,6 +4,7 @@ namespace App\Controller\Shop;
 
 use DateTime;
 use App\Entity\Order\Order;
+use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
 use App\Entity\Customer\Customer;
@@ -28,9 +29,19 @@ class OrderExtendedController extends OrderController
         $resource = $this->findOr404($configuration);
 
         /* Add estimated delivery date to the order */
-        $preferredTime = $resource->getPreferredDeliveryTime();
-        $scheduledDate = $resource->getScheduledDeliveryDate();
-        $estimated = $this->get('app.service.order')->getNextAvailableDay($preferredTime ? $preferredTime : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.none'), $scheduledDate ? $scheduledDate->format('Y-m-d') : "");
+        if ($resource->getPreferredDeliveryTime()) {
+            $preferredTime = $resource->getPreferredDeliveryTime();
+        } else {
+            $preferredTime = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.none');
+        }
+
+        if ($resource->getScheduledDeliveryDate()) {
+            $scheduled = $resource->getScheduledDeliveryDate()->format('Y-m-d');
+        } else {
+            $scheduled = '';
+        }
+
+        $estimated = $this->get('app.service.order')->getNextAvailableDay($preferredTime, $scheduled);
         $resource->setEstimatedDeliveryDate(New DateTime($estimated));
         $em->flush();
 
@@ -203,18 +214,6 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
-            if (!$request->request->get('add_data')) {
-                /** @var Address $billingAddress */
-                $billingAddress = $resource->getBillingAddress();
-                $billingAddress->setType(Address::TYPE_BILLING);
-                $billingAddress->setFirstName(null);
-                $billingAddress->setPhoneNumber(null);
-                $billingAddress->setFullAddress(null);
-                $billingAddress->setTaxId('CF');
-
-                $em->flush();
-            }
-
             $resource = $form->getData();
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
@@ -303,8 +302,9 @@ class OrderExtendedController extends OrderController
         $resource = $this->findOr404($configuration);
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
-        $cardType = $request->request->get('payment_type') == 'card';
-        $this->get('session')->set('payment', $request->request->get('payment_type'));
+        $paymentType = $request->request->get('payment_type');
+        $cardType = $paymentType == 'card';
+        $this->get('session')->set('payment', $paymentType);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $cardType) {
             if ($form->handleRequest($request)->isValid()) {
@@ -391,7 +391,7 @@ class OrderExtendedController extends OrderController
         return $this->viewHandler->handle($configuration, $view);
     }
 
-    public function thankYouAction(Request $request): Response
+    public function completeAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
@@ -400,14 +400,110 @@ class OrderExtendedController extends OrderController
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
 
+        $form = $this->resourceFormFactory->create($configuration, $resource);
+
+        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
+            $resource = $form->getData();
+            $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
+
+            if ($event->isStopped() && !$configuration->isHtmlRequest()) {
+                throw new HttpException($event->getErrorCode(), $event->getMessage());
+            }
+            if ($event->isStopped()) {
+                $this->flashHelper->addFlashFromEvent($configuration, $event);
+
+                $eventResponse = $event->getResponse();
+                if (null !== $eventResponse) {
+                    return $eventResponse;
+                }
+
+                return $this->redirectHandler->redirectToResource($configuration, $resource);
+            }
+
+            try {
+                $this->resourceUpdateHandler->handle($resource, $configuration, $this->manager);
+            } catch (UpdateHandlingException $exception) {
+                if (!$configuration->isHtmlRequest()) {
+                    return $this->viewHandler->handle(
+                        $configuration,
+                        View::create($form, $exception->getApiResponseCode())
+                    );
+                }
+
+                $this->flashHelper->addErrorFlash($configuration, $exception->getFlash());
+
+                return $this->redirectHandler->redirectToReferer($configuration);
+            }
+
+            if ($configuration->isHtmlRequest()) {
+                $this->flashHelper->addSuccessFlash($configuration, ResourceActions::UPDATE, $resource);
+            }
+
+            $postEvent = $this->eventDispatcher->dispatchPostEvent(ResourceActions::UPDATE, $configuration, $resource);
+
+            if (!$configuration->isHtmlRequest()) {
+                $view = $configuration->getParameters()->get('return_content', false) ? View::create($resource, Response::HTTP_OK) : View::create(null, Response::HTTP_NO_CONTENT);
+
+                return $this->viewHandler->handle($configuration, $view);
+            }
+
+            $postEventResponse = $postEvent->getResponse();
+
+            if (null !== $postEventResponse) {
+                return $postEventResponse;
+            }
+
+            return $this->redirectHandler->redirectToResource($configuration, $resource);
+        }
+
+        if (!$configuration->isHtmlRequest()) {
+            return $this->viewHandler->handle($configuration, View::create($form, Response::HTTP_BAD_REQUEST));
+        }
+
+        $initializeEvent = $this->eventDispatcher->dispatchInitializeEvent(ResourceActions::UPDATE, $configuration, $resource);
+        $initializeEventResponse = $initializeEvent->getResponse();
+        if (null !== $initializeEventResponse) {
+            return $initializeEventResponse;
+        }
+
         $view = View::create()
             ->setData([
                 'configuration' => $configuration,
                 'metadata' => $this->metadata,
                 'resource' => $resource,
-                $this->metadata->getName() => $resource
+                $this->metadata->getName() => $resource,
+                'form' => $form->createView(),
             ])
             ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
+        ;
+
+        return $this->viewHandler->handle($configuration, $view);
+    }
+
+    public function thankYouAction(Request $request): Response
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+        $orderId = $request->getSession()->get('sylius_order_id', null);
+
+        if (null === $orderId) {
+            $options = $configuration->getParameters()->get('after_failure');
+
+            return $this->redirectHandler->redirectToRoute(
+                $configuration,
+                $options['route'] ?? 'sylius_shop_homepage',
+                $options['parameters'] ?? []
+            );
+        }
+
+        $request->getSession()->remove('sylius_order_id');
+        $order = $this->repository->find($orderId);
+        Assert::notNull($order);
+
+        $view = View::create()
+            ->setData([
+                'order' => $order,
+            ])
+            ->setTemplate($configuration->getParameters()->get('template'))
         ;
 
         return $this->viewHandler->handle($configuration, $view);
