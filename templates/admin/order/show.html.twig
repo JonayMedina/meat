@@ -55,7 +55,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.annotations'|trans }}</strong></td>
-                                                    <td>{{ order.shippingAddress.firstName|default('app.ui.n/a'|trans) }} {{ order.shippingAddress.lastName|default('app.ui.n/a'|trans) }}</td>
+                                                    <td>{{ order.shippingAddress.annotations|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.form.address.phone_number'|trans }}</strong></td>
@@ -71,7 +71,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.name_in_tax'|trans }}</strong></td>
-                                                    <td>{{ order.billingAddress.firstName|default('app.ui.n/a'|trans) }} {{ order.billingAddress.lastName|default('app.ui.n/a'|trans) }}</td>
+                                                    <td>{{ order.billingAddress.firstName|default('app.ui.n/a'|trans) }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><strong>{{ 'app.ui.nit'|trans }}</strong></td>

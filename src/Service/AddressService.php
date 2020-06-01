@@ -80,23 +80,30 @@ class AddressService
          */
         $customer = $address->getCustomer();
 
-        if ($customer instanceof Customer) {
+        if (!$customer instanceof Customer) {
+            $user = $this->entityManager->getRepository('App:User\ShopUser')
+                ->findOneBy(['username' => $address->getCreatedBy()]);
+        } else {
             $user = $customer->getUser();
+        }
 
-            if ($user instanceof ShopUser) {
-                $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
-                $this->entityManager->persist($notification);
-                $this->entityManager->flush();
-            }
+        if ($user instanceof ShopUser) {
+            $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
+            $this->entityManager->persist($notification);
         } else {
             $parentAddress = $this->findParentAddress($address);
-            $this->validate($parentAddress);
 
-            /** Find children and enable those addresses. */
-            foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
-                $this->validate($childrenAddress);
+            if ($parentAddress instanceof Address) {
+                $this->validate($parentAddress);
+
+                /** Find children and enable those addresses. */
+                foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
+                    $this->validate($childrenAddress);
+                }
             }
         }
+
+        $this->entityManager->flush();
     }
 
     /**
