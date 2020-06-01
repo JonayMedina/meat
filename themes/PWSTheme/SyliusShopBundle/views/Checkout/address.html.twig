@@ -52,46 +52,52 @@
                                             <h2 class="mb-0">{{ 'app.ui.checkout.second.title'|trans }}</h2>
                                         </div>
                                     {% else %}
-                                        <div class="col-12">
-                                            <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
-                                        </div>
-                                        <div class="col-12 your-info">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                            <p>{{ billing.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
-                                                        </div>
-                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                            <p>{{ billing.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                        {% if billing.firstName != '' and billing.firstName != '-' and billing.taxId != '' and billing.taxId != '-' and billing.fullAddress != '' and billing.fullAddress != '-' %}
+                                            <div class="col-12">
+                                                <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                            </div>
+                                            <div class="col-12 your-info">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                            <p>{{ billing.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-12 text-center">
-                                            <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
-                                        </div>
+                                            <div class="col-12 text-center">
+                                                <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-12">
+                                                <h2 class="mb-0">{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                            </div>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
@@ -170,9 +176,9 @@
                                             </div>
                                         </div>
                                         <div class="col-12 text-center">
-                                            <a href="{{ path('sylius_shop_checkout_select_payment') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                            <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
                                         </div>
-                                {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -409,11 +415,10 @@
                         $extraData.fadeIn(450);
                         $annotations.val(null);
                         $phoneNumber.val(null);
+                        $(this).addClass('choose');
                     } else {
                         $deleteAddressModal.modal('show');
                     }
-
-                    $(this).addClass('choose');
                 }
             });
 

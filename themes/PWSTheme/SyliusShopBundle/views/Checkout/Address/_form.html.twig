@@ -6,7 +6,7 @@
         <button type="button" class="close-btn">
             <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
         </button>
-        {{ form_row(form.scheduledDate) }}
+        {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate ? order.scheduledDeliveryDate|date('d/m/Y') : ''}) }}
     </div>
 
     {{ form_row(form.preferredTime) }}
