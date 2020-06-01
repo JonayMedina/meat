@@ -90,7 +90,10 @@ class AddressService
             }
         } else {
             $parentAddress = $this->findParentAddress($address);
-            $this->validate($parentAddress);
+
+            if ($parentAddress instanceof Address) {
+                $this->validate($parentAddress);
+            }
 
             /** Find children and enable those addresses. */
             foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
