@@ -320,8 +320,8 @@ class PaymentGatewayService
          * Mark as paid
          * OrderPayment: cart -> awaiting_payment
          */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
         /** awaiting_payment -> paid */
         $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
@@ -390,8 +390,8 @@ class PaymentGatewayService
             try {
 
                 /** PaymentState: cart -> awaiting_payment */
-                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+//                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+//                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
 
                 /** PaymentState: awaiting_payment -> paid */
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
