@@ -2,6 +2,7 @@
 
 namespace App\Controller\Shop;
 
+use App\Entity\User\ShopUser;
 use DateTime;
 use App\Entity\Order\Order;
 use FOS\RestBundle\View\View;
@@ -73,22 +74,41 @@ class OrderExtendedController extends OrderController
 
             /** @var Address $shippingAddress */
             $shippingAddress = $resource->getShippingAddress();
-            $shippingAddress->setCustomer($customer);
             $shippingAddress->setType(Address::TYPE_SHIPPING);
             $shippingAddress->setTaxId('CF');
             $shippingAddress->setFirstName($shippingAddress->getAnnotations());
+            $shippingAddress->setStatus(Address::STATUS_PENDING);
 
             /** @var Address $billingAddress */
             $billingAddress = $resource->getBillingAddress();
-            $billingAddress->setCustomer($customer);
             $billingAddress->setType(Address::TYPE_BILLING);
 
-            if (!$customer->getDefaultAddress()) {
-                $customer->setDefaultAddress($shippingAddress);
+            if (count($this->getShippingAddresses($customer)) < ShopUser::SHIPPING_ADDRESS_LIMIT) {
+                $customerShippingAddress = new Address();
+                $customerShippingAddress->setAnnotations($shippingAddress->getAnnotations());
+                $customerShippingAddress->setFullAddress($shippingAddress->getFullAddress());
+                $customerShippingAddress->setPhoneNumber($shippingAddress->getPhoneNumber());
+                $customerShippingAddress->setCustomer($customer);
+                $customerShippingAddress->setType(Address::TYPE_SHIPPING);
+                $customerShippingAddress->setStatus(Address::STATUS_PENDING);
+
+                $em->persist($customerShippingAddress);
+
+                if (!$customer->getDefaultAddress()) {
+                    $customer->setDefaultAddress($customerShippingAddress);
+                }
             }
 
             if (!$customer->getDefaultBillingAddress()) {
-                $customer->setDefaultBillingAddress($billingAddress);
+                $customerBillingAddress = new Address();
+                $customerBillingAddress->setFirstName($billingAddress->getFirstName());
+                $customerBillingAddress->setFullAddress($billingAddress->getFullAddress());
+                $customerBillingAddress->setTaxId($billingAddress->getTaxId());
+                $customerBillingAddress->setType(Address::TYPE_BILLING);
+
+                $em->persist($customerBillingAddress);
+
+                $customer->setDefaultBillingAddress($customerBillingAddress);
             }
 
             $em->flush();
@@ -390,5 +410,35 @@ class OrderExtendedController extends OrderController
         ;
 
         return $this->viewHandler->handle($configuration, $view);
+    }
+
+    /**
+     * @param Customer $customer
+     * @return array
+     */
+    private function getShippingAddresses($customer) {
+        $addresses = $customer->getAddresses();
+        $default = $customer->getDefaultAddress();
+        $new = [];
+
+        if ($default) {
+            $new[] = $default;
+        }
+
+        foreach ($addresses as $address ) {
+            if ($default) {
+                if ($default->getId() != $address->getId()) {
+                    if ($address->getType() == Address::TYPE_SHIPPING) {
+                        $new[] = $address;
+                    }
+                }
+            } else {
+                if ($address->getType() == Address::TYPE_SHIPPING) {
+                    $new[] = $address;
+                }
+            }
+        }
+
+        return $new;
     }
 }

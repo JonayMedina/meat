@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Customer\Customer;
 use Exception;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -313,7 +314,7 @@ class AppExtension extends AbstractExtension
     }
 
     public function userHasOrders(ShopUser $user) {
-        $orders = $this->orderRepository->findBy(['customer' => $user, 'state' => Order::STATE_FULFILLED]);
+        $orders = $this->orderRepository->findBy(['customer' => $user->getCustomer(), 'state' => Order::STATE_NEW]);
 
         return count($orders) > 0;
     }
@@ -332,11 +333,28 @@ class AppExtension extends AbstractExtension
      * @return array
      */
     public function getShippingAddresses($addresses) {
+        /** @var Address $address1 */
+        $address1 = $addresses[0];
+        /** @var Customer $customer */
+        $customer = $address1->getCustomer();
+        $default = $customer->getDefaultAddress();
         $new = [];
 
+        if ($default) {
+            $new[] = $default;
+        }
+
         foreach ($addresses as $address ) {
-            if ($address->getType() == Address::TYPE_SHIPPING) {
-                $new[] = $address;
+            if ($default) {
+                if ($default->getId() != $address->getId()) {
+                    if ($address->getType() == Address::TYPE_SHIPPING) {
+                        $new[] = $address;
+                    }
+                }
+            } else {
+                if ($address->getType() == Address::TYPE_SHIPPING) {
+                    $new[] = $address;
+                }
             }
         }
 
