@@ -286,6 +286,32 @@
             });
         }
 
+        function getPaymentResponse($code) {
+            var response = {
+                '00': '{{ 'app.ui.payment.response.00'|trans }}',
+                '01': '{{ 'app.ui.payment.response.01'|trans }}',
+                '02': '{{ 'app.ui.payment.response.02'|trans }}',
+                '05': '{{ 'app.ui.payment.response.05'|trans }}',
+                '13': '{{ 'app.ui.payment.response.13'|trans }}',
+                '19': '{{ 'app.ui.payment.response.19'|trans }}',
+                '31': '{{ 'app.ui.payment.response.31'|trans }}',
+                '35': '{{ 'app.ui.payment.response.35'|trans }}',
+                '36': '{{ 'app.ui.payment.response.36'|trans }}',
+                '37': '{{ 'app.ui.payment.response.37'|trans }}',
+                '38': '{{ 'app.ui.payment.response.38'|trans }}',
+                '41': '{{ 'app.ui.payment.response.41'|trans }}',
+                '43': '{{ 'app.ui.payment.response.43'|trans }}',
+                '51': '{{ 'app.ui.payment.response.51'|trans }}',
+                '58': '{{ 'app.ui.payment.response.58'|trans }}',
+                '89': '{{ 'app.ui.payment.response.89'|trans }}',
+                '91': '{{ 'app.ui.payment.response.91'|trans }}',
+                '94': '{{ 'app.ui.payment.response.94'|trans }}',
+                '96': '{{ 'app.ui.payment.response.96'|trans }}',
+            };
+
+            return response[$code];
+        }
+
         // window.onunload = showedFalse;
         //
         // function showedFalse() {

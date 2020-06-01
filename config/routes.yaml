@@ -152,7 +152,6 @@ sylius_shop_checkout_start:
     path: /checkout
     methods: [GET]
     defaults:
-#        _controller: FrameworkBundle:Redirect:redirect
         _controller: app.controller.shop.extender:redirectToCheckoutAddress
         route: sylius_shop_checkout_address
                 
@@ -243,6 +242,23 @@ sylius_shop_checkout_complete:
                 type: Sylius\Bundle\CoreBundle\Form\Type\Checkout\CompleteType
                 options:
                     validation_groups: 'sylius_checkout_complete'
+                    
+sylius_shop_order_pay:
+    path: /order/{tokenValue}/pay
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:payOrderAction
+        _sylius:
+            redirect:
+                route: sylius_shop_order_after_pay
+                
+sylius_shop_order_thank_you:
+    path: /thank-you
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:thankYouAction
+        _sylius:
+            template: "@SyliusShop/Order/thankYou.html.twig"
                 
 sylius_shop_cart_save:
     path: /cart

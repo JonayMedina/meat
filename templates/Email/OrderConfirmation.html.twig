@@ -10,7 +10,7 @@
 
 {% block content %}
     <td class="content-block">
-        {{ 'app.email.order.message%date%'|trans({'%code%': order.number, '%date%': order.estimatedDeliveryDate}) }}
+        {{ 'app.email.order.message%date%'|trans({'%code%': order.number, '%date%': order.estimatedDeliveryDate|date('d/m/Y')}) }}
     </td>
 {% endblock %}
 
