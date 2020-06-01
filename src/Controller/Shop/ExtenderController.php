@@ -2,6 +2,8 @@
 
 namespace App\Controller\Shop;
 
+use App\Entity\Order\Order;
+use App\Service\PaymentGatewayService;
 use DateTime;
 use Exception;
 use App\Entity\User\ShopUser;
@@ -10,6 +12,7 @@ use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
+use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -225,6 +228,31 @@ class ExtenderController extends AbstractController
         $request->getSession()->set('card', null);
 
         return $redirectController->redirectAction($request, $request->attributes->get('route'));
+    }
+
+    /**
+     * @param Request $request
+     * @param string $tokenValue
+     */
+    public function payOrderAction(Request $request, $tokenValue, OrderRepositoryInterface $orderRepository, PaymentGatewayService $paymentGateway) {
+        $payment = $request->getSession()->get('payment');
+        $card = $request->getSession()->get('card');
+        $order = $orderRepository->findOneBy(['tokenValue' => $tokenValue]);
+
+        dump($card);
+
+        if ($order instanceof Order) {
+            $order->setState(Order::STATE_CART);
+            if ($payment == 'card') {
+                $expDate = explode("/", $card['expirationDate']);
+                $result = $paymentGateway->orderPayment($order, $card['name'], $card['number'], $expDate[1].$expDate[0], $card['cvv']);
+            } else {
+                $result = $paymentGateway->cashOnDelivery($order);
+            }
+
+            dump($result);
+            exit;
+        }
     }
 
     /**

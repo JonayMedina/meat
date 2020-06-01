@@ -174,6 +174,7 @@
             let $radio = $('input[type="radio"]');
             let $form = $('form[name="payment_card_checkout"]');
             let $cardForm = $('.payment-form');
+            let $checked = $('.radio.checked');
             moment.locale('es');
 
             if ($radio.closest('div.radio').find('label').length <=0 ) {
@@ -191,7 +192,11 @@
                 $input.prop('checked', true).change();
             });
 
-            $('.radio.checked').prop('checked', true).change();
+            if ($checked.length > 0) {
+                $checked.find('input').prop('checked', true).change();
+            } else {
+                $('.field:first-of-type .radio').find('input').prop('checked', true).change();
+            }
 
             $form.card({
                 container: '.card-wrapper',

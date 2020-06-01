@@ -150,7 +150,7 @@ class PaymentGatewayService
         "89" => 'Terminal inválida',
         "91" => 'Emisor no disponible',
         "94" => 'Transacción duplicada',
-        "96" => 'Error del sistema, intente más tarde',
+        "96" => 'Error del sistema, intente más tarde',4000000000000416
     ];
 
     /**
