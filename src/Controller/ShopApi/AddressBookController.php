@@ -378,6 +378,7 @@ class AddressBookController extends AbstractFOSRestController
 
         if ($address->getType() == Address::TYPE_BILLING) {
             $serializedAddress['tax_id'] = $address->getTaxId();
+            $serializedAddress['ask_for'] = $address->getFirstName();
         }
 
         return $serializedAddress;
