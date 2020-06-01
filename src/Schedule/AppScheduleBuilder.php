@@ -12,12 +12,6 @@ class AppScheduleBuilder implements ScheduleBuilder
         $schedule->onSingleServer();
 
         $schedule
-            ->addCommand('messenger:consume push_notification')
-            ->description('Process push notifications.')
-            ->withoutOverlapping(true)
-            ->everyMinute();
-
-        $schedule
             ->addCommand('app:disable-expired-coupons')
             ->description('Automatically disable expired coupons.')
             ->withoutOverlapping(true)
