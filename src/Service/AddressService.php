@@ -86,7 +86,6 @@ class AddressService
             if ($user instanceof ShopUser) {
                 $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
                 $this->entityManager->persist($notification);
-                $this->entityManager->flush();
             }
         } else {
             $parentAddress = $this->findParentAddress($address);
@@ -100,6 +99,8 @@ class AddressService
                 }
             }
         }
+
+        $this->entityManager->flush();
     }
 
     /**
