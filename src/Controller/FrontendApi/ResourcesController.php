@@ -515,8 +515,7 @@ class ResourcesController extends AbstractFOSRestController
             $customer = $user->getCustomer();
 
             try {
-                // TODO: Check if order items had change
-                $result = $this->orderService->serializeOrder($this->historyService->reorder($order, $customer));
+                $result = $this->historyService->reorder($order, $customer);
                 $op = 'success';
             } catch (\Exception $e) {
                 $op = 'error';
@@ -531,7 +530,8 @@ class ResourcesController extends AbstractFOSRestController
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
                     'title' => $this->translator->trans('app.api.order.reorder.success'),
                     'message' => $this->translator->trans('app.api.order.reorder.success.message'),
-                    'order' => $result,
+                    'order' => $result['order'],
+                    'hasChanged' => $result['hasChanged'],
                 ]);
                 break;
             case 'non-order':

@@ -126,10 +126,9 @@ class HistoryController extends AbstractFOSRestController
             throw new NotFoundHttpException('Customer has no access to this order.');
         }
 
-        $newOrder = $this->historyService->reorder($order, $customer);
+        $serialized = $this->historyService->reorder($order, $customer);
 
         $statusCode = Response::HTTP_OK;
-        $serialized = $this->orderService->serializeOrder($newOrder);
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'New order created.', $serialized);
         $view = $this->view($response, $statusCode);
 

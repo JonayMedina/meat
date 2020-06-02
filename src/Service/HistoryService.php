@@ -8,6 +8,7 @@ use App\Entity\User\ShopUser;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
+use App\Entity\Product\ProductVariant;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -60,6 +61,11 @@ class HistoryService
     private $logger;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
      * HistoryService constructor.
      * @param OrderRepository $orderRepository
      * @param EntityManagerInterface $entityManager
@@ -67,6 +73,7 @@ class HistoryService
      * @param ReordererInterface $reorderService
      * @param CartSessionStorage $cartSessionStorage
      * @param LoggerInterface $logger
+     * @param OrderService $orderService
      */
     public function __construct(
         OrderRepository $orderRepository,
@@ -74,7 +81,8 @@ class HistoryService
         ChannelContextInterface $channelContext,
         ReordererInterface $reorderService,
         CartSessionStorage $cartSessionStorage,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        OrderService $orderService
     ) {
         $this->orderRepository = $orderRepository;
         $this->entityManager = $entityManager;
@@ -82,6 +90,7 @@ class HistoryService
         $this->reorderer = $reorderService;
         $this->cartSessionStorage = $cartSessionStorage;
         $this->logger = $logger;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -115,9 +124,9 @@ class HistoryService
     /**
      * @param Order $order
      * @param Customer $customer
-     * @return Order|null
+     * @return array|null
      */
-    public function reorder(Order $order, Customer $customer): ?Order
+    public function reorder(Order $order, Customer $customer): ?array
     {
         if ($order->getCustomer() !== $customer) {
             throw new AccessDeniedHttpException('Customer has no access to this order.');
@@ -126,6 +135,22 @@ class HistoryService
         $reorder = null;
         /** @var ChannelInterface $channel */
         $channel = $this->channelContext->getChannel();
+        $hasChanged = false;
+
+        /** Search for changes... */
+        foreach ($order->getItems() as $orderItem) {
+            /** @var ProductVariant $variant */
+            $variant = $orderItem->getVariant();
+            $newPrice = $variant->getChannelPricingForChannel($channel)->getPrice();
+
+            if ($newPrice != $orderItem->getUnitPrice()) {
+                $hasChanged = true;
+            }
+
+            if ($variant->getOnHold() < $orderItem->getQuantity()) {
+                $hasChanged = true;
+            }
+        }
 
         if (!$order->getShippingAddress() instanceof Address) {
             throw new BadRequestHttpException('Esta orden no tiene una dirección de envío');
@@ -152,7 +177,10 @@ class HistoryService
 
         $this->cartSessionStorage->setForChannel($channel, $reorder);
 
-        return $reorder;
+        return [
+            'hasChanged' => $hasChanged,
+            'order' => $this->orderService->serializeOrder($reorder)
+        ];
     }
 
     /**
