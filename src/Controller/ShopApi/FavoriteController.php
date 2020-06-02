@@ -68,8 +68,14 @@ class FavoriteController extends AbstractFOSRestController
     public function indexAction()
     {
         $statusCode = Response::HTTP_OK;
+
+        /** @var ShopUser $shopUser */
+        $shopUser = $this->getUser();
+
         /** @var Favorite[] $favorites */
         $favorites = $this->repository->createQueryBuilder('favorite')
+            ->andWhere('favorite.shopUser = :shopUser')
+            ->setParameter('shopUser', $shopUser)
             ->orderBy('favorite.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
