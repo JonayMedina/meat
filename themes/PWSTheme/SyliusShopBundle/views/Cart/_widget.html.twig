@@ -12,8 +12,8 @@
 
             $('#delete-cart').click(function (evt) {
                 evt.preventDefault();
-                blockPage();
                 $('#showCartModal').modal('hide');
+                blockPage();
 
                 $.ajax({
                     type: 'DELETE',
@@ -21,11 +21,10 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                 })
-                .done(function (data) {
+                .done(function () {
                     location.reload();
-                    unblockPage();
                 })
-                .fail(function (error) {
+                .fail(function () {
                     $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
                     $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
 
@@ -35,12 +34,14 @@
             });
 
             if (!(Boolean) (localStorage.getItem('showed'))) {
-                if (localStorage.getItem('cart') !== '{{ cart.tokenValue }}') {
-                    $('#showCartModal').modal('show');
-                    localStorage.setItem('cart', '{{ cart.tokenValue }}');
-                    localStorage.setItem('showed', 'true');
-                } else {
-                    localStorage.setItem('showed', 'true');
+                if ($('#homepage').length > 0) {
+                    if (localStorage.getItem('cart') !== '{{ cart.tokenValue }}') {
+                        $('#showCartModal').modal('show');
+                        localStorage.setItem('cart', '{{ cart.tokenValue }}');
+                        localStorage.setItem('showed', 'true');
+                    } else {
+                        localStorage.setItem('showed', 'true');
+                    }
                 }
             }
         });
