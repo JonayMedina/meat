@@ -13,7 +13,9 @@ use App\Service\OrderService;
 use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Promotion\PromotionCoupon;
+use SM\Factory\Factory;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
+use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -66,6 +68,11 @@ class CartController extends AbstractFOSRestController
     private $aboutStoreRepository;
 
     /**
+     * @var Factory
+     */
+    private $stateMachineFactory;
+
+    /**
      * CartController constructor.
      * @param OrderRepository $repository
      * @param PromotionCouponRepository $couponRepository
@@ -75,6 +82,7 @@ class CartController extends AbstractFOSRestController
      * @param OrderService $orderService
      * @param AddressRepository $addressRepository
      * @param AboutStoreRepository $aboutStoreRepository
+     * @param Factory $stateMachineFactory
      */
     public function __construct(
         OrderRepository $repository,
@@ -84,7 +92,8 @@ class CartController extends AbstractFOSRestController
         EntityManagerInterface $entityManager,
         OrderService $orderService,
         AddressRepository $addressRepository,
-        AboutStoreRepository $aboutStoreRepository
+        AboutStoreRepository $aboutStoreRepository,
+        Factory $stateMachineFactory
     ) {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
@@ -94,6 +103,7 @@ class CartController extends AbstractFOSRestController
         $this->orderService = $orderService;
         $this->addressRepository = $addressRepository;
         $this->aboutStoreRepository = $aboutStoreRepository;
+        $this->stateMachineFactory = $stateMachineFactory;
     }
 
     /**
@@ -181,6 +191,21 @@ class CartController extends AbstractFOSRestController
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
+
+        /** OrderCheckoutState: cart -> addressed */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+        }
+
+        /** OrderCheckoutState: addressed -> shipping_skipped */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+        }
+
 
         $view = $this->view($response, $statusCode);
 

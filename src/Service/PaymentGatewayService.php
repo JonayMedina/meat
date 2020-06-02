@@ -15,6 +15,7 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
+use Sylius\Component\Core\OrderCheckoutTransitions;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Currency\Context\CurrencyContextInterface;
@@ -302,30 +303,7 @@ class PaymentGatewayService
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
 
-        /** Order: cart -> new */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-        $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
-
-        /** Payment: cart -> new */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-        $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
-
-        /** Payment: new -> complete */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-        $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
-
-        $this->paymentRepository->add($payment);
-
-        /**
-         * Mark as paid
-         * OrderPayment: cart -> awaiting_payment
-         */
-//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
-
-        /** awaiting_payment -> paid */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+        $this->executeSateMachine($order, $payment);
 
         $this->entityManager->flush();
 
@@ -374,27 +352,7 @@ class PaymentGatewayService
                 $payment->setMethod($paymentMethod);
                 $payment->setAmount($amount);
 
-                /** Order: cart -> new */
-                $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
-                $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
-
-                /** Payment: cart -> new */
-                $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-                $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
-
-                /** Payment: new -> complete */
-                $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-                $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
-
-                $this->paymentRepository->add($payment);
-
-                /** PaymentState: cart -> awaiting_payment */
-//                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-//                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
-
-                /** PaymentState: awaiting_payment -> paid */
-                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                $this->executeSateMachine($order, $payment);
 
                 $this->entityManager->flush();
             } catch (\Exception $exception) {
@@ -879,5 +837,64 @@ class PaymentGatewayService
         $this->paymentMethodRepository->add($paymentMethod);
 
         return $paymentMethod;
+    }
+
+    /**
+     * @param Order $order
+     * @param Payment $payment
+     * @throws \SM\SMException
+     */
+    private function executeSateMachine(Order $order, Payment $payment): void
+    {
+        /** Order: cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderTransitions::TRANSITION_CREATE)) {
+            $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+        }
+
+        /** Payment: cart -> new */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+
+        if ($stateMachine->can(PaymentTransitions::TRANSITION_CREATE)) {
+            $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
+        }
+
+        /** Payment: new -> complete */
+        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+
+        if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
+            $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+        }
+
+        $this->paymentRepository->add($payment);
+
+        /**
+         * Mark as paid
+         * OrderPayment: cart -> awaiting_payment
+         */
+//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
+
+        /** Order Payment: awaiting_payment -> paid */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
+            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+        }
+
+        /** OrderCheckout: shipping_skipped -> payment_selected */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+        }
+
+        /** OrderCheckout: payment_selected -> completed */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        }
     }
 }
