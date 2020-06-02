@@ -3,6 +3,7 @@
 namespace App\Controller\ShopApi;
 
 use App\Model\APIResponse;
+use App\Service\OrderService;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\Customer\Customer;
@@ -45,17 +46,30 @@ class AddressBookController extends AbstractFOSRestController
     private $translator;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
      * AddressBookController constructor.
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
      * @param AddressFactoryInterface $addressFactory
+     * @param TranslatorInterface $translator
+     * @param OrderService $orderService
      */
-    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger, AddressFactoryInterface $addressFactory, TranslatorInterface $translator)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        AddressFactoryInterface $addressFactory,
+        TranslatorInterface $translator,
+        OrderService $orderService
+    ) {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
         $this->addressFactory = $addressFactory;
         $this->translator = $translator;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -94,7 +108,7 @@ class AddressBookController extends AbstractFOSRestController
             ->getResult();
 
         foreach ($addresses as $address) {
-            $list[] = $this->serializeAddress($address);
+            $list[] = $this->orderService->serializeAddress($address);
         }
 
         $statusCode = Response::HTTP_OK;
@@ -193,7 +207,7 @@ class AddressBookController extends AbstractFOSRestController
             $this->entityManager->flush();
 
             $statusCode = Response::HTTP_CREATED;
-            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Created.', $this->serializeAddress($address));
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Created.', $this->orderService->serializeAddress($address));
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
@@ -278,7 +292,7 @@ class AddressBookController extends AbstractFOSRestController
             $this->entityManager->flush();
 
             $statusCode = Response::HTTP_OK;
-            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Updated.', $this->serializeAddress($address));
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Updated.', $this->orderService->serializeAddress($address));
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
@@ -355,33 +369,6 @@ class AddressBookController extends AbstractFOSRestController
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
-    }
-
-    /**
-     * @param Address $address
-     * @return array
-     */
-    private function serializeAddress(Address $address): array
-    {
-        $customer = $this->getCustomer();
-        $isDefault = ($customer->getDefaultAddress() && $customer->getDefaultAddress() == $address);
-
-        $serializedAddress = [
-            'id' => $address->getId(),
-            'ask_for' => $address->getAnnotations(),
-            'full_address' => $address->getFullAddress(),
-            'phone_number' => $address->getPhoneNumber(),
-            'status' => $address->getStatus(),
-            'type' => $address->getType(),
-            'is_default' => $isDefault
-        ];
-
-        if ($address->getType() == Address::TYPE_BILLING) {
-            $serializedAddress['tax_id'] = $address->getTaxId();
-            $serializedAddress['ask_for'] = $address->getFirstName();
-        }
-
-        return $serializedAddress;
     }
 
     /**

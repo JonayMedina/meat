@@ -370,7 +370,7 @@ class OrderService
      * @param AddressInterface $address
      * @return array
      */
-    private function serializeAddress(?AddressInterface $address): array
+    public function serializeAddress(?AddressInterface $address): array
     {
         if ($address == null) {
             return [];
