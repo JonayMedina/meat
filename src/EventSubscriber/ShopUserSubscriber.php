@@ -2,13 +2,11 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\User\ShopUser;
 use DateTime;
+use Exception;
+use App\Entity\User\ShopUser;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Exception;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class CompanySubscriber
@@ -16,20 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ShopUserSubscriber implements EventSubscriber
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
-    /**
-     * @var Security $security
-     */
-    private $security;
-
-    public function __construct(ContainerInterface $serviceContainer, Security $security)
-    {
-        $this->container = $serviceContainer;
-        $this->security = $security;
-    }
-
     /**
      * @return array
      */
@@ -47,10 +31,43 @@ class ShopUserSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof ShopUser) {
-            $entity->setTermsAndConditionsAcceptedAt(new DateTime());
-            $entity->setVerifiedAt(new DateTime());
+            /** Accept terms and conditions. */
+            $this->setTermsAndConditions($entity, $args);
 
-            $this->container->get('doctrine')->getManager()->flush();
+            /** Add email to ShopUser if not set && is valid email. */
+            $this->updateShopUserEmail($entity, $args);
         }
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param LifecycleEventArgs $args
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function updateShopUserEmail(ShopUser $user, LifecycleEventArgs $args)
+    {
+        $email = $user->getUsername();
+
+        if (!$user->getEmail()) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $user->setEmail($email);
+                $args->getEntityManager()->flush();
+            }
+        }
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param LifecycleEventArgs $args
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function setTermsAndConditions(ShopUser $user, LifecycleEventArgs $args)
+    {
+        $user->setTermsAndConditionsAcceptedAt(new DateTime());
+        $user->setVerifiedAt(new DateTime());
+
+        $args->getEntityManager()->flush();
     }
 }
