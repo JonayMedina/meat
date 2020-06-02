@@ -114,15 +114,9 @@ class AddressService
     {
         return $this->addressRepository
             ->createQueryBuilder('a')
-            ->andWhere('a.annotations = :annotations')
-            ->andWhere('a.type = :type')
-            ->andWhere('a.fullAddress = :fullAddress')
+            ->andWhere('a.parent = :parent')
             ->andWhere('a.customer IS NULL')
-            ->andWhere('a.status = :status')
-            ->setParameter('annotations', $parentAddress->getAnnotations())
-            ->setParameter('type', $parentAddress->getType())
-            ->setParameter('fullAddress', $parentAddress->getFullAddress())
-            ->setParameter('status', Address::STATUS_PENDING)
+            ->setParameter('parent', $parentAddress)
             ->getQuery()
             ->getResult();
     }
@@ -133,23 +127,7 @@ class AddressService
      */
     private function findParentAddress(Address $address): ?Address
     {
-        try {
-            return $this->addressRepository
-                ->createQueryBuilder('a')
-                ->andWhere('a.annotations = :annotations')
-                ->andWhere('a.type = :type')
-                ->andWhere('a.fullAddress = :fullAddress')
-                ->andWhere('a.customer IS NOT NULL')
-                ->setParameter('annotations', $address->getAnnotations())
-                ->setParameter('type', $address->getType())
-                ->setParameter('fullAddress', $address->getFullAddress())
-                ->getQuery()
-                ->getOneOrNullResult();
-        } catch (\Exception $exception) {
-            $this->logger->error($exception->getMessage());
-
-            return null;
-        }
+        return $address->getParent();
     }
 
 }
