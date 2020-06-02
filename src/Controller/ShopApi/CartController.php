@@ -188,18 +188,22 @@ class CartController extends AbstractFOSRestController
         }
 
         $this->entityManager->persist($addressCloned);
-        $this->entityManager->flush();
-
-        $response = $this->orderService->serializeOrder($cart);
 
         /** OrderCheckoutState: cart -> addressed */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
-        $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+        }
 
         /** OrderCheckoutState: addressed -> shipping_skipped */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
-        $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+        }
 
+        $this->entityManager->flush();
+
+        $response = $this->orderService->serializeOrder($cart);
 
         $view = $this->view($response, $statusCode);
 

@@ -885,10 +885,16 @@ class PaymentGatewayService
 
         /** OrderCheckout: shipping_skipped -> payment_selected */
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+        }
 
         /** OrderCheckout: payment_selected -> completed */
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-        $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        }
     }
 }
