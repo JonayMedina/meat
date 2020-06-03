@@ -183,6 +183,9 @@ services:
                     key: '%env(AWS_S3_ACCESS_ID)%'
                     secret: '%env(AWS_S3_ACCESS_SECRET)%'
                     
+    App\Service\AdminSyncService:
+        public: true
+                    
     sensio_framework_extra.view.listener:
         alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener
         

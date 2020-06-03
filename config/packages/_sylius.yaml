@@ -8,6 +8,15 @@ imports:
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
+    
+winzou_state_machine:
+    sylius_order_checkout:
+        callbacks:
+            after:
+                meat_house_sync_order_checkout_completed:
+                    on: ["complete"]
+                    do: ["@App\\Service\\AdminSyncService", "syncOrderAfterCheckoutCompleted"]
+                    args: ["object"]
 
 sylius_addressing:
     resources:

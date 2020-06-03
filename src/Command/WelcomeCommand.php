@@ -18,22 +18,6 @@ class WelcomeCommand extends Command
 {
     protected static $defaultName = 'app:welcome';
 
-    /**
-     * @var MessageBusInterface $bus
-     */
-    private $bus;
-
-    /**
-     * WelcomeCommand constructor.
-     * @param MessageBusInterface $bus
-     */
-    public function __construct(MessageBusInterface $bus)
-    {
-        parent::__construct();
-        $this->bus = $bus;
-    }
-
-
     protected function configure()
     {
         $this->setDescription('Welcome message');
@@ -42,8 +26,6 @@ class WelcomeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        //$this->bus->dispatch(new Sync(Sync::TYPE_UPDATE, Sync::MODEL_ORDER , random_int(1,25)));
 
         $milk = '
  _________________________

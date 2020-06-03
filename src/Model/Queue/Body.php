@@ -13,18 +13,25 @@ class Body
     private $url;
 
     /**
+     * @var array
+     */
+    private $metadata = [];
+
+    /**
      * Body constructor.
      * @param $id
      * @param $model
      * @param $type
      * @param $url
+     * @param array $metadata
      */
-    public function __construct($id, $model, $type, $url)
+    public function __construct($id, $model, $type, $url, $metadata = [])
     {
         $this->id = $id;
         $this->model = $model;
         $this->type = $type;
         $this->url = $url;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -57,5 +64,13 @@ class Body
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
     }
 }

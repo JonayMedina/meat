@@ -25,6 +25,16 @@ class Sync
     const TYPE_REMOVE = 'remove';
 
     /**
+     * Order checkout completed.
+     */
+    const TYPE_ORDER_CHECKOUT_COMPLETED = 'order_completed';
+
+    /**
+     * Order paid.
+     */
+    const TYPE_ORDER_PAID = 'order_paid';
+
+    /**
      * Order/Cart model.
      */
     const MODEL_ORDER = 'order';
@@ -68,18 +78,25 @@ class Sync
     private $url;
 
     /**
+     * @var array
+     */
+    private $metadata = [];
+
+    /**
      * Sync constructor.
      * @param string $type
      * @param string $model
      * @param int $id
+     * @param string $url
+     * @param array $metadata
      */
-    public function __construct(string $type, string $model, int $id)
+    public function __construct(string $type, string $model, int $id, string $url = '', array $metadata = [])
     {
         $this->id = $id;
         $this->type = $type;
         $this->model = $model;
-
-        // TODO: figure out how to add API URL here...
+        $this->url = $url;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -115,5 +132,10 @@ class Sync
     public function getUrl(): ?string
     {
         return $this->url;
+    }
+
+    public function getMetadata(): array
+    {
+        return $this->metadata;
     }
 }
