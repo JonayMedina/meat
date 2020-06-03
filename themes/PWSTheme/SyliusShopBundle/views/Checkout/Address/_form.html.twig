@@ -17,8 +17,9 @@
         <p id="estimated" class="mh-color">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m-d-y H:i:s') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
     {% endif %}
 
-    <input type="hidden" name="new_address" value="{% if order.customer.addresses|shipping|length > 0 %}false{% else %}true{% endif %}">
-
+    <div class="d-none">
+        {{ form_widget(form.addressId, {'value': order.customer.defaultAddress ? order.customer.defaultAddress.id : '' }) }}
+    </div>
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
 </div>
 
