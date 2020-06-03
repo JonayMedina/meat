@@ -66,8 +66,27 @@ class AdminSyncService
         ));
     }
 
+    /**
+     * @param Address $address
+     */
     public function syncAddressAfterCreation(Address $address): void
     {
+        if ($address->getParent() instanceof Address) {
+            return;
+        }
 
+        $url = $this->urlGenerator->generate('admin_api_address_show', [
+            'id' => $address->getId(),
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $metadata = [];
+
+        $this->bus->dispatch(new Sync(
+            Sync::TYPE_PERSIST,
+            Sync::MODEL_ADDRESS,
+            $address->getId(),
+            $url,
+            $metadata
+        ));
     }
 }

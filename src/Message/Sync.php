@@ -40,6 +40,11 @@ class Sync
     const MODEL_ORDER = 'order';
 
     /**
+     * Addressing/Address entity.
+     */
+    const MODEL_ADDRESS = 'address';
+
+    /**
      * Taxon model.
      */
     const MODEL_CATEGORY = 'category';
