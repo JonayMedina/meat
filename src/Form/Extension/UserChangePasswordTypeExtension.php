@@ -8,8 +8,16 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Sylius\Bundle\UserBundle\Form\Type\UserChangePasswordType;
 
+/**
+ * Class UserChangePasswordTypeExtension
+ * @package App\Form\Extension
+ */
 class UserChangePasswordTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -22,6 +30,9 @@ class UserChangePasswordTypeExtension extends AbstractTypeExtension
             ]);
     }
 
+    /**
+     * @return iterable|string[]
+     */
     public function getExtendedTypes()
     {
         return [UserChangePasswordType::class];

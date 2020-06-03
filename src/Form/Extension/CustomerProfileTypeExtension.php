@@ -11,8 +11,16 @@ use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 
+/**
+ * Class CustomerProfileTypeExtension
+ * @package App\Form\Extension
+ */
 class CustomerProfileTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->remove('gender')
@@ -46,11 +54,17 @@ class CustomerProfileTypeExtension extends AbstractTypeExtension
             );
     }
 
+    /**
+     * @return iterable
+     */
     public static function getExtendedTypes(): iterable
     {
         return [CustomerProfileType::class];
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);

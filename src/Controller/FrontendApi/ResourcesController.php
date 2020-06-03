@@ -529,9 +529,7 @@ class ResourcesController extends AbstractFOSRestController
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
                     'title' => $this->translator->trans('app.api.order.reorder.success'),
-                    'message' => $this->translator->trans('app.api.order.reorder.success.message'),
-                    'order' => $result['order'],
-                    'hasChanged' => $result['hasChanged'],
+                    'message' => $result['hasChanged'] ? $this->translator->trans('app.api.order.reorder.success.changed.message') : $this->translator->trans('app.api.order.reorder.success.message'),
                 ]);
                 break;
             case 'non-order':
