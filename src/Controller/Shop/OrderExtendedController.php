@@ -60,7 +60,11 @@ class OrderExtendedController extends OrderController
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
             $addressId = $request->request->get('sylius_checkout_address')['addressId'];
-            $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
+            if ($addressId) {
+                $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
+            } else {
+                $address = null;
+            }
 
             if ($request->request->get('sylius_checkout_address')) {
                 $scheduledDate = $request->request->get('sylius_checkout_address')['scheduledDate'];
