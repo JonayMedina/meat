@@ -285,7 +285,7 @@
                         <div class="row">
                             <p>{{ 'app.ui.checkout.address.limit.instructions'|trans }}</p>
                             <div class="col-12 list">
-                                {% for address in order.customer.addresses|shipping %}
+                                {% for address in order.customer.addresses|shipping|slice(0, constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')) %}
                                     <div class="radio">
                                         <input type="radio" name="delete_address" value="{{ address.id }}">
                                         <label><p>{{ address.fullAddress }}</p></label>
@@ -324,6 +324,7 @@
             let $fullAddress = $('#sylius_checkout_address_shippingAddress_fullAddress');
             let $annotations = $('#sylius_checkout_address_shippingAddress_annotations');
             let $phoneNumber = $('#sylius_checkout_address_shippingAddress_phoneNumber');
+            let $addressId = $('#sylius_checkout_address_addressId');
             let $addAddress = $('#address-add-change');
             let $firstAddress = $('.dropdown .dropdown-item:first-of-type');
             let $newAddressMsg = $('.new-address-message');
@@ -422,6 +423,7 @@
                         $newAddressMsg.fadeIn(450);
                         $annotations.val(null);
                         $phoneNumber.val(null);
+                        $addressId.val(null);
                         $(this).addClass('choose');
                     } else {
                         $deleteAddressModal.modal('show');
@@ -460,6 +462,7 @@
                 $fullAddress.val($this.data('full-address'));
                 $annotations.val($this.data('annotations'));
                 $phoneNumber.val($this.data('phone-number'));
+                $addressId.val($this.data('id'));
 
                 if (!notShow) {
                     $extraData.fadeIn(450);

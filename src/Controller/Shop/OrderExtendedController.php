@@ -59,6 +59,9 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
+            $addressId = $request->request->get('sylius_checkout_address')['addressId'];
+            $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
+
             if ($request->request->get('sylius_checkout_address')) {
                 $scheduledDate = $request->request->get('sylius_checkout_address')['scheduledDate'];
                 $preferredTime = $request->request->get('sylius_checkout_address')['preferredTime'];
@@ -100,9 +103,10 @@ class OrderExtendedController extends OrderController
             /** @var Address $billingAddress */
             $billingAddress = $resource->getBillingAddress();
             $billingAddress->setType(Address::TYPE_BILLING);
+            $billingAddress->setFullAddress(null);
 
             /* Clone shipping address to customer if the limit is not reached yet */
-            if (count($this->getShippingAddresses($customer)) < ShopUser::SHIPPING_ADDRESS_LIMIT) {
+            if (!$addressId && count($this->getShippingAddresses($customer)) < ShopUser::SHIPPING_ADDRESS_LIMIT) {
                 $customerShippingAddress = new Address();
                 $customerShippingAddress->setAnnotations($shippingAddress->getAnnotations());
                 $customerShippingAddress->setFullAddress($shippingAddress->getFullAddress());
@@ -112,6 +116,7 @@ class OrderExtendedController extends OrderController
                 $customerShippingAddress->setStatus(Address::STATUS_PENDING);
 
                 $em->persist($customerShippingAddress);
+                $address = $customerShippingAddress;
 
                 /* If customer doesn't have default shipping address add the cloned address */
                 if (!$customer->getDefaultAddress()) {
@@ -132,6 +137,11 @@ class OrderExtendedController extends OrderController
                 $em->persist($customerBillingAddress);
 
                 $customer->setDefaultBillingAddress($customerBillingAddress);
+            }
+
+            /* Set parent to cloned address */
+            if ($address instanceof Address) {
+                $shippingAddress->setParent($address);
             }
 
             $em->flush();

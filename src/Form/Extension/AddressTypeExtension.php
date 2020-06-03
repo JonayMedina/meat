@@ -9,8 +9,16 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Sylius\Bundle\AddressingBundle\Form\Type\AddressType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
+/**
+ * Class AddressTypeExtension
+ * @package App\Form\Extension
+ */
 class AddressTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->remove('firstName')
@@ -50,10 +58,16 @@ class AddressTypeExtension extends AbstractTypeExtension
         ;
     }
 
+    /**
+     * @return iterable|string[]
+     */
     public function getExtendedTypes() {
         return [AddressType::class];
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);

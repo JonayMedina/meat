@@ -11,8 +11,16 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
 
+/**
+ * Class CustomerRegistrationTypeExtension
+ * @package App\Form\Extension
+ */
 class CustomerRegistrationTypeExtension extends AbstractTypeExtension
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -45,6 +53,9 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
             ));
     }
 
+    /**
+     * @return iterable
+     */
     public static function getExtendedTypes(): iterable
     {
         return [CustomerRegistrationType::class];
