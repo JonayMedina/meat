@@ -2,24 +2,24 @@
 
 namespace App\Service;
 
-use App\Entity\Addressing\Address;
-use App\Entity\Payment\Payment;
 use Carbon\Carbon;
 use App\Entity\Holiday;
 use App\Entity\AboutStore;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Order\OrderItem;
+use App\Entity\Payment\Payment;
+use App\Entity\Addressing\Address;
 use App\Repository\HolidayRepository;
 use App\Entity\Product\ProductVariant;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Carbon\Exceptions\InvalidFormatException;
 use Doctrine\ORM\NonUniqueResultException;
-use Sylius\Component\Addressing\Model\AddressInterface;
-use Sylius\Component\Core\Model\OrderInterface;
+use Carbon\Exceptions\InvalidFormatException;
 use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
 use Sylius\Component\Order\Processor\CompositeOrderProcessor;

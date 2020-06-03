@@ -2,29 +2,29 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Entity\Addressing\Address;
-use App\Entity\Customer\Customer;
-use App\Repository\AboutStoreRepository;
 use Carbon\Carbon;
+use SM\Factory\Factory;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Service\OrderService;
+use App\Entity\Customer\Customer;
+use App\Entity\Addressing\Address;
 use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\AboutStoreRepository;
 use App\Entity\Promotion\PromotionCoupon;
-use SM\Factory\Factory;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
-use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Sylius\Component\Core\OrderCheckoutTransitions;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\ShopApiPlugin\Controller\Cart\AddCouponAction;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
 
 /**

@@ -2,30 +2,30 @@
 
 namespace App\Service;
 
+use SM\Factory\Factory;
 use App\Entity\AboutStore;
 use App\Entity\Order\Order;
-use App\Entity\Payment\GatewayConfig;
+use Psr\Log\LoggerInterface;
 use App\Entity\Payment\Payment;
+use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use SM\Factory\Factory;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
-use Sylius\Component\Core\OrderCheckoutTransitions;
-use Sylius\Component\Core\OrderPaymentStates;
-use Sylius\Component\Core\OrderPaymentTransitions;
-use Sylius\Component\Currency\Context\CurrencyContextInterface;
-use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\OrderTransitions;
-use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
-use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
+use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PaymentGatewayService
 {
@@ -723,6 +723,7 @@ class PaymentGatewayService
     /**
      * Generate audit number.
      * @return string
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function generateAuditNumber()
     {

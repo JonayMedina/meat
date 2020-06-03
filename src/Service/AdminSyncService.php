@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Payment\Payment;
 use App\Message\Sync;
 use App\Entity\Order\Order;
 use Symfony\Component\Messenger\MessageBusInterface;
