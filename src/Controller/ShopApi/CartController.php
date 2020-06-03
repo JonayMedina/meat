@@ -9,6 +9,7 @@ use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Service\OrderService;
 use App\Entity\Customer\Customer;
+use App\Entity\Shipping\Shipment;
 use App\Entity\Addressing\Address;
 use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +34,8 @@ use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
  */
 class CartController extends AbstractFOSRestController
 {
+    const DEFAULT_SHIPPING_METHOD = 'meathouse';
+
     /**
      * @var OrderRepository
      */
@@ -200,6 +203,20 @@ class CartController extends AbstractFOSRestController
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
         if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+        }
+
+        /** Add shipment here... */
+        $shipmentMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => self::DEFAULT_SHIPPING_METHOD]);
+
+        if ($shipmentMethod) {
+            $shipment = new Shipment();
+            $shipment->setOrder($cart);
+            $shipment->setMethod($shipmentMethod);
+            $shipment->setCreatedAt(new \DateTime());
+            $shipment->setState('ready');
+
+            $this->entityManager->persist($shipment);
         }
 
         $this->entityManager->flush();
