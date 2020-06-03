@@ -4,6 +4,7 @@ namespace App\Controller\Shop;
 
 use DateTime;
 use App\Entity\Order\Order;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
@@ -240,6 +241,16 @@ class OrderExtendedController extends OrderController
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
             $resource = $form->getData();
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
+
+            /* Add shipment to order */
+            if (count($resource->getShipments()) <= 0) {
+                /** @var ShipmentInterface $shipment */
+                $shipment = $this->container->get('sylius.factory.shipment')->createNew();
+                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => 'meathouse']));
+                $resource->addShipment($shipment);
+                $this->container->get('sylius.order_processing.order_processor')->process($resource);
+                $this->container->get('sylius.manager.order')->flush();
+            }
 
             if ($event->isStopped() && !$configuration->isHtmlRequest()) {
                 throw new HttpException($event->getErrorCode(), $event->getMessage());
