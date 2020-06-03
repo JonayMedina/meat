@@ -57,7 +57,12 @@ class OrderController extends AbstractFOSRestController
         $order = $this->orderRepository->find($id);
 
         $statusCode = Response::HTTP_OK;
-        $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', $this->orderService->serializeOrder($order));
+        $data = new APIResponse(
+            $statusCode,
+            APIResponse::TYPE_INFO,
+            'Ok',
+            $this->orderService->serializeOrder($order, true)
+        );
 
         $view = $this->view($data, $statusCode);
 

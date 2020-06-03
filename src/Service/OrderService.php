@@ -2,6 +2,9 @@
 
 namespace App\Service;
 
+use App\Entity\Customer\Customer;
+use App\Entity\Order\Adjustment;
+use App\Entity\Promotion\PromotionCoupon;
 use Carbon\Carbon;
 use App\Entity\Holiday;
 use App\Entity\AboutStore;
@@ -16,6 +19,7 @@ use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Carbon\Exceptions\InvalidFormatException;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -70,6 +74,11 @@ class OrderService
     private $cartItemFactory;
 
     /**
+     * @var ChannelContextInterface
+     */
+    private $channelContext;
+
+    /**
      * OrderService constructor.
      * @param HolidayRepository $holidayRepository
      * @param AboutStoreRepository $aboutStoreRepository
@@ -78,9 +87,20 @@ class OrderService
      * @param EntityManagerInterface $entityManager
      * @param LimitingOrderItemQuantityModifier $itemQuantityModifier
      * @param CompositeOrderProcessor $compositeOrderProcessor
+     * @param CartItemFactoryInterface $cartItemFactory
+     * @param ChannelContextInterface $channelContext
      */
-    public function __construct(HolidayRepository $holidayRepository, AboutStoreRepository $aboutStoreRepository, OrderRepository $repository, TranslatorInterface $translator, EntityManagerInterface $entityManager, LimitingOrderItemQuantityModifier $itemQuantityModifier, CompositeOrderProcessor $compositeOrderProcessor, CartItemFactoryInterface $cartItemFactory)
-    {
+    public function __construct(
+        HolidayRepository $holidayRepository,
+        AboutStoreRepository $aboutStoreRepository,
+        OrderRepository $repository,
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        LimitingOrderItemQuantityModifier $itemQuantityModifier,
+        CompositeOrderProcessor $compositeOrderProcessor,
+        CartItemFactoryInterface $cartItemFactory,
+        ChannelContextInterface $channelContext
+    ) {
         $this->holidayRepository = $holidayRepository;
         $this->aboutStoreRepository = $aboutStoreRepository;
         $this->repository = $repository;
@@ -89,6 +109,7 @@ class OrderService
         $this->itemQuantityModifier = $itemQuantityModifier;
         $this->compositeOrderProcessor = $compositeOrderProcessor;
         $this->cartItemFactory = $cartItemFactory;
+        $this->channelContext = $channelContext;
     }
 
     /**
@@ -193,11 +214,42 @@ class OrderService
     /**
      * Return serialized order object.
      * @param Order|null $order
+     * @param bool $details
      * @return array
      */
-    public function serializeOrder(?Order $order)
+    public function serializeOrder(?Order $order, $details = false)
     {
-        return [
+        $payments = [];
+        $items = [];
+        $coupon = [];
+        $adjustments = [];
+        $customer = [];
+        $rating = [];
+
+        if ($details) {
+            foreach ($order->getPayments() as $payment) {
+                $payments[] = $this->serializePayment($payment);
+            }
+
+            foreach ($order->getItems() as $orderItem) {
+                $items[] = $this->serializeOrderItem($orderItem);
+            }
+
+            foreach ($order->getAdjustments() as $adjustment) {
+                $adjustments[] = $this->serializeAdjustment($adjustment);
+            }
+
+            if ($order->getPromotionCoupon()) {
+                /** @var PromotionCoupon $couponOrder */
+                $couponOrder = $order->getPromotionCoupon();
+                $coupon = $this->serializeCoupon($couponOrder);
+            }
+
+            $rating = $this->serializeRating($order);
+            $customer = $this->serializeCustomer($order);
+        }
+
+        $response = [
             'id' => $order->getId(),
             'number' => $order->getNumber(),
             'items_total' => $order->getTotalQuantity(),
@@ -209,11 +261,22 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'rating' => $order->getRating(),
             'rating_comment' => $order->getRatingComment(),
             'shipping_address' => $this->serializeAddress($order->getShippingAddress()),
             'billing_address' => $this->serializeAddress($order->getBillingAddress()),
         ];
+
+        if ($details) {
+            $response['total'] = $order->getTotal()/100;
+            $response['payments'] = $payments;
+            $response['items'] = $items;
+            $response['adjustments'] = $adjustments;
+            $response['coupon'] = $coupon;
+            $response['customer'] = $customer;
+            $response['rating'] = $rating;
+        }
+
+        return $response;
     }
 
     /**
@@ -411,5 +474,93 @@ class OrderService
                 'code' => $payment->getMethod()->getCode(),
             ],
         ];
+    }
+
+    /**
+     * @param PromotionCoupon $couponOrder
+     * @return array
+     */
+    public function serializeCoupon(PromotionCoupon $couponOrder)
+    {
+        return [
+            'code' => $couponOrder->getCode(),
+            'type' => $couponOrder->getTypeSlug($this->channelContext->getChannel()),
+        ];
+    }
+
+    /**
+     * @param Adjustment $adjustment
+     * @return array
+     */
+    public function serializeAdjustment(Adjustment $adjustment)
+    {
+        return [
+            'type' => $adjustment->getType(),
+            'label' => $adjustment->getLabel(),
+            'amount' => $adjustment->getAmount() / 100,
+        ];
+    }
+
+    /**
+     * @param OrderItem $orderItem
+     * @return array
+     */
+    public function serializeOrderItem(OrderItem $orderItem)
+    {
+        /** @var ProductVariant $variant */
+        $variant = $orderItem->getVariant();
+
+        return [
+            'code' => $variant->getCode(),
+            'name' => $variant->getProduct()->getName(),
+            'quantity' => $orderItem->getQuantity(),
+            'unit_price' => $orderItem->getUnitPrice()/100,
+            'total' => $orderItem->getTotal()/100,
+        ];
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    public function serializeRating(Order $order)
+    {
+        return [
+            'rating' => $order->getRating(),
+            'comment' => $order->getRatingComment(),
+        ];
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    public function serializeCustomer(Order $order)
+    {
+        /** @var Customer $customer */
+        $customer = $order->getCustomer();
+
+        return [
+            'email' => $customer->getEmail(),
+            'first_name' => $customer->getFirstName(),
+            'last_name' => $customer->getLastName(),
+            'phone_number' => $customer->getPhoneNumber(),
+            'gender' => $customer->getGender(),
+            'age' => $this->calculateAGe($customer->getBirthday()),
+        ];
+    }
+
+    private function calculateAGe(?\DateTimeInterface $birthday)
+    {
+        if (!$birthday) {
+            return null;
+        }
+
+        $formattedBirthday = $birthday->format('m/d/Y');
+        $formattedBirthday = explode("/", $formattedBirthday);
+
+        return (date("md", date("U", mktime(0, 0, 0, $formattedBirthday[0], $formattedBirthday[1], $formattedBirthday[2]))) > date("md")
+            ? ((date("Y") - $formattedBirthday[2]) - 1)
+            : (date("Y") - $formattedBirthday[2]));
     }
 }

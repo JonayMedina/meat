@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Message\Sync;
 use App\Entity\Order\Order;
+use App\Entity\Addressing\Address;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -20,24 +21,16 @@ class AdminSyncService
     private $urlGenerator;
 
     /**
-     * @var OrderService
-     */
-    private $orderService;
-
-    /**
      * WelcomeCommand constructor.
      * @param MessageBusInterface $bus
      * @param UrlGeneratorInterface $urlGenerator
-     * @param OrderService $orderService
      */
     public function __construct(
         MessageBusInterface $bus,
-        UrlGeneratorInterface $urlGenerator,
-        OrderService $orderService
+        UrlGeneratorInterface $urlGenerator
     ) {
         $this->bus = $bus;
         $this->urlGenerator = $urlGenerator;
-        $this->orderService = $orderService;
     }
 
     /**
@@ -71,5 +64,10 @@ class AdminSyncService
             $url,
             $metadata
         ));
+    }
+
+    public function syncAddressAfterCreation(Address $address): void
+    {
+
     }
 }

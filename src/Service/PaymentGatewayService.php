@@ -327,10 +327,6 @@ class PaymentGatewayService
 
         $amount = $order->getTotal();
 
-        /** Recalculate here... */
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
-
         /** Pay using Visa Epay... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv);
 
@@ -723,7 +719,6 @@ class PaymentGatewayService
     /**
      * Generate audit number.
      * @return string
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function generateAuditNumber()
     {
