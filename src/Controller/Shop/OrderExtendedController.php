@@ -4,15 +4,16 @@ namespace App\Controller\Shop;
 
 use DateTime;
 use App\Entity\Order\Order;
-use Sylius\Component\Core\Model\ShipmentInterface;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
+use App\Entity\Shipping\ShippingMethod;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Resource\ResourceActions;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sylius\Bundle\OrderBundle\Controller\OrderController;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
@@ -246,7 +247,7 @@ class OrderExtendedController extends OrderController
             if (count($resource->getShipments()) <= 0) {
                 /** @var ShipmentInterface $shipment */
                 $shipment = $this->container->get('sylius.factory.shipment')->createNew();
-                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => 'meathouse']));
+                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
                 $resource->addShipment($shipment);
                 $this->container->get('sylius.order_processing.order_processor')->process($resource);
                 $this->container->get('sylius.manager.order')->flush();
@@ -328,7 +329,6 @@ class OrderExtendedController extends OrderController
 
     public function paymentAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
