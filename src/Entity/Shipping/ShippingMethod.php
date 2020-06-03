@@ -14,6 +14,8 @@ use Sylius\Component\Shipping\Model\ShippingMethodTranslationInterface;
  */
 class ShippingMethod extends BaseShippingMethod
 {
+    const DEFAULT_SHIPPING_METHOD = 'meathouse';
+
     protected function createTranslation(): ShippingMethodTranslationInterface
     {
         return new ShippingMethodTranslation();

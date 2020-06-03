@@ -2,30 +2,30 @@
 
 namespace App\Service;
 
+use SM\Factory\Factory;
 use App\Entity\AboutStore;
 use App\Entity\Order\Order;
-use App\Entity\Payment\GatewayConfig;
+use Psr\Log\LoggerInterface;
 use App\Entity\Payment\Payment;
+use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use SM\Factory\Factory;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
-use Sylius\Component\Core\OrderCheckoutTransitions;
-use Sylius\Component\Core\OrderPaymentStates;
-use Sylius\Component\Core\OrderPaymentTransitions;
-use Sylius\Component\Currency\Context\CurrencyContextInterface;
-use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Order\OrderTransitions;
-use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
-use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Sylius\Component\Core\OrderPaymentStates;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Core\OrderCheckoutTransitions;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentRepository;
+use Sylius\Component\Payment\Factory\PaymentFactoryInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PaymentGatewayService
 {
@@ -42,6 +42,10 @@ class PaymentGatewayService
     const POST_MODE_BAND_READER = "022";
 
     const TIMEOUT = 10;
+
+    const PAYMENT_METHOD_EPAY = 'epay';
+
+    const PAYMENT_METHOD_CASH_ON_DELIVERY = 'cash_on_delivery';
 
     /**
      * @var string
@@ -297,8 +301,9 @@ class PaymentGatewayService
          */
         $payment = $this->paymentFactory->createNew();
 
+        $details = ['date' => date('c')];
         $payment->setOrder($order);
-        $payment->setDetails([]);
+        $payment->setDetails($details);
         $payment->setCurrencyCode($currency);
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
@@ -321,10 +326,6 @@ class PaymentGatewayService
         }
 
         $amount = $order->getTotal();
-
-        /** Recalculate here... */
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
 
         /** Pay using Visa Epay... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv);
@@ -794,10 +795,8 @@ class PaymentGatewayService
 
     private function getCashOnDeliveryPaymentMethod(): PaymentMethod
     {
-        $code = 'cash_on_delivery';
-
         /** @var PaymentMethod $paymentMethod */
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => self::PAYMENT_METHOD_CASH_ON_DELIVERY]);
 
         return $paymentMethod;
     }
@@ -808,16 +807,15 @@ class PaymentGatewayService
      */
     private function getPaymentMethod(): PaymentMethod
     {
-        $code = 'epay';
         $gatewayName = 'visanet';
         $factoryName = 'sylius_payment';
 
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => self::PAYMENT_METHOD_EPAY]);
 
         if (!$paymentMethod instanceof PaymentMethod) {
             /** @var PaymentMethod $paymentMethod */
             $paymentMethod = $this->paymentMethodFactory->createNew();
-            $paymentMethod->setCode($code);
+            $paymentMethod->setCode(self::PAYMENT_METHOD_EPAY);
             $paymentMethod->addChannel($this->channelContext->getChannel());
 
             $this->paymentMethodRepository->add($paymentMethod);
@@ -831,10 +829,10 @@ class PaymentGatewayService
             $gatewayConfig = new GatewayConfig();
             $gatewayConfig->setFactoryName($factoryName);
             $gatewayConfig->setGatewayName($gatewayName);
-        }
 
-        $paymentMethod->setGatewayConfig($gatewayConfig);
-        $this->paymentMethodRepository->add($paymentMethod);
+            $paymentMethod->setGatewayConfig($gatewayConfig);
+            $this->paymentMethodRepository->add($paymentMethod);
+        }
 
         return $paymentMethod;
     }
@@ -860,28 +858,23 @@ class PaymentGatewayService
             $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
         }
 
-        /** Payment: new -> complete */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        if ($payment->getMethod()->getCode() == self::PAYMENT_METHOD_EPAY) {
+            /** Payment: new -> complete */
+            $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
 
-        if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
-            $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+            if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
+                $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+            }
+
+            /** Order Payment: awaiting_payment -> paid */
+            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+
+            if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
+                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+            }
         }
 
         $this->paymentRepository->add($payment);
-
-        /**
-         * Mark as paid
-         * OrderPayment: cart -> awaiting_payment
-         */
-//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
-
-        /** Order Payment: awaiting_payment -> paid */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-
-        if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
-            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
-        }
 
         /** OrderCheckout: shipping_skipped -> payment_selected */
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
@@ -895,6 +888,20 @@ class PaymentGatewayService
 
         if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        }
+
+        $this->clearEmptyPayments($order);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function clearEmptyPayments(Order $order): void
+    {
+        foreach ($order->getPayments() as $payment) {
+            if (empty($payment->getDetails())) {
+                $this->entityManager->remove($payment);
+            }
         }
     }
 }

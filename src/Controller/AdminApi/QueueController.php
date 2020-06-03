@@ -60,8 +60,9 @@ class QueueController extends AbstractFOSRestController
             foreach ($data as $index => $datum) {
                 $body = json_decode($datum['body'], true);
                 $url = $body['url'] ?? null;
+                $metadata = $body['metadata'] ?? null;
 
-                $responseBody = new \App\Model\Queue\Body($body['id'], $body['model'], $body['type'], $url);
+                $responseBody = new \App\Model\Queue\Body($body['id'], $body['model'], $body['type'], $url, $metadata);
 
                 $list[] = new \App\Model\Queue\Response((int)$datum['id'], $responseBody, $datum['created_at']);
             }
