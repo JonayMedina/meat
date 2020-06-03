@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use Exception;
+use App\Service\AdminSyncService;
 use App\Entity\Addressing\Address;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -13,6 +14,18 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  */
 class AddressSubscriber implements EventSubscriber
 {
+    /** @var AdminSyncService */
+    private $adminSyncService;
+
+    /**
+     * AddressSubscriber constructor.
+     * @param AdminSyncService $adminSyncService
+     */
+    public function __construct(AdminSyncService $adminSyncService)
+    {
+        $this->adminSyncService = $adminSyncService;
+    }
+
     /**
      * @return array
      */
@@ -35,6 +48,9 @@ class AddressSubscriber implements EventSubscriber
                 $entity->setStatus(Address::STATUS_VALIDATED);
                 $args->getEntityManager()->flush();
             }
+
+            /** Send to validation process */
+            $this->adminSyncService->syncAddressAfterCreation($entity);
         }
     }
 }

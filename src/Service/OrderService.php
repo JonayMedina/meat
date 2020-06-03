@@ -217,7 +217,7 @@ class OrderService
      * @param bool $details
      * @return array
      */
-    public function serializeOrder(?Order $order, $details = false)
+    public function serializeOrder(Order $order, $details = false)
     {
         $payments = [];
         $items = [];
@@ -246,7 +246,7 @@ class OrderService
             }
 
             $rating = $this->serializeRating($order);
-            $customer = $this->serializeCustomer($order);
+            $customer = $this->serializeCustomer($order->getCustomer());
         }
 
         $response = [
@@ -432,12 +432,20 @@ class OrderService
 
     /**
      * @param AddressInterface $address
+     * @param bool $details
      * @return array
      */
-    public function serializeAddress(?AddressInterface $address): array
+    public function serializeAddress(Address $address, $details = false): array
     {
+        $customer = [];
+
         if ($address == null) {
             return [];
+        }
+
+        if ($details) {
+            /** @var Customer $customer */
+            $customer = $address->getCustomer();
         }
 
         /** @var Address $address */
@@ -452,6 +460,12 @@ class OrderService
 
         if (Address::TYPE_BILLING == $address->getType()) {
             $object['tax_id'] = $address->getTaxId();
+            $serializedAddress['ask_for'] = $address->getFirstName();
+        }
+
+        if ($details) {
+            $object['validated_at'] = $address->getValidatedAt();
+            $object['customer'] = $this->serializeCustomer($customer);
         }
 
         return $object;
@@ -532,14 +546,11 @@ class OrderService
     }
 
     /**
-     * @param Order $order
+     * @param Customer $customer
      * @return array
      */
-    public function serializeCustomer(Order $order)
+    public function serializeCustomer(Customer $customer)
     {
-        /** @var Customer $customer */
-        $customer = $order->getCustomer();
-
         return [
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),

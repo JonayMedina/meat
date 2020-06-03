@@ -48,7 +48,10 @@ class AddressService
         $this->logger = $logger;
     }
 
-    public function reject(Address $address)
+    /**
+     * @param Address $address
+     */
+    public function reject(Address $address): void
     {
         $address->setStatus(Address::STATUS_REJECTED);
         $address->setValidatedAt(null);
@@ -59,16 +62,37 @@ class AddressService
          * @var ShopUser $user
          */
         $customer = $address->getCustomer();
-        $user = $customer->getUser();
+
+        if (!$customer instanceof Customer) {
+            $user = $this->entityManager->getRepository('App:User\ShopUser')
+                ->findOneBy(['username' => $address->getCreatedBy()]);
+        } else {
+            $user = $customer->getUser();
+        }
 
         if ($user instanceof ShopUser) {
             $notification = new Notification(null, $user, 'Lo sentimos', 'Por el momento no podemos brindarte nuestro servicio en esta área.', PushNotification::TYPE_ADDRESS_REJECTED);
             $this->entityManager->persist($notification);
-            $this->entityManager->flush();
+        } else {
+            $parentAddress = $this->findParentAddress($address);
+
+            if ($parentAddress instanceof Address) {
+                $this->reject($parentAddress);
+
+                /** Find children and enable those addresses. */
+                foreach ($this->findChildrenAddresses($parentAddress) as $childrenAddress) {
+                    $this->reject($childrenAddress);
+                }
+            }
         }
+
+        $this->entityManager->flush();
     }
 
-    public function validate(Address $address)
+    /**
+     * @param Address $address
+     */
+    public function validate(Address $address): void
     {
         $address->setStatus(Address::STATUS_VALIDATED);
         $address->setValidatedAt(new \DateTime());

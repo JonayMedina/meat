@@ -50,7 +50,7 @@ class OrderController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function showAction(Request $request)
     {
         $id = $request->get('id');
         /** @var Order $order */

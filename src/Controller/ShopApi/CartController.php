@@ -154,7 +154,6 @@ class CartController extends AbstractFOSRestController
     public function addAddressAction(Request $request, $token)
     {
         $statusCode = Response::HTTP_OK;
-        $response = [];
 
         $addressId = $request->get('address_id');
         $type = $request->get('type');
