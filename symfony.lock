@@ -326,6 +326,9 @@
             "ref": "7f6676627c1ceeeee204553d24a0545d5f918b7b"
         }
     },
+    "maennchen/zipstream-php": {
+        "version": "2.1.0"
+    },
     "markbaker/complex": {
         "version": "1.4.8"
     },
@@ -355,6 +358,9 @@
     },
     "myclabs/deep-copy": {
         "version": "1.8.1"
+    },
+    "myclabs/php-enum": {
+        "version": "1.7.6"
     },
     "namshi/jose": {
         "version": "7.2.3"

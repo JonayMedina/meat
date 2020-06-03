@@ -43,6 +43,10 @@ class PaymentGatewayService
 
     const TIMEOUT = 10;
 
+    const PAYMENT_METHOD_EPAY = 'epay';
+
+    const PAYMENT_METHOD_CASH_ON_DELIVERY = 'cash_on_delivery';
+
     /**
      * @var string
      */
@@ -297,8 +301,9 @@ class PaymentGatewayService
          */
         $payment = $this->paymentFactory->createNew();
 
+        $details = ['date' => date('c')];
         $payment->setOrder($order);
-        $payment->setDetails([]);
+        $payment->setDetails($details);
         $payment->setCurrencyCode($currency);
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
@@ -794,10 +799,8 @@ class PaymentGatewayService
 
     private function getCashOnDeliveryPaymentMethod(): PaymentMethod
     {
-        $code = 'cash_on_delivery';
-
         /** @var PaymentMethod $paymentMethod */
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => self::PAYMENT_METHOD_CASH_ON_DELIVERY]);
 
         return $paymentMethod;
     }
@@ -808,16 +811,15 @@ class PaymentGatewayService
      */
     private function getPaymentMethod(): PaymentMethod
     {
-        $code = 'epay';
         $gatewayName = 'visanet';
         $factoryName = 'sylius_payment';
 
-        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => $code]);
+        $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => self::PAYMENT_METHOD_EPAY]);
 
         if (!$paymentMethod instanceof PaymentMethod) {
             /** @var PaymentMethod $paymentMethod */
             $paymentMethod = $this->paymentMethodFactory->createNew();
-            $paymentMethod->setCode($code);
+            $paymentMethod->setCode(self::PAYMENT_METHOD_EPAY);
             $paymentMethod->addChannel($this->channelContext->getChannel());
 
             $this->paymentMethodRepository->add($paymentMethod);
@@ -831,10 +833,10 @@ class PaymentGatewayService
             $gatewayConfig = new GatewayConfig();
             $gatewayConfig->setFactoryName($factoryName);
             $gatewayConfig->setGatewayName($gatewayName);
-        }
 
-        $paymentMethod->setGatewayConfig($gatewayConfig);
-        $this->paymentMethodRepository->add($paymentMethod);
+            $paymentMethod->setGatewayConfig($gatewayConfig);
+            $this->paymentMethodRepository->add($paymentMethod);
+        }
 
         return $paymentMethod;
     }
@@ -860,28 +862,23 @@ class PaymentGatewayService
             $stateMachine->apply(PaymentTransitions::TRANSITION_CREATE);
         }
 
-        /** Payment: new -> complete */
-        $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+        if ($payment->getMethod()->getCode() == self::PAYMENT_METHOD_EPAY) {
+            /** Payment: new -> complete */
+            $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
 
-        if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
-            $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+            if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
+                $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+            }
+
+            /** Order Payment: awaiting_payment -> paid */
+            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+
+            if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
+                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+            }
         }
 
         $this->paymentRepository->add($payment);
-
-        /**
-         * Mark as paid
-         * OrderPayment: cart -> awaiting_payment
-         */
-//        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-//        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REQUEST_PAYMENT);
-
-        /** Order Payment: awaiting_payment -> paid */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-
-        if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
-            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
-        }
 
         /** OrderCheckout: shipping_skipped -> payment_selected */
         $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
@@ -895,6 +892,20 @@ class PaymentGatewayService
 
         if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
+        }
+
+        $this->clearEmptyPayments($order);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function clearEmptyPayments(Order $order): void
+    {
+        foreach ($order->getPayments() as $payment) {
+            if (empty($payment->getDetails())) {
+                $this->entityManager->remove($payment);
+            }
         }
     }
 }

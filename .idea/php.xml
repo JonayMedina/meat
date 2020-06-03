@@ -289,6 +289,8 @@
       <path value="$PROJECT_DIR$/vendor/sylius/customer-reorder-plugin" />
       <path value="$PROJECT_DIR$/vendor/cron/cron" />
       <path value="$PROJECT_DIR$/vendor/cron/cron-bundle" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/vendor/maennchen/zipstream-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

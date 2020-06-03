@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Payment\Payment;
 use App\Message\Sync;
 use App\Entity\Order\Order;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,14 +21,24 @@ class AdminSyncService
     private $urlGenerator;
 
     /**
+     * @var OrderService
+     */
+    private $orderService;
+
+    /**
      * WelcomeCommand constructor.
      * @param MessageBusInterface $bus
      * @param UrlGeneratorInterface $urlGenerator
+     * @param OrderService $orderService
      */
-    public function __construct(MessageBusInterface $bus, UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        MessageBusInterface $bus,
+        UrlGeneratorInterface $urlGenerator,
+        OrderService $orderService
+    ) {
         $this->bus = $bus;
         $this->urlGenerator = $urlGenerator;
+        $this->orderService = $orderService;
     }
 
     /**
@@ -48,6 +59,10 @@ class AdminSyncService
             'number' => $order->getNumber(),
             'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
             'preferred_delivery_time' => $order->getPreferredDeliveryTime(),
+            'general_status' => $order->getStatus(),
+            'checkout_state' => $order->getCheckoutState(),
+            'payment_state' => $order->getPaymentState(),
+            'shipping_state' => $order->getShippingState(),
         ];
 
         $this->bus->dispatch(new Sync(

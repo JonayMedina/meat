@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Addressing\Address;
+use App\Entity\Payment\Payment;
 use Carbon\Carbon;
 use App\Entity\Holiday;
 use App\Entity\AboutStore;
@@ -391,5 +392,24 @@ class OrderService
         }
 
         return $object;
+    }
+
+    /**
+     * @param Payment $payment
+     * @return array
+     */
+    public function serializePayment(Payment $payment): array
+    {
+        return [
+            'id' => $payment->getId(),
+            'state' => $payment->getState(),
+            'currency' => $payment->getCurrencyCode(),
+            'amount' => $payment->getAmount()/100,
+            'details' => $payment->getDetails(),
+            'method' => [
+                'id' => $payment->getMethod()->getId(),
+                'code' => $payment->getMethod()->getCode(),
+            ],
+        ];
     }
 }
