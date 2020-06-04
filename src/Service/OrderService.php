@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Carbon\Exceptions\InvalidFormatException;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -225,6 +226,7 @@ class OrderService
         $adjustments = [];
         $customer = [];
         $rating = [];
+        $shipments = [];
 
         if ($details) {
             foreach ($order->getPayments() as $payment) {
@@ -245,6 +247,10 @@ class OrderService
                 $coupon = $this->serializeCoupon($couponOrder);
             }
 
+            foreach ($order->getShipments() as $shipment) {
+                $shipments[] = $this->serializeShipment($shipment);
+            }
+
             $rating = $this->serializeRating($order);
             $customer = $this->serializeCustomer($order->getCustomer());
         }
@@ -261,7 +267,6 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'rating_comment' => $order->getRatingComment(),
             'shipping_address' => $this->serializeAddress($order->getShippingAddress()),
             'billing_address' => $this->serializeAddress($order->getBillingAddress()),
         ];
@@ -269,6 +274,7 @@ class OrderService
         if ($details) {
             $response['total'] = $order->getTotal()/100;
             $response['payments'] = $payments;
+            $response['shipments'] = $shipments;
             $response['items'] = $items;
             $response['adjustments'] = $adjustments;
             $response['coupon'] = $coupon;
@@ -487,6 +493,8 @@ class OrderService
                 'id' => $payment->getMethod()->getId(),
                 'code' => $payment->getMethod()->getCode(),
             ],
+            'created_at' => $payment->getCreatedAt(),
+            'updated_at' => $payment->getUpdatedAt(),
         ];
     }
 
@@ -561,6 +569,10 @@ class OrderService
         ];
     }
 
+    /**
+     * @param \DateTimeInterface|null $birthday
+     * @return false|int|mixed|string|null
+     */
     private function calculateAGe(?\DateTimeInterface $birthday)
     {
         if (!$birthday) {
@@ -573,5 +585,23 @@ class OrderService
         return (date("md", date("U", mktime(0, 0, 0, $formattedBirthday[0], $formattedBirthday[1], $formattedBirthday[2]))) > date("md")
             ? ((date("Y") - $formattedBirthday[2]) - 1)
             : (date("Y") - $formattedBirthday[2]));
+    }
+
+    /**
+     * @param ShipmentInterface $shipment
+     */
+    private function serializeShipment(ShipmentInterface $shipment)
+    {
+        return [
+            'id' => $shipment->getId(),
+            'method' => [
+                'code' => $shipment->getMethod()->getCode(),
+                'name' => $shipment->getMethod()->getName(),
+                'amount' => ($shipment->getMethod()->getConfiguration()[$this->channelContext->getChannel()->getCode()]['amount'] ?? 0)/100,
+            ],
+            'state' => $shipment->getState(),
+            'created_at' => $shipment->getCreatedAt(),
+            'updated_at' => $shipment->getUpdatedAt(),
+        ];
     }
 }

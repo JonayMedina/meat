@@ -28,51 +28,13 @@ security:
             logout:
                 path: app_logout
                 target: app_login
-            
-#        admin:
-#            switch_user: true
-#            context: admin
-#            pattern: "%sylius.security.admin_regex%"
-#            provider: sylius_admin_user_provider
-#            form_login:
-#                provider: sylius_admin_user_provider
-#                login_path: sylius_admin_login
-#                check_path: sylius_admin_login_check
-#                failure_path: sylius_admin_login
-#                default_target_path: sylius_admin_dashboard
-#                use_forward: false
-#                use_referer: true
-#                csrf_token_generator: security.csrf.token_manager
-#                csrf_parameter: _csrf_admin_security_token
-#                csrf_token_id: admin_authenticate
-#            remember_me:
-#                secret: "%env(APP_SECRET)%"
-#                path: /admin
-#                name: APP_ADMIN_REMEMBER_ME
-#                lifetime: 31536000
-#                remember_me_parameter: _remember_me
-#            logout:
-#                path: sylius_admin_logout
-#                target: sylius_admin_login
-#            anonymous: true
-
-#        oauth_token:
-#            pattern: "%sylius.security.api_regex%/oauth/v2/token"
-#            security: false
-
-#        api:
-#            pattern: "%sylius.security.api_regex%/.*"
-#            provider: sylius_admin_user_provider
-#            fos_oauth: true
-#            stateless: true
-#            anonymous: true
         
         api:
             pattern: ^/api
             stateless: true
-            #provider: sylius_admin_user_provider
-            #http_basic:
-            #    realm: Secured Area
+            provider: sylius_admin_user_provider
+            # http_basic:
+                # realm: "Meat House Secure Area"
             anonymous: true
             
         sylius_shop_api:
@@ -143,6 +105,8 @@ security:
         - { path: "%sylius_shop_api.security.regex%/orders/.*/rating", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/carts", role: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER]}
         - { path: "%sylius_shop_api.security.regex%/history", role: ROLE_USER}
+
+        # - { path: "^/api/", role: ROLE_ADMIN }
             
         - { path: "%sylius.security.admin_regex%/_partial", role: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
         - { path: "%sylius.security.admin_regex%/_partial", role: ROLE_NO_ACCESS }
@@ -154,12 +118,12 @@ security:
         - { path: "%sylius.security.admin_regex%/validate-token", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.admin_regex%/.*/new-password", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.admin_regex%/.*/resend-code", role: IS_AUTHENTICATED_ANONYMOUSLY }
-        #- { path: "%sylius.security.api_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: "%sylius.security.shop_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.shop_regex%/register", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/verify", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
-        #- { path: "%sylius.security.api_regex%/.*", role: ROLE_API_ACCESS }
+
         - { path: "%sylius.security.shop_regex%/account", role: ROLE_USER }
