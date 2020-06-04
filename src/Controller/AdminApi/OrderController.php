@@ -234,7 +234,6 @@ class OrderController extends AbstractFOSRestController
         }
 
         /** Revert all payments */
-        // TODO: Make refund here...
         foreach ($order->getPayments() as $payment) {
             /** Payment: completed -> refund */
             $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
@@ -280,6 +279,9 @@ class OrderController extends AbstractFOSRestController
         }
 
         if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID && $order->getLastPayment()->getMethod()->getCode() == PaymentGatewayService::PAYMENT_METHOD_EPAY) {
+            // TODO: Make refund here...
+
+
             /** Cart: paid -> refunded */
             $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
 
