@@ -45,10 +45,6 @@ body.mini-navbar #main-logo {
     width: 50px;
 }
 
-.navbar-static-side {
-    overflow: hidden;
-}
-
 .btn-primary {
     color: #fff;
     background-color: #AB162B;
