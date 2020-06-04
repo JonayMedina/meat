@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\AboutStore;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Psr\Cache\InvalidArgumentException;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method AboutStore|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,21 +17,38 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class AboutStoreRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var AdapterInterface
+     */
+    private $cache;
+
+    public function __construct(ManagerRegistry $registry, AdapterInterface $cache)
     {
         parent::__construct($registry, AboutStore::class);
+        $this->cache = $cache;
     }
 
     /**
      * @return AboutStore|null Returns TermsAndConditions object
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException|InvalidArgumentException
      */
     public function findLatest()
     {
-        return $this->createQueryBuilder('about_store')
-            ->orderBy('about_store.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+        $item = $this->cache->getItem('_about_store_');
+
+        if (!$item->isHit()) {
+            $result = $this->createQueryBuilder('about_store')
+                ->orderBy('about_store.id', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            $item->set($result);
+            $this->cache->save($item);
+        }
+
+        $result = $item->get();
+
+        return $result;
     }
 }

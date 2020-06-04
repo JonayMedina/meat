@@ -20,8 +20,12 @@ class ProductRepository extends BaseProductRepository
     public function searchQuery(string $phrase, string $locale, ?int $limit = 100, ?int $offset = 0): QueryBuilder
     {
         return $this->createQueryBuilder('o')
-            ->innerJoin('o.translations', 'translation', 'WITH', 'translation.locale = :locale')
-            ->andWhere('translation.name LIKE :name')
+            ->innerJoin('o.translations', 'translations')
+            ->leftJoin('o.images', 'images')
+            ->leftJoin('o.options', 'options')
+            ->andWhere('translations.name LIKE :name')
+            ->andWhere('translations.locale = :locale')
+            ->addSelect(['translations', 'images', 'options'])
             ->setParameter('name', '%' . $phrase . '%')
             ->setParameter('locale', $locale)
             ->setMaxResults($limit)
@@ -38,8 +42,12 @@ class ProductRepository extends BaseProductRepository
         $qb = $this->createQueryBuilder('p');
 
         $query = $qb->select('p')
-            ->innerJoin('App\Entity\Product\ProductTaxon', 'pt', 'WITH', 'p.id = pt.product')
-            ->where('p.enabled like :true')
+            ->innerJoin('p.productTaxons', 'pt')
+            ->leftJoin('p.translations', 'translations')
+            ->leftJoin('p.images', 'images')
+            ->leftJoin('p.options', 'options')
+            ->addSelect(['pt', 'translations', 'images', 'options'])
+            ->andWhere('p.enabled like :true')
             ->andWhere('pt.taxon = :taxon')
             ->setParameter('true', true)
             ->setParameter('taxon', $taxon);
@@ -69,9 +77,13 @@ class ProductRepository extends BaseProductRepository
          * @var Product[] $products
          */
         $products = $qb->select('p')
-            ->innerJoin('App\Entity\Product\ProductVariant', 'pv', 'WITH','pv.product = p.id')
-            ->innerJoin('App\Entity\Channel\ChannelPricing', 'ch', 'WITH', 'ch.productVariant = pv.id')
-            ->where('ch.originalPrice > ch.price')
+            ->innerJoin('p.variants', 'pv')
+            ->innerJoin('pv.channelPricings', 'ch')
+            ->leftJoin('p.translations', 'translations')
+            ->leftJoin('p.images', 'images')
+            ->leftJoin('p.options', 'options')
+            ->addSelect(['pv', 'ch', 'translations', 'images', 'options'])
+            ->andWhere('ch.originalPrice > ch.price')
             ->andWhere('p.enabled like :true')
             ->setParameter('true', true)
             ->getQuery()
