@@ -2,13 +2,12 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Order\Order;
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Exception;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use App\Entity\Order\Order;
+use App\Service\AdminSyncService;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Class OrderSubscriber
@@ -16,18 +15,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OrderSubscriber implements EventSubscriber
 {
-    /** @var ContainerInterface $container */
-    private $container;
+    /**
+     * @var AdminSyncService $adminSyncService
+     */
+    private $adminSyncService;
 
     /**
-     * @var Security $security
+     * OrderSubscriber constructor.
+     * @param AdminSyncService $adminSyncService
      */
-    private $security;
-
-    public function __construct(ContainerInterface $serviceContainer, Security $security)
+    public function __construct(AdminSyncService $adminSyncService)
     {
-        $this->container = $serviceContainer;
-        $this->security = $security;
+        $this->adminSyncService = $adminSyncService;
     }
 
     /**
@@ -47,11 +46,11 @@ class OrderSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof Order) {
-            if ($entity->getTokenValue() == null) {
-                $entity->setTokenValue(Uuid::uuid4()->toString());
+            /** Set token value */
+            $this->setTokenValue($entity, $args);
 
-                $this->container->get('doctrine')->getManager()->flush();
-            }
+            /** Notify about rating */
+            $this->checkAdminRatingNotification($entity, $args);
         }
     }
 
@@ -64,11 +63,41 @@ class OrderSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof Order) {
-            if ($entity->getTokenValue() == null) {
-                $entity->setTokenValue(Uuid::uuid4()->toString());
+            /** Set token value */
+            $this->setTokenValue($entity, $args);
 
-                $this->container->get('doctrine')->getManager()->flush();
-            }
+            /** Notify about rating */
+            $this->checkAdminRatingNotification($entity, $args);
+        }
+    }
+
+    /**
+     * Set token value if still empty on cart.
+     * @param Order $order
+     * @param LifecycleEventArgs $args
+     * @throws Exception
+     */
+    private function setTokenValue(Order $order, LifecycleEventArgs $args): void
+    {
+        if ($order->getTokenValue() == null) {
+            $order->setTokenValue(Uuid::uuid4()->toString());
+
+            $args->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * Check if we need to notify to admin about rating.
+     * @param Order $order
+     * @param LifecycleEventArgs $args
+     */
+    private function checkAdminRatingNotification(Order $order, LifecycleEventArgs $args): void
+    {
+        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+        $changeSet = $unitOfWork->getEntityChangeSet($order);
+
+        if (isset($changeSet['rating'])) {
+            $this->adminSyncService->syncOrderAfterRating($order);
         }
     }
 }
