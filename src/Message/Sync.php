@@ -30,6 +30,11 @@ class Sync
     const TYPE_ORDER_CHECKOUT_COMPLETED = 'order_completed';
 
     /**
+     * Order has been rated.
+     */
+    const TYPE_ORDER_RATED = 'order_rated';
+
+    /**
      * Order paid.
      */
     const TYPE_ORDER_PAID = 'order_paid';

@@ -89,4 +89,32 @@ class AdminSyncService
             $metadata
         ));
     }
+
+    /**
+     * @param Order $order
+     */
+    public function syncOrderAfterRating(Order $order): void
+    {
+        $url = $this->urlGenerator->generate('admin_api_orders_show', [
+            'id' => $order->getId(),
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $metadata = [
+            'id' => $order->getId(),
+            'token' => $order->getTokenValue(),
+            'number' => $order->getNumber(),
+            'rating' => [
+                'rating' => $order->getRating(),
+                'comment' => $order->getRatingComment(),
+            ]
+        ];
+
+        $this->bus->dispatch(new Sync(
+            Sync::TYPE_ORDER_RATED,
+            Sync::MODEL_ORDER,
+            $order->getId(),
+            $url,
+            $metadata
+        ));
+    }
 }
