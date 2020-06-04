@@ -437,11 +437,11 @@ class OrderService
     }
 
     /**
-     * @param AddressInterface $address
+     * @param Address $address
      * @param bool $details
      * @return array
      */
-    public function serializeAddress(Address $address, $details = false): array
+    public function serializeAddress(?Address $address, $details = false): array
     {
         $customer = [];
 
