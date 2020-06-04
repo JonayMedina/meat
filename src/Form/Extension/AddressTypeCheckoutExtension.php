@@ -44,6 +44,9 @@ class AddressTypeCheckoutExtension extends AbstractTypeExtension
             ])
             ->add('addressId', TextType::class, [
                 'mapped' => false
+            ])
+            ->add('skipBilling', TextType::class, [
+                'mapped' => false,
             ]);
     }
 

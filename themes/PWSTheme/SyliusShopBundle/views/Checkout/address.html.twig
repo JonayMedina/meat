@@ -267,7 +267,7 @@
                     </div>
                     <div class="modal-footer text-center">
                         <button id="cleanForm" type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.edit'|trans }}</button>
-                        <a href="{{ path('sylius_shop_checkout_select_payment') }}" class="btn-rounded">{{ 'app.ui.yes_its_correct'|trans }}</a>
+                        <a id="skip-billing" class="btn-rounded">{{ 'app.ui.yes_its_correct'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -459,6 +459,12 @@
                 } else {
                     $deleteAddressModal.find('.error-message').fadeIn(450);
                 }
+            });
+
+            $('#skip-billing').click(function () {
+                $('#sylius_checkout_address_skipBilling').val('true');
+                $addressModal.modal('hide');
+                $('#next-step').trigger('click');
             });
 
             function selectAddress($this, notShow = false) {

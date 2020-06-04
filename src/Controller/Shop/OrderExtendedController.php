@@ -5,6 +5,7 @@ namespace App\Controller\Shop;
 use DateTime;
 use App\Entity\AboutStore;
 use App\Entity\Order\Order;
+use Sylius\Component\Core\OrderCheckoutTransitions;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
@@ -66,6 +67,8 @@ class OrderExtendedController extends OrderController
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
             $addressId = $request->request->get('sylius_checkout_address')['addressId'];
+            $skipBilling = $request->request->get('sylius_checkout_address')['skipBilling'];
+
             if ($addressId) {
                 $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
             } else {
@@ -114,6 +117,37 @@ class OrderExtendedController extends OrderController
             $billingAddress = $resource->getBillingAddress();
             $billingAddress->setType(Address::TYPE_BILLING);
             $billingAddress->setFullAddress(null);
+
+            if (filter_var($skipBilling, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
+                $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
+                $stateMachine['transition'] = 'select_shipping';
+
+                $configuration->getParameters()->set('state_machine', $stateMachine);
+                $configuration->getParameters()->set('redirect', 'sylius_shop_checkout_select_payment');
+
+                /* Add shipment to order */
+                if (count($resource->getShipments()) <= 0) {
+                    /** @var ShipmentInterface $shipment */
+                    $shipment = $this->container->get('sylius.factory.shipment')->createNew();
+                    $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
+                    $resource->addShipment($shipment);
+                    $this->container->get('sylius.order_processing.order_processor')->process($resource);
+                    $this->container->get('sylius.manager.order')->flush();
+                }
+
+                $defaultBilling = $customer->getDefaultBillingAddress();
+
+                $billingAddress->setFirstName($defaultBilling ? $defaultBilling->getFirstName() : $this->get('translator')->trans('app.ui.checkout.billing.cf'));
+                $billingAddress->setTaxId($defaultBilling ? $defaultBilling->getTaxId() : $this->get('translator')->trans('app.ui.checkout.billing.cf.short'));
+                $billingAddress->setFullAddress($defaultBilling ? $defaultBilling->getFullAddress() : $this->get('translator')->trans('app.ui.checkout.billing.city'));
+
+                $stateMachineFactory = $this->container->get('sm.factory');
+
+                $stateMachine = $stateMachineFactory->get($resource, OrderCheckoutTransitions::GRAPH);
+                $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+
+                $this->container->get('sylius.manager.order')->flush();
+            }
 
             /* Clone shipping address to customer if the limit is not reached yet */
             if (!$addressId && count($this->getShippingAddresses($customer)) < ShopUser::SHIPPING_ADDRESS_LIMIT) {
