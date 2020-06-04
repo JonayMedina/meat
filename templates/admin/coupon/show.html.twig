@@ -42,7 +42,7 @@
                             <div class="row border-bottom padding-bottom-35">
                                 <div class="col-lg-12">
                                     <h3>{{ 'app.ui.description'|trans }}</h3>
-                                    {{ promotion.description|default('app.ui.n/a'|trans) }}
+                                    {{ promotion.description|default('-') }}
                                 </div>
                             </div>
                             <br><br>
@@ -70,7 +70,11 @@
                             <div class="row border-bottom padding-bottom-35">
                                 <div class="col-lg-12">
                                     <h3>{{ 'app.ui.coupon_duration'|trans }}</h3>
-                                    {{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "medium") : 'app.ui.n/a'|trans }} - {{ promotion.endsAt ? promotion.endsAt|localizeddate("medium", "medium") : 'app.ui.n/a'|trans }}
+                                    {% if promotion.startsAt and promotion.endsAt %}
+                                        {{ promotion.startsAt|localizeddate("medium", "medium") }} - {{ promotion.endsAt|localizeddate("medium", "medium") }}
+                                    {% else %}
+                                        {{ 'app.ui.n/a'|trans }}
+                                    {% endif %}
                                 </div>
                             </div>
                             <br><br>
@@ -81,11 +85,11 @@
                                     {% if coupon.perCustomerUsageLimit != constant('App\\Entity\\Promotion\\PromotionCoupon::MAX_USAGES_PER_USER') %}
                                         {{ 'app.ui.coupon_one_usage_per_user'|trans }}
                                         <br>
-                                    {% endif %}
-
-                                    {% if coupon.usageLimit %}
+                                    {% elseif coupon.usageLimit %}
                                         {% trans with {'%x%': coupon.usageLimit} %}app.ui.coupon_limit_to_%x%_users{% endtrans %}
                                         <br>
+                                    {% else %}
+                                        -
                                     {% endif %}
 
                                 </div>
