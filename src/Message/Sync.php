@@ -35,11 +35,6 @@ class Sync
     const TYPE_ORDER_RATED = 'order_rated';
 
     /**
-     * Order paid.
-     */
-    const TYPE_ORDER_PAID = 'order_paid';
-
-    /**
      * Order/Cart model.
      */
     const MODEL_ORDER = 'order';
@@ -48,21 +43,6 @@ class Sync
      * Addressing/Address entity.
      */
     const MODEL_ADDRESS = 'address';
-
-    /**
-     * Taxon model.
-     */
-    const MODEL_CATEGORY = 'category';
-
-    /**
-     * Product/pricing model
-     */
-    const MODEL_PRODUCT = 'product';
-
-    /**
-     * Coupon model.
-     */
-    const MODEL_COUPON = 'coupon';
 
     /**
      * Customer model.
