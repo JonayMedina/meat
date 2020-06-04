@@ -414,12 +414,13 @@ class ResourcesController extends AbstractFOSRestController
      * @param string $token
      * @return Response
      */
-    public function updateDeliveryTime(Request $request, $token) {
+    public function updateDeliveryTime(Request $request, $token, SettingsService $settingsService) {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $data = json_decode($request->getContent(), true);
         $order = $this->orderRepository->findOneBy(['tokenValue' => $token]);
         $op = 'error';
         $result = "";
+        $deliveryHours = $settingsService->getDeliveryHours();
 
         if ($order instanceof Order) {
             if (isset($data)) {
@@ -431,11 +432,11 @@ class ResourcesController extends AbstractFOSRestController
                 if ($preferredTime) {
                     if ($preferredTime >= 1) {
                         if ($preferredTime == 3) {
-                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.third.short');
+                            $preferred = $deliveryHours[2]['name'] ? $deliveryHours[2]['name'] : $this->translator->trans('app.ui.checkout.order.preferred_time.third.short');
                         } else if ($preferredTime == 2) {
-                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.second.short');
+                            $preferred = $deliveryHours[1]['name'] ? $deliveryHours[1]['name'] : $this->translator->trans('app.ui.checkout.order.preferred_time.second.short');
                         } else {
-                            $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.first.short');
+                            $preferred = $deliveryHours[0]['name'] ? $deliveryHours[0]['name'] : $this->translator->trans('app.ui.checkout.order.preferred_time.first.short');
                         }
                     } else {
                         $preferred = $this->translator->trans('app.ui.checkout.order.preferred_time.none');

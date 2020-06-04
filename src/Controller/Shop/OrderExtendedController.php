@@ -2,6 +2,7 @@
 
 namespace App\Controller\Shop;
 
+use App\Entity\AboutStore;
 use DateTime;
 use App\Entity\Order\Order;
 use Webmozart\Assert\Assert;
@@ -24,6 +25,9 @@ class OrderExtendedController extends OrderController
     {
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+        /** @var AboutStore $aboutStore */
+        $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
+        $deliveryHours = $aboutStore->getDeliveryHours();
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
 
@@ -84,11 +88,11 @@ class OrderExtendedController extends OrderController
                 if ($preferredTime) {
                     if ($preferredTime >= 1) {
                         if ($preferredTime == 3) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
+                            $text = $deliveryHours[2]['name'] ? $deliveryHours[2]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
                         } else if ($preferredTime == 2) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
+                            $text = $deliveryHours[1]['name'] ? $deliveryHours[1]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
                         } else {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
+                            $text = $deliveryHours[0]['name'] ? $deliveryHours[0]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
                         }
 
                         $resource->setPreferredDeliveryTime($text);
