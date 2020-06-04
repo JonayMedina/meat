@@ -2,8 +2,8 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\AboutStore;
 use DateTime;
+use App\Entity\AboutStore;
 use App\Entity\Order\Order;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
