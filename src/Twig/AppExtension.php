@@ -40,42 +40,28 @@ class AppExtension extends AbstractExtension
     /** @var ContainerInterface $container */
     private $container;
 
-    /**
-     * @var UploaderHelper $uploaderHelper
-     */
+    /** @var UploaderHelper $uploaderHelper */
     private $uploaderHelper;
 
     /** @var SettingsService $settingsService */
     private $settingsService;
 
-    /**
-     * @var TranslatorInterface
-     */
+    /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @var FavoriteService
-     */
+    /** @var FavoriteService */
     private $favoriteService;
 
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @var ChannelContextInterface
-     */
+    /** @var ChannelContextInterface */
     private $channelContext;
 
-    /**
-     * @var OrderRepositoryInterface
-     */
+    /** @var OrderRepositoryInterface */
     private $orderRepository;
 
-    /**
-     * @var FavoriteRepository
-     */
+    /** @var FavoriteRepository */
     private $favoriteRepository;
 
     /** @var HistoryService */
@@ -125,6 +111,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('is_favorite', [$this, 'isFavorite']),
             new TwigFilter('shipping', [$this, 'getShippingAddresses']),
             new TwigFilter('card_mask', [$this, 'creditMask']),
+            new TwigFilter('format_schedule', [$this, 'formatSchedules']),
         ];
     }
 
@@ -419,5 +406,21 @@ class AppExtension extends AbstractExtension
      */
     public function getHolidays() {
         return $this->holidayRepository->findAll();
+    }
+
+    /**
+     * @param $schedules
+     * @return array
+     */
+    public function formatSchedules($schedules) {
+        $formatted = [];
+
+        foreach ($schedules as $schedule) {
+            if ($schedule['enabled'] == '1') {
+                $formatted[] = $this->translator->trans('app.ui.schedule.%schedule%_%start%_%end%', ['%schedule%' => $schedule['name'], '%start%' => $schedule['start'], '%end%' => $schedule['end']]);
+            }
+        }
+
+        return $formatted;
     }
 }

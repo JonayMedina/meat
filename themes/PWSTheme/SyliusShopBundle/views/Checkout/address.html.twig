@@ -336,7 +336,14 @@
                 "{{ holiday.date|date('d-m-Y') }}",
                 {% endfor %}
             ];
+            var deliveryHours = [
+                {% for deliveryHour in about_store('delivery-hours')|format_schedule %}
+                    '{{ deliveryHour }}',
+                {% endfor %}
+            ];
             moment.locale('es');
+
+            console.log(deliveryHours);
 
             {% if order.preferredDeliveryTime %}
                 {% set preferred = order.preferredDeliveryTime %}
@@ -356,9 +363,9 @@
             }
 
             $('input[type="radio"]:first-of-type').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.none'|trans }}</p>");
-            $('input[type="radio"][value="1"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.first'|trans }}</p>");
-            $('input[type="radio"][value="2"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.second'|trans }}</p>");
-            $('input[type="radio"][value="3"]').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.third'|trans }}</p>");
+            deliveryHours[0] ? $('input[type="radio"][value="1"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[0] + "</p>") : $('input[type="radio"][value="1"]').closest('div.toggle').hide();
+            deliveryHours[1] ? $('input[type="radio"][value="2"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[1] + "</p>") : $('input[type="radio"][value="2"]').closest('div.toggle').hide();
+            deliveryHours[2] ? $('input[type="radio"][value="3"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[2] + "</p>") : $('input[type="radio"][value="3"]').closest('div.toggle').hide();
             $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
 
             if ($preferred > 0) {

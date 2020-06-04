@@ -3,15 +3,18 @@
 namespace App\Controller\Shop;
 
 use DateTime;
+use App\Entity\AboutStore;
 use App\Entity\Order\Order;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
+use App\Entity\Shipping\ShippingMethod;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Resource\ResourceActions;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sylius\Bundle\OrderBundle\Controller\OrderController;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
@@ -22,6 +25,9 @@ class OrderExtendedController extends OrderController
     {
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+        /** @var AboutStore $aboutStore */
+        $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
+        $deliveryHours = $aboutStore->getDeliveryHours();
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
 
@@ -60,7 +66,11 @@ class OrderExtendedController extends OrderController
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
             $addressId = $request->request->get('sylius_checkout_address')['addressId'];
-            $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
+            if ($addressId) {
+                $address = $this->getDoctrine()->getRepository('App:Addressing\Address')->find($addressId);
+            } else {
+                $address = null;
+            }
 
             if ($request->request->get('sylius_checkout_address')) {
                 $scheduledDate = $request->request->get('sylius_checkout_address')['scheduledDate'];
@@ -78,11 +88,11 @@ class OrderExtendedController extends OrderController
                 if ($preferredTime) {
                     if ($preferredTime >= 1) {
                         if ($preferredTime == 3) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
+                            $text = $deliveryHours[2]['name'] ? $deliveryHours[2]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.third.short');
                         } else if ($preferredTime == 2) {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
+                            $text = $deliveryHours[1]['name'] ? $deliveryHours[1]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.second.short');
                         } else {
-                            $text = $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
+                            $text = $deliveryHours[0]['name'] ? $deliveryHours[0]['name'] : $this->get('translator')->trans('app.ui.checkout.order.preferred_time.first.short');
                         }
 
                         $resource->setPreferredDeliveryTime($text);
@@ -237,6 +247,16 @@ class OrderExtendedController extends OrderController
             $resource = $form->getData();
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
+            /* Add shipment to order */
+            if (count($resource->getShipments()) <= 0) {
+                /** @var ShipmentInterface $shipment */
+                $shipment = $this->container->get('sylius.factory.shipment')->createNew();
+                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
+                $resource->addShipment($shipment);
+                $this->container->get('sylius.order_processing.order_processor')->process($resource);
+                $this->container->get('sylius.manager.order')->flush();
+            }
+
             if ($event->isStopped() && !$configuration->isHtmlRequest()) {
                 throw new HttpException($event->getErrorCode(), $event->getMessage());
             }
@@ -313,7 +333,6 @@ class OrderExtendedController extends OrderController
 
     public function paymentAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
