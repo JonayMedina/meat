@@ -19,6 +19,7 @@
 
     <div class="d-none">
         {{ form_widget(form.addressId, {'value': order.customer.defaultAddress ? order.customer.defaultAddress.id : '' }) }}
+        {{ form_widget(form.skipBilling, {'value': 'false'}) }}
     </div>
     {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
 </div>
