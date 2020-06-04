@@ -62,6 +62,9 @@ class PushNotificationType extends AbstractType
                         ->andWhere('promotion_coupon.enabled = :enabled')
                         ->setParameter('enabled', true);
                 },
+                'attr' => [
+                    'class' => 'select2'
+                ],
             ])
             ->add('promotionBanner', null, [
                 'label' => 'app.ui.promotion_banner',

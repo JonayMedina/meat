@@ -47,7 +47,7 @@
                                 <tbody>
                                 {% for segment in pagination %}
                                     <tr>
-                                        <td>{{ segment.id }}</td>
+                                        <td>{{ loop.index }}</td>
                                         <td>
                                             <h4>{{ segment.name }}</h4>
                                         </td>

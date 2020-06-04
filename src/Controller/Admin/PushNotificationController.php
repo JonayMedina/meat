@@ -80,11 +80,20 @@ class PushNotificationController extends AbstractController
         $page = $request->query->getInt('page', 1);
 
         $queryBuilder = $this->repository
-            ->createQueryBuilder('push_notification');
+            ->createQueryBuilder('push_notification')
+            ->leftJoin('push_notification.promotionCoupon', 'promotion_coupon')
+            ->leftJoin('push_notification.promotionBanner', 'promotion_banner')
+            ->addSelect(['promotion_coupon', 'promotion_banner']);
 
         if (!empty($filter)) {
+            $dql = 'push_notification.title LIKE :filter OR push_notification.description LIKE :filter OR promotion_coupon.code LIKE :filter OR promotion_banner.name LIKE :filter';
+
+            if (in_array(strtoupper($filter), ['TODOS', 'TODO', 'TOD'])) {
+                $dql .= " OR push_notification.segment IS NULL";
+            }
+
             $queryBuilder
-                ->andWhere('push_notification.title LIKE :filter OR push_notification.description LIKE :filter')
+                ->andWhere($dql)
                 ->setParameter('filter', '%'.$filter.'%');
         }
 

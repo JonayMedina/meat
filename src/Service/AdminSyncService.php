@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Message\Sync;
 use App\Entity\Order\Order;
+use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -113,6 +114,32 @@ class AdminSyncService
             Sync::TYPE_ORDER_RATED,
             Sync::MODEL_ORDER,
             $order->getId(),
+            $url,
+            $metadata
+        ));
+    }
+
+    /**
+     * @param Customer $customer
+     */
+    public function syncCustomerAfterCreation(Customer $customer): void
+    {
+        $url = $this->urlGenerator->generate('admin_api_customers_show', [
+            'id' => $customer->getId(),
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $metadata = [
+            'id' => $customer->getId(),
+            'first_name' => $customer->getFirstName(),
+            'last_name' => $customer->getLastName(),
+            'email' => $customer->getEmail(),
+            'gender' => $customer->getGender(),
+        ];
+
+        $this->bus->dispatch(new Sync(
+            Sync::TYPE_PERSIST,
+            Sync::MODEL_CUSTOMER,
+            $customer->getId(),
             $url,
             $metadata
         ));

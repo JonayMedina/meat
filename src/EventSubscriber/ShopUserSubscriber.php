@@ -9,7 +9,7 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
- * Class CompanySubscriber
+ * Class ShopUserSubscriber
  * @package AppBundle\EventSubscriber
  */
 class ShopUserSubscriber implements EventSubscriber

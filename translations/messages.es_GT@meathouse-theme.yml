@@ -927,3 +927,5 @@ app.ui.schedule.%schedule%_%start%_%end%: '%schedule% (entre %start% - %end%)'
 app.ui.orders_no_items_in_search: 'No se encontraron coincidencias con estos términos de búsqueda.'
 app.ui.create: Crear
 app.ui.segment.create: 'Crear segmento'
+app.ui.push.create: 'Crear push'
+app.ui.search_coupon: 'Buscar un cupón'
