@@ -26,10 +26,12 @@
         <div class="middle-box text-center loginscreen animated fadeInDown">
             <div>
                 {% if not app.user %}
-                    <form class="m-t" role="form" method="post">
+                    <form class="m-t" role="form" method="post" novalidate>
                         {% if error %}
                             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                         {% endif %}
+
+                        <div id="messages-wrapper"></div>
 
                         {{ include('admin/security/_flashes.html.twig') }}
 
@@ -37,11 +39,11 @@
 
                         <div class="form-group">
                             <label for="">{{ 'app.ui.login.email'|trans }}</label>
-                            <input type="text" name="email" class="form-control" required="" value="{{ last_username }}" autofocus>
+                            <input id="email-control" type="text" name="email" class="form-control" required="" value="{{ last_username }}" autofocus>
                         </div>
                         <div class="form-group">
                             <label for="">{{ 'app.ui.login.password'|trans }}</label>
-                            <input type="password" name="password" class="form-control" required="">
+                            <input id="password-control" type="password" name="password" class="form-control" required="">
                         </div>
 
                         {#
@@ -60,7 +62,7 @@
                         </a>
                         <br><br>
 
-                        <button type="submit" class="btn btn-primary width-225 m-b">
+                        <button id="login-button" type="submit" class="btn btn-primary width-225 m-b">
                             {{ 'app.ui.login.title'|trans }}
                         </button>
                     </form>
@@ -68,4 +70,50 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            var $loginButton = $('#login-button');
+            var $emailControl = $('#email-control');
+            var $passwordControl = $('#password-control');
+            var $messagesWrapper = $('#messages-wrapper');
+
+            function addMessage(message) {
+                var id = Math.random().toString(36).substring(7);
+                var alert = "<div id=\"alert-"+ id +"\" class=\"alert alert-danger\" style='display:none;'>"+ message +"</div>";
+                $messagesWrapper.append(alert);
+
+                $('#alert-' + id).slideDown();
+
+                setTimeout(function () {
+                    $('#alert-' + id).slideUp('fast', function () {
+                        $('#alert-' + id).remove();
+                    });
+                }, 3 * 1000);
+            }
+
+            $loginButton.on('click', function (e) {
+                e.preventDefault();
+                var $form = $(this).closest('form');
+
+                if ($emailControl.val() && $passwordControl.val()) {
+                    $form.submit();
+                } else {
+                    if (!$emailControl.val()) {
+                        $emailControl.focus();
+                    }
+
+                    if (!$passwordControl.val()) {
+                        $passwordControl.focus();
+                    }
+
+                    addMessage('Debes ingresar ambos campos para continuar.');
+                }
+
+            });
+        });
+    </script>
 {% endblock %}

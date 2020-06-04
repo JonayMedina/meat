@@ -131,11 +131,10 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
 
-            if (!$this->sendCode($email, $sender)) {
-                $this->redirectToRoute('app_forgot_password');
+            if ($this->sendCode($email, $sender)) {
+                return $this->redirectToRoute('app_validate_token', ['user' => $email]);
             }
 
-            return $this->redirectToRoute('app_validate_token', ['user' => $email]);
         }
 
         return $this->render('/admin/security/forgot-password.html.twig', [

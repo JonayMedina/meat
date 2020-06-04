@@ -901,7 +901,7 @@ app.ui.checkout.address.limit: 'Has alcanzado tu límite de direcciones por perf
 app.ui.checkout.address.limit.instructions: 'Para agregar una por favor elige cuál de estas direcciones deseas eliminar'
 app.ui.checkout.address.delete.select_one_address: 'Debes seleccionar una dirección para eleminar'
 app.ui.validate_this_address: 'Validar esta dirección de entrega'
-app.ui.payment.response.00: 'Aprobada'
+app.ui.payment.response.00: Aprobada
 app.ui.payment.response.01: 'Refiérase al Emisor'
 app.ui.payment.response.02: 'Refiérase al Emisor'
 app.ui.payment.response.05: 'Transacción No Aceptada'
@@ -924,3 +924,6 @@ app.ui.payment.response.error: 'Parece que hubo un error'
 app.ui.payment.response.error.message: 'Un error no permitio terminar con el proceso de compra, intenta nuevamente...'
 app.ui.new_address: 'Las nuevas direcciones deben ser validadas.'
 app.ui.schedule.%schedule%_%start%_%end%: '%schedule% (entre %start% - %end%)'
+app.ui.orders_no_items_in_search: 'No se encontraron coincidencias con estos términos de búsqueda.'
+app.ui.create: Crear
+app.ui.segment.create: 'Crear segmento'

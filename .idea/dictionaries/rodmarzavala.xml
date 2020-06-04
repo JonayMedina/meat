@@ -3,6 +3,7 @@
     <words>
       <w>birthdate</w>
       <w>clearfix</w>
+      <w>csrf</w>
       <w>epay</w>
       <w>expdate</w>
       <w>ibox</w>

@@ -169,7 +169,11 @@
                                 {% else %}
                                     <tr>
                                         <td colspan="8" class="text-center">
-                                            {{ 'app.ui.orders_no_items_on_table'|trans|raw }}
+                                            {% if in_search_scope %}
+                                                {{ 'app.ui.orders_no_items_in_search'|trans|raw }}
+                                            {% else %}
+                                                {{ 'app.ui.orders_no_items_on_table'|trans|raw }}
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}

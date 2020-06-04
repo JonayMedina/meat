@@ -42,7 +42,7 @@
                                 <tbody>
                                 {% for banner in banners %}
                                 <tr>
-                                    <td>{{ banner.id }}</td>
+                                    <td>{{ loop.index }}</td>
                                     <td>
                                         {% if banner.photoMobile %}
                                             <img src="{{ uploaded_banner_asset(banner.photoMobile) }}" width="100" alt="{{ banner.name }}" title="{{ banner.name }}">

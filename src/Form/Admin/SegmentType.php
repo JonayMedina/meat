@@ -20,7 +20,11 @@ class SegmentType extends AbstractType
             ->add('name', null, [
                 'label' => 'app.ui.segment.name',
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Length(['max' => 50])
+                ],
+                'attr' => [
+                    'maxlength' => 50
                 ]
             ])
             ->add('gender', ChoiceType::class, [
@@ -46,7 +50,8 @@ class SegmentType extends AbstractType
                     new Length(['max' => 4])
                 ],
                 'attr' => [
-                    'maxlength' => 4
+                    'maxlength' => 4,
+                    'class' => 'integer-only'
                 ]
             ])
             ->add('purchaseTimes', TextType::class, [
@@ -55,7 +60,8 @@ class SegmentType extends AbstractType
                     new Length(['max' => 2])
                 ],
                 'attr' => [
-                    'maxlength' => 2
+                    'maxlength' => 2,
+                    'class' => 'integer-only'
                 ]
             ])
             ->add('minAge', TextType::class, [
@@ -64,7 +70,8 @@ class SegmentType extends AbstractType
                     new Length(['max' => 2])
                 ],
                 'attr' => [
-                    'maxlength' => 2
+                    'maxlength' => 2,
+                    'class' => 'integer-only'
                 ]
             ])
             ->add('maxAge', TextType::class, [
@@ -73,7 +80,8 @@ class SegmentType extends AbstractType
                     new Length(['max' => 2])
                 ],
                 'attr' => [
-                    'maxlength' => 2
+                    'maxlength' => 2,
+                    'class' => 'integer-only'
                 ]
             ])
         ;

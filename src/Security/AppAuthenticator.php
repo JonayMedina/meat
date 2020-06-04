@@ -69,7 +69,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('Este usuario no existe. Por favor revisa la información que ingresaste e inténtalo de nuevo.');
         }
 
         return $user;

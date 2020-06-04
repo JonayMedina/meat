@@ -85,6 +85,7 @@ class OrderController extends AbstractController
         $status = $request->query->get('status');
         $sort = $request->query->get('order');
         $page = $request->query->getInt('page', 1);
+        $inSearchScope = ($filter || $status);
 
         $queryBuilder = $this->getCollectionQuery($filter, $status, $sort);
 
@@ -97,6 +98,7 @@ class OrderController extends AbstractController
         return $this->render('/admin/order/index.html.twig', [
             'pagination' => $pagination,
             'currency' => $currencyContext->getCurrencyCode(),
+            'in_search_scope' => $inSearchScope
         ]);
     }
 

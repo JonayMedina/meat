@@ -61,8 +61,10 @@
                                         <td>
                                             {% if segment.gender|length >= 2 %}
                                                 {{ 'app.ui.segment.gender.both'|trans }}
-                                            {% else %}
+                                            {% elseif segment.gender|length == 1 %}
                                                 {{ ('app.ui.segment.gender.'~segment.gender[0])|trans }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
                                             {% endif %}
                                         </td>
                                         <td>

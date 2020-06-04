@@ -6,6 +6,7 @@ use App\Entity\PromotionBanner;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,7 +24,11 @@ class PromotionBannerType extends AbstractType
             ->add('name', null, [
                 'label' => 'app.ui.name',
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Length(['max' => 60])
+                ],
+                'attr' => [
+                    'maxlength' => 60
                 ]
             ])
             ->add('productVariant', null, [
