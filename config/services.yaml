@@ -86,6 +86,9 @@ services:
     Sylius\Bundle\CoreBundle\Storage\CartSessionStorage:
         alias: 'Sylius\Component\Core\Storage\CartStorageInterface'
         
+    Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository:
+        alias: 'sylius.repository.taxon'
+        
     SM\Factory\Factory:
         alias: 'sm.factory'
         

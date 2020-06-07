@@ -209,6 +209,9 @@
     "hamcrest/hamcrest-php": {
         "version": "v2.0.0"
     },
+    "hshn/base64-encoded-file": {
+        "version": "v2.1.0"
+    },
     "http-interop/http-factory-guzzle": {
         "version": "1.0.0"
     },
@@ -226,6 +229,15 @@
     },
     "instaclick/php-webdriver": {
         "version": "1.4.5"
+    },
+    "jbzoo/data": {
+        "version": "3.0.1"
+    },
+    "jbzoo/image": {
+        "version": "4.0.1"
+    },
+    "jbzoo/utils": {
+        "version": "3.1.2"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
