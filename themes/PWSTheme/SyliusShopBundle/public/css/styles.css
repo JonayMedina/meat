@@ -2355,6 +2355,16 @@ label.icobutton input {
     max-width: calc(45% - 8px);
 }
 
+/* Disconnect */
+#disconnect label {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#disconnect label .invalid-feedback {
+    order: 1;
+}
+
 /* Responsive */
 .mobile-cart {
     display: flex;

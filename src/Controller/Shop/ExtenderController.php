@@ -2,6 +2,9 @@
 
 namespace App\Controller\Shop;
 
+use App\Controller\ShopApi\OAuthLoginController;
+use App\Entity\User\UserOAuth;
+use App\Form\Shop\AddPasswordType;
 use DateTime;
 use Exception;
 use SM\SMException;
@@ -14,6 +17,8 @@ use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
 use App\Service\PaymentGatewayService;
 use Sylius\Component\Core\OrderCheckoutStates;
+use Sylius\Component\User\Security\PasswordUpdater;
+use Sylius\Component\User\Security\UserPbkdf2PasswordEncoder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -309,6 +314,61 @@ class ExtenderController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @param OrderRepositoryInterface $orderRepository
+     * @return RedirectResponse|Response
+     */
+    public function disconnectFacebookAction(Request $request, OrderRepositoryInterface $orderRepository) {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        /** @var Customer $customer */
+        $customer = $user->getCustomer();
+        $em = $this->getDoctrine()->getManager();
+        $errors = [];
+
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => OAuthLoginController::PROVIDER_FACEBOOK, 'user' => $user]);
+
+        if ($request->getMethod() == 'POST') {
+            if (!$oauthUser instanceof UserOAuth) {
+                return $this->redirectToRoute('sylius_shop_account_dashboard');
+            }
+        }
+
+        $form = $this->createForm(AddPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $errors = $this->validateDisconnectData($form->getData());
+
+            if (count($errors) <= 0) {
+                $data = $form->getData();
+
+                try {
+                    $customer->setEmail($data['email']);
+                    $customer->setEmailCanonical($data['email']);
+                    $user->setEmail($data['email']);
+                    $user->setEmailCanonical($data['email']);
+                    $user->setPlainPassword($data['password']);
+
+                    $passwordUpdater = new PasswordUpdater(new UserPbkdf2PasswordEncoder());
+                    $passwordUpdater->updatePassword($user);
+
+                    $em->remove($oauthUser);
+                    $em->flush();
+
+                    return $this->redirectToRoute('sylius_shop_account_disconnect_facebook', ['success' => true]);
+                } catch (\Exception $e) {
+                    return $this->redirectToRoute('sylius_shop_account_disconnect_facebook', ['error' => true]);
+                }
+            }
+        }
+
+        return $this->render('shop/account/disconnectFacebook.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
      * @param $emails
      * @return array
      */
@@ -325,6 +385,28 @@ class ExtenderController extends AbstractController
             $errors['email'] = 'app.ui.change_email.error.same_email';
         } else if ($existUser instanceof ShopUser) {
             $errors['email'] = 'app.ui.change_email.error.email_is_used';
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $emails
+     * @return array
+     */
+    private function validateDisconnectData($emails) {
+        $errors = [];
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+
+        $existUser = $this->userRepository->findOneBy(['username' => $emails['email']]);
+
+        if ($emails['email'] != $emails['confirmEmail']) {
+            $errors['email'] = 'app.ui.disconnect.facebook.error.not_same_email';
+        }  else if ($existUser instanceof ShopUser) {
+            if ($existUser->getId() != $user->getId()) {
+                $errors['email'] = 'app.ui.change_email.error.email_is_used';
+            }
         }
 
         return $errors;

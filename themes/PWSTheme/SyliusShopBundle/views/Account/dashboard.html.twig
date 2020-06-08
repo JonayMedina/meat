@@ -262,21 +262,29 @@
                                     <a href="{{ path('user_change_email') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.change_email'|trans }}</a>
                                 </div>
                             </div>
-                            <div class="row mb-2">
-                                <div class="col-4">
-                                    <p><strong>{{ 'app.ui.login.password'|trans }}</strong></p>
+                            {% if not connected_to_provider(customer.user, constant('App\\Controller\\ShopApi\\OAuthLoginController::PROVIDER_FACEBOOK')) %}
+                                <div class="row mb-2">
+                                    <div class="col-4">
+                                        <p><strong>{{ 'app.ui.login.password'|trans }}</strong></p>
+                                    </div>
+                                    <div class="col-8">
+                                        <p>..........</p>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_account_change_password') }}" class="btn-rounded inverted d-inline-block">{{ 'sylius.ui.change_password'|trans }}</a>
+                                    </div>
                                 </div>
-                                <div class="col-8">
-                                    <p>..........</p>
+                            {% else %}
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <p class="mh-color">{{ 'app.ui.dashboard.facebook.password'|trans }}</p>
+                                    </div>
                                 </div>
-                                <div class="col-12 text-center">
-                                    <a href="{{ path('sylius_shop_account_change_password') }}" class="btn-rounded inverted d-inline-block">{{ 'sylius.ui.change_password'|trans }}</a>
-                                </div>
-                            </div>
+                            {% endif %}
                             <div class="row mb-3">
                                 <div class="col-12 text-center">
                                     {% if connected_to_provider(customer.user, constant('App\\Controller\\ShopApi\\OAuthLoginController::PROVIDER_FACEBOOK')) %}
-                                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with d-inline-block facebook">
+                                        <a href="{{ path('sylius_shop_account_disconnect_facebook') }}" class="btn-login-with d-inline-block facebook">
                                             <i class="fab fa-facebook-square"></i>
                                             {{ 'app.ui.deconnect_from_%name%'|trans({'%name%':'Facebook'}) }}
                                         </a>

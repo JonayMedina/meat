@@ -149,6 +149,12 @@ sylius_shop_account_profile_update:
     defaults:
         _controller: app.controller.shop.extender:updateCustomerAction
         
+sylius_shop_account_disconnect_facebook:
+    path: /account/disconnect/facebook
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:disconnectFacebookAction
+        
 sylius_shop_checkout_start:
     path: /checkout
     methods: [GET]
