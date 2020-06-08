@@ -59,10 +59,14 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hshn/base64-encoded-file" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/http-interop/http-factory-guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/hwi/oauth-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/imagine/imagine" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/instaclick/php-webdriver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jbzoo/data" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jbzoo/image" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jbzoo/utils" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jdorn/sql-formatter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jean85/pretty-package-versions" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/jms/metadata" />

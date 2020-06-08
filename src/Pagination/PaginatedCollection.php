@@ -11,21 +11,25 @@ use Symfony\Component\HttpFoundation\Response;
 class PaginatedCollection
 {
     /**
-     * @var array $items
-     */
-    public $recordset;
-    /**
      * @var int $code
      */
     private $code;
-    /**
-     * @var string $message
-     */
-    private $message;
+
     /**
      * @var string $type
      */
     private $type;
+
+    /**
+     * @var string $message
+     */
+    private $message;
+
+    /**
+     * @var array $items
+     */
+    public $recordset;
+
     /**
      * @var array $metadata
      */

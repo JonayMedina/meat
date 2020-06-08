@@ -290,6 +290,11 @@
       <path value="$PROJECT_DIR$/vendor/coduo/php-to-string" />
       <path value="$PROJECT_DIR$/vendor/liip/imagine-bundle" />
       <path value="$PROJECT_DIR$/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/vendor/jbzoo/data" />
+      <path value="$PROJECT_DIR$/vendor/jbzoo/image" />
+      <path value="$PROJECT_DIR$/vendor/jbzoo/utils" />
+      <path value="$PROJECT_DIR$/vendor/hshn/base64-encoded-file" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
