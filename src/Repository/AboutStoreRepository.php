@@ -54,6 +54,7 @@ class AboutStoreRepository extends ServiceEntityRepository
                 ->getOneOrNullResult();
 
             $item->set($result);
+            $item->expiresAfter(15); // 15 secs of cache
             $this->cache->save($item);
         }
 
