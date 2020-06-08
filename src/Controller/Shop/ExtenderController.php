@@ -7,18 +7,24 @@ use Exception;
 use SM\SMException;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
+use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
+use App\Form\Shop\AddPasswordType;
 use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
 use App\Service\PaymentGatewayService;
-use Sylius\Component\Core\OrderCheckoutStates;
+use App\Form\Shop\DisconnectFacebookType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sylius\Component\Core\OrderCheckoutStates;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\ShopApi\OAuthLoginController;
 use Sylius\Component\Mailer\Sender\SenderInterface;
+use Sylius\Component\User\Security\PasswordUpdater;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sylius\Component\User\Security\UserPbkdf2PasswordEncoder;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
@@ -309,6 +315,107 @@ class ExtenderController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function disconnectFacebookAction(Request $request) {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        /** @var Customer $customer */
+        $customer = $user->getCustomer();
+        $em = $this->getDoctrine()->getManager();
+        $errors = [];
+
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => OAuthLoginController::PROVIDER_FACEBOOK, 'user' => $user]);
+
+        if ($request->getMethod() == 'POST') {
+            if (!$oauthUser instanceof UserOAuth) {
+                return $this->redirectToRoute('sylius_shop_account_dashboard');
+            }
+        }
+
+        $form = $this->createForm(DisconnectFacebookType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $errors = $this->validateDisconnectData($form->getData());
+
+            if (count($errors) <= 0) {
+                $data = $form->getData();
+
+                try {
+                    $customer->setEmail($data['email']);
+                    $customer->setEmailCanonical($data['email']);
+                    $user->setEmail($data['email']);
+                    $user->setEmailCanonical($data['email']);
+                    $user->setPlainPassword($data['password']);
+
+                    $passwordUpdater = new PasswordUpdater(new UserPbkdf2PasswordEncoder());
+                    $passwordUpdater->updatePassword($user);
+
+                    $em->remove($oauthUser);
+                    $em->flush();
+
+                    return $this->redirectToRoute('sylius_shop_account_disconnect_facebook', ['success' => true]);
+                } catch (\Exception $e) {
+                    return $this->redirectToRoute('sylius_shop_account_disconnect_facebook', ['error' => true]);
+                }
+            }
+        }
+
+        return $this->render('shop/account/disconnectFacebook.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function addPasswordAction(Request $request) {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $errors = [];
+
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => OAuthLoginController::PROVIDER_FACEBOOK, 'user' => $user]);
+
+        if ($request->getMethod() == 'POST') {
+            if (!$oauthUser instanceof UserOAuth) {
+                return $this->redirectToRoute('sylius_shop_account_dashboard');
+            }
+        }
+
+        $form = $this->createForm(AddPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $errors = $this->validatePassword($form->getData());
+
+            if (count($errors) <= 0) {
+                $data = $form->getData();
+
+                try {
+                    $user->setPlainPassword($data['password']);
+
+                    $passwordUpdater = new PasswordUpdater(new UserPbkdf2PasswordEncoder());
+                    $passwordUpdater->updatePassword($user);
+
+                    $em->flush();
+
+                    return $this->redirectToRoute('user_change_email');
+                } catch (\Exception $e) {
+                    return $this->redirectToRoute('user_pre_change_email', ['error' => true]);
+                }
+            }
+        }
+
+        return $this->render('shop/account/preChangeEmail.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
      * @param $emails
      * @return array
      */
@@ -325,6 +432,42 @@ class ExtenderController extends AbstractController
             $errors['email'] = 'app.ui.change_email.error.same_email';
         } else if ($existUser instanceof ShopUser) {
             $errors['email'] = 'app.ui.change_email.error.email_is_used';
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $emails
+     * @return array
+     */
+    private function validateDisconnectData($emails) {
+        $errors = [];
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+
+        $existUser = $this->userRepository->findOneBy(['username' => $emails['email']]);
+
+        if ($emails['email'] != $emails['confirmEmail']) {
+            $errors['email'] = 'app.ui.disconnect.facebook.error.not_same_email';
+        }  else if ($existUser instanceof ShopUser) {
+            if ($existUser->getId() != $user->getId()) {
+                $errors['email'] = 'app.ui.change_email.error.email_is_used';
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $passwords
+     * @return array
+     */
+    private function validatePassword($passwords) {
+        $errors = [];
+
+        if ($passwords['password'] != $passwords['confirmPassword']) {
+            $errors['password'] = 'app.ui.pre_change_email.error.not_same_password';
         }
 
         return $errors;

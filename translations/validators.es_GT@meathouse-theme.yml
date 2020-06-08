@@ -16,3 +16,5 @@ app.ui.checkout.address.add_phone: 'Ingresa un teléfono de contacto, Si quien l
 app.ui.checkout.billing.add_name: 'Ingresa el nombre que llevará la factura.'
 app.ui.checkout.billing.add_tax_id: 'Ingresa el NIT para la factura.'
 app.ui.checkout.billing.add_address: 'Ingresa una dirección para la factura.'
+app.ui.password.min_length: 'Ingresa una contraseña con más de 8 caracteres'
+app.ui.disconnect.facebook.error.not_same_email: 'Parece que los correos no coinciden.'
