@@ -2,6 +2,7 @@
   <dictionary name="rodmarzavala">
     <words>
       <w>birthdate</w>
+      <w>cacheable</w>
       <w>clearfix</w>
       <w>csrf</w>
       <w>epay</w>

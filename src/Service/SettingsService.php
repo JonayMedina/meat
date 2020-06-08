@@ -68,7 +68,7 @@ class SettingsService
     public function __call($name, $arguments)
     {
         try {
-            $aboutStore = $this->repository->findLatest();
+            $aboutStore = $this->repository->findLatest(true);
 
             return $aboutStore->$name();
         } catch (\Exception $exception) {

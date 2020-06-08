@@ -29,11 +29,21 @@ class AboutStoreRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param bool $cacheable
      * @return AboutStore|null Returns TermsAndConditions object
-     * @throws NonUniqueResultException|InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws NonUniqueResultException
      */
-    public function findLatest()
+    public function findLatest($cacheable = false)
     {
+        if (!$cacheable) {
+            return $this->createQueryBuilder('about_store')
+                ->orderBy('about_store.id', 'DESC')
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
         $item = $this->cache->getItem('_about_store_');
 
         if (!$item->isHit()) {
