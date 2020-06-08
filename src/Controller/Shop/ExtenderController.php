@@ -2,29 +2,29 @@
 
 namespace App\Controller\Shop;
 
-use App\Controller\ShopApi\OAuthLoginController;
-use App\Entity\User\UserOAuth;
-use App\Form\Shop\AddPasswordType;
-use App\Form\Shop\DisconnectFacebookType;
 use DateTime;
 use Exception;
 use SM\SMException;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
+use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
+use App\Form\Shop\AddPasswordType;
 use App\Form\Shop\ChangeEmailType;
 use App\Entity\Addressing\Address;
 use App\Form\Shop\BillingProfileType;
 use App\Repository\FavoriteRepository;
 use App\Service\PaymentGatewayService;
-use Sylius\Component\Core\OrderCheckoutStates;
-use Sylius\Component\User\Security\PasswordUpdater;
-use Sylius\Component\User\Security\UserPbkdf2PasswordEncoder;
+use App\Form\Shop\DisconnectFacebookType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sylius\Component\Core\OrderCheckoutStates;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Controller\ShopApi\OAuthLoginController;
 use Sylius\Component\Mailer\Sender\SenderInterface;
+use Sylius\Component\User\Security\PasswordUpdater;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sylius\Component\User\Security\UserPbkdf2PasswordEncoder;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
