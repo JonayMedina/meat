@@ -29,12 +29,12 @@
         {% endif %}
 
         <div id="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" class="{{ classes|join(' ') }}" data-taxon="{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %}" data-position="{{ i }}">
-            <a {{ href|raw }} {% if from != 'favorites' and category.code == 'pro' %}href="{{ url('sylius_shop_homepage') }}"{% endif %} class="{{ about_store('theme') }}" style="background: {% if about_store('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% else %} url('{{ category.images.first.path|imagine_filter('sylius_small') }}') {% endif %}">
+            <a {{ href|raw }} {% if from != 'favorites' and category.code == 'pro' %}href="{{ url('sylius_shop_homepage') }}"{% endif %} class="{{ about_store('theme') }}" style="background: {% if about_store('theme') == 'dark' %} linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('{% if category.images|length > 0 %}{{ category.images.first.path|imagine_filter('sylius_small') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}') {% else %} url('{% if category.images|length > 0 %}{{ category.images.first.path|imagine_filter('sylius_small') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}') {% endif %}">
                 <p>{% if from == 'favorites' and category.code == 'pro' %}{{ 'app.ui.favorites.all'|trans }}{% else %}{{ category.name }}{% endif %}</p>
             </a>
             <style>
                 .taxons-carousel .item.current.{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %} a {
-                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{% if category.images %}{{ category.images[0].path|imagine_filter('sylius_small') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}') !important;
+                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{% if category.images|length > 0 %}{{ category.images[0].path|imagine_filter('sylius_small') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}') !important;
                     background-position: center !important;
                     background-repeat: no-repeat !important;
                     background-size: cover !important;
