@@ -24,7 +24,7 @@
 
             <div class="two fields flex-wrap">
                 <p class="w-100 mh-color f-rl-light">{{ 'app.ui.profile.update.optional_fields_to_offers' | trans }}</p>
-                <div class="field">{{ form_row(form.birthday, {'value': customer.birthday|date("d/m/Y")}) }}</div>
+                <div class="field">{{ form_row(form.birthday, {'value': customer.birthday ? customer.birthday|date("d/m/Y") : ''}) }}</div>
                 <div class="field">{{ form_row(form.gender) }}</div>
             </div>
 

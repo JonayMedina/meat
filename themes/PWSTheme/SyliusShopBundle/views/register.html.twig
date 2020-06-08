@@ -46,7 +46,7 @@
                     <div class="text-center">
                         <h3 class="text-center mt-3">{{ 'app.ui.create_an_account_using_social_networks' | trans }}</h3>
 
-                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook" target="_blank">
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
                             <i class="fab fa-facebook-square"></i>
 
                             {{ 'app.ui.register_with_%name%'|trans({'%name%': "Facebook"}) }}

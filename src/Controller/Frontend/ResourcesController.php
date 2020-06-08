@@ -256,7 +256,6 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/search", name="store_search")
      * @param Request $request
-     * @param $search
      * @param ProductRepositoryInterface $productRepository
      * @param ProductService $productService
      * @return Response
