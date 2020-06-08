@@ -74,6 +74,33 @@ user_change_email:
     methods: [GET, POST]
     defaults:
         _controller: app.controller.shop.extender:changeEmailAction
+        
+user_pre_change_email:
+    path: /account/add-password
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:addPasswordAction
+        
+sylius_shop_account_change_password:
+    path: /account/change-password
+    methods: [GET, POST]
+    defaults:
+        _controller: sylius.controller.shop_user:changePasswordAction
+        _sylius:
+            template: "@SyliusShop/Account/changePassword.html.twig"
+            redirect: user_changed_password
+
+sylius_shop_account_profile_update:
+    path: /account/profile/edit
+    methods: [GET, PUT]
+    defaults:
+        _controller: app.controller.shop.extender:updateCustomerAction
+
+sylius_shop_account_disconnect_facebook:
+    path: /account/disconnect/facebook
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:disconnectFacebookAction
 
 sylius_shop_login:
     path: /store/login
@@ -133,27 +160,6 @@ sylius_shop_password_reset:
         _sylius:
             template: "@SyliusShop/Account/resetPassword.html.twig"
             redirect: sylius_shop_new_password
-    
-sylius_shop_account_change_password:
-    path: /account/change-password
-    methods: [GET, POST]
-    defaults:
-        _controller: sylius.controller.shop_user:changePasswordAction
-        _sylius:
-            template: "@SyliusShop/Account/changePassword.html.twig"
-            redirect: user_changed_password
-            
-sylius_shop_account_profile_update:
-    path: /account/profile/edit
-    methods: [GET, PUT]
-    defaults:
-        _controller: app.controller.shop.extender:updateCustomerAction
-        
-sylius_shop_account_disconnect_facebook:
-    path: /account/disconnect/facebook
-    methods: [GET, POST]
-    defaults:
-        _controller: app.controller.shop.extender:disconnectFacebookAction
         
 sylius_shop_checkout_start:
     path: /checkout

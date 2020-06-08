@@ -259,7 +259,7 @@
                                     <p>{{ customer.email }}</p>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <a href="{{ path('user_change_email') }}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.change_email'|trans }}</a>
+                                    <a href="{% if connected_to_provider(customer.user, constant('App\\Controller\\ShopApi\\OAuthLoginController::PROVIDER_FACEBOOK')) %}{{ path('user_pre_change_email') }}{% else %}{{ path('user_change_email') }}{% endif %}" class="btn-rounded inverted d-inline-block">{{ 'app.ui.profile.change_email'|trans }}</a>
                                 </div>
                             </div>
                             {% if not connected_to_provider(customer.user, constant('App\\Controller\\ShopApi\\OAuthLoginController::PROVIDER_FACEBOOK')) %}

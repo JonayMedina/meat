@@ -2356,12 +2356,12 @@ label.icobutton input {
 }
 
 /* Disconnect */
-#disconnect label {
+#disconnect label, #add-Password label {
     display: flex;
     flex-wrap: wrap;
 }
 
-#disconnect label .invalid-feedback {
+#disconnect label .invalid-feedback, #add-Password label .invalid-feedback {
     order: 1;
 }
 

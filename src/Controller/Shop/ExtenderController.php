@@ -5,6 +5,7 @@ namespace App\Controller\Shop;
 use App\Controller\ShopApi\OAuthLoginController;
 use App\Entity\User\UserOAuth;
 use App\Form\Shop\AddPasswordType;
+use App\Form\Shop\DisconnectFacebookType;
 use DateTime;
 use Exception;
 use SM\SMException;
@@ -315,10 +316,9 @@ class ExtenderController extends AbstractController
 
     /**
      * @param Request $request
-     * @param OrderRepositoryInterface $orderRepository
      * @return RedirectResponse|Response
      */
-    public function disconnectFacebookAction(Request $request, OrderRepositoryInterface $orderRepository) {
+    public function disconnectFacebookAction(Request $request) {
         $this->get('session')->getFlashBag()->clear();
         /** @var ShopUser $user */
         $user = $this->getUser();
@@ -336,7 +336,7 @@ class ExtenderController extends AbstractController
             }
         }
 
-        $form = $this->createForm(AddPasswordType::class);
+        $form = $this->createForm(DisconnectFacebookType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -366,6 +366,53 @@ class ExtenderController extends AbstractController
         }
 
         return $this->render('shop/account/disconnectFacebook.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function addPasswordAction(Request $request) {
+        $this->get('session')->getFlashBag()->clear();
+        /** @var ShopUser $user */
+        $user = $this->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $errors = [];
+
+        $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
+            ->findOneBy(['provider' => OAuthLoginController::PROVIDER_FACEBOOK, 'user' => $user]);
+
+        if ($request->getMethod() == 'POST') {
+            if (!$oauthUser instanceof UserOAuth) {
+                return $this->redirectToRoute('sylius_shop_account_dashboard');
+            }
+        }
+
+        $form = $this->createForm(AddPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $errors = $this->validatePassword($form->getData());
+
+            if (count($errors) <= 0) {
+                $data = $form->getData();
+
+                try {
+                    $user->setPlainPassword($data['password']);
+
+                    $passwordUpdater = new PasswordUpdater(new UserPbkdf2PasswordEncoder());
+                    $passwordUpdater->updatePassword($user);
+
+                    $em->flush();
+
+                    return $this->redirectToRoute('user_change_email');
+                } catch (\Exception $e) {
+                    return $this->redirectToRoute('user_pre_change_email', ['error' => true]);
+                }
+            }
+        }
+
+        return $this->render('shop/account/preChangeEmail.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
     }
 
     /**
@@ -407,6 +454,20 @@ class ExtenderController extends AbstractController
             if ($existUser->getId() != $user->getId()) {
                 $errors['email'] = 'app.ui.change_email.error.email_is_used';
             }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $passwords
+     * @return array
+     */
+    private function validatePassword($passwords) {
+        $errors = [];
+
+        if ($passwords['password'] != $passwords['confirmPassword']) {
+            $errors['password'] = 'app.ui.pre_change_email.error.not_same_password';
         }
 
         return $errors;
