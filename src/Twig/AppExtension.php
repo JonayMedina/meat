@@ -384,7 +384,7 @@ class AppExtension extends AbstractExtension
      */
     public function isConnectedToProvider(ShopUser $user, $provider) {
         $oauthUser = $this->container->get('doctrine')->getManager()->getRepository('App:User\UserOAuth')
-            ->findOneBy(['provider' => $provider, 'identifier' => $user]);
+            ->findOneBy(['provider' => $provider, 'user' => $user]);
 
         if ($oauthUser instanceof UserOAuth) {
             return true;
