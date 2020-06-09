@@ -5,13 +5,6 @@
 Se creará un item en la cola de sincronización local por cada evento de creación/edición/eliminación de registros dentro de la base de datos.
 
 
-|Evento|Descripción|
-|--- |--- |
-| persist| Se ejecuta al guardar un elemento nuevo en la base de datos|
-| update | Se ejecuta después de actualizar un elemento en la base de datos|
-| remove | Se ejecuta después de eliminar un elemento en la base de datos|
-
-
 El API está versionada, la versión actual de esta implementación es la **v1**.
 También puede responder en dos formatos diferentes, json por default y XML.
 

@@ -2,7 +2,7 @@
 
 
 ## Listado de categorías
-Listado de categorías disponibles con parametros para paginación y búsqueda de elementos.
+Listado de categorías disponibles con parámetros para paginación y búsqueda de elementos.
 
 ### Modelo
 |Campo|Descripción|Tipo de dato|Longitud máxima|Requerido|
@@ -11,10 +11,8 @@ Listado de categorías disponibles con parametros para paginación y búsqueda d
 |code|Identificador único de categoría|VARCHAR|255|Sí|
 |name|Nombre de la categoría|VARCHAR|255|Sí|
 |parent|Id de la categoría padre|INT|11|No|
-|tree_root|Antepasado principal de la categoría|INT|11|No|
 |left|Ubicación dentro de toda la colección.|INT|11|No|
 |right|Ubicación dentro de toda la colección.|INT|11|No|
-|level|Qué tan profundo es la categoría en el árbol|INT|11|No|
 |position|Posición de la categoría entre otras categorías.|INT|11|No|
 |photo|Fotografía principal de la categoría|LONGTEXT (BASE64) |--|Sí|
 
@@ -105,14 +103,21 @@ Posibles códigos de respuesta:
     "id": 3,
     "code": "cordero",
     "name": "Cordero",
-    "parent": 1,
-    "tree_root": null,
+    "parent": {
+        "id": 7,
+        "code": "promo",
+        "name": "Promociones",
+        "left": 1,
+        "right": 10,
+        "position": 0,
+        "photo": "https://URL_DE_LA_FOTO.jpg",
+        "created_at": "2020-03-31 17:08:53"
+    },
     "left": 1,
     "right": 10,
-    "level": 0,	
-    "position": 1,
+    "position": 9,
     "photo": "https://URL_DE_LA_FOTO.jpg",
-    "created_at": "2020-03-31 17:08:53"
+    "created_at": "2020-03-31T17:08:53"
 }
 ```
 
@@ -136,11 +141,18 @@ Posibles códigos de respuesta:
     "id": 3,
     "code": "cordero",
     "name": "Cordero",
-    "parent": 1,
-    "tree_root": null,
+    "parent": {
+        "id": 7,
+        "code": "promo",
+        "name": "Promociones",
+        "left": 1,
+        "right": 10,
+        "position": 0,
+        "photo": "https://URL_DE_LA_FOTO.jpg",
+        "created_at": "2020-03-31 17:08:53"
+    },
     "left": 1,
     "right": 10,
-    "level": 0,	
     "position": 1,
     "photo": "https://URL_DE_LA_FOTO.jpg",
     "created_at": "2020-03-31 17:08:53"
@@ -175,11 +187,18 @@ Posibles códigos de respuesta:
     "id": 3,
     "code": "cordero",
     "name": "Cordero",
-    "parent": 1,
-    "tree_root": null,
+    "parent": {
+        "id": 7,
+        "code": "promo",
+        "name": "Promociones",
+        "left": 1,
+        "right": 10,
+        "position": 0,
+        "photo": "https://URL_DE_LA_FOTO.jpg",
+        "created_at": "2020-03-31 17:08:53"
+    },
     "left": 1,
     "right": 10,
-    "level": 0,	
     "position": 1,
     "photo": "https://URL_DE_LA_NUEVA_FOTO.jpg",
     "created_at": "2020-03-31 17:08:53"

@@ -14,7 +14,7 @@ Listado de cupones disponibles con parametros para paginación y búsqueda de el
 |endsAt|Fecha de fin de la promoción|DATETIME|--|No|
 |enabled|Define si la promoción está o no habilitada|TINYINT|1|Sí|
 |type|Tipo de promoción|ENUM: order_fixed_discount, order_percentage_discount|1|Sí|
-|amount|Valor de la promoción|order_fixed_discount: INT(11), order_percentage_discount: DECIMAL (0-0.99)|--|Sí|
+|amount|Valor de la promoción|order_fixed_discount: INT(11), order_percentage_discount: DECIMAL (0-99)|--|Sí|
 |oneUsagePerUser|Si está habilitado, solo se permitirá un uso por cliente|TINYINT|1|Sí|
 |limitUsageToXQuantityOfUsers|Si está habilitado, se limita el uso del cupón a una cantidad de usuarios|TINYINT|1|Sí|
 |usageLimit|Limite de uso del cupón por cliente|INT|11|No|
@@ -99,11 +99,10 @@ Listado de cupones disponibles con parametros para paginación y búsqueda de el
   "description": "Promoción de invierno",
   "enabled": true,
   "type": "order_percentage_discount",
-  "amount": 0.1,
+  "amount": 10,
   "oneUsagePerUser": true,
   "limitUsageToXQuantityOfUsers": true,
   "usageLimit": 10,
-  "used": 3,
   "startsAt": "2020-01-31 17:08:53",
   "endsAt": "2020-03-31 17:08:53"
 }
@@ -162,7 +161,7 @@ Posibles códigos de respuesta:
 ### Response
 
 Posibles códigos de respuesta:
-- 200: No hubieron problemas
+- 200: No hubo problemas
 - 403: No hay suficientes permisos para ejecutar esta operación
 - 404: Este cupón no existe.
 
@@ -196,13 +195,12 @@ Posibles códigos de respuesta:
 
 ```json
 {
-  "description": "Venta de invierno",
-  "enabled": false
+  "description": "Venta de invierno"
 }
 ```
 
 Posibles códigos de respuesta:
-- 200: No hubieron problemas
+- 200: No hubo problemas
 - 400: Por favor revise el contenido que está enviando, parece que hay errores
 - 403: No hay suficientes permisos para ejecutar esta operación
 - 404: Este cupón no existe.
@@ -238,3 +236,66 @@ Posibles códigos de respuesta:
 
 * HTTP Status: 204 (No content), 403 (Invalid credentials)
 * Body: N/A
+
+
+## Activar un cupón
+
+### Request
+
+- URL: /api/v1/coupons/:code/enable
+- Método: PUT
+
+### Response
+```json
+{
+  "id": 3,
+  "code": "PROM003",
+  "description": "Venta de invierno",
+  "enabled": true,
+  "type": "order_fixed_discount",
+  "amount": 10,
+  "oneUsagePerUser": true,
+  "limitUsageToXQuantityOfUsers": true,
+  "usageLimit": 10,
+  "used": 3,
+  "startsAt": "2020-01-31 17:08:53",
+  "endsAt": "2020-03-31 17:08:53"
+}
+```
+
+Posibles códigos de respuesta:
+- 200: No hubo problemas
+- 400: Por favor revise el contenido que está enviando, parece que hay errores
+- 403: No hay suficientes permisos para ejecutar esta operación
+- 404: Este cupón no existe.
+
+## Desactivar un cupón
+
+### Request
+
+- URL: /api/v1/coupons/:code/disable
+- Método: PUT
+
+### Response
+```json
+{
+  "id": 3,
+  "code": "PROM003",
+  "description": "Venta de invierno",
+  "enabled": false,
+  "type": "order_fixed_discount",
+  "amount": 10,
+  "oneUsagePerUser": true,
+  "limitUsageToXQuantityOfUsers": true,
+  "usageLimit": 10,
+  "used": 3,
+  "startsAt": "2020-01-31 17:08:53",
+  "endsAt": "2020-03-31 17:08:53"
+}
+```
+
+Posibles códigos de respuesta:
+- 200: No hubo problemas
+- 400: Por favor revise el contenido que está enviando, parece que hay errores
+- 403: No hay suficientes permisos para ejecutar esta operación
+- 404: Este cupón no existe.
