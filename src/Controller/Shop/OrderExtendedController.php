@@ -66,6 +66,7 @@ class OrderExtendedController extends OrderController
         $form = $this->resourceFormFactory->create($configuration, $resource);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
+            $resource = $form->getData();
             $addressId = $request->request->get('sylius_checkout_address')['addressId'];
             $skipBilling = $request->request->get('sylius_checkout_address')['skipBilling'];
 
@@ -118,6 +119,7 @@ class OrderExtendedController extends OrderController
             $billingAddress->setType(Address::TYPE_BILLING);
             $billingAddress->setFullAddress(null);
 
+            /* If skip billing step is true */
             if (filter_var($skipBilling, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
                 $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
                 $stateMachine['transition'] = 'select_shipping';
@@ -189,8 +191,6 @@ class OrderExtendedController extends OrderController
             }
 
             $em->flush();
-
-            $resource = $form->getData();
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
             if ($event->isStopped() && !$configuration->isHtmlRequest()) {
@@ -468,6 +468,10 @@ class OrderExtendedController extends OrderController
         return $this->viewHandler->handle($configuration, $view);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function completeAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
@@ -557,6 +561,10 @@ class OrderExtendedController extends OrderController
         return $this->viewHandler->handle($configuration, $view);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function thankYouAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);

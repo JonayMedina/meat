@@ -152,10 +152,12 @@ class ExtenderController extends AbstractController
 
         if ($request->request->get('sylius_customer_profile')) {
             $profile = $request->request->get('sylius_customer_profile');
-            $formatted = DateTime::createFromFormat('d/m/Y', $profile['birthday']);
-            $date = $formatted->format('Y-m-d');
+            if ($profile['birthday']) {
+                $formatted = DateTime::createFromFormat('d/m/Y', $profile['birthday']);
+                $date = $formatted->format('Y-m-d');
 
-            $profile['birthday'] = New DateTime($date);
+                $profile['birthday'] = New DateTime($date);
+            }
 
             $request->request->set('sylius_customer_profile', $profile);
 

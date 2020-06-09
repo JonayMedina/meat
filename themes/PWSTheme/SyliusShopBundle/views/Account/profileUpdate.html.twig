@@ -192,6 +192,8 @@
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
 
+            $('input[type="radio"][value="{{ customer.gender }}"]').prop('checked', true);
+
             enableRadios();
 
             $addAddress.click(function () {
