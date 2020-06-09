@@ -4,7 +4,6 @@ namespace App\Controller\AdminApi;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Taxonomy\Taxon;
-use App\Entity\Taxonomy\TaxonImage;
 use Doctrine\ORM\QueryBuilder;
 use App\Form\AdminApi\CategoryType;
 use App\Pagination\PaginationFactory;
