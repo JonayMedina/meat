@@ -243,7 +243,7 @@ class CategoryController extends AbstractFOSRestController
             ->createQueryBuilder('taxon')
             ->leftJoin('taxon.translations', 'translations')
             ->andWhere('translations.locale = :locale')
-            ->setParameter('locale', 'es_GT')
+            ->setParameter('locale', Locale::DEFAULT_LOCALE)
             ->orderBy('taxon.position', 'ASC');
 
         if (!empty($search)) {

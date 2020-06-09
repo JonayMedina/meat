@@ -18,7 +18,6 @@ use Sylius\Component\Payment\PaymentTransitions;
 use Sylius\Component\Shipping\ShipmentTransitions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sylius\Component\Core\OrderPaymentTransitions;
 use Sylius\Component\Core\OrderShippingTransitions;
