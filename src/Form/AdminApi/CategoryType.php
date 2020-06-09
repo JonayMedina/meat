@@ -26,7 +26,7 @@ class CategoryType extends AbstractType
             ])
             ->add('name', null, [
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(['groups' => ['creation']]),
                 ]
             ])
             ->add('description', null, [

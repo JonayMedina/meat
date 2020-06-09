@@ -107,7 +107,7 @@ class CategoryController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/{id}.{_format}",
+     *     "/{code}.{_format}",
      *     name="admin_api_categories_show",
      *     methods={"GET"}
      * )
@@ -135,7 +135,7 @@ class CategoryController extends AbstractFOSRestController
      */
     public function newAction(Request $request)
     {
-        $form = $this->createForm(CategoryType::class);
+        $form = $this->createForm(CategoryType::class, null, ['validation_groups' => ['creation']]);
         $form->submit($request->request->all());
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -167,7 +167,7 @@ class CategoryController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/{id}.{_format}",
+     *     "/{code}.{_format}",
      *     name="admin_api_categories_edit",
      *     methods={"PUT"}
      * )
@@ -209,7 +209,7 @@ class CategoryController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/{id}.{_format}",
+     *     "/{code}.{_format}",
      *     name="admin_api_categories_delete",
      *     methods={"DELETE"}
      * )
@@ -243,7 +243,7 @@ class CategoryController extends AbstractFOSRestController
             ->createQueryBuilder('taxon')
             ->leftJoin('taxon.translations', 'translations')
             ->andWhere('translations.locale = :locale')
-            ->setParameter('locale', 'es_GT')
+            ->setParameter('locale', Locale::DEFAULT_LOCALE)
             ->orderBy('taxon.position', 'ASC');
 
         if (!empty($search)) {
@@ -291,9 +291,9 @@ class CategoryController extends AbstractFOSRestController
      */
     private function getCategory(Request $request): ?Taxon
     {
-        $id = $request->get('id');
+        $code = $request->get('code');
         /** @var Taxon $category */
-        $category = $this->categoryRepository->find($id);
+        $category = $this->categoryRepository->findOneBy(['code' => $code]);
 
         if (!$category instanceof Taxon) {
             throw new NotFoundHttpException('Category not found.');
@@ -349,8 +349,13 @@ class CategoryController extends AbstractFOSRestController
     {
         $category->setCurrentLocale(Locale::DEFAULT_LOCALE);
 
-        $category->setName($name);
-        $category->setDescription($description);
+        if (!empty($name)) {
+            $category->setName($name);
+        }
+
+        if (!empty($description)) {
+            $category->setDescription($description);
+        }
 
         if (!empty($left)) {
             $category->setLeft($left);

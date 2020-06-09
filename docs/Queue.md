@@ -3,7 +3,14 @@ Con este servicio podrá obtener que entidades han cambiado por eventos.
 
 - **persist**: Se ejecuta al guardar un elemento nuevo en la base de datos.
 - **update**: Se ejecuta después de actualizar un elemento en la base de datos.
-- **remove**: Se ejecuta después de eliminar un elemento en la base de datos.
+- **order_completed**: Este evento se ejecuta después de completar el checkout de una orden.
+- **order_rated**: Se ejecuta luego de que una orden ha sido calificada por parte del cliente.
+
+El listado de modelos que pueden verse afectados por estos eventos son:
+
+- **order**: Son las ordenes que los clientes han generado desde la tienda.
+- **address**: Son las direcciones que los clientes han creado, generalmente estas necesitan ser aprobadas antes de ser usadas.
+- **customer**: Cuando un nuevo cliente se registra se usa este modelo en la cola de sincronización.
 
 
 ## Listado de items
@@ -17,6 +24,7 @@ body.id | Identificador del recurso | INT | 11 |
 body.model | Recurso | ENUM: order, category, product, coupon, customer | 150 |
 body.type | El tipo de evento que desencadenó esta entrada en la cola | ENUM: persist, update, remove | 150 |
 body.url | URL del API para ejecutar la actualización del modelo | VARCHAR | 255 | URL absoluta
+body.metadata | Detalle de que ha cambiado en este evento. | VARCHAR | 255 | URL absoluta
 created_at | Fecha/Hora en la que el evento fue creado | DATETIME | -- | Formato: Y-m-d H:i:s
 
 ### Request
@@ -72,7 +80,8 @@ Si no hay extensión del servicio o si esta es .json, la respuesta será un JSON
                 "id": 21,
                 "model": "coupon",
                 "type": "persist",
-                "url": "http://localhost:8000/api/v1/coupon/21"
+                "url": "http://localhost:8000/api/v1/coupon/21",
+                "metadata": []
             },
             "created_at": "2020-03-31 17:08:53"
         },
@@ -82,7 +91,8 @@ Si no hay extensión del servicio o si esta es .json, la respuesta será un JSON
                 "id": 26,
                 "model": "coupon",
                 "type": "update",
-                "url": "http://localhost:8000/api/v1/coupon/26"
+                "url": "http://localhost:8000/api/v1/coupon/26",
+                "metadata": []
             },
             "created_at": "2020-03-31 21:22:14"
         }

@@ -20,11 +20,6 @@ class Sync
     const TYPE_UPDATE = 'update';
 
     /**
-     * On remove entity.
-     */
-    const TYPE_REMOVE = 'remove';
-
-    /**
      * Order checkout completed.
      */
     const TYPE_ORDER_CHECKOUT_COMPLETED = 'order_completed';
