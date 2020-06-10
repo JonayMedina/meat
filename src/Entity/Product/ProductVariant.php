@@ -17,6 +17,16 @@ use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
  */
 class ProductVariant extends BaseProductVariant
 {
+    const MEASUREMENT_UNIT_TYPE = 'unit';
+
+    const MEASUREMENT_POUND_TYPE = 'pound';
+
+    const MEASUREMENT_PACKAGE_TYPE = 'package';
+
+    const MEASUREMENT_PIECE_TYPE = 'piece';
+
+    const MEASUREMENT_LITTER_TYPE = 'litter';
+
     /**
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\PromotionBanner",
@@ -24,6 +34,12 @@ class ProductVariant extends BaseProductVariant
      * )
      */
     private $promotionBanners;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=150, nullable=true)
+     */
+    private $measurementUnit = self::MEASUREMENT_POUND_TYPE;
 
     public function __construct()
     {
@@ -65,5 +81,21 @@ class ProductVariant extends BaseProductVariant
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMeasurementUnit(): string
+    {
+        return $this->measurementUnit;
+    }
+
+    /**
+     * @param string $measurementUnit
+     */
+    public function setMeasurementUnit(string $measurementUnit): void
+    {
+        $this->measurementUnit = $measurementUnit;
     }
 }
