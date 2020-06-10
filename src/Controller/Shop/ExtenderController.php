@@ -152,10 +152,12 @@ class ExtenderController extends AbstractController
 
         if ($request->request->get('sylius_customer_profile')) {
             $profile = $request->request->get('sylius_customer_profile');
-            $formatted = DateTime::createFromFormat('d/m/Y', $profile['birthday']);
-            $date = $formatted->format('Y-m-d');
+            if ($profile['birthday']) {
+                $formatted = DateTime::createFromFormat('d/m/Y', $profile['birthday']);
+                $date = $formatted->format('Y-m-d');
 
-            $profile['birthday'] = New DateTime($date);
+                $profile['birthday'] = New DateTime($date);
+            }
 
             $request->request->set('sylius_customer_profile', $profile);
 
@@ -413,6 +415,37 @@ class ExtenderController extends AbstractController
         }
 
         return $this->render('shop/account/preChangeEmail.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function welcomeAction() {
+        $this->get('session')->getFlashBag()->clear();
+
+        return $this->render('/frontend/welcome.html.twig');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function grandCentralAction(Request $request) {
+        $session = $request->getSession();
+        $route = 'sylius_shop_homepage';
+        $params = [];
+
+        if ($session->get('redirect_to_route')) {
+            $route = $session->get('redirect_to_route');
+
+            if ($route == 'sylius_shop_account_dashboard') {
+                $params = ['connected' => true];
+            }
+
+            $session->remove('redirect_to_route');
+        }
+
+        return $this->redirectToRoute($route, $params);
     }
 
     /**

@@ -50,6 +50,18 @@ meathouse_frontend_api:
     prefix:   /store/api/v{version}
     defaults:
         _format: json
+        
+grand_central:
+    path: /grand-central
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:grandCentralAction
+
+store_welcome:
+    path: /account/welcome
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:welcomeAction
       
 user_favorites:
     path: /account/favorites

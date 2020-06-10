@@ -39,6 +39,9 @@ services:
             $epayMerchant: '%env(EPAY_MERCHANT)%'
             $epayMerchantUser: '%env(EPAY_MERCHANT_USER)%'
             $epayMerchantPassword: '%env(EPAY_MERCHANT_PASSWORD)%'
+            $oauthRepository: '@sylius.repository.oauth_user'
+            $userFactory: '@sylius.factory.shop_user'
+            $oauthFactory: '@sylius.factory.oauth_user'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
@@ -195,3 +198,7 @@ services:
     App\EventListener\LoginListener:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+    
+    user.oauth_user_provider:
+        class: App\Auth\OAuthProvider
+        public: true

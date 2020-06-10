@@ -15,8 +15,8 @@
                         <div class="custom-overlay-container {% if not available %}show sold-out{% endif %}">
                             <div class="bg-white">
                                 <div class="image">
-                                    <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
-                                        <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                    <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}')">
+                                        <img src="{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
                                     </a>
                                     <span class="{% if available %}xpress-button{% else %}xpress-button-disabled{% endif %}">{{ 'app.ui.express_buy'|trans }}</span>
                                 </div>
