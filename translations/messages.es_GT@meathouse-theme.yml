@@ -93,7 +93,7 @@ app.ui.logout: Salir
 app.ui.segments: Segmentos
 app.ui.purchase_texts: 'Textos de compras'
 app.ui.purchase_settings: 'Configuración de compra'
-app.ui.holidays: 'Días festivos'
+app.ui.holidays: 'Días de feriado'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
 app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
@@ -416,7 +416,7 @@ app.ui.holiday_reason: Motivo
 app.ui.holiday_day: Día
 app.ui.holiday_month: Mes
 app.ui.calendar_holiday: Editar
-app.ui.qty_of_holiday_%total%: 'Cantidad de días festivos: %total%'
+app.ui.qty_of_holiday_%total%: 'Cantidad de días de feriado: %total%'
 app.ui.holiday_remove_text: '%name%'
 app.ui.holiday_error_on_remove_message: 'Hubo un error al eliminar el día festivo, por favor inténtelo de nuevo más tarde.'
 app.ui.holiday_remove_title: '¿Estás seguro de borrar este día festivo?'
@@ -424,7 +424,7 @@ app.ui.filter_order_by_date: Cronológico
 app.ui.filter_order_by: 'Ordenar por'
 app.ui.filter_order_by_reason: ABC
 app.ui.filter_by_month: 'Filtrar por'
-app.ui.edit_holidays: 'Editar días festivos'
+app.ui.edit_holidays: 'Editar días de feriado'
 app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
 app.ui.holidays_new: 'Nuevo día festivo'
 app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
