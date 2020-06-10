@@ -231,7 +231,7 @@ h4 {
 
 .sweet-alert {
     width: 720px;
-    height: 290px;
+    min-height: 290px;
     margin-left: -335px;
 }
 
