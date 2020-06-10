@@ -4,8 +4,10 @@ namespace App\Form\Admin;
 
 use App\Entity\AboutStore;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Positive;
@@ -41,7 +43,7 @@ class PurchaseSettingsType extends AbstractType
                 ]
             ])
 
-            ->add('daysToChooseInAdvanceToPurchase', TextType::class, [
+            ->add('daysToChooseInAdvanceToPurchase', NumberType::class, [
                 'label' => 'app.ui.purchase_settings_days_to_choose_in_advance_to_purchase',
                 'constraints' => [
                     new NotBlank(),

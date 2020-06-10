@@ -21,7 +21,7 @@ class PurchaseTextsType extends AbstractType
                     'maxlength' => 90,
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(['message' => 'app.ui.admin.purchase.not_empty']),
                     new Length(['min' => 5, 'max' => 90])
                 ]
             ])
@@ -33,7 +33,7 @@ class PurchaseTextsType extends AbstractType
                     'maxlength' => 90
                 ],
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(['message' => 'app.ui.admin.purchase.not_empty']),
                     new Length(['min' => 5, 'max' => 90])
                 ]
             ])

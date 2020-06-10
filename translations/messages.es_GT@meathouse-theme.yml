@@ -93,7 +93,7 @@ app.ui.logout: Salir
 app.ui.segments: Segmentos
 app.ui.purchase_texts: 'Textos de compras'
 app.ui.purchase_settings: 'Configuración de compra'
-app.ui.holidays: 'Días festivos'
+app.ui.holidays: 'Días de feriado'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
 app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
@@ -327,7 +327,7 @@ app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscado
 app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
 app.ui.purchase_settings_edit: Editar
 app.ui.purchase_settings_max_purchase: 'Máximo de compra'
-app.ui.purchase_settings_min_purchase: 'Minimo de compra'
+app.ui.purchase_settings_min_purchase: 'Mínimo de compra'
 app.ui.purchase_settings_days_to_choose_in_advance_to_purchase: 'Días a elegir con anticipación la compra'
 app.ui.purchase_settings_delivery_hours: 'Horarios de entrega'
 app.ui.settings.purchase_settings_success_message: '¡Se actualizaron las configuraciones de compra!'
@@ -416,7 +416,7 @@ app.ui.holiday_reason: Motivo
 app.ui.holiday_day: Día
 app.ui.holiday_month: Mes
 app.ui.calendar_holiday: Editar
-app.ui.qty_of_holiday_%total%: 'Cantidad de días festivos: %total%'
+app.ui.qty_of_holiday_%total%: 'Cantidad de días de feriado: %total%'
 app.ui.holiday_remove_text: '%name%'
 app.ui.holiday_error_on_remove_message: 'Hubo un error al eliminar el día festivo, por favor inténtelo de nuevo más tarde.'
 app.ui.holiday_remove_title: '¿Estás seguro de borrar este día festivo?'
@@ -424,7 +424,7 @@ app.ui.filter_order_by_date: Cronológico
 app.ui.filter_order_by: 'Ordenar por'
 app.ui.filter_order_by_reason: ABC
 app.ui.filter_by_month: 'Filtrar por'
-app.ui.edit_holidays: 'Editar días festivos'
+app.ui.edit_holidays: 'Editar días de feriado'
 app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
 app.ui.holidays_new: 'Nuevo día festivo'
 app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
@@ -952,3 +952,7 @@ app.ui.account.pre_change_email.error.title: 'Hubo un error al agregar tu contra
 app.ui.account.pre_change_email.error.message: 'Un error no permitio agregar tu contraseña, intentanlo más tarde...'
 app.ui.pre_change_email.error.not_same_password: 'Parece que las contraseñas no coinciden.'
 sylius.shop_api.coupon.not_valid: 'Parece que el cupón no es valido'
+app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
+app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
+app.ui.admin.yes: Sí
+app.ui.admin.no: No
