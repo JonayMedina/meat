@@ -37,14 +37,12 @@ $response | ConvertTo-Json
 
 
 ```json
-{
-    "code": 200,
-    "type": "info",
-    "message": "Order rating result",
-    "recordset": [
-        {
-            "rating": 3.5
-        }
-    ]
+{ 
+  "rating": { 
+    "rating": 4.0, 
+    "order_counter": 4 
+  }, 
+  "startsAt": "2020-01-01", 
+  "endsAt": "2020-12-31" 
 }
 ```
