@@ -9,7 +9,13 @@
     <div class="row profile pt-4 favorites page cart-summary">
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
             <h1 class="text-center">{{ 'app.ui.my_cart'|trans }}</h1>
-            <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
+            {% if not cart.empty %}
+                {% if (cart.total/100) < about_store('min-purchase') %}
+                    <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
+                {% endif %}
+            {% else %}
+                <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
+            {% endif %}
         </div>
 
         <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">

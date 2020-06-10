@@ -24,7 +24,7 @@
 
             <div class="two fields flex-wrap">
                 <p class="w-100 mh-color f-rl-light">{{ 'app.ui.profile.update.optional_fields_to_offers' | trans }}</p>
-                <div class="field">{{ form_row(form.birthday, {'value': customer.birthday|date("d/m/Y")}) }}</div>
+                <div class="field">{{ form_row(form.birthday, {'value': customer.birthday ? customer.birthday|date("d/m/Y") : ''}) }}</div>
                 <div class="field">{{ form_row(form.gender) }}</div>
             </div>
 
@@ -191,6 +191,8 @@
             $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
             $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
             $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            $('input[type="radio"][value="{{ customer.gender }}"]').prop('checked', true);
 
             enableRadios();
 

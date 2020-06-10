@@ -18,7 +18,7 @@
                                     <div class="bg-white">
                                         <div class="image">
                                             <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" style="background: url('{{ taxon.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
-                                                <img src="{{ taxon.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ taxon.name }}" title="{{ taxon.name }}" width="auto" height="auto">
+                                                <img src="{% if taxon.images|length > 0 %}{{ taxon.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}" alt="{{ taxon.name }}" title="{{ taxon.name }}" width="auto" height="auto">
                                             </a>
                                         </div>
                                         <div class="content">
