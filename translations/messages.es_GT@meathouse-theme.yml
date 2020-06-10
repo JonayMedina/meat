@@ -936,6 +936,8 @@ app.ui.account.disconnect.facebook.success.title: 'Hemos desconectado tu cuenta 
 app.ui.account.disconnect.facebook.success.message: 'La próxima vez que entres a Meat House deberás ingresar utilizando tu correo y contraseña.'
 app.ui.account.disconnect.facebook.error.title: 'Hubo un error al desconectar tu cuenta'
 app.ui.account.disconnect.facebook.error.message: 'Un error no permitio desconectar tu cuenta de Facebook, intentalo más tarde...'
+app.ui.account.connect.facebook.success.title: 'Hemos conectado tu cuenta a tu Facebook'
+app.ui.account.connect.facebook.success.message: 'La próxima vez que entres a Meat House puedes ingresar utilizando Facebook o bien tu correo y contraseña.'
 app.ui.form.disconnect.email: 'Correo electrónico'
 app.ui.form.disconnect.confirm_email: 'Confirma tu correo electrónico'
 app.ui.form.disconnect.password: 'Crea una contraseña'

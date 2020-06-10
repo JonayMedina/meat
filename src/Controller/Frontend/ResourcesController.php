@@ -64,16 +64,6 @@ class ResourcesController extends AbstractController
     }
 
     /**
-     * @Route("/welcome", name="store_welcome")
-     * @return Response
-     */
-    public function welcomeAction() {
-        $this->get('session')->getFlashBag()->clear();
-
-        return $this->render('/frontend/welcome.html.twig');
-    }
-
-    /**
      * @Route("/forgotten-password/token", name="store_set_token")
      * @param Request $request
      * @return RedirectResponse|Response

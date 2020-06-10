@@ -414,6 +414,7 @@
 
 {% block extrajs %}
     {% include '@SyliusShop/Account/Order/Widget/_reorder.html.twig'%}
+
     <script>
         $(function () {
             let $showMessage = $('#showMessage');
@@ -421,12 +422,21 @@
             if (getParameterByName('success')) {
                 $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.verified.title'|trans }}');
                 $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.verified.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.accept.short'|trans }}');
                 $showMessage.modal('show');
             }
 
             if (getParameterByName('error')) {
                 $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.error.title'|trans }}');
                 $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.error.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.accept.short'|trans }}');
+                $showMessage.modal('show');
+            }
+
+            if (getParameterByName('connected')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.connect.facebook.success.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.connect.facebook.success.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.agreed'|trans }}');
                 $showMessage.modal('show');
             }
         });

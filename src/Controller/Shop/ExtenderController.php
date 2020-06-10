@@ -4,6 +4,7 @@ namespace App\Controller\Shop;
 
 use DateTime;
 use Exception;
+use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use SM\SMException;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
@@ -415,6 +416,37 @@ class ExtenderController extends AbstractController
         }
 
         return $this->render('shop/account/preChangeEmail.html.twig', ['form' => $form->createView(), 'errors' => $errors]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function welcomeAction() {
+        $this->get('session')->getFlashBag()->clear();
+
+        return $this->render('/frontend/welcome.html.twig');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function grandCentralAction(Request $request) {
+        $session = $request->getSession();
+        $route = 'sylius_shop_homepage';
+        $params = [];
+
+        if ($session->get('redirect_to_route')) {
+            $route = $session->get('redirect_to_route');
+
+            if ($route == 'sylius_shop_account_dashboard') {
+                $params = ['connected' => true];
+            }
+
+            $session->remove('redirect_to_route');
+        }
+
+        return $this->redirectToRoute($route, $params);
     }
 
     /**

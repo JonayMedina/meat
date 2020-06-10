@@ -3,10 +3,10 @@
     color: #ffffff !important;
     font-family: "Raleway Medium", sans-serif;
     font-size: 16px;
-    padding-left: 15px;
-    padding-right: 35px;
+    padding: .78571429em 35px .78571429em 15px;
     display: inline-flex;
     align-items: center;
+    border-radius: 10em;
 }
 
 .ui.circular.button img {
