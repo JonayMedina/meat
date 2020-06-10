@@ -13,15 +13,12 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
 |categories|colección de categorías asociadas|INT|11|Sí|
 |code|SKU del producto|VARCHAR|255|Sí|
 |name|Nombre del producto|VARCHAR|255|Sí|
-|shortName|Nombre corto del producto|VARCHAR|150|Sí|
 |description|Descripción del producto|LONGTEXT|--|Sí|
 |price|Precio base del producto en GTQ (price * 100)|INT|11|Sí|
 |offerPrice|Precio de oferta del producto en GTQ (offerPrice * 100)|INT|11|Sí|
 |measurementUnit|Tipo de medida|ENUM: (pound, package, piece, liter)|100|Sí|
 |keywords|Nombres clave para búsqueda de producto separados por coma|VARCHAR|255|No|
 |photo|Fotografía principal del producto|LONGTEXT (BASE64) |--|Sí|
-
-LB/Unidad
 
 ### Request
 
@@ -78,6 +75,7 @@ LB/Unidad
       "description": "Pieza de lomito",
       "price": 2450,
       "offerPrice": 2200,
+      "inStock": true,
       "measurementUnit": "piece",
       "keywords": "lomito, res, vaca",
       "photo": "BASE64 image"
@@ -111,7 +109,7 @@ LB/Unidad
 }
 ```
 
-
+    
 ### Response
 
 Posibles códigos de respuesta:
@@ -147,6 +145,7 @@ Posibles códigos de respuesta:
   "description": "Pieza de lomito",
   "price": 2450,
   "offerPrice": 2200,
+  "inStock": true,
   "measurementUnit": "piece",
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
@@ -163,20 +162,40 @@ Posibles códigos de respuesta:
 ### Response
 
 Posibles códigos de respuesta:
-- 200: No hubieron problemas
+- 200: No hubo problemas
 - 403: No hay suficientes permisos para ejecutar esta operación
 - 404: Este producto no existe.
 
 
 ```json
 {
-  "category":  "carnes-rojas",
-  "categories": ["carnes-rojas", "res"],
+  "id": 2,
+  "category": {
+    "id": 1,
+    "name": "Carnes Rojas",
+    "code": "carnes-rojas",
+    "photo": "https://URL_DE_LA_FOTO.jpg"
+  },
+  "categories": [
+    {
+      "id": 1,
+      "name": "Carnes Rojas",
+      "code": "carnes-rojas",
+      "photo": "https://URL_DE_LA_FOTO.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Carnes de Res",
+      "code": "res",
+      "photo": "https://URL_DE_LA_FOTO.jpg"
+    }
+  ],
   "code": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
   "offerPrice": 2200,
+  "inStock": true,
   "measurementUnit": "piece",
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
@@ -202,7 +221,7 @@ Posibles códigos de respuesta:
 ```
 
 Posibles códigos de respuesta:
-- 200: No hubieron problemas
+- 200: No hubo problemas
 - 400: Por favor revise el contenido que está enviando, parece que hay errores
 - 403: No hay suficientes permisos para ejecutar esta operación
 - 404: Este producto no existe.
@@ -210,13 +229,33 @@ Posibles códigos de respuesta:
 
 ```json
 {
-  "category":  "carnes-rojas",
-  "categories": ["carnes-rojas", "res"],
+  "id": 2,
+  "category": {
+    "id": 1,
+    "name": "Carnes Rojas",
+    "code": "carnes-rojas",
+    "photo": "https://URL_DE_LA_FOTO.jpg"
+  },
+  "categories": [
+    {
+      "id": 1,
+      "name": "Carnes Rojas",
+      "code": "carnes-rojas",
+      "photo": "https://URL_DE_LA_FOTO.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Carnes de Res",
+      "code": "res",
+      "photo": "https://URL_DE_LA_FOTO.jpg"
+    }
+  ],
   "code": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
-  "offerPrice": null,
+  "offerPrice": 2200,
+  "inStock": true,
   "measurementUnit": "piece",
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
@@ -259,3 +298,17 @@ Posibles códigos de respuesta:
 
 * HTTP Status: 204 (No content), 403 (Invalid credentials)
 * Body: N/A
+
+## Marcar un producto como fuera de stock
+
+### Request
+
+* URL: /api/v1/products/:code/out-of-stock
+* Method: PUT
+
+## Marcar un producto como disponible
+
+### Request
+
+* URL: /api/v1/products/:code/in-stock
+* Method: PUT
