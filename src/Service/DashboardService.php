@@ -353,10 +353,8 @@ class DashboardService
             $averageRating = $this->container->get('sylius.repository.order')
                 ->createQueryBuilder('o')
                 ->select('AVG(o.rating)')
-                ->andWhere('o.paymentState = :paymentState')
                 ->andWhere('o.shippingState = :shippingState')
-                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
-                ->setParameter('paymentState', OrderPaymentStates::STATE_PAID);
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED);
 
             if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
                 $averageRating
@@ -375,10 +373,8 @@ class DashboardService
                 ->createQueryBuilder('o')
                 ->select('COUNT(o)')
                 ->andWhere('o.rating IS NOT NULL')
-                ->andWhere('o.paymentState = :paymentState')
                 ->andWhere('o.shippingState = :shippingState')
-                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED)
-                ->setParameter('paymentState', OrderPaymentStates::STATE_PAID);
+                ->setParameter('shippingState', OrderShippingStates::STATE_SHIPPED);
 
             if ($this->getStartDate() != '1970-01-01' && $this->getEndDate() != '1970-01-01') {
                 $averageRatingCounter
@@ -542,11 +538,11 @@ class DashboardService
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getAverageRatingCounter(): ?float
+    public function getAverageRatingCounter(): ?int
     {
-        return $this->averageRatingCounter;
+        return (int)$this->averageRatingCounter;
     }
 
     /**
