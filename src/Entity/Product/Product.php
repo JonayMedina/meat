@@ -66,6 +66,15 @@ class Product extends BaseProduct
         return $this;
     }
 
+    public function getMeasurementUnit()
+    {
+        if (!$this->hasVariants()) {
+            return null;
+        }
+
+        return $this->getVariants()[0]->getMeasurementUnit();
+    }
+
     protected function createTranslation(): ProductTranslationInterface
     {
         return new ProductTranslation();
