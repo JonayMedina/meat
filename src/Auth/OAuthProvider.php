@@ -2,16 +2,10 @@
 
 namespace App\Auth;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\User\Model\UserOAuthInterface;
@@ -19,12 +13,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sylius\Component\User\Canonicalizer\CanonicalizerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
-use Sylius\Component\Core\Model\ShopUserInterface as SyliusUserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Sylius\Component\Core\Model\ShopUserInterface as SyliusUserInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Class OAuthProvider
@@ -101,7 +97,7 @@ class OAuthProvider extends OAuthUserProvider
 
     /**
      * @param UserResponseInterface $response
-     * @return UserInterface|RedirectResponse
+     * @return UserInterface
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
@@ -138,7 +134,7 @@ class OAuthProvider extends OAuthUserProvider
 
     /**
      * @param UserResponseInterface $response
-     * @return SyliusUserInterface|RedirectResponse
+     * @return SyliusUserInterface
      */
     private function createUserByOAuthUserResponse(UserResponseInterface $response)
     {
@@ -191,7 +187,7 @@ class OAuthProvider extends OAuthUserProvider
      * @param UserInterface $user
      * @param UserResponseInterface $response
      * @param string $redirect
-     * @return SyliusUserInterface|RedirectResponse
+     * @return SyliusUserInterface
      */
     private function updateUserByOAuthUserResponse(UserInterface $user, UserResponseInterface $response, string $redirect = '')
     {

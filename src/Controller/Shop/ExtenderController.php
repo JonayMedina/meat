@@ -4,7 +4,6 @@ namespace App\Controller\Shop;
 
 use DateTime;
 use Exception;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use SM\SMException;
 use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
