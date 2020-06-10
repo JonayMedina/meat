@@ -92,6 +92,9 @@ services:
     Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository:
         alias: 'sylius.repository.taxon'
         
+    Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository:
+        alias: 'sylius.repository.product_association_type'
+        
     SM\Factory\Factory:
         alias: 'sm.factory'
         

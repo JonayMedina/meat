@@ -6,10 +6,12 @@ use App\Entity\Channel\Channel;
 use App\Entity\Channel\ChannelPricing;
 use App\Entity\Locale\Locale;
 use App\Entity\Product\Product;
+use App\Entity\Product\ProductAssociation;
 use App\Entity\Product\ProductImage;
 use App\Entity\Product\ProductTaxon;
 use App\Entity\Product\ProductVariant;
 use App\Entity\Taxonomy\Taxon;
+use App\Form\AdminApi\ProductAssociationType;
 use App\Form\AdminApi\ProductType;
 use App\Pagination\PaginationFactory;
 use App\Repository\ProductRepository;
@@ -19,6 +21,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
 use Hshn\Base64EncodedFile\HttpFoundation\File\UploadedBase64EncodedFile;
 use Liip\ImagineBundle\Service\FilterService;
+use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository;
 use Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
@@ -43,6 +46,8 @@ class ProductController extends AbstractFOSRestController
     const ITEMS_PER_PAGE = 10;
 
     const ORIGINAL_IMAGE_KEY = 'shop_api_product_original';
+
+    const IN_STOCK_VALUE = 1000000;
 
     /** @var ProductRepository $productRepository */
     private $productRepository;
@@ -77,6 +82,11 @@ class ProductController extends AbstractFOSRestController
     private $categoryRepository;
 
     /**
+     * @var ProductAssociationTypeRepository
+     */
+    private $associationTypeRepository;
+
+    /**
      * ProductController constructor.
      * @param ProductRepository $productRepository
      * @param ProductVariantRepository $productVariantRepository
@@ -86,6 +96,7 @@ class ProductController extends AbstractFOSRestController
      * @param CurrencyContextInterface $currencyContext
      * @param ImageUploaderInterface $imageUploader
      * @param TaxonRepository $taxonRepository
+     * @param ProductAssociationTypeRepository $associationTypeRepository
      */
     public function __construct(
         ProductRepository $productRepository,
@@ -95,7 +106,8 @@ class ProductController extends AbstractFOSRestController
         FilterService $filterService,
         CurrencyContextInterface $currencyContext,
         ImageUploaderInterface $imageUploader,
-        TaxonRepository $taxonRepository
+        TaxonRepository $taxonRepository,
+        ProductAssociationTypeRepository $associationTypeRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
@@ -105,6 +117,7 @@ class ProductController extends AbstractFOSRestController
         $this->currencyContext = $currencyContext;
         $this->imageUploader = $imageUploader;
         $this->categoryRepository = $taxonRepository;
+        $this->associationTypeRepository = $associationTypeRepository;
     }
 
     /**
@@ -251,6 +264,107 @@ class ProductController extends AbstractFOSRestController
 
     /**
      * @Route(
+     *     "/{code}/associations.{_format}",
+     *     name="admin_api_product_associate",
+     *     methods={"POST"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function associateAction(Request $request): Response
+    {
+        $form = $this->createForm(ProductAssociationType::class);
+        $form->submit($request->request->all());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $this->getProduct($request);
+            $similarProducts = $form->get('similar_products')->getData();
+            $complimentaryProducts = $form->get('complimentary_products')->getData();
+
+            if (count($similarProducts) > 0) {
+                $associationType = $this->getAssociationType('similar_products', 'Productos similares');
+                $this->removeProductAssociations($product, $associationType);
+
+                foreach ($similarProducts as $associatedProduct) {
+                    $this->associateProduct($product, $associationType, $associatedProduct);
+                }
+            }
+
+            if (count($complimentaryProducts) > 0) {
+                $associationType = $this->getAssociationType('complimentary_products', 'Productos complementarios');
+                $this->removeProductAssociations($product, $associationType);
+
+                foreach ($complimentaryProducts as $associatedProduct) {
+                    $this->associateProduct($product, $associationType, $associatedProduct);
+                }
+            }
+
+            $this->entityManager->flush();
+            $statusCode = Response::HTTP_CREATED;
+            $view = $this->view($this->serializeProduct($product), $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        $statusCode = Response::HTTP_BAD_REQUEST;
+        $view = $this->view(['type' => 'error', 'message' => 'Invalid form.', 'recordset' => $form->getErrors(), 'code' => $statusCode], $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{code}/out-of-stock.{_format}",
+     *     name="admin_api_product_out_of_stock",
+     *     methods={"PUT"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function outOfStockAction(Request $request): Response
+    {
+        $product = $this->getProduct($request);
+        $statusCode = Response::HTTP_OK;
+
+        /** @var ProductVariant $variant */
+        $variant = $product->getVariants()[0];
+        $variant->setOnHand(0);
+        $this->entityManager->flush();
+
+        $view = $this->view($this->serializeProduct($product), $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{code}/in-stock.{_format}",
+     *     name="admin_api_product_in_stock",
+     *     methods={"PUT"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function inStockAction(Request $request): Response
+    {
+        $product = $this->getProduct($request);
+        $statusCode = Response::HTTP_OK;
+
+        /** @var ProductVariant $variant */
+        $variant = $product->getVariants()[0];
+        $variant->setOnHand(self::IN_STOCK_VALUE);
+        $this->entityManager->flush();
+
+        $view = $this->view($this->serializeProduct($product), $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
      *     "/{code}.{_format}",
      *     name="admin_api_product_delete",
      *     methods={"DELETE"}
@@ -351,7 +465,6 @@ class ProductController extends AbstractFOSRestController
             'category' => $category,
             'categories' => $categories,
             'inStock' => ($variant->getOnHand() > 0),
-            'enabled' => $product->isEnabled(),
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'currency' => [
@@ -513,5 +626,61 @@ class ProductController extends AbstractFOSRestController
         }
 
         return $product;
+    }
+
+    private function getAssociationType(string $code, string $name): \App\Entity\Product\ProductAssociationType
+    {
+        $association = $this->associationTypeRepository->findOneBy(['code' => $code]);
+
+        if (!$association instanceof \App\Entity\Product\ProductAssociationType) {
+            $association = new \App\Entity\Product\ProductAssociationType();
+            $association->setCurrentLocale(Locale::DEFAULT_LOCALE);
+            $association->setCode($code);
+            $association->setName($name);
+
+            $this->entityManager->persist($association);
+        }
+
+        return $association;
+    }
+
+    /**
+     * @param Product $product
+     * @param \App\Entity\Product\ProductAssociationType $associationType
+     */
+    private function removeProductAssociations(Product $product, \App\Entity\Product\ProductAssociationType $associationType): void
+    {
+        foreach ($product->getAssociations() as $association) {
+            if ($association->getType()->getCode() == $associationType->getCode()) {
+                $this->entityManager->remove($association);
+            }
+        }
+
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @param Product $product
+     * @param \App\Entity\Product\ProductAssociationType $associationType
+     * @param Product $associatedProduct
+     * @return ProductAssociation
+     */
+    private function associateProduct(Product $product, \App\Entity\Product\ProductAssociationType $associationType, Product $associatedProduct): ProductAssociation
+    {
+        $association = $this->entityManager->getRepository('App:Product\ProductAssociation')
+            ->findOneBy(['owner' => $product, 'type' => $associationType]);
+
+        if (!$association instanceof ProductAssociation) {
+            $association = new ProductAssociation();
+            $association->setOwner($product);
+            $association->setType($associationType);
+
+            $this->entityManager->persist($association);
+        }
+
+        $association->addAssociatedProduct($associatedProduct);
+        $this->entityManager->flush();
+
+        return $association;
     }
 }
