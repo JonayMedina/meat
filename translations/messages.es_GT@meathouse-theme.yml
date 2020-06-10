@@ -952,3 +952,7 @@ app.ui.account.pre_change_email.error.title: 'Hubo un error al agregar tu contra
 app.ui.account.pre_change_email.error.message: 'Un error no permitio agregar tu contraseña, intentanlo más tarde...'
 app.ui.pre_change_email.error.not_same_password: 'Parece que las contraseñas no coinciden.'
 sylius.shop_api.coupon.not_valid: 'Parece que el cupón no es valido'
+app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
+app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
+app.ui.admin.yes: Sí
+app.ui.admin.no: No

@@ -396,9 +396,41 @@ button.btn {
     color: #AB162B;
 }
 
-.btn-back-button, .btn-back-button:hover {
+.btn-back-button {
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-back-button span, .btn-back-button:hover span {
+    padding-left: 15px;
+    font-size: 14px;
     color: #AB162B;
     text-decoration: underline;
+}
+
+.btn-rounded {
+    -webkit-appearance: none;
+    font-family: "Raleway Medium", sans-serif;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: #AB162B;
+    border-radius: 10em;
+    padding: 10px 30px;
+    margin-top: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+}
+
+.btn-rounded:hover {
+    color: rgba(255, 255, 255, 1) !important;
+    text-decoration: none;
+}
+
+.btn-rounded.inverted {
+    color: rgba(171, 22, 43, .9) !important;
+    background: #EBE7E7;
 }
 
 .invalid-feedback {
@@ -789,6 +821,55 @@ table.spaced {
 
 .order .stars span.checked {
     color: #ffd239;
+}
+
+/* Modal */
+.modal.smaller {
+    margin-top: 6vw;
+}
+
+.modal.smaller .modal-content {
+    border-radius: 10px;
+}
+
+.modal.smaller .modal-header, .modal.smaller .modal-body, .modal.smaller .modal-footer {
+    border: none;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.modal.smaller .modal-header {
+    padding-top: 35px;
+}
+
+.modal.smaller .modal-footer {
+    padding-bottom: 35px;
+}
+
+.modal.smaller .modal-title {
+    font-size: 24px;
+    font-family: "Raleway Medium", sans-serif;
+    color: #404040;
+}
+
+.modal.smaller .modal-body {
+    font-size: 16px;
+    font-family: "Raleway Regular", sans-serif;
+    color: #404040;
+}
+
+.modal.smaller .modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.smaller .modal-footer a, .modal.smaller .modal-footer button {
+    margin-top: 0;
+}
+
+.modal.smaller .modal-footer button {
+    margin-right: 15px;
 }
 
 @media (min-width: 1400px) {
