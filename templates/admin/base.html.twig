@@ -36,6 +36,21 @@
             color: #FFFFFF;
             content: "{{ 'app.ui.browse'|trans }}"
         }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            background-image: url("{{ asset('meathouse/img/icons/dropdown.svg') }}") !important;
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 11px);
+            background-position-y: 16px;
+            border: 1px solid #dfdfdf;
+            border-radius: 2px;
+            margin-right: 2rem;
+            padding: 1rem;
+            padding-right: 2rem !important;
+        }
     </style>
     <style>
         /* Fonts */

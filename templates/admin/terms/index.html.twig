@@ -2,9 +2,13 @@
 
 {% block title %}{{ 'app.ui.terms_and_conditions'|trans }}{% endblock %}
 
+{% block styles %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/summernote/summernote-bs4.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="col-lg-12">
-
         <div class="row wrapper page-heading">
             <div class="col-sm-12">
                 <h1>{{ 'app.ui.terms_and_conditions'|trans }}</h1>
@@ -33,21 +37,14 @@
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}
-
-{% block styles %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/summernote/summernote-bs4.css') }}">
-{% endblock %}
-
 
 {% block javascript %}
 {{ parent() }}
 <script src="{{ asset('meathouse/js/plugins/summernote/summernote-bs4.js') }}"></script>
 <script>
-    $(document).ready(function () {
+    $(function () {
         $('.summernote').summernote({
             height: 450,
             toolbar: [

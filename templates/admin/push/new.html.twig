@@ -3,30 +3,6 @@
 
 {% block title %}{{ 'app.ui.new_push'|trans }}{% endblock %}
 
-{% block content %}
-    <div class="col-lg-12">
-
-        <div class="row wrapper page-heading">
-            <div class="col-sm-12">
-                {{ UI.back(path('push_index'), 'app.ui.back_to_push') }}
-                <br>
-                <h1>{{ 'app.ui.new_push'|trans }}</h1>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content padding-55">
-                        {{ include('/admin/push/_form.html.twig') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-{% endblock %}
-
 {% block styles %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/select2/select2.min.css') }}">
@@ -67,28 +43,52 @@
     </style>
 {% endblock %}
 
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('push_index'), 'app.ui.back_to_push') }}
+                <br>
+                <h1>{{ 'app.ui.new_push'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        {{ include('/admin/push/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block javascript %}
-{{ parent() }}
-<script src="{{ asset('meathouse/js/plugins/select2/select2.full.min.js') }}"></script>
-<script>
-    $(document).ready(function () {
-        var $promotionTypePushDiv = $('#promotion-type-push');
+    {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script>
+        $(function () {
+            var $promotionTypePushDiv = $('#promotion-type-push');
 
-        $('.select2').select2({
-            'placeholder': '{{ 'app.ui.search_coupon'|trans }}'
+            $('.select2').select2({
+                'placeholder': '{{ 'app.ui.search_coupon'|trans }}'
+            });
+
+            $('input[type=radio][name="push_notification[type]"]').change(function() {
+                var value = $('input[name="push_notification[type]"]:checked').val();
+
+                if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_PROMOTION') }}') {
+                    $promotionTypePushDiv.slideDown('fast');
+                }
+
+                if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_INFO') }}') {
+                    $promotionTypePushDiv.slideUp('fast');
+                }
+            }).change();
+
+            $('#push_notification_promotionType_0').prop('checked', true).change();
         });
-
-        $('input[type=radio][name="push_notification[type]"]').change(function() {
-            var value = $('input[name="push_notification[type]"]:checked').val();
-
-            if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_PROMOTION') }}') {
-                $promotionTypePushDiv.slideDown('fast');
-            }
-
-            if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_INFO') }}') {
-                $promotionTypePushDiv.slideUp('fast');
-            }
-        }).change();
-    });
-</script>
+    </script>
 {% endblock %}
