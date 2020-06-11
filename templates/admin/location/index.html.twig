@@ -46,15 +46,15 @@
                                 </thead>
 
                                 <tbody>
-                                {% for location in pagination %}
+                                {% for key, location in pagination %}
                                     <tr>
-                                        <td>{{ location.id }}</td>
+                                        <td>{{ key + 1 }}</td>
                                         <td>
                                             <h4>{{ location.name }}</h4>
                                         </td>
                                         <td>{{ location.address }}</td>
                                         <td>{{ location.phoneNumber|default('app.ui.n/a'|trans) }}</td>
-                                        <td>{{ location.extension|default('app.ui.n/a'|trans) }}</td>
+                                        <td>{{ location.extension|default('app.ui.admin.none'|trans) }}</td>
                                         <td>
                                             <a href="{{ path('locations_edit', {id: location.id}) }}" class="btn btn-default btn-action-button">
                                                 {{ 'app.ui.edit'|trans }}

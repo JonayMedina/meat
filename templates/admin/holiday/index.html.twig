@@ -71,9 +71,9 @@
                                 </thead>
 
                                 <tbody>
-                                {% for holiday in pagination %}
+                                {% for key, holiday in pagination %}
                                     <tr>
-                                        <td>{{ holiday.id }}</td>
+                                        <td>{{ key + 1 }}</td>
                                         <td>{{ holiday.date|date('d') }}</td>
                                         <td>{{ holiday.monthName|default(holiday.date|date('F')) }}</td>
                                         <td>{{ holiday }}</td>

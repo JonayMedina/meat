@@ -1,6 +1,5 @@
 {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
 
-
 <div class="row">
     <div class="col-lg-7">
         {{ form_row(form.name) }}
@@ -64,7 +63,7 @@
 
 <div class="form-group">
     <div class="text-center">
-        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{% if edit %}{{ 'app.ui.save_changes'|trans }}{% else %}{{ 'app.ui.admin.create_location'|trans }}{% endif %}</button>
     </div>
 </div>
 

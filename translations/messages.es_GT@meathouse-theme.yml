@@ -956,3 +956,5 @@ app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
 app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
 app.ui.admin.yes: Sí
 app.ui.admin.no: No
+app.ui.admin.create_location: 'Crear ubicación'
+app.ui.admin.none: '-'

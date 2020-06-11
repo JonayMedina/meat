@@ -6,11 +6,14 @@ use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Image;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Positive;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
 class LocationType extends AbstractType
@@ -24,24 +27,31 @@ class LocationType extends AbstractType
             ->add('name', null, [
                 'label' => 'app.ui.name',
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Length(['max' => 35])
                 ]
             ])
             ->add('address', TextareaType::class, [
                 'label' => 'app.ui.address',
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['min' => 3])
+                    new Length(['min' => 3, 'max' => 90])
                 ]
             ])
             ->add('phoneNumber', null, [
                 'label' => 'app.ui.phone_number',
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
+                    new Regex(['pattern' => '/^\d{4}[\s.-]\d{4}$/', 'message' => 'app.ui.admin.not_valid_phone']),
+                    new Length(['max' => 9])
                 ]
             ])
-            ->add('extension', null, [
-                'label' => 'app.ui.phone_number_extension'
+            ->add('extension', NumberType::class, [
+                'label' => 'app.ui.phone_number_extension',
+                'constraints' => [
+                    new Positive(),
+                    new Length(['max' => 4])
+                ]
             ])
             ->add('photoType', FileType::class, [
                 'label' => 'app.ui.image',
