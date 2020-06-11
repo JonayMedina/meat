@@ -6,6 +6,7 @@ use Psr\Log\LoggerInterface;
 use App\Entity\TermsAndConditions;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Admin\TermsAndConditionsType;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +30,7 @@ class TermsAndConditionsController extends AbstractController
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      * @return Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function indexAction(Request $request, TermsAndConditionsRepository $repository, EntityManagerInterface $entityManager, TranslatorInterface $translator, LoggerInterface $logger)
     {
@@ -55,7 +56,7 @@ class TermsAndConditionsController extends AbstractController
                 $this->addFlash('error', $translator->trans('app.ui.terms_and_conditions_error_while_saving_message'));
             }
 
-            return $this->redirectToRoute('dashboard_index');
+            return $this->redirectToRoute('terms_index');
         }
 
         return $this->render('/admin/terms/index.html.twig', [

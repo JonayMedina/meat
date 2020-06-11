@@ -21,3 +21,5 @@ app.ui.disconnect.facebook.error.not_same_email: 'Parece que los correos no coin
 app.ui.admin.purchase.not_empty: 'Debes llenar esta información para guardar.'
 app.ui.not_decimal: 'Este valor no debe contener decimales'
 app.ui.admin.not_valid_phone: 'Debes ingresar un número telefónico valido.'
+app.ui.admin.faq.not_empty: 'Debes llenar este campo para continuar.'
+app.ui.admin.not_empty: 'Debes llenar este campo para continuar.'

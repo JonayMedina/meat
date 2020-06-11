@@ -18,7 +18,18 @@
 {% if faq.type == constant('App\\Entity\\FAQ::TYPE_SCHEDULE') %}
 
     <div class="form-group padding-bottom-25">
-        <label>{{ 'app.ui.faq_time_to_order'|trans }}</label>
+        <label>
+            {{ 'app.ui.faq_time_to_order'|trans }}
+
+            {% if errors|length > 0 %}
+                {% if errors['order'] %}
+                    <span class="invalid-feedback d-block"><span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span> <span class="form-error-message">{{ errors['order']|trans }}</span></span>
+                </span>
+                {% endif %}
+            {% endif %}
+        </label>
+
         <div class="row padding-bottom-25">
             <div class="col-lg-3">
                 <input name="order[0][start]" type="text" class="form-control inputmask" maxlength="8" value="{{ faq.timeToPlaceAnOrder[0]['start']|default('') }}">
@@ -51,7 +62,17 @@
     <hr>
 
     <div class="form-group padding-bottom-25">
-        <label>{{ 'app.ui.faq_order_delivery_time'|trans }}</label>
+        <label>
+            {{ 'app.ui.faq_order_delivery_time'|trans }}
+
+            {% if errors|length > 0 %}
+                {% if errors['delivery'] %}
+                    <span class="invalid-feedback d-block"><span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span> <span class="form-error-message">{{ errors['delivery']|trans }}</span></span>
+                </span>
+                {% endif %}
+            {% endif %}
+        </label>
 
         <div class="row padding-bottom-25">
             <div class="col-lg-2">
@@ -100,7 +121,7 @@
 
 <div class="form-group">
     <div class="text-center">
-        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{% if edit %}{{ 'app.ui.save_changes'|trans }}{% else %}{{ 'app.ui.admin.create_faq'|trans }}{% endif %}</button>
     </div>
 </div>
 
