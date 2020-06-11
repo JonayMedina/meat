@@ -18,6 +18,7 @@ use Sylius\ShopApiPlugin\Factory\Product\ProductViewFactoryInterface;
 use Sylius\ShopApiPlugin\View\Product\ProductTaxonView;
 use Sylius\ShopApiPlugin\View\Product\ProductView;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ProductViewFactory implements ProductViewFactoryInterface
 {
@@ -46,11 +47,28 @@ final class ProductViewFactory implements ProductViewFactoryInterface
      */
     private $favoriteService;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * ProductViewFactory constructor.
+     * @param ImageViewFactoryInterface $imageViewFactory
+     * @param ProductAttributeValuesViewFactoryInterface $attributeValuesViewFactory
+     * @param Security $security
+     * @param FavoriteService $favoriteService
+     * @param TranslatorInterface $translator
+     * @param string $productViewClass
+     * @param string $productTaxonViewClass
+     * @param string $fallbackLocale
+     */
     public function __construct(
         ImageViewFactoryInterface $imageViewFactory,
         ProductAttributeValuesViewFactoryInterface $attributeValuesViewFactory,
         Security $security,
         FavoriteService $favoriteService,
+        TranslatorInterface $translator,
         string $productViewClass,
         string $productTaxonViewClass,
         string $fallbackLocale
@@ -62,12 +80,13 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         $this->fallbackLocale = $fallbackLocale;
         $this->security = $security;
         $this->favoriteService = $favoriteService;
+        $this->translator = $translator;
     }
 
     /** {@inheritdoc} */
     public function create(ProductInterface $product, ChannelInterface $channel, string $locale): ProductView
     {
-        /** @var ShopUser */
+        /** @var ShopUser $user */
         $user = $this->security->getUser();
 
         /** @var \App\View\ShopApi\ProductView $productView */
@@ -85,8 +104,9 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         $productView->metaDescription = $translation->getMetaDescription();
         $productView->channelCode = $channel->getCode();
         /** @var Product $product */
-        $productView->measurementUnit = $product->getMeasurementUnit();
         $productView->isFavorite = $this->favoriteService->isFavorite($product, $user);
+        /** Translate measurement unit */
+        $productView->measurementUnit = $this->translator->trans('app.ui.measurement_units.'.$product->getMeasurementUnit());
 
         /** @var ProductImageInterface $image */
         foreach ($product->getImages() as $image) {
