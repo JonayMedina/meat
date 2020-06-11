@@ -880,6 +880,7 @@ table.spaced {
     margin-right: 15px;
 }
 
+/* Responsive */
 @media (min-width: 1400px) {
     .order table tr td:first-of-type {
         width: 27%;
