@@ -126,7 +126,7 @@ class ExtenderController extends AbstractController
 
                 $em->flush();
 
-                $sender->send('change_email_verification', [$emails['email']], ['user' => $user]);
+                $sender->send('change_email_verification', [$emails['newEmail']], ['user' => $user]);
 
                 return $this->redirectToRoute('user_change_email', ['success' => true]);
             }

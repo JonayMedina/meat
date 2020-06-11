@@ -106,6 +106,7 @@ security:
         - { path: "%sylius_shop_api.security.regex%/orders/.*/rating", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/carts", role: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER]}
         - { path: "%sylius_shop_api.security.regex%/history", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/email", role: ROLE_USER}
 
         # - { path: "^/api/", role: ROLE_ADMIN }
             
