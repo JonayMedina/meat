@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\FAQ;
-use App\Form\Admin\FAQType;
 use Doctrine\ORM\Query;
+use App\Form\Admin\FAQType;
 use Psr\Log\LoggerInterface;
 use App\Repository\FAQRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,8 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class FAQController
@@ -129,6 +129,8 @@ class FAQController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $type = $request->get('type');
+        $errors['order'] = '';
+        $errors['delivery'] = '';
 
         $faq = new FAQ();
         $faq->setPosition($this->guessNextPosition());
@@ -140,33 +142,39 @@ class FAQController extends AbstractController
         $form = $this->createForm(FAQType::class, $faq);
         $form->handleRequest($request);
 
-        /** Only for Schedule type. */
-        if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
-            $order = $request->get('order');
-            $delivery = $request->get('delivery');
-
-            $faq->setOrderDeliveryTime($delivery);
-            $faq->setTimeToPlaceAnOrder($order);
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($faq);
+            /** Only for Schedule type. */
+            if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
+                $order = $request->get('order');
+                $delivery = $request->get('delivery');
 
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', $this->translator->trans('app.ui.faq_new_success_message'));
+                $errors['order'] = $this->validateExtraFields($order, 'order');
+                $errors['delivery'] = $this->validateExtraFields($delivery, 'delivery');
 
-            } catch (\Exception $exception) {
-                $this->addFlash('danger', $this->translator->trans('app.ui.faq_new_error_message'));
-                $this->logger->error($exception->getMessage());
+                $faq->setOrderDeliveryTime($delivery);
+                $faq->setTimeToPlaceAnOrder($order);
             }
 
-            return $this->redirectToRoute('faqs_index');
+            if ($errors['order'] == '' && $errors['delivery'] == '') {
+                $entityManager->persist($faq);
+
+                try {
+                    $entityManager->flush();
+                    $this->addFlash('success', $this->translator->trans('app.ui.faq_new_success_message'));
+
+                } catch (\Exception $exception) {
+                    $this->addFlash('danger', $this->translator->trans('app.ui.faq_new_error_message'));
+                    $this->logger->error($exception->getMessage());
+                }
+
+                return $this->redirectToRoute('faqs_index');
+            }
         }
 
         return $this->render('/admin/faq/new.html.twig', [
             'faq' =>  $faq,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
@@ -180,35 +188,43 @@ class FAQController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $faq = $this->repository->find($request->get('id'));
+        $errors['order'] = '';
+        $errors['delivery'] = '';
 
         $form = $this->createForm(FAQType::class, $faq);
         $form->handleRequest($request);
 
-        /** Only for Schedule type. */
-        if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
-            $order = $request->get('order');
-            $delivery = $request->get('delivery');
-
-            $faq->setOrderDeliveryTime($delivery);
-            $faq->setTimeToPlaceAnOrder($order);
-        }
-
         if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $entityManager->flush();
-                $this->addFlash('success', $this->translator->trans('app.ui.faq_edit_success_message'));
+            /** Only for Schedule type. */
+            if ($faq->getType() == FAQ::TYPE_SCHEDULE && $request->isMethod(Request::METHOD_POST)) {
+                $order = $request->get('order');
+                $delivery = $request->get('delivery');
 
-            } catch (\Exception $exception) {
-                $this->addFlash('danger', $this->translator->trans('app.ui.faq_edit_error_message'));
-                $this->logger->error($exception->getMessage());
+                $errors['order'] = $this->validateExtraFields($order, 'order');
+                $errors['delivery'] = $this->validateExtraFields($delivery, 'delivery');
+
+                $faq->setOrderDeliveryTime($delivery);
+                $faq->setTimeToPlaceAnOrder($order);
             }
 
-            return $this->redirectToRoute('faqs_index');
+            if ($errors['order'] == '' && $errors['delivery'] == '') {
+                try {
+                    $entityManager->flush();
+                    $this->addFlash('success', $this->translator->trans('app.ui.faq_edit_success_message'));
+
+                } catch (\Exception $exception) {
+                    $this->addFlash('danger', $this->translator->trans('app.ui.faq_edit_error_message'));
+                    $this->logger->error($exception->getMessage());
+                }
+
+                return $this->redirectToRoute('faqs_index');
+            }
         }
 
         return $this->render('/admin/faq/edit.html.twig', [
             'faq' =>  $faq,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
@@ -279,6 +295,42 @@ class FAQController extends AbstractController
             $this->logger->warning($exception->getMessage());
 
             return 1;
+        }
+    }
+
+    /**
+     * @param $array
+     * @param $type
+     * @return string
+     */
+    private function validateExtraFields($array, $type) {
+        $errors = '';
+
+        if (!$this->validateArray($array[0], $type) && !$this->validateArray($array[1], $type) && !$this->validateArray($array[2], $type)) {
+            $errors = 'app.ui.admin.not_empty';
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $array
+     * @param $type
+     * @return bool
+     */
+    private function validateArray($array, $type) {
+        if ($type == 'order') {
+            if ($array['start'] == '' || $array['end'] == '') {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if ($array['name'] == '' || $array['start'] == '' || $array['end'] == '') {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 }

@@ -3,15 +3,17 @@
 namespace App\Controller\Admin;
 
 use App\Entity\AboutStore;
+use Psr\Log\LoggerInterface;
 use App\Form\Admin\AboutStoreType;
+use Psr\Cache\InvalidArgumentException;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class AboutController
@@ -29,7 +31,8 @@ class AboutController extends AbstractController
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      * @return Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
+     * @throws InvalidArgumentException
      */
     public function indexAction(Request $request, AboutStoreRepository $repository, EntityManagerInterface $entityManager, TranslatorInterface $translator, LoggerInterface $logger)
     {
@@ -54,7 +57,7 @@ class AboutController extends AbstractController
                 $this->addFlash('error', $translator->trans('app.ui.about_store_error_while_saving_message'));
             }
 
-            return $this->redirectToRoute('dashboard_index');
+            return $this->redirectToRoute('about_index');
         }
 
         return $this->render('/admin/about/index.html.twig', [

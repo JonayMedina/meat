@@ -37,6 +37,7 @@ app.ui.locations: Ubicaciones
 app.ui.faqs: 'FAQ''s'
 app.ui.faqs_list: 'Preguntas frecuentes'
 app.ui.about_procasa: 'Sobre Procasa'
+app.ui.about_procasa.alternative: 'Acerca de Procasa'
 app.ui.terms_and_conditions: 'Términos y condiciones'
 app.ui.today: Hoy
 app.ui.clear: Limpiar
@@ -956,3 +957,7 @@ app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
 app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
 app.ui.admin.yes: Sí
 app.ui.admin.no: No
+app.ui.admin.create_location: 'Crear ubicación'
+app.ui.admin.create_faq: 'Crear pregunta'
+app.ui.admin.none: '-'
+app.ui.admin.not_empty: 'Debes llenar este campo para continuar.'

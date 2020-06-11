@@ -3,19 +3,19 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Location;
+use Psr\Log\LoggerInterface;
+use App\Service\UploaderHelper;
 use App\Form\Admin\LocationType;
 use App\Repository\LocationRepository;
-use App\Service\UploaderHelper;
+use League\Flysystem\FileExistsException;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class LocationController
@@ -102,7 +102,7 @@ class LocationController extends AbstractController
      * @param Request $request
      * @param UploaderHelper $uploaderHelper
      * @return Response
-     * @throws \League\Flysystem\FileExistsException
+     * @throws FileExistsException
      */
     public function newAction(Request $request, UploaderHelper $uploaderHelper)
     {
