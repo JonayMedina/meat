@@ -442,13 +442,15 @@ class OrderService
      */
     public function serializeAddress(?Address $address, $details = false): array
     {
+        $customer = null;
         $isDefault = false;
-        /** @var Customer $customer */
-        $customer = $address->getCustomer();
 
         if ($address == null) {
             return [];
         }
+
+        /** @var Customer $customer */
+        $customer = $address->getCustomer();
 
         if ($customer->getDefaultAddress() && $customer->getDefaultAddress()->getId() == $address->getId()) {
             $isDefault = true;
