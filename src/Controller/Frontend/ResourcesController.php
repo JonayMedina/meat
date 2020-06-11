@@ -2,6 +2,8 @@
 
 namespace App\Controller\Frontend;
 
+use App\Entity\Notification;
+use App\Entity\PushNotification;
 use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
 use App\Service\ProductService;
@@ -18,6 +20,7 @@ use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResourcesController extends AbstractController
 {
@@ -95,9 +98,10 @@ class ResourcesController extends AbstractController
      * @Route("/verify/{token}", name="user_verify_email_token")
      * @param $token
      * @param UserRepositoryInterface $userRepository
+     * @param TranslatorInterface $translator
      * @return RedirectResponse
      */
-    public function validateToken($token, UserRepositoryInterface $userRepository) {
+    public function validateToken($token, UserRepositoryInterface $userRepository, TranslatorInterface $translator) {
         $em = $this->getDoctrine()->getManager();
         $user = $userRepository->findOneBy(['emailVerificationToken' => $token]);
 
@@ -113,6 +117,9 @@ class ResourcesController extends AbstractController
                 $customer->setEmailCanonical($newEmail);
                 $user->setEmailVerificationToken(null);
                 $user->setTempEmail(null);
+
+                $notification = new Notification(null, $user, $translator->trans('app.ui.account.change_email.verified.title'), $translator->trans('app.ui.account.change_email.verified.message'), PushNotification::TYPE_INFO);
+                $em->persist($notification);
 
                 $em->flush();
                 return $this->redirectToRoute('sylius_shop_account_dashboard', ['success' => true]);
