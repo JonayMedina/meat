@@ -86,9 +86,9 @@ class ProductVariant extends BaseProductVariant
     /**
      * @return string
      */
-    public function getMeasurementUnit(): string
+    public function getMeasurementUnit(): ?string
     {
-        return $this->measurementUnit;
+        return $this->measurementUnit ?? self::MEASUREMENT_POUND_TYPE;
     }
 
     /**
