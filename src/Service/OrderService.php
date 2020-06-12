@@ -560,8 +560,12 @@ class OrderService
      * @param Customer $customer
      * @return array
      */
-    public function serializeCustomer(Customer $customer)
+    public function serializeCustomer(?Customer $customer)
     {
+        if (!$customer) {
+            return [];
+        }
+
         return [
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),
