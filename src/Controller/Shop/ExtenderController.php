@@ -304,6 +304,43 @@ class ExtenderController extends AbstractController
 
         if ($session->get('tokenValue')) {
             $order = $orderRepository->findOneBy(['tokenValue' => $session->get('tokenValue')]);
+
+            $em = $this->getDoctrine()->getManager();
+
+            /** @var ShopUser $user */
+            $user = $this->getUser();
+
+            /** @var Customer $customer */
+            $customer = $user->getCustomer();
+
+            $trashShippingAddresses = $this->getDoctrine()->getRepository('App:Addressing\Address')->findBy(['customer' => $customer, 'parent' => $order->getShippingAddress()->getParent(), 'type' => Address::TYPE_SHIPPING]);
+
+            /* Delete trash shipping address of customer profile */
+            if (count($trashShippingAddresses) > 0) {
+                foreach ($trashShippingAddresses as $trashAddress) {
+                    if ($trashAddress instanceof Address) {
+                        $em->remove($trashAddress);
+                    }
+                }
+
+                $em->flush();
+            }
+
+            $trashBillingAddresses = $this->getDoctrine()->getRepository('App:Addressing\Address')->findBy(['customer' => $customer, 'type' => Address::TYPE_BILLING]);
+
+            /* Delete trash billing address of customer profile */
+            if (count($trashBillingAddresses) > 0) {
+                foreach ($trashBillingAddresses as $trashAddress) {
+                    if ($trashAddress instanceof Address) {
+                        if ($trashAddress->getId() != $customer->getDefaultBillingAddress()->getId()) {
+                            $em->remove($trashAddress);
+                        }
+                    }
+                }
+
+                $em->flush();
+            }
+
             $session->set('tokenValue', null);
 
             if ($order instanceof Order) {
