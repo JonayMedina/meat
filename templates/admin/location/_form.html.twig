@@ -31,6 +31,13 @@
 
 <label for="">
     {{ 'app.ui.location_schedule'|trans }}
+    {% if errors|length > 0 %}
+        {% if errors['schedule'] %}
+            <span class="invalid-feedback d-block"><span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span> <span class="form-error-message">{{ errors['schedule']|trans }}</span></span>
+                </span>
+        {% endif %}
+    {% endif %}
 </label>
 
 <div class="row">
