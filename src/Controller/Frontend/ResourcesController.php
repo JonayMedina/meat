@@ -103,6 +103,8 @@ class ResourcesController extends AbstractController
      */
     public function validateToken($token, UserRepositoryInterface $userRepository, TranslatorInterface $translator) {
         $em = $this->getDoctrine()->getManager();
+        /** @var ShopUser $loggedUser */
+        $loggedUser = $this->getUser();
         $user = $userRepository->findOneBy(['emailVerificationToken' => $token]);
 
         if ($user instanceof ShopUser) {
@@ -122,12 +124,12 @@ class ResourcesController extends AbstractController
                 $em->persist($notification);
 
                 $em->flush();
-                return $this->redirectToRoute('sylius_shop_account_dashboard', ['success' => true]);
+                return $loggedUser instanceof ShopUser ? $this->redirectToRoute('sylius_shop_account_dashboard', ['success' => true]) : $this->redirectToRoute('sylius_shop_login', ['success' => true]);
             } catch (\Exception $e) {
-                return $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]);
+                return $loggedUser instanceof ShopUser ? $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]) : $this->redirectToRoute('sylius_shop_login', ['error' => true]);
             }
         } else {
-            return $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]);
+            return $loggedUser instanceof ShopUser ? $this->redirectToRoute('sylius_shop_account_dashboard', ['error' => true]) : $this->redirectToRoute('sylius_shop_login', ['error' => true]);
         }
     }
 

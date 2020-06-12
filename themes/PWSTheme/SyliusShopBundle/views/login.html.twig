@@ -41,11 +41,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block extrajs %}
     <script>
         $(function () {
             let $form = $("form");
+            let $showMessage = $('#showMessage');
 
             $form.validate({
                 rules: {
@@ -106,6 +121,20 @@
                     $i.addClass('fa-eye');
                 }
             });
+
+            if (getParameterByName('success')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.verified.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.verified.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.accept.short'|trans }}');
+                $showMessage.modal('show');
+            }
+
+            if (getParameterByName('error')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.change_email.error.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.change_email.error.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.accept.short'|trans }}');
+                $showMessage.modal('show');
+            }
         });
     </script>
 {% endblock %}
