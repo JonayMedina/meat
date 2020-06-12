@@ -313,7 +313,7 @@ class OrderController extends AbstractController
         /** @var Order $order */
         $order = $this->entityManager->getRepository('App:Order\Order')->find($id);
         /** @var Address $address */
-        $address = $order->getShippingAddress();
+        $address = $order->getShippingAddress()->getParent();
         $addressService->validate($address);
 
         return $this->redirectToRoute('orders_show',  ['id' => $id]);
