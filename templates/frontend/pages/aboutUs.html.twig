@@ -10,7 +10,7 @@
 
         .phrase {
             position: relative;
-            background: linear-gradient(rgba(145, 113, 113, .58), rgba(145, 113, 113, .58)), url("{{ asset('bundles/syliusshop/img/about-us.png') }}"), no-repeat, center !important;
+            background: linear-gradient(rgba(145, 113, 113, .58), rgba(145, 113, 113, .58)), url("https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/about-us.png"), no-repeat, center !important;
             background-size: cover !important;
         }
 
@@ -95,7 +95,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 pr-0 phrase sm-order-1">
-                    <img class="w-100" src="{{ asset('bundles/syliusshop/img/about-us.png') }}" alt="{{ 'app.ui.frontend.about_procasa'|trans }}" title="{{ 'app.ui.frontend.about_procasa'|trans }}" width="auto" height="auto">
+                    <img class="w-100" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/about-us.png" alt="{{ 'app.ui.frontend.about_procasa'|trans }}" title="{{ 'app.ui.frontend.about_procasa'|trans }}" width="auto" height="auto">
                     <div class="content">
                         <p>"{{ about_store('phrase') }}"</p>
                         <p class="text-right">- {{ about_store('author') }}</p>
@@ -109,7 +109,7 @@
 
 {% block extrajs %}
     <script>
-        $(document).ready(function () {
+        $(function () {
             calcPL();
 
             $(window).resize(function () {

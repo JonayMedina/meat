@@ -3,7 +3,7 @@
         {{ sonata_block_render_event('sylius.shop.layout.before_footer') }}
         <div class="row">
             <div class="col-12 col-sm-12 col-md-2 col-lg-2">
-                <a class="logo d-block max-w-mx-content" href="{{ path('sylius_shop_homepage') }}"><img src="{{ asset('bundles/syliusshop/img/logo.png') }}" alt="{{ app_name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
+                <a class="logo d-block max-w-mx-content" href="{{ path('sylius_shop_homepage') }}"><img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/logo.png" alt="{{ app_name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
             </div>
             <div class="col-12 col-sm-12 col-md-5 col-lg-5 links">
                 <a href="{{ path('store_about_us') }}" class="d-block">{{ 'app.ui.frontend.about_procasa'|trans }}</a>
@@ -15,10 +15,10 @@
                 <p class="text-right">{{ 'app.ui.download_app'|trans  }} {{ app_name }}</p>
                 <div class="text-right">
                     {% if about_store('app-store') %}
-                    <a href="{{ about_store('app-store') }}"><img src="{{ asset('bundles/syliusshop/img/app/app_store.png') }}" alt="{{ 'app.ui.app_store_logo'|trans }}" title="{{ 'app.ui.app_store_logo'|trans }}" width="auto" height="auto"></a>
+                    <a href="{{ about_store('app-store') }}"><img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/app/app_store.png" alt="{{ 'app.ui.app_store_logo'|trans }}" title="{{ 'app.ui.app_store_logo'|trans }}" width="auto" height="auto"></a>
                     {% endif %}
                     {% if about_store('play-store') %}
-                    <a href="{{ about_store('play-store') }}"><img src="{{ asset('bundles/syliusshop/img/app/google_play.png') }}" alt="{{ 'app.ui.google_play_logo'|trans }}" title="{{ 'app.ui.google_play_logo'|trans }}" width="auto" height="auto"></a>
+                    <a href="{{ about_store('play-store') }}"><img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/app/google_play.png" alt="{{ 'app.ui.google_play_logo'|trans }}" title="{{ 'app.ui.google_play_logo'|trans }}" width="auto" height="auto"></a>
                     {% endif %}
                 </div>
             </div>
