@@ -52,7 +52,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title text-center" id="showMessageLabel">{{ 'app.ui.account.change_email.success.title'|trans }}</h5>
                 </div>
-                <div class="modal-body text-center">{{ 'app.ui.account.change_email.success.message_%email%'|trans({'%email%': user.email}) }}</div>
+                <div class="modal-body text-center">{{ 'app.ui.account.change_email.success.message_%email%'|trans({'%email%': user.tempEmail ? user.tempEmail : user.email }) }}</div>
                 <div class="modal-footer text-center">
                     <a href="{{ path('sylius_shop_account_dashboard') }}" class="btn-rounded">{{ 'app.ui.agreed'|trans }}</a>
                 </div>
