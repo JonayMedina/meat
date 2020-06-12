@@ -73,6 +73,12 @@ class AddressService
         if ($user instanceof ShopUser) {
             $notification = new Notification(null, $user, 'Lo sentimos', 'Por el momento no podemos brindarte nuestro servicio en esta área.', PushNotification::TYPE_ADDRESS_REJECTED);
             $this->entityManager->persist($notification);
+
+            /** Find children and enable those addresses. */
+            foreach ($this->findChildrenAddresses($address) as $childrenAddress) {
+                $this->reject($childrenAddress);
+            }
+
         } else {
             $parentAddress = $this->findParentAddress($address);
 
@@ -114,6 +120,11 @@ class AddressService
         if ($user instanceof ShopUser) {
             $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
             $this->entityManager->persist($notification);
+
+            /** Find children and enable those addresses. */
+            foreach ($this->findChildrenAddresses($address) as $childrenAddress) {
+                $this->validate($childrenAddress);
+            }
         } else {
             $parentAddress = $this->findParentAddress($address);
 
@@ -139,7 +150,6 @@ class AddressService
         return $this->addressRepository
             ->createQueryBuilder('a')
             ->andWhere('a.parent = :parent')
-            ->andWhere('a.customer IS NULL')
             ->setParameter('parent', $parentAddress)
             ->getQuery()
             ->getResult();
