@@ -266,7 +266,7 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'shipping_address' => $this->serializeAddress($order->getShippingAddress()),
+            'shipping_address' => $this->serializeAddress($order->getShippingAddress()->getParent()),
             'billing_address' => $this->serializeAddress($order->getBillingAddress()),
         ];
 
