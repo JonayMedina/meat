@@ -9,8 +9,6 @@ class AppScheduleBuilder implements ScheduleBuilder
 {
     public function buildSchedule(Schedule $schedule): void
     {
-        $schedule->onSingleServer();
-
         $schedule
             ->addCommand('app:disable-expired-coupons')
             ->description('Automatically disable expired coupons.')
