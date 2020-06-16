@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class PaymentCardCheckoutType
@@ -23,11 +25,17 @@ class PaymentCardCheckoutType extends AbstractType
         $builder
             ->add('number', TextType::class, [
                 'label' => 'app.ui.form.payment.number',
-                'mapped' => false
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('name', TextType::class, [
                 'label' => 'app.ui.form.payment.name',
-                'mapped' => false
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('expirationDate', TextType::class, [
                 'label' => 'app.ui.form.payment.expiration_date',
@@ -35,11 +43,17 @@ class PaymentCardCheckoutType extends AbstractType
                     'class' => 'datepicker',
                     'placeholder' => 'MM/YY'
                 ],
-                'mapped' => false
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
             ->add('cvv', NumberType::class, [
                 'label' => 'app.ui.form.payment.cvv',
-                'mapped' => false
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank()
+                ]
             ])
         ;
     }

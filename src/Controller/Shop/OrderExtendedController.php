@@ -368,7 +368,6 @@ class OrderExtendedController extends OrderController
     public function paymentAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
-
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
 
         /** @var Order $resource */
@@ -378,70 +377,73 @@ class OrderExtendedController extends OrderController
         $paymentType = $request->request->get('payment_type');
         $cardType = $paymentType == 'card';
         $this->get('session')->set('payment', $paymentType);
+        $valid = false;
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
             if ($paymentType) {
-                if ($cardType) {
-                    if ($form->handleRequest($request)->isValid()) {
-                        $resource = $form->getData();
-                        $card = $request->request->get('payment_card_checkout');
+                if ($cardType && $form->handleRequest($request)->isValid()) {
+                    $resource = $form->getData();
+                    $card = $request->request->get('payment_card_checkout');
 
-                        $this->get('session')->set('card', $card);
+                    $this->get('session')->set('card', $card);
+
+                    $valid = true;
+                }
+
+                if ($paymentType == 'cash_on_delivery' || $valid) {
+                    $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
+
+                    if ($event->isStopped() && !$configuration->isHtmlRequest()) {
+                        throw new HttpException($event->getErrorCode(), $event->getMessage());
                     }
-                }
 
-                $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
+                    if ($event->isStopped()) {
+                        $this->flashHelper->addFlashFromEvent($configuration, $event);
 
-                if ($event->isStopped() && !$configuration->isHtmlRequest()) {
-                    throw new HttpException($event->getErrorCode(), $event->getMessage());
-                }
+                        $eventResponse = $event->getResponse();
+                        if (null !== $eventResponse) {
+                            return $eventResponse;
+                        }
 
-                if ($event->isStopped()) {
-                    $this->flashHelper->addFlashFromEvent($configuration, $event);
+                        return $this->redirectHandler->redirectToResource($configuration, $resource);
+                    }
 
-                    $eventResponse = $event->getResponse();
-                    if (null !== $eventResponse) {
-                        return $eventResponse;
+                    try {
+                        $this->resourceUpdateHandler->handle($resource, $configuration, $this->manager);
+                    } catch (UpdateHandlingException $exception) {
+                        if (!$configuration->isHtmlRequest()) {
+                            return $this->viewHandler->handle(
+                                $configuration,
+                                View::create($form, $exception->getApiResponseCode())
+                            );
+                        }
+
+                        $this->flashHelper->addErrorFlash($configuration, $exception->getFlash());
+
+                        return $this->redirectHandler->redirectToReferer($configuration);
+                    }
+
+                    if ($configuration->isHtmlRequest()) {
+                        $this->flashHelper->addSuccessFlash($configuration, ResourceActions::UPDATE, $resource);
+                    }
+
+                    $postEvent = $this->eventDispatcher->dispatchPostEvent(ResourceActions::UPDATE, $configuration, $resource);
+
+                    if (!$configuration->isHtmlRequest()) {
+                        $view = $configuration->getParameters()->get('return_content', false) ? View::create($resource, Response::HTTP_OK) : View::create(null, Response::HTTP_NO_CONTENT);
+
+                        return $this->viewHandler->handle($configuration, $view);
+                    }
+
+                    $postEventResponse = $postEvent->getResponse();
+
+                    if (null !== $postEventResponse) {
+                        return $postEventResponse;
                     }
 
                     return $this->redirectHandler->redirectToResource($configuration, $resource);
                 }
-
-                try {
-                    $this->resourceUpdateHandler->handle($resource, $configuration, $this->manager);
-                } catch (UpdateHandlingException $exception) {
-                    if (!$configuration->isHtmlRequest()) {
-                        return $this->viewHandler->handle(
-                            $configuration,
-                            View::create($form, $exception->getApiResponseCode())
-                        );
-                    }
-
-                    $this->flashHelper->addErrorFlash($configuration, $exception->getFlash());
-
-                    return $this->redirectHandler->redirectToReferer($configuration);
-                }
-
-                if ($configuration->isHtmlRequest()) {
-                    $this->flashHelper->addSuccessFlash($configuration, ResourceActions::UPDATE, $resource);
-                }
-
-                $postEvent = $this->eventDispatcher->dispatchPostEvent(ResourceActions::UPDATE, $configuration, $resource);
-
-                if (!$configuration->isHtmlRequest()) {
-                    $view = $configuration->getParameters()->get('return_content', false) ? View::create($resource, Response::HTTP_OK) : View::create(null, Response::HTTP_NO_CONTENT);
-
-                    return $this->viewHandler->handle($configuration, $view);
-                }
-
-                $postEventResponse = $postEvent->getResponse();
-
-                if (null !== $postEventResponse) {
-                    return $postEventResponse;
-                }
             }
-
-            return $this->redirectHandler->redirectToResource($configuration, $resource);
         }
 
         if (!$configuration->isHtmlRequest()) {
