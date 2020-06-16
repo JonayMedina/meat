@@ -182,7 +182,7 @@ class ProductController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/.{_format}",
+     *     ".{_format}",
      *     name="admin_api_product_new",
      *     methods={"POST"}
      * )

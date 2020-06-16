@@ -134,7 +134,7 @@ class CategoryController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/.{_format}",
+     *     ".{_format}",
      *     name="admin_api_categories_new",
      *     methods={"POST"}
      * )
