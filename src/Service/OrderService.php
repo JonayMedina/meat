@@ -254,6 +254,20 @@ class OrderService
             $customer = $this->serializeCustomer($order->getCustomer());
         }
 
+        /** @var Address $shippingAddress */
+        $shippingAddress = null;
+
+        if ($order->getShippingAddress() instanceof Address) {
+            $shippingAddress = $order->getShippingAddress();
+        }
+
+        if ($order->getShippingAddress() instanceof Address && $order->getShippingAddress()->getParent() instanceof Address) {
+            $shippingAddress = $order->getShippingAddress()->getParent();
+        }
+
+        /** @var Address $billingAddress */
+        $billingAddress = $order->getBillingAddress();
+
         $response = [
             'id' => $order->getId(),
             'number' => $order->getNumber(),
@@ -266,8 +280,8 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'shipping_address' => $this->serializeAddress($order->getShippingAddress()->getParent() ?? $order->getShippingAddress()),
-            'billing_address' => $this->serializeAddress($order->getBillingAddress()),
+            'shipping_address' => $this->serializeAddress($shippingAddress),
+            'billing_address' => $this->serializeAddress($billingAddress),
         ];
 
         if ($details) {
