@@ -6,6 +6,7 @@ use App\Entity\Segment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,12 +33,14 @@ class SegmentType extends AbstractType
             ->add('gender', ChoiceType::class, [
                 'label' => 'app.ui.gender.label',
                 'expanded' => true,
-                'multiple' => false,
+                'multiple' => true,
+                'constraints' => [
+                    new Count(['min' => 1, 'minMessage' => 'app.ui.segment.select_at_least_one_gender']),
+                ],
                 'choices' => [
                     'app.ui.segment.gender.'.CustomerInterface::FEMALE_GENDER => CustomerInterface::FEMALE_GENDER,
                     'app.ui.segment.gender.'.CustomerInterface::MALE_GENDER => CustomerInterface::MALE_GENDER,
-                ],
-                'data' => 'app.ui.segment.gender.'.CustomerInterface::FEMALE_GENDER
+                ]
             ])
             ->add('frequencyType', ChoiceType::class, [
                 'label' => 'app.ui.frequency',

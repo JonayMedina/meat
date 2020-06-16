@@ -41,8 +41,6 @@
         $integerOnly.on('keypress input blur paste', function() {
             $(this).val($(this).val().replace(/\D/g, ''));
         });
-
-        $('#segment_gender_0').prop('checked', true).change();
     });
 </script>
 {% endblock %}
