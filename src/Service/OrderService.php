@@ -266,7 +266,7 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'shipping_address' => $this->serializeAddress($order->getShippingAddress()->getParent()),
+            'shipping_address' => $this->serializeAddress($order->getShippingAddress()->getParent() ?? $order->getShippingAddress()),
             'billing_address' => $this->serializeAddress($order->getBillingAddress()),
         ];
 
@@ -452,7 +452,7 @@ class OrderService
         /** @var Customer $customer */
         $customer = $address->getCustomer();
 
-        if ($customer->getDefaultAddress() && $customer->getDefaultAddress()->getId() == $address->getId()) {
+        if ($customer instanceof Customer && $customer->getDefaultAddress() && $customer->getDefaultAddress()->getId() == $address->getId()) {
             $isDefault = true;
         }
 
