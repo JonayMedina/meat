@@ -42,10 +42,22 @@ class TermsAndConditionsController extends AbstractFOSRestController
         $aboutStore = $this->repository->findLatest();
 
         $view = $this->view([
-            'text' => $aboutStore->getText(),
+            'text' => $this->sanitizeText($aboutStore->getText()),
             'updated_at' => $aboutStore->getUpdatedAt()->format('c')
         ], $statusCode);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param string|null $text
+     * @return string
+     */
+    private function sanitizeText(?string $text): string
+    {
+        $text = str_replace(["\r", "\n"], '', $text);
+        $text = str_replace("\xc2\xa0",' ',$text);
+
+        return $text;
     }
 }
