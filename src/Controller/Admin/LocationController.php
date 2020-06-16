@@ -109,15 +109,18 @@ class LocationController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
 
         $location = new Location();
+        $errors = [];
 
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 
         if ($request->isMethod(Request::METHOD_POST)) {
-            $location->setSchedule($request->get('schedule'));
+            $schedule = $request->get('schedule');
+            $location->setSchedule($schedule);
+            $errors = $this->validateExtraFields($schedule);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && count($errors) <= 0) {
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['photoType']->getData();
             if ($uploadedFile) {
@@ -142,6 +145,7 @@ class LocationController extends AbstractController
         return $this->render('/admin/location/new.html.twig', [
             'location' =>  $location,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
