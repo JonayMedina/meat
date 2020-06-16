@@ -131,6 +131,12 @@ class PromotionBanner implements ResourceInterface
      */
     private $pushNotifications;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $enabled = true;
+
     public function __construct()
     {
         $this->pushNotifications = new ArrayCollection();
@@ -291,6 +297,22 @@ class PromotionBanner implements ResourceInterface
         $this->photoApp = $photoApp;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): void
+    {
+        $this->enabled = $enabled;
     }
 
     /**

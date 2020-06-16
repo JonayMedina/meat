@@ -16,6 +16,12 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->twiceDaily();
 
         $schedule
+            ->addCommand('app:disable-expired-promotions')
+            ->description('Automatically disable expired promotion banners.')
+            ->withoutOverlapping(true)
+            ->twiceDaily();
+
+        $schedule
             ->addCommand('sylius:cancel-unpaid-orders')
             ->description('Removes order that have been unpaid for a configured period. Configuration parameter - sylius_order.order_expiration_period.')
             ->withoutOverlapping(true)

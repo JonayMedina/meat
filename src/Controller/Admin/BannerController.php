@@ -81,7 +81,12 @@ class BannerController extends AbstractController
      */
     public function indexAction()
     {
-        $banners = $this->repository->findAll();
+        $banners = $this->repository
+            ->createQueryBuilder('promotion_banner')
+            ->andWhere('promotion_banner.enabled = :enabled')
+            ->setParameter('enabled', true)
+            ->getQuery()
+            ->getResult();
 
         return $this->render('/admin/banner/index.html.twig', [
             'banners' => $banners
@@ -220,6 +225,8 @@ class BannerController extends AbstractController
     {
         $queryBuilder = $this->repository
             ->createQueryBuilder('banner')
+            ->andWhere('banner.enabled = :enabled')
+            ->setParameter('enabled', true)
             ->select('COUNT(banner.id)');
 
         try {

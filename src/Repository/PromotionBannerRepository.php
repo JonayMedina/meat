@@ -29,7 +29,9 @@ class PromotionBannerRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('promotion_banner')
             ->andWhere('promotion_banner.startDate <= :now')
             ->andWhere('promotion_banner.endDate >= :now')
+            ->andWhere('promotion_banner.enabled = :enabled')
             ->setParameter('now', $now)
+            ->setParameter('enabled', true)
             ->getQuery()
             ->getResult();
     }
