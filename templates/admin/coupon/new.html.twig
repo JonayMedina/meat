@@ -5,6 +5,7 @@
 
 {% block styles %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/datapicker/datepicker3.css') }}">
     <style>
         #promotion_startsAt_date, #promotion_endsAt_date {
             width: 70%;
@@ -13,6 +14,18 @@
         #promotion_startsAt_time, #promotion_endsAt_time {
             width: calc(30% - 20px);
             margin-left: 20px;
+        }
+
+        .datepicker table tr td.active:active, .datepicker table tr td.active.highlighted:active, .datepicker table tr td.active.active, .datepicker table tr td.active.highlighted.active {
+            color: #fff;
+            background-color: #69595C;
+            border-color: #404040;
+        }
+
+        .datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+            color: #fff;
+            background-color: #69595C;
+            border-color: #69595C;
         }
     </style>
 {% endblock %}
@@ -59,6 +72,8 @@
 
 {% block javascript %}
     {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.es.min.js') }}"></script>
     <script>
         $(function () {
             var $limitUsageCheckbox = $('#promotion_limitUsageToXQuantityOfUsers');
@@ -77,6 +92,13 @@
                     $promotionAmountInput.attr('placeholder', '{{ 'app.ui.percentage_input_placeholder'|trans }}');
                 }
             }).change();
+
+            $('#promotion_startsAt_date, #promotion_endsAt_date').datepicker({
+                format: "dd/mm/yyyy",
+                startDate: "today",
+                todayBtn: "linked",
+                language: "es"
+            });
 
             $limitUsageCheckbox.on('change', function () {
                 if ($(this).is(':checked')) {
