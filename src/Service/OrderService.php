@@ -478,7 +478,8 @@ class OrderService
             'phone_number' => $address->getPhoneNumber(),
             'status' => $address->getStatus(),
             'type' => $address->getType(),
-            'is_default' => $isDefault
+            'is_default' => $isDefault,
+            'parent' => $this->serializeAddress($address->getParent())
         ];
 
         if (Address::TYPE_BILLING == $address->getType()) {
