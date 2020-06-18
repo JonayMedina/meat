@@ -891,6 +891,10 @@ table.spaced {
     .order table tr td:first-of-type {
         width: 40%;
     }
+
+    .order-by-control {
+        padding-left: 0 !important;
+    }
 }
 
 @media (min-width: 768px) {
@@ -933,6 +937,13 @@ table.spaced {
 
     #toggle-main-menu span {
         font-size: 12px;
+    }
+}
+
+@media (max-width: 575px) {
+    .users-filters .search-box {
+        padding-bottom: 15px;
+        padding-top: 15px;
     }
 }
 

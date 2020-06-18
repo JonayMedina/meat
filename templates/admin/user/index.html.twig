@@ -22,15 +22,14 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
-                    <div class="ibox-content no-padding">
-
+                    <div class="ibox-content no-padding users-filters">
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-5">
                                 <div class="search-box search-box-fullwidth" style="width: 100%;">
                                     <input type="search" name="filter" class="search-box-input form-control" maxlength="50" placeholder="{{ 'app.ui.users_search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
                                 </div>
                             </div>
-                            <div class="col-lg-4 search-box">
+                            <div class="col-12 col-sm-5 col-md-5 col-lg-3 search-box">
                                 <select class="search-box-input role-filter form-control">
                                     <option value="">{{ 'app.ui.users_filter_by_role'|trans }}</option>
                                     <option value="{{ constant('App\\Entity\\User\\AdminUser::ROLE_ADMIN') }}" {% if constant('App\\Entity\\User\\AdminUser::ROLE_ADMIN') == app.request.get('role') %}selected{% endif %}>{{ 'app.ui.roles.role_admin'|trans }}</option>
@@ -38,10 +37,10 @@
 
                                 </select>
                             </div>
-                            <div class="col-lg-2 search-box text-right">
+                            <div class="col-5 col-sm-3 col-md-3 col-lg-2 search-box text-right">
                                 <label for="order-by-control">{{ 'app.ui.filter_order_by'|trans }}</label>
                             </div>
-                            <div class="col-lg-1 search-box">
+                            <div class="col-7 col-sm-4 col-md-4 col-lg-2 search-box order-by-control">
                                 <select id="order-by-control" class="search-box-input order-filter form-control">
                                     <option value="{{ constant('App\\Controller\\Admin\\UserController::ORDER_ABC') }}" {% if constant('App\\Controller\\Admin\\RatingController::ORDER_ASC')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.users_sort_asc'|trans }}</option>
                                     <option value="{{ constant('App\\Controller\\Admin\\UserController::ORDER_RECENT') }}" {% if constant('App\\Controller\\Admin\\RatingController::ORDER_RECENT')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.users_sort_recent'|trans }}</option>
