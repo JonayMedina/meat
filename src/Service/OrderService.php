@@ -310,6 +310,7 @@ class OrderService
             ->andWhere('holiday.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         return ($holiday instanceof Holiday);
