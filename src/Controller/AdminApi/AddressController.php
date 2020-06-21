@@ -132,7 +132,7 @@ class AddressController extends AbstractFOSRestController
      * @param Request $request
      * @return Address
      */
-    private function getAddress(Request $request): Address
+    private function getAddress(Request $request): ?Address
     {
         $id = $request->get('id');
 
