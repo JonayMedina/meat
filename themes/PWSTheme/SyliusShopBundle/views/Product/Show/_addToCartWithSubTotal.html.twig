@@ -15,7 +15,7 @@
 
     {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
         'class': 'ui loadable form text-center product-buy ' ~ class, 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
-        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': ('app.ui.measurement_units.' ~ product.measurementUnit)|trans }}) }}
+        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.plural')|trans }}) }}
     {{ form_errors(form) }}
     <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
     <div class="d-none">
@@ -34,7 +34,7 @@
         <div class="quantity">
             {{ form_widget(form.cartItem.quantity) }}
         </div>
-        <p class="type">{{ ('app.ui.measurement_units.' ~ product.measurementUnit)|trans }}</p>
+        <p class="type">{{ ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.plural')|trans }}</p>
     </div>
 
     <div>

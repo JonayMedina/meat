@@ -29,9 +29,9 @@
                                         <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
                                             {% if get_price(product)['isOffer'] %}
                                                 <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
-                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit)|trans})|raw }}
+                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                             {% else %}
-                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit)|trans})|raw }}
+                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                             {% endif %}
                                         </div>
                                     {% endif %}
