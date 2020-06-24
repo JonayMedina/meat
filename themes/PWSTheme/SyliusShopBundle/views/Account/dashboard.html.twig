@@ -37,7 +37,7 @@
                                                 <p><strong>{{ 'sylius.form.customer.birthday'|trans }}</strong></p>
                                             </div>
                                             <div class="col-8">
-                                                <p>{{ customer.birthday|date('d-m-Y') }}</p>
+                                                <p>{{ customer.birthday|date('d/m/Y') }}</p>
                                             </div>
                                         </div>
                                     {% endif %}
@@ -329,9 +329,9 @@
                                                             </a>
                                                             <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
                                                                 {% if get_price(product)['isOffer'] %}
-                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                                                 {% else %}
-                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                                                 {% endif %}
                                                             </div>
                                                         </div>
@@ -374,7 +374,7 @@
                                                             <p class="title">{{ item.getVariant.product.name }}</p>
                                                         </div>
                                                         <div class="col-12 extra">
-                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ item.quantity }} {{ 'app.ui.pound'|trans }}</p>
+                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ 'app.ui.checkout.%quantity%_%measure%'|trans({'%quantity%': item.quantity, '%measure%': item.quantity > 1 ? ('app.ui.measurement_units.' ~ item.getVariant.product.measurementUnit ~ '.plural')|trans : ('app.ui.measurement_units.' ~ item.getVariant.product.measurementUnit ~ '.lower')|trans }) }}</p>
                                                             <p>{{ money.convertAndFormat(item.subtotal) }}</p>
                                                         </div>
                                                     </div>

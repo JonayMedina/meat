@@ -2,8 +2,8 @@
 
 <h3 class="{% if get_price(product)['isOffer'] %}offer{% endif %}">
     {% if get_price(product)['isOffer'] %}
-        {{ 'app.ui.product.price_by_%measure%_%price%_%offer%'|trans({'%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit)|trans, '%price%': '<span class="original">' ~ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) ~ '</span>', '%offer%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>'})|raw }}
+        {{ 'app.ui.product.price_by_%measure%_%price%_%offer%'|trans({'%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans, '%price%': '<span class="original">' ~ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) ~ '</span>', '%offer%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>'})|raw }}
     {% else %}
-        {{ 'app.ui.product.price_by_%measure%_%price%'|trans({'%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit)|trans, '%price%': money.calculatePrice(product|sylius_resolve_variant)}) }}
+        {{ 'app.ui.product.price_by_%measure%_%price%'|trans({'%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans, '%price%': money.calculatePrice(product|sylius_resolve_variant)}) }}
     {% endif %}
 </h3>
