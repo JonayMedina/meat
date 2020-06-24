@@ -40,6 +40,7 @@ class CategoryType extends AbstractType
             ])
             ->add('photo', null, [
                 'constraints' => [
+                    new NotBlank(['groups' => ['creation']]),
                     new Callback([$this, 'validatePhoto']),
                 ]
             ])
