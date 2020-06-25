@@ -1,6 +1,5 @@
 {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
 
-
 <div class="row">
     <div class="col-lg-7">
         {{ form_row(form.name) }}
@@ -32,6 +31,16 @@
 
 <label for="">
     {{ 'app.ui.location_schedule'|trans }}
+    {% if errors|length > 0 %}
+        {% if errors['schedule'] %}
+            <span class="invalid-feedback d-block">
+                <span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span>
+                    <span class="form-error-message"><strong>{{ errors['schedule']|trans }}</strong></span>
+                </span>
+            </span>
+        {% endif %}
+    {% endif %}
 </label>
 
 <div class="row">
@@ -40,10 +49,10 @@
     </div>
 
     <div class="col-lg-2">
-        <input type="text" class="form-control inputmask" name="schedule[in_week][start]" value="{{ location.schedule['in_week']['start']|default('') }}">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[in_week][start]" value="{{ location.schedule['in_week']['start']|default('') }}">
     </div>
     <div class="col-lg-2">
-        <input type="text" class="form-control inputmask" name="schedule[in_week][end]" value="{{ location.schedule['in_week']['end']|default('') }}">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[in_week][end]" value="{{ location.schedule['in_week']['end']|default('') }}">
     </div>
 </div>
 
@@ -52,10 +61,10 @@
         {{'app.ui.saturday'|trans}}
     </div>
     <div class="col-lg-2">
-        <input type="text" class="form-control inputmask" name="schedule[weekend][start]" value="{{ location.schedule['weekend']['start']|default('') }}">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[weekend][start]" value="{{ location.schedule['weekend']['start']|default('') }}">
     </div>
     <div class="col-lg-2">
-        <input type="text" class="form-control inputmask" name="schedule[weekend][end]" value="{{ location.schedule['weekend']['end']|default('') }}">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[weekend][end]" value="{{ location.schedule['weekend']['end']|default('') }}">
     </div>
 </div>
 
@@ -64,7 +73,7 @@
 
 <div class="form-group">
     <div class="text-center">
-        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{% if edit %}{{ 'app.ui.save_changes'|trans }}{% else %}{{ 'app.ui.admin.create_location'|trans }}{% endif %}</button>
     </div>
 </div>
 

@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
-    <link rel="icon" href="{{ asset('bundles/syliusshop/img/favicon.ico') }}" type="image/x-icon" />
+    <link rel="icon" href="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/favicon.ico" type="image/x-icon" />
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="description" content="{{ sylius.channel.description }}"/>
+    <meta property="og:image" content="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/logo.png"/>
 
     {% block metatags %}
     {% endblock %}
@@ -71,7 +72,7 @@
             {% endif %}
 
             .lb-data .lb-close{
-                background: url('{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}') !important;
+                background: url("https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg") !important;
                 background-size: cover !important;
                 margin-top: 10px !important;
                 width: 20px !important;
@@ -141,7 +142,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="product-in-cartLabel"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                            <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                         </button>
                     </div>
                     <div class="modal-body">
@@ -150,7 +151,7 @@
                                 <div class="row info">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-4">
                                         <img class="product-image" src="" alt="{{ 'app.ui.product.image'|trans }}" title="{{ 'app.ui.product.image'|trans }}" width="auto" height="auto">
-                                        <img class="d-none d-lg-block" src="{{ asset('bundles/syliusshop/img/icons/check.svg') }}" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
+                                        <img class="d-none d-lg-block" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/check.svg" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-8 product-text md-mt-2"><p></p></div>
                                 </div>
@@ -202,7 +203,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title text-center" id="reorderMessageLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                     </button>
                 </div>
                 <div class="modal-body text-center"></div>
@@ -217,10 +218,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <img src="{{ asset('bundles/syliusshop/img/icons/add-to-favorites.png') }}" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                    <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/add-to-favorites.png" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
                     <h5 class="modal-title text-center" id="showCartModalLabel">{{ 'app.ui.cart.abandoned.title'|trans }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                     </button>
                 </div>
                 <div class="modal-body text-center">
@@ -264,7 +265,7 @@
     <script>
         function blockPage() {
             $('body').addClass('blocked');
-            $.blockUI({ message: '<img src="{{ asset('bundles/syliusshop/img/loader.gif') }}">' });
+            $.blockUI({ message: '<img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/loader.gif">' });
         }
 
         /**

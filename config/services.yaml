@@ -8,6 +8,11 @@ parameters:
     fb_client_id: "%env(APP_FB_CLIENT_ID)%"
     fb_client_secret: "%env(APP_FB_SECRET)%"
     sylius.form.type.address.validation_groups: ['app_address']
+    aws.s3.key: "%env(AWS_S3_ACCESS_ID)%"
+    aws.s3.secret: "%env(AWS_S3_ACCESS_SECRET)%"
+    aws.s3.bucket: "%env(AWS_S3_BUCKET_NAME)%"
+    aws.s3.region: "%env(AWS_S3_REGION_ID)%"
+    aws.s3.version: "%env(AWS_S3_REGION_VERSION)%"
 
 services:
     # Default configuration for services in *this* file
@@ -132,6 +137,16 @@ services:
         decorates: sylius.shop_api_plugin.factory.list_product_view_factory
         arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.product_view_factory', '@sylius.shop_api_plugin.factory.product_variant_view_factory']
         public: false
+        
+    App\Factory\Product\ProductViewFactory:
+        decorates: sylius.shop_api_plugin.factory.product_view_factory
+        arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.limited_product_attribute_values_view_factory', '', '', '', 'App\View\ShopApi\ProductView', '%sylius.shop_api.view.product_taxon.class%', '%locale%']
+        public: false
+        
+    App\Factory\ShopApi\AddressViewFactory:
+        decorates: sylius.shop_api_plugin.factory.address_view_factory
+        arguments: ['App\View\ShopApi\AddressView']
+        public: false
 
     app.service.token_generator.password_reset:
         class: App\Service\UniqueTokenGeneratorExtended
@@ -186,7 +201,7 @@ services:
                 
     Aws\S3\S3Client:
         arguments:
-            -   version: '2006-03-01' # or 'latest'
+            -   version: '%env(AWS_S3_REGION_VERSION)%' # or 'latest'
                 region: '%env(AWS_S3_REGION_ID)%' # 'eu-central-1' for example
                 credentials:
                     key: '%env(AWS_S3_ACCESS_ID)%'

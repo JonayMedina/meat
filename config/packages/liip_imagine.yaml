@@ -1,9 +1,28 @@
 liip_imagine:
+    loaders:
+        aws_s3:
+            stream:
+                wrapper: gaufrette://sylius_image/
+                
     resolvers:
-        default:
-            web_path:
-                web_root: "%kernel.project_dir%/public"
-                cache_prefix: "media/cache"
+        aws_s3:
+            aws_s3:
+                client_config:
+                    credentials:
+                        key:    "%aws.s3.key%"
+                        secret: "%aws.s3.secret%"
+                    region: "%aws.s3.region%"
+                    version: "%aws.s3.version%"
+                bucket: "%aws.s3.bucket%"
+                get_options:
+                    Scheme: https
+                put_options:
+                    CacheControl: "max-age=86400"
+                cache_prefix: media/cache
+                
+    data_loader: aws_s3
+    cache: aws_s3
+                
     filter_sets:
         shop_api_product_original: ~
         shop_api_product_tiny:

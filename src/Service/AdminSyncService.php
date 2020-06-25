@@ -76,6 +76,10 @@ class AdminSyncService
             return;
         }
 
+        if ($address->getType() == Address::TYPE_BILLING) {
+            return;
+        }
+
         $url = $this->urlGenerator->generate('admin_api_address_show', [
             'id' => $address->getId(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);

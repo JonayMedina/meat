@@ -3,32 +3,9 @@
 
 {% block title %}{{ 'app.ui.new_coupon'|trans }}{% endblock %}
 
-{% block content %}
-    <div class="col-lg-12">
-
-        <div class="row wrapper page-heading">
-            <div class="col-sm-12">
-                {{ UI.back(path('coupons_index')) }}
-                <br>
-                <h1>{{ 'app.ui.new_coupon'|trans }}</h1>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        {{ include('/admin/coupon/_form.html.twig') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-{% endblock %}
-
 {% block styles %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/datapicker/datepicker3.css') }}">
     <style>
         #promotion_startsAt_date, #promotion_endsAt_date {
             width: 70%;
@@ -38,38 +15,98 @@
             width: calc(30% - 20px);
             margin-left: 20px;
         }
+
+        .datepicker table tr td.active:active, .datepicker table tr td.active.highlighted:active, .datepicker table tr td.active.active, .datepicker table tr td.active.highlighted.active {
+            color: #fff;
+            background-color: #69595C;
+            border-color: #404040;
+        }
+
+        .datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+            color: #fff;
+            background-color: #69595C;
+            border-color: #69595C;
+        }
     </style>
 {% endblock %}
 
+{% block content %}
+    <div class="col-12">
+        <div class="row wrapper page-heading">
+            <div class="col-12">
+                {{ UI.modalBack('leaveModal') }}
+                <br>
+                <h1>{{ 'app.ui.new_coupon'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        {{ include('/admin/coupon/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal smaller fade" id="leaveModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="leaveModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="leaveModalLabel">{{ 'app.ui.admin.coupon.leave.title'|trans }}</h5>
+                </div>
+                <div class="modal-body">
+                    {{ 'app.ui.admin.coupon.leave.message'|trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.admin.no'|trans }}</button>
+                    <a href="{{ path('coupons_index') }}" class="btn-rounded">{{ 'app.ui.admin.yes'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block javascript %}
-{{ parent() }}
-<script>
-    $(document).ready(function () {
-        var $limitUsageCheckbox = $('#promotion_limitUsageToXQuantityOfUsers');
-        var $usageLimitWrapper = $('#usage-limit-wrapper');
-        var $typeInput = $('#promotion_type');
-        var $promotionAmountInput = $('#promotion_amount');
+    {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.es.min.js') }}"></script>
+    <script>
+        $(function () {
+            var $limitUsageCheckbox = $('#promotion_limitUsageToXQuantityOfUsers');
+            var $usageLimitWrapper = $('#usage-limit-wrapper');
+            var $typeInput = $('#promotion_type');
+            var $promotionAmountInput = $('#promotion_amount');
 
-        $typeInput.on('change', function() {
-            var value = $(this).val();
+            $typeInput.on('change', function() {
+                var value = $(this).val();
 
-            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_FIXED_AMOUNT') }}') {
-                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.fixed_discount_input_placeholder'|trans }}');
-            }
+                if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_FIXED_AMOUNT') }}') {
+                    $promotionAmountInput.attr('placeholder', '{{ 'app.ui.fixed_discount_input_placeholder'|trans }}');
+                }
 
-            if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_PERCENTAGE') }}') {
-                $promotionAmountInput.attr('placeholder', '{{ 'app.ui.percentage_input_placeholder'|trans }}');
-            }
-        }).change();
+                if (value === '{{ constant('App\\Entity\\Promotion\\PromotionCoupon::TYPE_PERCENTAGE') }}') {
+                    $promotionAmountInput.attr('placeholder', '{{ 'app.ui.percentage_input_placeholder'|trans }}');
+                }
+            }).change();
 
-        $limitUsageCheckbox.on('change', function () {
-            if ($(this).is(':checked')) {
-                $usageLimitWrapper.slideDown('fast');
-            } else {
-                $usageLimitWrapper.slideUp('fast');
-            }
-        }).change();
-    });
-</script>
+            $('#promotion_startsAt_date, #promotion_endsAt_date').datepicker({
+                format: "dd/mm/yyyy",
+                startDate: "today",
+                todayBtn: "linked",
+                language: "es"
+            });
+
+            $limitUsageCheckbox.on('change', function () {
+                if ($(this).is(':checked')) {
+                    $usageLimitWrapper.slideDown('fast');
+                } else {
+                    $usageLimitWrapper.slideUp('fast');
+                }
+            }).change();
+        });
+    </script>
 {% endblock %}

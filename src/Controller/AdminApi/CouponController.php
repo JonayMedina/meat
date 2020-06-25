@@ -89,7 +89,7 @@ class CouponController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/.{_format}",
+     *     ".{_format}",
      *     name="admin_api_coupons_new",
      *     methods={"POST"}
      * )

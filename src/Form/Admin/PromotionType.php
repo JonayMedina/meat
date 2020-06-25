@@ -52,20 +52,28 @@ class PromotionType extends AbstractType
                 'label' => 'app.ui.coupon_starts_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
+                'date_format' => 'dd/MM/yyyy',
                 'time_label' => 'Hora',
                 'constraints' => [
                     new GreaterThan(['value' => 'now']),
                     new DateTime()
+                ],
+                'attr' => [
+                    'autocomplete' => 'off'
                 ]
             ])
             ->add('endsAt', null, [
                 'label' => 'app.ui.coupon_ends_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
+                'date_format' => 'dd/MM/yyyy',
                 'time_label' => 'Hora',
                 'constraints' => [
                     new GreaterThan(['value' => 'now']),
                     new DateTime()
+                ],
+                'attr' => [
+                    'autocomplete' => 'off'
                 ]
             ])
             ->add('type', ChoiceType::class, [

@@ -66,6 +66,7 @@ class NotificationSubscriber implements EventSubscriber
             ], [
                 'type' => $entity->getType(),
                 'notification_id' => $entity->getId(),
+                'order_token' => $entity->getOrder() ? $entity->getOrder()->getTokenValue() : null,
             ], $deviceIds);
 
             $entity->setResponse($response);

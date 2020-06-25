@@ -25,7 +25,7 @@ class ProductVariant extends BaseProductVariant
 
     const MEASUREMENT_PIECE_TYPE = 'piece';
 
-    const MEASUREMENT_LITTER_TYPE = 'litter';
+    const MEASUREMENT_LITTER_TYPE = 'liter';
 
     /**
      * @ORM\OneToMany(
@@ -86,9 +86,9 @@ class ProductVariant extends BaseProductVariant
     /**
      * @return string
      */
-    public function getMeasurementUnit(): string
+    public function getMeasurementUnit(): ?string
     {
-        return $this->measurementUnit;
+        return $this->measurementUnit ?? self::MEASUREMENT_POUND_TYPE;
     }
 
     /**

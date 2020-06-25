@@ -2,9 +2,12 @@
 
 {% block title %}{{ 'app.ui.send_push'|trans }}{% endblock %}
 
+{% block styles %}
+    {{ parent() }}
+{% endblock %}
+
 {% block content %}
     <div class="col-lg-12">
-
         <div class="row wrapper page-heading">
             <div class="col-sm-4">
                 <h1>{{ 'app.ui.send_push'|trans }}</h1>
@@ -86,20 +89,8 @@
             </div>
         </div>
     </div>
-
-
-{% endblock %}
-
-
-{% block styles %}
-    {{ parent() }}
 {% endblock %}
 
 {% block javascript %}
-{{ parent() }}
-
-<script>
-$(document).ready(function() {
-});
-</script>
+    {{ parent() }}
 {% endblock %}

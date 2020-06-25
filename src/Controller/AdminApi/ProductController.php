@@ -21,6 +21,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
 use Hshn\Base64EncodedFile\HttpFoundation\File\UploadedBase64EncodedFile;
 use Liip\ImagineBundle\Service\FilterService;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository;
 use Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository;
 use Sylius\Component\Core\Model\ImageInterface;
@@ -87,6 +88,11 @@ class ProductController extends AbstractFOSRestController
     private $associationTypeRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ProductController constructor.
      * @param ProductRepository $productRepository
      * @param ProductVariantRepository $productVariantRepository
@@ -97,6 +103,7 @@ class ProductController extends AbstractFOSRestController
      * @param ImageUploaderInterface $imageUploader
      * @param TaxonRepository $taxonRepository
      * @param ProductAssociationTypeRepository $associationTypeRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         ProductRepository $productRepository,
@@ -107,7 +114,8 @@ class ProductController extends AbstractFOSRestController
         CurrencyContextInterface $currencyContext,
         ImageUploaderInterface $imageUploader,
         TaxonRepository $taxonRepository,
-        ProductAssociationTypeRepository $associationTypeRepository
+        ProductAssociationTypeRepository $associationTypeRepository,
+        LoggerInterface $logger
     ) {
         $this->productRepository = $productRepository;
         $this->productVariantRepository = $productVariantRepository;
@@ -118,6 +126,7 @@ class ProductController extends AbstractFOSRestController
         $this->imageUploader = $imageUploader;
         $this->categoryRepository = $taxonRepository;
         $this->associationTypeRepository = $associationTypeRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -173,7 +182,7 @@ class ProductController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/.{_format}",
+     *     ".{_format}",
      *     name="admin_api_product_new",
      *     methods={"POST"}
      * )
@@ -445,7 +454,11 @@ class ProductController extends AbstractFOSRestController
         }
 
         if ($product->getImages()[0] ?? null) {
-            $photoURL = $this->filterService->getUrlOfFilteredImage($product->getImages()[0]->getPath(), self::ORIGINAL_IMAGE_KEY);
+            try {
+                $photoURL = $this->filterService->getUrlOfFilteredImage($product->getImages()[0]->getPath(), self::ORIGINAL_IMAGE_KEY);
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
 
         if ($product->getMainTaxon() instanceof Taxon) {
@@ -471,8 +484,8 @@ class ProductController extends AbstractFOSRestController
                 'code' => $this->currencyContext->getCurrencyCode(),
                 'symbol' => Currencies::getSymbol($this->currencyContext->getCurrencyCode())
             ],
-            'price' => $variant->getChannelPricingForChannel($channel)->getOriginalPrice(),
-            'offerPrice' => $variant->getChannelPricingForChannel($channel)->getPrice(),
+            'price' => $variant->getChannelPricingForChannel($channel) ? $variant->getChannelPricingForChannel($channel)->getOriginalPrice() : null,
+            'offerPrice' => $variant->getChannelPricingForChannel($channel) ? $variant->getChannelPricingForChannel($channel)->getPrice() : null,
             'keywords' => $product->getMetaKeywords(),
             'photo' => $photoURL,
         ];

@@ -4,11 +4,11 @@ namespace App\Form\Admin;
 
 use App\Entity\FAQ;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class FAQType extends AbstractType
 {
@@ -21,7 +21,7 @@ class FAQType extends AbstractType
             ->add('question', null, [
                 'label' => 'app.ui.question',
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(['message' => 'app.ui.admin.faq.not_empty']),
                     new Length(['min' => 5, 'max' => 125])
                 ],
                 'attr' => [
@@ -36,7 +36,7 @@ class FAQType extends AbstractType
             $builder->add('answer', TextareaType::class, [
                 'label' => 'app.ui.answer',
                 'constraints' => [
-                    new NotBlank(),
+                    new NotBlank(['message' => 'app.ui.admin.faq.not_empty']),
                     new Length(['min' => 5, 'max' => 200])
                 ],
                 'attr' => [

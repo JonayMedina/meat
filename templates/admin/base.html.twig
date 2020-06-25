@@ -36,6 +36,53 @@
             color: #FFFFFF;
             content: "{{ 'app.ui.browse'|trans }}"
         }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            background-image: url("{{ asset('meathouse/img/icons/dropdown.svg') }}") !important;
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 11px);
+            background-position-y: 16px;
+            border: 1px solid #dfdfdf;
+            border-radius: 2px;
+            margin-right: 2rem;
+            padding: 1rem;
+            padding-right: 2rem !important;
+        }
+    </style>
+    <style>
+        /* Fonts */
+        @font-face {
+            font-family: "Raleway Medium";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Medium.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Regular";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Regular.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway SemiBold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-SemiBold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Bold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Bold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway ExtraBold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-ExtraBold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Light";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Light.ttf') }}");
+        }
     </style>
 </head>
 <body>
@@ -47,7 +94,7 @@
             <ul class="nav metismenu">
                 <li class="nav-header text-center">
                     <a href="{{ path('dashboard_index') }}">
-                        <img id="main-logo" src="{{ asset('meathouse/img/logo.png') }}" alt="{{ app_name }}">
+                        <img id="main-logo" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/admin/logo.png" alt="{{ app_name }}">
                     </a>
                 </li>
             </ul>

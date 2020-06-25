@@ -325,6 +325,11 @@ class AddressBookController extends AbstractFOSRestController
             return $this->renderError('Not allowed', Response::HTTP_FORBIDDEN);
         }
 
+        foreach ($address->getChildren() as $child) {
+            /** @var Address $child */
+            $child->setParent(NULL);
+        }
+
         $this->entityManager->remove($address);
 
         try {

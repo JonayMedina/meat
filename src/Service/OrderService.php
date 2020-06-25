@@ -24,7 +24,6 @@ use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\OrderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Sylius\Component\Addressing\Model\AddressInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
 use Sylius\Component\Order\Processor\CompositeOrderProcessor;
@@ -255,6 +254,20 @@ class OrderService
             $customer = $this->serializeCustomer($order->getCustomer());
         }
 
+        /** @var Address $shippingAddress */
+        $shippingAddress = null;
+
+        if ($order->getShippingAddress() instanceof Address) {
+            $shippingAddress = $order->getShippingAddress();
+        }
+
+        if ($order->getShippingAddress() instanceof Address && $order->getShippingAddress()->getParent() instanceof Address) {
+            $shippingAddress = $order->getShippingAddress()->getParent();
+        }
+
+        /** @var Address $billingAddress */
+        $billingAddress = $order->getBillingAddress();
+
         $response = [
             'id' => $order->getId(),
             'number' => $order->getNumber(),
@@ -267,8 +280,8 @@ class OrderService
             'checkout_state' => $order->getCheckoutState(),
             'payment_state' => $order->getPaymentState(),
             'shipping_state' => $order->getShippingState(),
-            'shipping_address' => $this->serializeAddress($order->getShippingAddress()),
-            'billing_address' => $this->serializeAddress($order->getBillingAddress()),
+            'shipping_address' => $this->serializeAddress($shippingAddress),
+            'billing_address' => $this->serializeAddress($billingAddress),
         ];
 
         if ($details) {
@@ -297,6 +310,7 @@ class OrderService
             ->andWhere('holiday.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
+            ->setMaxResults(1)
             ->getOneOrNullResult();
 
         return ($holiday instanceof Holiday);
@@ -443,15 +457,18 @@ class OrderService
      */
     public function serializeAddress(?Address $address, $details = false): array
     {
-        $customer = [];
+        $customer = null;
+        $isDefault = false;
 
         if ($address == null) {
             return [];
         }
 
-        if ($details) {
-            /** @var Customer $customer */
-            $customer = $address->getCustomer();
+        /** @var Customer $customer */
+        $customer = $address->getCustomer();
+
+        if ($customer instanceof Customer && $customer->getDefaultAddress() && $customer->getDefaultAddress()->getId() == $address->getId()) {
+            $isDefault = true;
         }
 
         /** @var Address $address */
@@ -462,6 +479,8 @@ class OrderService
             'phone_number' => $address->getPhoneNumber(),
             'status' => $address->getStatus(),
             'type' => $address->getType(),
+            'is_default' => $isDefault,
+            'parent' => $this->serializeAddress($address->getParent())
         ];
 
         if (Address::TYPE_BILLING == $address->getType()) {
@@ -557,8 +576,12 @@ class OrderService
      * @param Customer $customer
      * @return array
      */
-    public function serializeCustomer(Customer $customer)
+    public function serializeCustomer(?Customer $customer)
     {
+        if (!$customer) {
+            return [];
+        }
+
         return [
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),
@@ -589,6 +612,7 @@ class OrderService
 
     /**
      * @param ShipmentInterface $shipment
+     * @return array
      */
     private function serializeShipment(ShipmentInterface $shipment)
     {

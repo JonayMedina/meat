@@ -3,14 +3,17 @@
 namespace App\Form\Admin;
 
 use App\Entity\Segment;
-use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Sylius\Component\Customer\Model\CustomerInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Validator\Constraints\Positive;
 
 class SegmentType extends AbstractType
 {
@@ -31,6 +34,9 @@ class SegmentType extends AbstractType
                 'label' => 'app.ui.gender.label',
                 'expanded' => true,
                 'multiple' => true,
+                'constraints' => [
+                    new Count(['min' => 1, 'minMessage' => 'app.ui.segment.select_at_least_one_gender']),
+                ],
                 'choices' => [
                     'app.ui.segment.gender.'.CustomerInterface::FEMALE_GENDER => CustomerInterface::FEMALE_GENDER,
                     'app.ui.segment.gender.'.CustomerInterface::MALE_GENDER => CustomerInterface::MALE_GENDER,
@@ -44,9 +50,10 @@ class SegmentType extends AbstractType
                     'app.ui.segment.frequency_type.'.Segment::TYPE_FIXED_AMOUNT.'.label' => Segment::TYPE_FIXED_AMOUNT,
                 ]
             ])
-            ->add('fixedAmount', TextType::class, [
+            ->add('fixedAmount', NumberType::class, [
                 'label' => 'app.ui.segment.frequency_type.amount',
                 'constraints' => [
+                    new Positive(),
                     new Length(['max' => 4])
                 ],
                 'attr' => [
@@ -54,9 +61,10 @@ class SegmentType extends AbstractType
                     'class' => 'integer-only'
                 ]
             ])
-            ->add('purchaseTimes', TextType::class, [
+            ->add('purchaseTimes', NumberType::class, [
                 'label' => 'app.ui.segment.frequency_type.times',
                 'constraints' => [
+                    new Positive(),
                     new Length(['max' => 2])
                 ],
                 'attr' => [

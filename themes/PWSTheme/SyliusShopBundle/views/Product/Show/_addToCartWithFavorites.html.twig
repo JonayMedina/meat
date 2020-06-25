@@ -15,7 +15,7 @@
 
     {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
         'class': 'ui loadable form text-center product-buy ' ~ class, 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
-        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': 'app.ui.package'|trans }}) }}
+        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.plural')|trans }}) }}
     {{ form_errors(form) }}
     <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
     <div class="d-none">
@@ -34,13 +34,13 @@
         <div class="quantity">
             {{ form_widget(form.cartItem.quantity) }}
         </div>
-        <p class="type">{{ 'app.ui.express_buy.package'|trans }}</p>
+        <p class="type">{{ ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.plural')|trans }}</p>
     </div>
 
     {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
     <div class="extra">
-        <button type="submit" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+        <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
         <a {% if not is_granted('ROLE_USER') %}data-toggle="modal" data-target="#createAccount"{% else %}class="add-true" data-id="{{ product.id }}"{% endif %}>
             {% if is_granted('ROLE_USER') %}
                 {% set isFavorite = product|is_favorite %}
@@ -66,10 +66,10 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <img src="{{ asset('bundles/syliusshop/img/icons/add-to-favorites.png') }}" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                            <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/add-to-favorites.png" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
                             <h5 class="modal-title text-center" id="createAccountLabel">{{ 'app.ui.favorites.modal.unlogged.title'|trans }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                                <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                             </button>
                         </div>
                         <div class="modal-body text-center">

@@ -26,14 +26,14 @@
                         <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
                             {% if get_price(product)['isOffer'] %}
                                 <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
-                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                             {% else %}
-                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                             {% endif %}
                         </div>
                     {% endif %}
                     <div class="text-right mt-4 {% if not available %}invisible{% endif %}">
-                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
+                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
             <div>
                 {% if available %}
                     <button type="button" class="close">
-                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                     </button>
 
                     {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCart.html.twig', 'productId': product.id})) }}

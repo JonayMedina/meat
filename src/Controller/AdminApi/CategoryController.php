@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
 use Hshn\Base64EncodedFile\HttpFoundation\File\UploadedBase64EncodedFile;
 use Liip\ImagineBundle\Service\FilterService;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Uploader\ImageUploaderInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -52,25 +53,33 @@ class CategoryController extends AbstractFOSRestController
     private $taxonImageFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * CategoryController constructor.
      * @param TaxonRepository $categoryRepository
      * @param EntityManagerInterface $entityManager
      * @param FilterService $filterService
      * @param ImageUploaderInterface $imageUploader
      * @param FactoryInterface $taxonImageFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         TaxonRepository $categoryRepository,
         EntityManagerInterface $entityManager,
         FilterService $filterService,
         ImageUploaderInterface $imageUploader,
-        FactoryInterface $taxonImageFactory
+        FactoryInterface $taxonImageFactory,
+        LoggerInterface $logger
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->entityManager = $entityManager;
         $this->filterService = $filterService;
         $this->imageUploader = $imageUploader;
         $this->taxonImageFactory = $taxonImageFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -125,7 +134,7 @@ class CategoryController extends AbstractFOSRestController
 
     /**
      * @Route(
-     *     "/.{_format}",
+     *     ".{_format}",
      *     name="admin_api_categories_new",
      *     methods={"POST"}
      * )
@@ -268,7 +277,11 @@ class CategoryController extends AbstractFOSRestController
         $photoURL = null;
 
         if ($category->getImages()[0] ?? null) {
-            $photoURL = $this->filterService->getUrlOfFilteredImage($category->getImages()[0]->getPath(), self::ORIGINAL_IMAGE_KEY);
+            try {
+                $photoURL = $this->filterService->getUrlOfFilteredImage($category->getImages()[0]->getPath(), self::ORIGINAL_IMAGE_KEY);
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
 
         return [

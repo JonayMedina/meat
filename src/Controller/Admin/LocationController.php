@@ -3,19 +3,19 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Location;
+use Psr\Log\LoggerInterface;
+use App\Service\UploaderHelper;
 use App\Form\Admin\LocationType;
 use App\Repository\LocationRepository;
-use App\Service\UploaderHelper;
+use League\Flysystem\FileExistsException;
 use Knp\Component\Pager\PaginatorInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class LocationController
@@ -102,22 +102,25 @@ class LocationController extends AbstractController
      * @param Request $request
      * @param UploaderHelper $uploaderHelper
      * @return Response
-     * @throws \League\Flysystem\FileExistsException
+     * @throws FileExistsException
      */
     public function newAction(Request $request, UploaderHelper $uploaderHelper)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
         $location = new Location();
+        $errors = [];
 
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 
         if ($request->isMethod(Request::METHOD_POST)) {
-            $location->setSchedule($request->get('schedule'));
+            $schedule = $request->get('schedule');
+            $location->setSchedule($schedule);
+            $errors = $this->validateExtraFields($schedule);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && count($errors) <= 0) {
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['photoType']->getData();
             if ($uploadedFile) {
@@ -142,6 +145,7 @@ class LocationController extends AbstractController
         return $this->render('/admin/location/new.html.twig', [
             'location' =>  $location,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
@@ -156,15 +160,19 @@ class LocationController extends AbstractController
     {
         $entityManager = $this->getDoctrine()->getManager();
         $location = $this->repository->find($request->get('id'));
+        $errors = [];
 
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
 
         if ($request->isMethod(Request::METHOD_POST)) {
-            $location->setSchedule($request->get('schedule'));
+            $schedule = $request->get('schedule');
+            $location->setSchedule($schedule);
+
+            $errors = $this->validateExtraFields($schedule);
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && count($errors) <= 0) {
             /** @var UploadedFile $uploadedFile */
             $uploadedFile = $form['photoType']->getData();
             if ($uploadedFile) {
@@ -191,6 +199,7 @@ class LocationController extends AbstractController
         return $this->render('/admin/location/edit.html.twig', [
             'location' =>  $location,
             'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
@@ -236,6 +245,32 @@ class LocationController extends AbstractController
             $this->logger->error($exception->getMessage());
 
             return null;
+        }
+    }
+
+    /**
+     * @param $array
+     * @return array
+     */
+    private function validateExtraFields($array) {
+        $errors = [];
+
+        if (!$this->validateArray($array['in_week']) || !$this->validateArray($array['weekend'])) {
+            $errors['schedule'] = 'app.ui.admin.not_empty';
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param $array
+     * @return bool
+     */
+    private function validateArray($array) {
+        if ($array['start'] == '' || $array['end'] == '') {
+            return false;
+        } else {
+            return true;
         }
     }
 }

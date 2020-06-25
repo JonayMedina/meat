@@ -14,9 +14,9 @@
                     {% set product = banner.productVariant.product %}
                     <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}">
                 {% endif %}
-                <img src="{{ uploaded_banner_asset(banner.photoWeb) }}" class="d-none d-lg-block w-100" alt="{{ banner.name }} web" title="{{ banner.name }} web" width="auto" height="auto" onerror="this.src='{{ asset('bundles/syliusshop/img/error/web.png') }}';">
-                <img src="{{ uploaded_banner_asset(banner.photoTablet) }}" class="d-none d-sm-block d-lg-none w-100" alt="{{ banner.name }} tablet" title="{{ banner.name }} tablet" width="auto" height="auto" onerror="this.src='{{ asset('bundles/syliusshop/img/error/tablet.png') }}';">
-                <img src="{{ uploaded_banner_asset(banner.photoMobile) }}" class="d-block d-sm-none w-100" alt="{{ banner.name }} mobile" title="{{ banner.name }} mobile" width="auto" height="auto" onerror="this.src='{{ asset('bundles/syliusshop/img/error/mobile.png') }}';">
+                <img src="{{ uploaded_banner_asset(banner.photoWeb) }}" class="d-none d-lg-block w-100" alt="{{ banner.name }} web" title="{{ banner.name }} web" width="auto" height="auto" onerror="this.src='https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/web.png';">
+                <img src="{{ uploaded_banner_asset(banner.photoTablet) }}" class="d-none d-sm-block d-lg-none w-100" alt="{{ banner.name }} tablet" title="{{ banner.name }} tablet" width="auto" height="auto" onerror="this.src='https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/tablet.png';">
+                <img src="{{ uploaded_banner_asset(banner.photoMobile) }}" class="d-block d-sm-none w-100" alt="{{ banner.name }} mobile" title="{{ banner.name }} mobile" width="auto" height="auto" onerror="this.src='https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png';">
                 {% if banner.productVariant %}
                     </a>
                 {% endif %}

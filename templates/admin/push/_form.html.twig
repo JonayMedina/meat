@@ -15,12 +15,12 @@
         <legend class="col-form-label required">{{ form_label(form.type) }}</legend>
     </fieldset>
 
-    <div class="col-lg-3">
+    <div class="col-12 col-sm-12 col-md-2 col-lg-2">
         <div class="form-group">
             {{ form_widget(form.type[0]) }}
         </div>
     </div>
-    <div class="col-lg-3">
+    <div class="col-12 col-sm-12 col-md-2 col-lg-2">
         <div class="form-group">
             {{ form_widget(form.type[1]) }}
         </div>
@@ -28,35 +28,29 @@
 </div>
 
 <div id="promotion-type-push" class="row">
-    <div class="col-lg-1"></div>
-    <div class="col-lg-2">
-        <div class="form-group">
-            {{ form_widget(form.promotionType[0]) }}
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <div class="form-group">
-            {{ form_widget(form.promotionType[1]) }}
-        </div>
-    </div>
-    <div class="col-lg-7"></div>
-
-    <div class="col-lg-1"></div>
-    <div class="col-lg-2">
-        <div class="form-group">
-            {{ form_widget(form.promotionCoupon) }}
-            {{ form_errors(form.promotionCoupon) }}
-        </div>
-    </div>
-
-    <div class="col-lg-2">
-        <div class="form-group">
-            {{ form_widget(form.promotionBanner) }}
-            {{ form_errors(form.promotionBanner) }}
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6 ml-5">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    {{ form_widget(form.promotionType[0]) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.promotionCoupon) }}
+                    {{ form_errors(form.promotionCoupon) }}
+                </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    {{ form_widget(form.promotionType[1]) }}
+                </div>
+                <div class="form-group">
+                    {{ form_widget(form.promotionBanner) }}
+                    {{ form_errors(form.promotionBanner) }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
 
 {{ UI.row([
     {'span': 6, 'field': form.segment},

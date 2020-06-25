@@ -173,7 +173,7 @@ class CartController extends AbstractFOSRestController
         /** @var Customer $customer */
         $customer = $cart->getCustomer();
 
-        if (!$address instanceof Address || $address->getCustomer()->getId() != $customer->getId()) {
+        if (!$address instanceof Address || !$address->getCustomer() instanceof Customer || !$customer instanceof Customer || $address->getCustomer()->getId() != $customer->getId()) {
             throw new NotFoundHttpException('Address not found.');
         }
 
@@ -247,10 +247,24 @@ class CartController extends AbstractFOSRestController
         if ($cart instanceof Order) {
             if ($coupon instanceof PromotionCoupon) {
                 if ($coupon->isEnabled()) {
-                    return $this->addCouponAction->__invoke($request);
+                    if ($coupon->getPromotion()->getEndsAt() && $coupon->getPromotion()->getEndsAt()->format('U') < time()) {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        setlocale(LC_ALL,"es_ES");
+                        $date = iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", $coupon->getPromotion()->getEndsAt()->format('U')));
+                        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
+                    } else {
+                        return $this->addCouponAction->__invoke($request);
+                    }
                 } else {
-                    $statusCode = Response::HTTP_BAD_REQUEST;
-                    $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_not_found'));
+                    if ($coupon->getPromotion()->getEndsAt() && $coupon->getPromotion()->getEndsAt()->format('U') < time()) {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        setlocale(LC_ALL,"es_ES");
+                        $date = iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", $coupon->getPromotion()->getEndsAt()->format('U')));
+                        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
+                    } else {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_not_found'));
+                    }
                 }
             } else {
                 $statusCode = Response::HTTP_NOT_FOUND;

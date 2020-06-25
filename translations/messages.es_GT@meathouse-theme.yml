@@ -37,6 +37,7 @@ app.ui.locations: Ubicaciones
 app.ui.faqs: 'FAQ''s'
 app.ui.faqs_list: 'Preguntas frecuentes'
 app.ui.about_procasa: 'Sobre Procasa'
+app.ui.about_procasa.alternative: 'Acerca de Procasa'
 app.ui.terms_and_conditions: 'Términos y condiciones'
 app.ui.today: Hoy
 app.ui.clear: Limpiar
@@ -93,7 +94,7 @@ app.ui.logout: Salir
 app.ui.segments: Segmentos
 app.ui.purchase_texts: 'Textos de compras'
 app.ui.purchase_settings: 'Configuración de compra'
-app.ui.holidays: 'Días festivos'
+app.ui.holidays: 'Días de feriado'
 app.ui.searcher: Buscador
 app.ui.category_color: 'Color en categorías'
 app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
@@ -327,7 +328,7 @@ app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscado
 app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
 app.ui.purchase_settings_edit: Editar
 app.ui.purchase_settings_max_purchase: 'Máximo de compra'
-app.ui.purchase_settings_min_purchase: 'Minimo de compra'
+app.ui.purchase_settings_min_purchase: 'Mínimo de compra'
 app.ui.purchase_settings_days_to_choose_in_advance_to_purchase: 'Días a elegir con anticipación la compra'
 app.ui.purchase_settings_delivery_hours: 'Horarios de entrega'
 app.ui.settings.purchase_settings_success_message: '¡Se actualizaron las configuraciones de compra!'
@@ -416,7 +417,7 @@ app.ui.holiday_reason: Motivo
 app.ui.holiday_day: Día
 app.ui.holiday_month: Mes
 app.ui.calendar_holiday: Editar
-app.ui.qty_of_holiday_%total%: 'Cantidad de días festivos: %total%'
+app.ui.qty_of_holiday_%total%: 'Cantidad de días de feriado: %total%'
 app.ui.holiday_remove_text: '%name%'
 app.ui.holiday_error_on_remove_message: 'Hubo un error al eliminar el día festivo, por favor inténtelo de nuevo más tarde.'
 app.ui.holiday_remove_title: '¿Estás seguro de borrar este día festivo?'
@@ -424,7 +425,7 @@ app.ui.filter_order_by_date: Cronológico
 app.ui.filter_order_by: 'Ordenar por'
 app.ui.filter_order_by_reason: ABC
 app.ui.filter_by_month: 'Filtrar por'
-app.ui.edit_holidays: 'Editar días festivos'
+app.ui.edit_holidays: 'Editar días de feriado'
 app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
 app.ui.holidays_new: 'Nuevo día festivo'
 app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
@@ -846,7 +847,7 @@ app.ui.account.billing.changed.message: 'Tus datos de facturación fueron cambia
 app.api.cart.no_carts_available_for_current_user: 'No existen carritos para este usuario.'
 app.ui.account.change_email: 'Cambio de correo'
 app.ui.account.change_email.send: 'Enviar validación'
-app.ui.account.change_email.instructions: '<p>Para cambiar tu correo, te enviaremos un mensaje a tu correo actual en el cual debes seguir las instrucciones para que este cambio sea realizado.</p><p class="text-danger-light-i">Si no validas el cambio de correo, éste no se ejecutará y seguirás ingresando a Meat House con tu correo actual.</p>'
+app.ui.account.change_email.instructions: '<p>Para cambiar tu correo, te enviaremos un mensaje a tu correo nuevo en el cual debes seguir las instrucciones para que este cambio sea realizado.</p><p class="text-danger-light-i">Si no validas el cambio de correo, éste no se ejecutará y seguirás ingresando a Meat House con tu correo actual.</p>'
 app.ui.account.change_email.success.title: 'Validación de correo enviada'
 app.ui.account.change_email.success.message_%email%: 'Por favor ve al correo %email% y valida el cambio. Si no lo validas, el cambio de correo no se tomará en cuenta.'
 app.ui.form.current_email: 'Escribe tu correo actual'
@@ -952,3 +953,35 @@ app.ui.account.pre_change_email.error.title: 'Hubo un error al agregar tu contra
 app.ui.account.pre_change_email.error.message: 'Un error no permitio agregar tu contraseña, intentanlo más tarde...'
 app.ui.pre_change_email.error.not_same_password: 'Parece que las contraseñas no coinciden.'
 sylius.shop_api.coupon.not_valid: 'Parece que el cupón no es valido'
+app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
+app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
+app.ui.admin.yes: Sí
+app.ui.admin.no: No
+app.ui.admin.create_location: 'Crear ubicación'
+app.ui.admin.create_faq: 'Crear pregunta'
+app.ui.admin.none: '-'
+app.ui.admin.not_empty: 'Debes llenar este campo para continuar.'
+app.ui.measurement_units.unit: 'Unidad'
+app.ui.measurement_units.pound: 'Libra'
+app.ui.measurement_units.package: 'Paquete'
+app.ui.measurement_units.piece: 'Pieza'
+app.ui.measurement_units.litter: 'Litro'
+app.ui.measurement_units.unit.lower: 'unidad'
+app.ui.measurement_units.pound.lower: 'libra'
+app.ui.measurement_units.package.lower: 'paquete'
+app.ui.measurement_units.piece.lower: 'pieza'
+app.ui.measurement_units.litter.lower: 'litro'
+app.ui.measurement_units.unit.plural: 'unidades'
+app.ui.measurement_units.pound.plural: 'libras'
+app.ui.measurement_units.package.plural: 'paquetes'
+app.ui.measurement_units.piece.plural: 'piezas'
+app.ui.measurement_units.litter.plural: 'litros'
+app.api.cart.coupon_expired_at: 'Este cupón venció el %date%. Intenta usar otro cupón.'
+app.api.switch_email.invalid_current_email: 'Tu correo actual es incorrecto. Inténtalo de nuevo'
+app.api.switch_email.enter_email: 'Tiene que ingresar todos los datos.'
+app.api.switch_email.user_not_found: 'Tiene que iniciar sesión primero.'
+app.api.switch_email.new_email_is_same_to_current: 'No puedes utilizar el mismo correo para realizar este cambio.'
+app.api.switch_email.email_already_in_use: 'Este correo electrónico ya está en uso por otro cliente.'
+app.api.switch_email.invalid_email_formats: 'Parece que el formato del correo electrónico es incorrecto.'
+app.api.switch_email.success_message: 'Hemos enviado un enlace a tu correo nuevo. Revisa tu correo para continuar con el cambio.'
+app.ui.checkout.%quantity%_%measure%: '%quantity% %measure%'

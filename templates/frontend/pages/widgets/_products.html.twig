@@ -16,8 +16,8 @@
                         <div class="custom-overlay-container {% if not available %}show sold-out{% endif %}">
                             <div class="bg-white">
                                 <div class="image">
-                                    <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}')">
-                                        <img src="{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}{{ asset('bundles/syliusshop/img/error/mobile.png') }}{% endif %}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                    <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}')">
+                                        <img src="{% if product.images|length > 0 %}{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
                                     </a>
                                     <span class="{% if available %}xpress-button{% else %}xpress-button-disabled{% endif %}">{{ 'app.ui.express_buy'|trans }}</span>
                                 </div>
@@ -29,15 +29,15 @@
                                         <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
                                             {% if get_price(product)['isOffer'] %}
                                                 <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
-                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                             {% else %}
-                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': 'app.ui.pound'|trans})|raw }}
+                                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
                                             {% endif %}
                                         </div>
                                     {% endif %}
                                     {% if available %}
                                     <div class="text-right mt-4">
-                                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="{{ asset('bundles/syliusshop/img/icons/cart.svg') }}" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
+                                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -46,7 +46,7 @@
                                 <div>
                                     {% if available %}
                                     <button type="button" class="close">
-                                        <img src="{{ asset('bundles/syliusshop/img/icons/close-red.svg') }}" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
                                     </button>
 
                                     {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCart.html.twig', 'productId': product.id})) }}
@@ -64,7 +64,7 @@
     {% else %}
         <div id="empty-search" class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 xs-mt-3">
             <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0 sm-pl-0 sm-pr-0">
-                <img src="{{ asset('bundles/syliusshop/img/icons/empty-search.png') }}" title="{{ 'app.ui.search.empty'|trans }}" alt="{{ 'app.ui.search.empty'|trans }}" width="auto" height="auto">
+                <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/empty-search.png" title="{{ 'app.ui.search.empty'|trans }}" alt="{{ 'app.ui.search.empty'|trans }}" width="auto" height="auto">
                 <p class="mt-4 mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 md-pl-0 md-pr-0 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.search.empty.message'|trans }}</p>
             </div>
         </div>
