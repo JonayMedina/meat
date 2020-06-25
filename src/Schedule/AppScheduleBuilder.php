@@ -10,6 +10,12 @@ class AppScheduleBuilder implements ScheduleBuilder
     public function buildSchedule(Schedule $schedule): void
     {
         $schedule
+            ->addCommand('app:send-rating-notification')
+            ->description('Automatically send push rating push notification when order should arrive.')
+            ->withoutOverlapping(true)
+            ->everyTenMinutes();
+
+        $schedule
             ->addCommand('app:disable-expired-coupons')
             ->description('Automatically disable expired coupons.')
             ->withoutOverlapping(true)

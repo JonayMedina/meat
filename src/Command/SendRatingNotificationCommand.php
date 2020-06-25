@@ -45,7 +45,7 @@ class SendRatingNotificationCommand extends Command
      */
     protected function configure()
     {
-        $this->setDescription('Add a short description for your command');
+        $this->setDescription('Automatically send push rating push notification when order should arrive.');
     }
 
     /**
@@ -63,6 +63,7 @@ class SendRatingNotificationCommand extends Command
 
             if ($user instanceof ShopUser) {
                 $notification = new Notification(null, $user, 'Califica nuestro servicio.', 'Califica nuestro servicio respondiendo estas dos breves preguntas.', PushNotification::TYPE_RATE_ORDER);
+                $notification->setOrder($order);
                 $this->entityManager->persist($notification);
             }
 
