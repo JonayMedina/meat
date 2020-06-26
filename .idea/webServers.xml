@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="b1b0b317-70ad-45a4-84aa-a27c5b4564b6" name="MH Staging" url="https://meathouse.tribalworldwide.gt/">
-        <fileTransfer accessType="SFTP" host="meathouse.tribalworldwide.gt" port="22" sshConfigId="69041451-52f4-411f-9fe6-56a46b22962e" sshConfig="tribal@meathouse.tribalworldwide.gt:22 key" keyPair="true">
+        <fileTransfer rootFolder="/var/www/staging/current" accessType="SFTP" host="meathouse.tribalworldwide.gt" port="22" sshConfigId="69041451-52f4-411f-9fe6-56a46b22962e" sshConfig="tribal@meathouse.tribalworldwide.gt:22 key" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

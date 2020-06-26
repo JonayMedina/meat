@@ -181,15 +181,25 @@ strong, .table thead th {
     text-decoration: none !important;
     padding: 10px 15px;
     display: inline-block;
+    margin-top: 15px;
+    width: 100%;
+    max-width: 260px;
+}
+
+.btn-login-with:first-of-type {
     margin-top: 25px;
 }
 
 .btn-login-with i {
-    margin-right: 20px;
+    margin-right: 15px;
 }
 
 .btn-login-with.facebook {
     background: #3B5998;
+}
+
+.btn-login-with.apple {
+    background: #000000;
 }
 
 .max-w-mx-content {
