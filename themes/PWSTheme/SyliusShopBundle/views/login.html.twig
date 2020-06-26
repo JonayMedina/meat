@@ -29,10 +29,15 @@
                     <input type="hidden" name="_csrf_shop_security_token" value="{{ csrf_token('shop_authenticate') }}">
                     {{ form_end(form, {'render_rest': false}) }}
 
-                    <div class="text-center">
+                    <div class="text-center oauth-services">
                         <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
                             <i class="fab fa-facebook-square"></i>
-                            {% trans with {'%name%': 'Facebook'} %} app.ui.login_with_%name% {% endtrans %}
+                            {{ 'app.ui.login_with_%name%'|trans({'%name%': 'Facebook'}) }}
+                        </a>
+                        <br>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'apple' }) }}" class="btn-login-with apple">
+                            <i class="fab fa-apple"></i>
+                            {{ 'app.ui.login_with_%name%'|trans({'%name%': 'Apple'}) }}
                         </a>
                     </div>
 
