@@ -6,3 +6,9 @@ hwi_oauth:
             client_id: "%env(APP_FB_CLIENT_ID)%"
             client_secret: "%env(APP_FB_SECRET)%"
             scope: "email"
+        apple:
+            type: oauth2
+            class: 'App\Auth\AppleResourceOwner'
+            client_id: '%env(APP_APPLE_CLIENT_ID)%'
+            client_secret: "%env(APP_APPLE_SECRET)%"
+            scope: "email"         
