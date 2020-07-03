@@ -111,7 +111,7 @@ class AppleResourceOwner extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'authorization_url' => 'https://appleid.apple.com/auth/authorize',
+            'authorization_url' => 'https://appleid.apple.com/auth/authorize?response_mode=form_post',
             'access_token_url' => 'https://appleid.apple.com/auth/token',
             'revoke_token_url' => '',
             'infos_url' => '',
