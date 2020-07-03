@@ -608,17 +608,24 @@ class ProductController extends AbstractFOSRestController
         }
 
         if (count($categories) > 0) {
-            foreach ($product->getProductTaxons() as $productTaxon) {
-                $this->entityManager->remove($productTaxon);
+            foreach ($categories as $taxon) {
+                $productTaxon = $this->entityManager->getRepository('App:Product\ProductTaxon')
+                    ->findOneBy(['product' => $product, 'taxon' => $taxon]);
+
+                if (!$productTaxon instanceof ProductTaxon) {
+                    $productTaxon = new ProductTaxon();
+                    $productTaxon->setTaxon($taxon);
+                    $productTaxon->setProduct($product);
+
+                    $this->entityManager->persist($productTaxon);
+                    $product->addProductTaxon($productTaxon);
+                }
             }
 
-            foreach ($categories as $taxon) {
-                $productTaxon = new ProductTaxon();
-                $productTaxon->setTaxon($taxon);
-                $productTaxon->setProduct($product);
-
-                $this->entityManager->persist($productTaxon);
-                $product->addProductTaxon($productTaxon);
+            foreach ($product->getProductTaxons() as $prevTaxon) {
+                if (!in_array($prevTaxon->getTaxon(), $categories->toArray())) {
+                    $this->entityManager->remove($prevTaxon);
+                }
             }
         }
 
