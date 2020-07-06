@@ -8,6 +8,7 @@ use App\Service\OrderService;
 use App\Entity\Addressing\Address;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
@@ -138,6 +139,10 @@ class AddressController extends AbstractFOSRestController
 
         /** @var Address $address */
         $address = $this->addressRepository->find($id);
+
+        if (!$address instanceof Address) {
+            throw new NotFoundHttpException('Address not found.');
+        }
 
         return $address;
     }

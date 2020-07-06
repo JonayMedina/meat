@@ -11,4 +11,4 @@ hwi_oauth:
             class: 'App\Auth\AppleResourceOwner'
             client_id: '%env(APP_APPLE_CLIENT_ID)%'
             client_secret: "%env(APP_APPLE_SECRET)%"
-            scope: "email"         
+            scope: "email name"         
