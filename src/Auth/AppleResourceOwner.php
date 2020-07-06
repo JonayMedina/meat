@@ -16,10 +16,19 @@ use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GenericOAuth2ResourceOwner;
  */
 class AppleResourceOwner extends GenericOAuth2ResourceOwner
 {
+    protected $paths = array(
+        'identifier' => 'id',
+        'nickname' => 'name',
+        'firstname' => 'firstname',
+        'lastname' => 'lastname',
+        'realname' => 'realname',
+        'email' => 'email',
+    );
+
     /**
      * @param array $accessToken
      * @param array $extraParameters
-     * @return PathUserResponse|UserResponseInterface
+     * @return UserResponseInterface|PathUserResponse
      */
     public function getUserInformation(array $accessToken, array $extraParameters = array())
     {
@@ -111,7 +120,7 @@ class AppleResourceOwner extends GenericOAuth2ResourceOwner
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'authorization_url' => 'https://appleid.apple.com/auth/authorize',
+            'authorization_url' => 'https://appleid.apple.com/auth/authorize?response_mode=form_post',
             'access_token_url' => 'https://appleid.apple.com/auth/token',
             'revoke_token_url' => '',
             'infos_url' => '',

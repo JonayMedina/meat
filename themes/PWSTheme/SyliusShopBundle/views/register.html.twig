@@ -51,6 +51,11 @@
 
                             {{ 'app.ui.register_with_%name%'|trans({'%name%': "Facebook"}) }}
                         </a>
+                        <br>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'apple' }) }}" class="btn-login-with apple">
+                            <i class="fab fa-apple"></i>
+                            {{ 'app.ui.login_with_%name%'|trans({'%name%': 'Apple'}) }}
+                        </a>
                     </div>
 
                     <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting_%link%'|trans({'%link%': messageFB})|raw }}</p>
