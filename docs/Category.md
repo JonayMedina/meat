@@ -11,8 +11,6 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
 |code|Identificador único de categoría|VARCHAR|255|Sí|
 |name|Nombre de la categoría|VARCHAR|255|Sí|
 |parent|Id de la categoría padre|INT|11|No|
-|left|Ubicación dentro de toda la colección.|INT|11|No|
-|right|Ubicación dentro de toda la colección.|INT|11|No|
 |position|Posición de la categoría entre otras categorías.|INT|11|No|
 |photo|Fotografía principal de la categoría|LONGTEXT (BASE64) |--|Sí|
 
@@ -78,7 +76,7 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
 
 ### Request
 
-* URL: /api/v1/categories/
+* URL: /api/v1/categories
 * Método: POST
 * Body:
 
@@ -87,7 +85,8 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
     "code":"cordero",
     "name": "Cordero",
     "parent": 1,
-    "photo": "BASE64 image"
+    "photo": "BASE64 image",
+    "position": 5
 }
 ```
 
@@ -197,8 +196,6 @@ Posibles códigos de respuesta:
         "photo": "https://URL_DE_LA_FOTO.jpg",
         "created_at": "2020-03-31 17:08:53"
     },
-    "left": 1,
-    "right": 10,
     "position": 1,
     "photo": "https://URL_DE_LA_NUEVA_FOTO.jpg",
     "created_at": "2020-03-31 17:08:53"
