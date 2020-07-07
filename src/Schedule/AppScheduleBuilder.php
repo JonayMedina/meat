@@ -19,13 +19,13 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->addCommand('app:disable-expired-coupons')
             ->description('Automatically disable expired coupons.')
             ->withoutOverlapping(true)
-            ->twiceDaily();
+            ->everyTenMinutes();
 
         $schedule
             ->addCommand('app:disable-expired-promotions')
             ->description('Automatically disable expired promotion banners.')
             ->withoutOverlapping(true)
-            ->twiceDaily();
+            ->everyTenMinutes();
 
         $schedule
             ->addCommand('sylius:cancel-unpaid-orders')
