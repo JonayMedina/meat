@@ -51,7 +51,7 @@ set('keep_releases', 2);
 
 /** Hosts */
 host('staging')
-    ->hostname('172.105.152.192')
+    ->hostname('meathouse.tribalworldwide.gt')
     ->user('tribal')
     ->set('branch', 'develop')
     ->port(22)
