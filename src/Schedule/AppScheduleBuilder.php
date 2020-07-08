@@ -31,12 +31,14 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->addCommand('sylius:cancel-unpaid-orders')
             ->description('Removes order that have been unpaid for a configured period. Configuration parameter - sylius_order.order_expiration_period.')
             ->withoutOverlapping(true)
-            ->daysOfWeek('1,3,5,7');
+            ->daysOfWeek('1,3,5,7')
+            ->at(1);
 
         $schedule
             ->addCommand('sylius:remove-expired-carts ')
             ->description('Removes carts that have been idle for a period set in `sylius_order.expiration.cart` configuration key.')
             ->withoutOverlapping(true)
-            ->daysOfWeek('1,3,5,7');
+            ->daysOfWeek('1,3,5,7')
+            ->at(1);
     }
 }
