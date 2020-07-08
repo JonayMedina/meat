@@ -766,7 +766,7 @@ div.error {
     margin-bottom: 15px;
 }
 
-label.error, div.error span {
+label.error, div.error span, span.error {
     font-family: "Raleway Italic", sans-serif;
     letter-spacing: .61px;
     font-size: 14px !important;
@@ -774,13 +774,22 @@ label.error, div.error span {
     color: #AB162B !important;
 }
 
-label.error:after {
+label.error:after, .terms-conditions label.error:before {
     content: none !important;
 }
 
-label.error:before {
+label.error:before, .terms-conditions span.error:before {
     content: "*";
     color: #AB162B;
+}
+
+.terms-conditions span.error {
+    margin-top: 0 !important;
+}
+
+.terms-conditions span.error:before {
+    font-size: 20px;
+    margin-right: 5px;
 }
 
 /* Taxons Carousel */

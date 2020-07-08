@@ -76,7 +76,7 @@
                     },
                     _password: {
                         required: true,
-                        // minlength: 8,
+                        minlength: 8,
                         maxlength: 20
                     }
                 },
@@ -89,7 +89,7 @@
                     _password: {
                         required: '{{ 'app.ui.error.required'|trans }}',
                         minlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 8}) }}',
-                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 20}) }}'
+                        maxlength: '{{ 'app.ui.error.not_greater_than_%x%'|trans({'%x%': 20}) }}'
                     }
                 },
                 invalidHandler: function(event, validator) {

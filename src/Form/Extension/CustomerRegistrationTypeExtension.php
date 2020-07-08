@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Sylius\Component\Customer\Model\CustomerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
@@ -51,6 +52,18 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
                 'mapped' => false,
                 'constraints' => new IsTrue()
             ));
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'validation_groups' => 'sylius_user_registration'
+        ]);
     }
 
     /**

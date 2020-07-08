@@ -27,7 +27,7 @@
 
                     <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
 
-                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
+                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center flex-wrap">
                         <label class="d-flex align-items-center checkbox">
                             <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
                             <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
@@ -161,9 +161,14 @@
                 if (!$terms.prop('checked')) {
                     $register.prop('disabled', true).change();
                     $terms.closest('label').addClass('error');
+
+                    if ($terms.closest('.terms-conditions').find('span.error').length <= 0) {
+                        $terms.closest('.terms-conditions').append('<span class="error">{{ 'app.ui.register.accept_terms'|trans }}</span>');
+                    }
                 } else {
                     $register.prop('disabled', false).change();
                     $terms.closest('label').removeClass('error');
+                    $terms.closest('.terms-conditions').find('span.error').remove();
                 }
             }
 
@@ -178,7 +183,7 @@
             $('.datepicker').prop('type', 'text').datepicker({
                 changeYear: true,
                 changeMonth: true,
-                yearRange: "-65:-6",
+                yearRange: "-65:-18",
             });
 
             formatToDMY($birthday);
