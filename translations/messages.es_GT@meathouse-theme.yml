@@ -279,6 +279,8 @@ app.ui.required_fields: 'Los campos con un asterisco (*) son obligatorios para r
 app.ui.by_registering_you_are_accepting_%link%: 'Al registrarte, estás aceptando los%link%'
 app.ui.login_with: 'Ingresar con '
 app.ui.register_with_%name%: 'Regístrame con %name%'
+app.ui.register.accept_terms: 'Debes aceptar los términos y condiciones para continuar'
+app.ui.register.must_be_of_legal_age: 'Debes ser mayor de edad para crear una cuenta'
 app.ui.create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
 app.ui.enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
 app.ui.send_instructions: 'Enviar instrucciones'

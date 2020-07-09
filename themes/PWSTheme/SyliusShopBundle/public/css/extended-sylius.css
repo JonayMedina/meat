@@ -98,3 +98,25 @@ div.field .radio {
     border-radius: 10px;
     background-color: rgba(145, 113, 113, 1);
 }
+
+.ui.pointing.label {
+    font-family: "Raleway Italic", sans-serif;
+    font-size: 14px;
+    color: #ab162b !important;
+    margin-top: 5px !important;
+    padding: 0;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    letter-spacing: .61px;
+    font-weight: 500;
+}
+
+.ui.pointing.label:before {
+    content: "*";
+    position: initial;
+    width: auto;
+    height: auto;
+    border: none;
+    font-size: 20px;
+    margin-right: 5px;
+}
