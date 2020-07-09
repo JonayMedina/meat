@@ -772,22 +772,27 @@ label.error, div.error span, span.error {
     font-size: 14px !important;
     margin: 10px 0 15px 0 !important;
     color: #AB162B !important;
+    line-height: 1;
 }
 
 label.error:after, .terms-conditions label.error:before {
     content: none !important;
 }
 
-label.error:before, .terms-conditions span.error:before {
+label.error:before, .terms-conditions span.error:before, span.error.birthdate:before {
     content: "*";
     color: #AB162B;
+}
+
+span.error.birthdate {
+    display: inline-block;
 }
 
 .terms-conditions span.error {
     margin-top: 0 !important;
 }
 
-.terms-conditions span.error:before {
+.terms-conditions span.error:before, span.error.birthdate:before {
     font-size: 20px;
     margin-right: 5px;
 }
