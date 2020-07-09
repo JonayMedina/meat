@@ -62,7 +62,7 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'validation_groups' => 'sylius_user_registration'
+            'validation_groups' => ['sylius_user_registration', 'sylius']
         ]);
     }
 
