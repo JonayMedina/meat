@@ -385,6 +385,7 @@ class CategoryController extends AbstractFOSRestController
         if (!empty($base64Content)) {
             foreach ($category->getImages() as $image) {
                 $this->entityManager->remove($image);
+                $this->entityManager->flush();
             }
 
             /** @var ImageInterface $taxonImage */
