@@ -27,7 +27,7 @@
 
                     <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
 
-                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center">
+                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center flex-wrap">
                         <label class="d-flex align-items-center checkbox">
                             <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
                             <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
@@ -136,13 +136,15 @@
 
             if ($('body').find('.field.error').length > 0) {
                 $terms.prop('checked', false).change();
+                checkBirthdate();
             }
 
             $form.submit(function (e) {
-                if (!$terms.prop('checked')) {
+                if (!checkBirthdate() || !$terms.prop('checked')) {
                     e.preventDefault();
                     $form.removeClass('loading');
                     checkTerms();
+                    checkBirthdate();
                 }
             });
 
@@ -161,10 +163,36 @@
                 if (!$terms.prop('checked')) {
                     $register.prop('disabled', true).change();
                     $terms.closest('label').addClass('error');
+
+                    if ($terms.closest('.terms-conditions').find('span.error').length <= 0) {
+                        $terms.closest('.terms-conditions').append('<span class="error">{{ 'app.ui.register.accept_terms'|trans }}</span>');
+                    }
                 } else {
                     $register.prop('disabled', false).change();
                     $terms.closest('label').removeClass('error');
+                    $terms.closest('.terms-conditions').find('span.error').remove();
                 }
+            }
+
+            function checkBirthdate() {
+                var $birthDate = $birthday;
+
+                if ((Boolean) ($birthDate.val())) {
+                    var birthdate = moment($birthDate.val(), "YYYY-MM-DD");
+                    var years = moment().diff(birthdate, 'years');
+
+                    if (years < 18) {
+                        if ($birthDate.closest('.field').find('span.error').length <= 0) {
+                            $birthDate.closest('.field').append('<span class="error birthdate">{{ 'app.ui.register.must_be_of_legal_age'|trans }}</span>');
+                        }
+                    } else {
+                        $birthDate.closest('.field').find('span.error').remove();
+                    }
+
+                    return years >= 18;
+                }
+
+                return true;
             }
 
             function formatToYMD($input) {
@@ -178,7 +206,7 @@
             $('.datepicker').prop('type', 'text').datepicker({
                 changeYear: true,
                 changeMonth: true,
-                yearRange: "-65:-6",
+                yearRange: "-65:-18",
             });
 
             formatToDMY($birthday);

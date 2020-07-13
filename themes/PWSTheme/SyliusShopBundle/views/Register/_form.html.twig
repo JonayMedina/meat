@@ -8,7 +8,7 @@
         {{ form_row(form.user.plainPassword.first) }}
         {{ form_row(form.user.plainPassword.second) }}
 
-        <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center">
+        <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center flex-wrap">
             <label class="d-flex align-items-center checkbox">
                 {{ form_widget(form.termsAccepted) }}
                 <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>

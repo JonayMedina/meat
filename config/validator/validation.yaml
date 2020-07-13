@@ -19,10 +19,45 @@ App\Entity\Addressing\Address:
                   message: 'app.ui.checkout.billing.add_address'
                   groups: ['app_billing']
         annotations:
-            -   NotBlank:
+            - NotBlank:
                     message: 'app.ui.checkout.address.add_name'
                     groups: ['app_address']
         taxId:
             - NotBlank:
                   message: 'Ingresa el NIT para la factura.'
                   groups: ['app_billing']
+                  
+Sylius\Component\Customer\Model\Customer:
+    properties:
+        email:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length:
+                  min: 2
+                  max: 50
+                  groups: ['sylius_user_registration']
+            - Email:
+                  message: 'app.ui.register.form.email.not_valid'
+                  groups: ['sylius_user_registration']
+        firstName:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length: 
+                  min: 2
+                  max: 25
+                  groups: ['sylius_user_registration']
+        lastName:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length:
+                  min: 2
+                  max: 25
+                  groups: ['sylius_user_registration']
+                  
+Sylius\Component\Core\Model\ShopUser:
+    properties:
+        plainPassword:
+            - Length:
+                  min: 8
+                  max: 20
+                  groups: ['sylius_shop_user_registration']
