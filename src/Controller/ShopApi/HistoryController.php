@@ -89,7 +89,7 @@ class HistoryController extends AbstractFOSRestController
         $orders = $this->historyService->getOrderHistory($user);
 
         foreach ($orders as $order) {
-            $list[] = $this->orderService->serializeOrder($order);
+            $list[] = $this->orderService->serializeOrder($order, true);
         }
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Order history list', $list);
