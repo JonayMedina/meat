@@ -117,7 +117,7 @@ class OrderSubscriber implements EventSubscriber
         $unitOfWork = $args->getEntityManager()->getUnitOfWork();
         $changeSet = $unitOfWork->getEntityChangeSet($order);
 
-        if (isset($changeSet['state']) && $changeSet['state'][1] == Order::STATE_NEW) {
+        if (isset($changeSet['state']) && $changeSet['state'][0] != Order::STATE_NEW && $changeSet['state'][1] == Order::STATE_NEW) {
             $this->adminSyncService->syncOrderAfterCheckoutCompleted($order);
         }
     }
