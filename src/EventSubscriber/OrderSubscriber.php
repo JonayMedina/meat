@@ -49,6 +49,9 @@ class OrderSubscriber implements EventSubscriber
             /** Set token value */
             $this->setTokenValue($entity, $args);
 
+            /** Notify about new order */
+            $this->checkAdminNewOrderNotification($entity, $args);
+
             /** Notify about rating */
             $this->checkAdminRatingNotification($entity, $args);
         }
@@ -65,6 +68,9 @@ class OrderSubscriber implements EventSubscriber
         if ($entity instanceof Order) {
             /** Set token value */
             $this->setTokenValue($entity, $args);
+
+            /** Notify about new order */
+            $this->checkAdminNewOrderNotification($entity, $args);
 
             /** Notify about rating */
             $this->checkAdminRatingNotification($entity, $args);
@@ -98,6 +104,21 @@ class OrderSubscriber implements EventSubscriber
 
         if (isset($changeSet['rating'])) {
             $this->adminSyncService->syncOrderAfterRating($order);
+        }
+    }
+
+    /**
+     * Check if we need to notify to admin about a new order.
+     * @param Order $order
+     * @param LifecycleEventArgs $args
+     */
+    private function checkAdminNewOrderNotification(Order $order, LifecycleEventArgs $args)
+    {
+        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+        $changeSet = $unitOfWork->getEntityChangeSet($order);
+
+        if (isset($changeSet['state']) && $changeSet['state'][1] == Order::STATE_NEW) {
+            $this->adminSyncService->syncOrderAfterCheckoutCompleted($order);
         }
     }
 }
