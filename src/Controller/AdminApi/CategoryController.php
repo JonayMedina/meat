@@ -288,6 +288,7 @@ class CategoryController extends AbstractFOSRestController
             'id' => $category->getId(),
             'code' => $category->getCode(),
             'name' => $category->getName(),
+            'description' => $category->getDescription(),
             'parent' => $this->serializeCategory($category->getParent()),
             'left' => $category->getLeft(),
             'right' => $category->getRight(),
@@ -398,14 +399,16 @@ class CategoryController extends AbstractFOSRestController
             $category->addImage($taxonImage);
         }
 
-        if ($parentId) {
+        if (in_array($parentId, ["none", "null"])) {
+            $category->setParent(null);
+        } else {
             $parent = $this->getCategoryById($parentId);
 
             if ($parent instanceof Taxon) {
                 $category->setParent($parent);
+            } else {
+                throw new NotFoundHttpException('Parent not found.');
             }
-        } else {
-            $category->setParent(null);
         }
 
         return $category;
