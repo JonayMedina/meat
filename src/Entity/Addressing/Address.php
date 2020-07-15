@@ -210,7 +210,6 @@ class Address extends BaseAddress
             self::STATUS_PENDING,
             self::STATUS_VALIDATED,
             self::STATUS_REJECTED,
-            self::STATUS_TO_CLONE,
         ])) {
             throw new BadRequestHttpException('Invalid status for Address.');
         }
