@@ -342,9 +342,9 @@
                 {% endfor %}
             ];
             moment.locale('es');
-            step.scrollIntoView({behavior: 'smooth'});
+            var step = document.querySelector("#address-step");
 
-            step.scrollIntoView();
+            step.scrollIntoView({behavior: 'smooth'});
 
             {% if order.preferredDeliveryTime %}
                 {% set preferred = order.preferredDeliveryTime %}
