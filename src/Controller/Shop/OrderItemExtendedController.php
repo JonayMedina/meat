@@ -2,16 +2,15 @@
 
 namespace App\Controller\Shop;
 
-use App\Entity\Customer\Customer;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
-use Sylius\Bundle\OrderBundle\Controller\AddToCartCommandInterface;
-use Sylius\Bundle\OrderBundle\Controller\OrderItemController;
 use Sylius\Component\Order\CartActions;
-use Sylius\Component\Order\Model\OrderItemInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sylius\Component\Order\Model\OrderItemInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Sylius\Bundle\OrderBundle\Controller\OrderItemController;
+use Sylius\Bundle\OrderBundle\Controller\AddToCartCommandInterface;
 
 class OrderItemExtendedController extends OrderItemController
 {

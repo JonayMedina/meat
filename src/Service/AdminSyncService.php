@@ -72,7 +72,7 @@ class AdminSyncService
      */
     public function syncAddressAfterCreation(Address $address): void
     {
-        if ($address->getParent() instanceof Address) {
+        if ($address->getCustomer() == null || $address->getParent() instanceof Address) {
             return;
         }
 

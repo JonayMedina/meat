@@ -137,7 +137,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="segment">
+                            <div class="segment" id="payment-step">
                                 <div class="row">
                                     <div class="col-12">
                                         <h2>{{ 'app.ui.checkout.third.title'|trans }}</h2>
@@ -176,6 +176,9 @@
             let $cardForm = $('.payment-form');
             let $checked = $('.radio.checked');
             moment.locale('es');
+            var step = document.querySelector("#payment-step");
+
+            step.scrollIntoView({behavior: 'smooth'});
 
             if ($radio.closest('div.radio').find('label').length <=0 ) {
                 $radio.closest('div.radio').append("<label></label>");
