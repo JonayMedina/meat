@@ -59,8 +59,6 @@ class Address extends BaseAddress
 
     const STATUS_REJECTED = 'rejected';
 
-    const STATUS_TO_CLONE = 'to_clone';
-
     const TYPE_SHIPPING = 'shipping';
 
     const TYPE_BILLING = 'billing';
