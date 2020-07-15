@@ -59,6 +59,8 @@ class Address extends BaseAddress
 
     const STATUS_REJECTED = 'rejected';
 
+    const STATUS_TO_CLONE = 'to_clone';
+
     const TYPE_SHIPPING = 'shipping';
 
     const TYPE_BILLING = 'billing';
@@ -210,6 +212,7 @@ class Address extends BaseAddress
             self::STATUS_PENDING,
             self::STATUS_VALIDATED,
             self::STATUS_REJECTED,
+            self::STATUS_TO_CLONE,
         ])) {
             throw new BadRequestHttpException('Invalid status for Address.');
         }

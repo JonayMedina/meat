@@ -2,6 +2,7 @@
 
 namespace App\Controller\Shop;
 
+use App\Entity\Addressing\Address;
 use App\Entity\Customer\Customer;
 use App\Entity\User\ShopUser;
 use FOS\RestBundle\View\View;
@@ -47,6 +48,7 @@ class OrderItemExtendedController extends OrderItemController
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             /** @var AddToCartCommandInterface $addToCartCommand */
             $addToCartCommand = $form->getData();
+            $addToCartCommand->getCart()->getShippingAddress()->setStatus(Address::STATUS_TO_CLONE);
 
             $errors = $this->getCartItemErrors($addToCartCommand->getCartItem());
             if (0 < count($errors)) {
