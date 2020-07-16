@@ -583,6 +583,7 @@ class OrderService
         }
 
         return [
+            'id' => $customer->getId(),
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),
             'last_name' => $customer->getLastName(),

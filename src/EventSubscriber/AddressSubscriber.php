@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use Exception;
+use App\Message\Sync;
 use App\Service\AdminSyncService;
 use App\Entity\Addressing\Address;
 use Doctrine\Common\EventSubscriber;
@@ -31,7 +32,7 @@ class AddressSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return ['postPersist'];
+        return ['postPersist', 'postUpdate'];
     }
 
     /**
@@ -51,6 +52,26 @@ class AddressSubscriber implements EventSubscriber
 
             /** Send to validation process */
             $this->adminSyncService->syncAddressAfterCreation($entity);
+        }
+    }
+
+    /**
+     * @param LifecycleEventArgs $args
+     * @throws Exception
+     */
+    public function postUpdate(LifecycleEventArgs $args)
+    {
+        $entity = $args->getEntity();
+
+        if ($entity instanceof Address) {
+            /** Auto validate billing address */
+            if (Address::TYPE_BILLING === $entity->getType()) {
+                $entity->setStatus(Address::STATUS_VALIDATED);
+                $args->getEntityManager()->flush();
+            }
+
+            /** Send to validation process */
+            $this->adminSyncService->syncAddressAfterCreation($entity, $type = Sync::TYPE_UPDATE);
         }
     }
 }

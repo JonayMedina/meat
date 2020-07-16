@@ -69,8 +69,9 @@ class AdminSyncService
 
     /**
      * @param Address $address
+     * @param string $type
      */
-    public function syncAddressAfterCreation(Address $address): void
+    public function syncAddressAfterCreation(Address $address, $type = Sync::TYPE_PERSIST): void
     {
         if ($address->getParent() instanceof Address) {
             return;
@@ -87,7 +88,7 @@ class AdminSyncService
         $metadata = [];
 
         $this->bus->dispatch(new Sync(
-            Sync::TYPE_PERSIST,
+            $type,
             Sync::MODEL_ADDRESS,
             $address->getId(),
             $url,
@@ -125,8 +126,9 @@ class AdminSyncService
 
     /**
      * @param Customer $customer
+     * @param string $type
      */
-    public function syncCustomerAfterCreation(Customer $customer): void
+    public function syncCustomerAfterCreation(Customer $customer, $type = Sync::TYPE_PERSIST): void
     {
         $url = $this->urlGenerator->generate('admin_api_customers_show', [
             'id' => $customer->getId(),
@@ -141,7 +143,7 @@ class AdminSyncService
         ];
 
         $this->bus->dispatch(new Sync(
-            Sync::TYPE_PERSIST,
+            $type,
             Sync::MODEL_CUSTOMER,
             $customer->getId(),
             $url,

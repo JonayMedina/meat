@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use Exception;
+use App\Message\Sync;
 use App\Service\AdminSyncService;
 use App\Entity\Customer\Customer;
 use Doctrine\Common\EventSubscriber;
@@ -31,7 +32,7 @@ class CustomerSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return ['postPersist'];
+        return ['postPersist', 'postUpdate'];
     }
 
     /**
@@ -49,10 +50,25 @@ class CustomerSubscriber implements EventSubscriber
     }
 
     /**
-     * @param Customer $customer
+     * @param LifecycleEventArgs $args
+     * @throws Exception
      */
-    private function checkAdminCustomerNotification(Customer $customer)
+    public function postUpdate(LifecycleEventArgs $args)
     {
-        $this->adminSyncService->syncCustomerAfterCreation($customer);
+        $entity = $args->getEntity();
+
+        if ($entity instanceof Customer) {
+            /** Check if we need to send admin notification. */
+            $this->checkAdminCustomerNotification($entity, Sync::TYPE_UPDATE);
+        }
+    }
+
+    /**
+     * @param Customer $customer
+     * @param string $type
+     */
+    private function checkAdminCustomerNotification(Customer $customer, $type = Sync::TYPE_PERSIST)
+    {
+        $this->adminSyncService->syncCustomerAfterCreation($customer, $type);
     }
 }
