@@ -71,7 +71,7 @@ class AddressSubscriber implements EventSubscriber
             }
 
             /** Send to validation process */
-            $this->adminSyncService->syncAddressAfterCreation($entity, $type = Sync::TYPE_UPDATE);
+            $this->adminSyncService->syncAddressAfterCreation($entity, Sync::TYPE_UPDATE);
         }
     }
 }
