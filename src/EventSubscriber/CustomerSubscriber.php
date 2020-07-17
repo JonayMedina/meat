@@ -45,7 +45,7 @@ class CustomerSubscriber implements EventSubscriber
 
         if ($entity instanceof Customer) {
             /** Check if we need to send admin notification. */
-            $this->checkAdminCustomerNotification($entity);
+            $this->adminSyncService->syncCustomerAfterCreation($entity);
         }
     }
 
@@ -59,16 +59,7 @@ class CustomerSubscriber implements EventSubscriber
 
         if ($entity instanceof Customer) {
             /** Check if we need to send admin notification. */
-            $this->checkAdminCustomerNotification($entity, Sync::TYPE_UPDATE);
+            $this->adminSyncService->syncCustomerAfterCreation($entity, Sync::TYPE_UPDATE);
         }
-    }
-
-    /**
-     * @param Customer $customer
-     * @param string $type
-     */
-    private function checkAdminCustomerNotification(Customer $customer, $type = Sync::TYPE_PERSIST)
-    {
-        $this->adminSyncService->syncCustomerAfterCreation($customer, $type);
     }
 }
