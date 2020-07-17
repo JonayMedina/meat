@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="segment">
+                            <div class="segment" id="billing-step">
                                 <div class="row">
                                     <div class="col-12">
                                         <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
@@ -201,6 +201,9 @@
             var $body = $('body');
             var $skipForm = $('.skip-form');
             moment.locale('es');
+            var step = document.querySelector("#billing-step");
+
+            step.scrollIntoView({behavior: 'smooth'});
 
             $('.radio').click(function () {
                 var $input = $(this).find('input');
