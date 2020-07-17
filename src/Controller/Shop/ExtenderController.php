@@ -6,7 +6,6 @@ use DateTime;
 use Exception;
 use SM\SMException;
 use App\Entity\Order\Order;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
@@ -42,6 +41,7 @@ use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
 use Sylius\Component\Core\Model\ShopUserInterface as SyliusUserInterface;
 use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ExtenderController extends AbstractController
 {
@@ -598,7 +598,7 @@ class ExtenderController extends AbstractController
 
                 return $this->updateUserByOAuthUserResponse($user, $userData);
             } catch (\Exception $e) {
-                return $this->redirectToRoute('user_pre_change_email', ['error' => true]);
+                return $this->redirectToRoute('oauth_register');
             }
         }
 
