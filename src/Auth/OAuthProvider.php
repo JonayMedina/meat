@@ -118,6 +118,15 @@ class OAuthProvider extends OAuthUserProvider
             }
 
             return $this->createUserByOAuthUserResponse($response);
+        } else {
+            $this->session->set('redirect_to_route', 'oauth_register');
+
+            $this->session->set('oauth_first_name', $response->getFirstName());
+            $this->session->set('oauth_last_name', $response->getLastName());
+            $this->session->set('oauth_provider', $response->getResourceOwner()->getName());
+            $this->session->set('oauth_identifier', $response->getUsername());
+            $this->session->set('oauth_access_token', $response->getAccessToken());
+            $this->session->set('oauth_refresh_token', $response->getRefreshToken());
         }
 
         throw new UsernameNotFoundException('Email is null or not provided');

@@ -87,7 +87,7 @@ security:
                 login_path: sylius_shop_login
                 use_forward: false
                 default_target_path: grand_central
-                failure_path: sylius_shop_login
+                failure_path: grand_central
 
                 oauth_user_provider:
                     service: user.oauth_user_provider
