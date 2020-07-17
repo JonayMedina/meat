@@ -186,7 +186,7 @@ strong, .table thead th {
     max-width: 260px;
 }
 
-.register .btn-login-with, .register .btn-login-with:hover {
+.register .btn-login-with, .register .btn-login-with:hover, .profile .btn-login-with, .profile .btn-login-with:hover {
     max-width: 300px;
 }
 
