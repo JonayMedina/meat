@@ -587,7 +587,6 @@ class OrderService
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),
             'last_name' => $customer->getLastName(),
-            'phone_number' => $customer->getPhoneNumber(),
             'gender' => $customer->getGender(),
             'age' => $this->calculateAGe($customer->getBirthday()),
         ];
