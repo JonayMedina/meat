@@ -6,6 +6,7 @@ use DateTime;
 use Exception;
 use SM\SMException;
 use App\Entity\Order\Order;
+use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
@@ -21,29 +22,63 @@ use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Core\OrderCheckoutStates;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\ShopApi\OAuthLoginController;
+use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\User\Security\PasswordUpdater;
+use Sylius\Component\User\Model\UserOAuthInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Sylius\Component\Resource\Factory\FactoryInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Sylius\Component\User\Security\UserPbkdf2PasswordEncoder;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\User\Canonicalizer\CanonicalizerInterface;
 use Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
+use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
+use Sylius\Component\Core\Model\ShopUserInterface as SyliusUserInterface;
+use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class ExtenderController extends AbstractController
 {
     /** @var UserRepositoryInterface */
     private $userRepository;
 
+    /** @var FactoryInterface */
+    private $customerFactory;
+
+    /** @var FactoryInterface */
+    private $userFactory;
+
+    /** @var CanonicalizerInterface */
+    private $canonicalizer;
+
+    /** @var CustomerRepositoryInterface */
+    private $customerRepository;
+
+    /** @var FactoryInterface */
+    private $oauthFactory;
+
     /**
      * ExtenderController constructor.
      * @param UserRepositoryInterface $userRepository
+     * @param FactoryInterface $customerFactory
+     * @param FactoryInterface $userFactory
+     * @param CanonicalizerInterface $canonicalizer
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param FactoryInterface $oauthFactory
      */
-    public function __construct(UserRepositoryInterface $userRepository) {
+    public function __construct(UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory) {
         $this->userRepository = $userRepository;
+        $this->customerFactory = $customerFactory;
+        $this->userFactory = $userFactory;
+        $this->canonicalizer = $canonicalizer;
+        $this->customerRepository = $customerRepository;
+        $this->oauthFactory = $oauthFactory;
     }
 
     /**
@@ -486,6 +521,91 @@ class ExtenderController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @param SenderInterface $sender
+     * @return SyliusUserInterface|Response|UserInterface
+     */
+    public function oauthRegisterAction(Request $request, SenderInterface $sender) {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        $userData = [];
+
+        if ($session->get('oauth_first_name') || $session->get('oauth_last_name') || $session->get('oauth_provider') || $session->get('oauth_identifier')) {
+            $userData['first_name'] = $session->get('oauth_first_name');
+            $userData['last_name'] = $session->get('oauth_last_name');
+            $userData['provider'] = $session->get('oauth_provider');
+            $userData['identifier'] = $session->get('oauth_identifier');
+            $userData['access_token'] = $session->get('oauth_access_token');
+            $userData['refresh_token'] = $session->get('oauth_identifier');
+            $userData['pass'] = substr(sha1($session->get('oauth_identifier')), 0, 10);
+        } else {
+            return $this->redirectToRoute('sylius_shop_register');
+        }
+
+        $form = $this->createForm(CustomerRegistrationType::class, new Customer());
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            try {
+                /** @var SyliusUserInterface $user */
+                $user = $this->userFactory->createNew();
+
+                $canonicalEmail = $this->canonicalizer->canonicalize($data->getEmail());
+
+                /** @var CustomerInterface $customer */
+                $customer = $this->customerRepository->findOneBy(['emailCanonical' => $canonicalEmail]);
+
+                if (null === $customer) {
+                    /** @var CustomerInterface $customer */
+                    $customer = $this->customerFactory->createNew();
+                }
+
+                $user->setCustomer($customer);
+
+                // set default values taken from OAuth sign-in provider account
+                if (null !== $email = $data->getEmail()) {
+                    $customer->setEmail($email);
+                }
+
+                if (null !== $name = $data->getFirstName()) {
+                    $customer->setFirstName($name);
+                }
+
+                if (null !== $lastName = $data->getLastName()) {
+                    $customer->setLastName($lastName);
+                }
+
+                if (!$user->getUsername()) {
+                    $user->setUsername($data->getEmail());
+                }
+
+                // set random password to prevent issue with not nullable field & potential security hole
+                $user->setPlainPassword($userData['pass']);
+                $user->setEnabled(true);
+
+                $sender->send('user_registration', [$customer->getEmail()], ['user' => $user]);
+
+                $em->flush();
+
+                $session->remove('oauth_first_name');
+                $session->remove('oauth_last_name');
+                $session->remove('oauth_provider');
+                $session->remove('oauth_identifier');
+                $session->remove('oauth_access_token');
+                $session->remove('oauth_identifier');
+
+                return $this->updateUserByOAuthUserResponse($user, $userData);
+            } catch (\Exception $e) {
+                return $this->redirectToRoute('oauth_register');
+            }
+        }
+
+        return $this->render('/shop/oauthRegister.html.twig', ['form' => $form->createView(), 'oauth' => $userData]);
+    }
+
+    /**
      * @param $emails
      * @return array
      */
@@ -541,5 +661,36 @@ class ExtenderController extends AbstractController
         }
 
         return $errors;
+    }
+
+    /**
+     * Attach OAuth sign-in provider account to existing user.
+     * @param UserInterface $user
+     * @param array $response
+     * @return RedirectResponse
+     */
+    private function updateUserByOAuthUserResponse(UserInterface $user, $response)
+    {
+        /** @var SyliusUserInterface $user */
+        Assert::isInstanceOf($user, SyliusUserInterface::class);
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var UserOAuthInterface $oauth */
+        $oauth = $this->oauthFactory->createNew();
+        $oauth->setIdentifier($response['identifier']);
+        $oauth->setProvider($response['provider']);
+        $oauth->setAccessToken($response['access_token']);
+        $oauth->setRefreshToken($response['refresh_token']);
+
+        $user->addOAuthAccount($oauth);
+
+        $em->persist($user);
+        $em->flush();
+
+        $token = new UsernamePasswordToken($user, null, 'shop', $user->getRoles());
+        $this->container->get('security.token_storage')->setToken($token);
+        $this->container->get('session')->set('_security_shop', serialize($token));
+
+        return $this->redirectToRoute('store_welcome');
     }
 }

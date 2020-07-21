@@ -96,6 +96,12 @@ user_pre_change_email:
     defaults:
         _controller: app.controller.shop.extender:addPasswordAction
         
+oauth_register:
+    path: /store/oauth/register
+    methods: [GET, POST]
+    defaults:
+        _controller: app.controller.shop.extender:oauthRegisterAction
+        
 sylius_shop_account_change_password:
     path: /account/change-password
     methods: [GET, POST]
