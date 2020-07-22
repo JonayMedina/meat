@@ -69,6 +69,7 @@ sylius_channel:
         channel:
             classes:
                 model: App\Entity\Channel\Channel
+                repository: App\Repository\ChannelRepository
 sylius_core:
     resources:
         product_image:
@@ -155,6 +156,7 @@ sylius_product:
             classes:
                 model: App\Entity\Product\Product
                 repository: App\Repository\ProductRepository
+                controller: App\Controller\Shop\ProductExtendedController
             translation:
                 classes:
                     model: App\Entity\Product\ProductTranslation
