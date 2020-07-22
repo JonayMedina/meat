@@ -402,19 +402,21 @@ class CategoryController extends AbstractFOSRestController
         if (in_array($parentId, ["none", "null"])) {
             $category->setParent(null);
         } else {
-            $parent = $this->getCategoryById($parentId);
+            if (!empty($parentId)) {
+                $parent = $this->getCategoryById($parentId);
 
-            if ($parent instanceof Taxon) {
-                try {
-                    $category->setParent($parent);
-                } catch (\Exception $exception) {
-                    $category->setLeft(0);
-                    $category->setRight(0);
-                    $category->setLevel(0);
-                    $category->setParent($parent);
+                if ($parent instanceof Taxon) {
+                    try {
+                        $category->setParent($parent);
+                    } catch (\Exception $exception) {
+                        $category->setLeft(0);
+                        $category->setRight(0);
+                        $category->setLevel(0);
+                        $category->setParent($parent);
+                    }
+                } else {
+                    throw new NotFoundHttpException('Parent not found.');
                 }
-            } else {
-                throw new NotFoundHttpException('Parent not found.');
             }
         }
 
