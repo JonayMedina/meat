@@ -55,6 +55,8 @@ services:
             autowire: false
         App\Controller\Shop\OrderExtendedController:
             autowire: false
+        App\Controller\Shop\ProductExtendedController:
+            autowire: false
         App\Controller\Shop\OrderItemExtendedController:
             autowire: false
 

@@ -601,6 +601,11 @@ class ProductController extends AbstractFOSRestController
         $this->entityManager->persist($channelPricing);
 
         $product->addVariant($variant);
+
+        if ($product->getChannels()->count() <= 0) {
+            $product->addChannel($channel);
+        }
+
         $variant->setProduct($product);
 
         if ($category) {
