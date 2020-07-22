@@ -529,6 +529,7 @@ class ProductController extends AbstractFOSRestController
         $variant = new ProductVariant();
         $variant->setProduct($product);
         $variant->setCode($code);
+        $variant->setOnHand(100000);
 
         $product->addVariant($variant);
 
