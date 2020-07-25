@@ -387,12 +387,16 @@ class ProductController extends AbstractFOSRestController
         $product = $this->getProduct($request);
         $this->entityManager->remove($product);
 
+        foreach ($product->getVariants() as $variant) {
+            $this->entityManager->remove($variant);
+        }
+
         try {
             $this->entityManager->flush();
             return new JsonResponse([], Response::HTTP_NO_CONTENT);
         } catch (\Exception $exception) {
             $statusCode = Response::HTTP_BAD_REQUEST;
-            $view = $this->view(['type' => 'error', 'message' => 'Invalid form.', 'recordset' => $exception->getMessage(), 'code' => $statusCode], $statusCode);
+            $view = $this->view(['type' => 'error', 'message' => 'Invalid form.', 'recordset' => "We cannot remove this product now, it probably exists in a shopping cart.", 'code' => $statusCode], $statusCode);
 
             return $this->handleView($view);
         }
