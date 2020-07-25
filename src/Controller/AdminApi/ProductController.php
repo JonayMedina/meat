@@ -523,6 +523,9 @@ class ProductController extends AbstractFOSRestController
     {
         $product = $this->productRepository->findOneBy(['code' => $code]);
 
+        /** @var Channel $channel */
+        $channel = $this->channelContext->getChannel();
+
         if ($product instanceof Product) {
             throw new BadRequestHttpException('Product already exists.');
         }
@@ -536,6 +539,7 @@ class ProductController extends AbstractFOSRestController
         $variant->setOnHand(100000);
 
         $product->addVariant($variant);
+        $product->addChannel($channel);
 
         $this->entityManager->persist($product);
         $this->entityManager->persist($variant);
