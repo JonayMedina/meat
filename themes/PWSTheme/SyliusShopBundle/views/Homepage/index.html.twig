@@ -28,41 +28,43 @@
 {% block extrajs %}
     <script>
         jQuery(function () {
-            (function ($) {
-                $('.taxons-carousel').owlCarousel({
-                    loop: false,
-                    margin: 15,
-                    nav: true,
-                    dots: false,
-                    items: 5,
-                    autoWidth: true,
-                    responsiveClass:true,
-                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
-                    responsive:{
-                        0:{
-                            items: 2,
-                            autoWidth: true,
-                            nav: false
-                        },
-                        576:{
-                            items: 2,
-                            autoWidth: true
-                        },
-                        768:{
-                            items: 3,
-                            autoWidth: true
-                        },
-                        992:{
-                            items: 4,
-                            autoWidth: true
-                        },
-                        1200:{
-                            items: 5,
-                            autoWidth: true
-                        }
+            if (window.innerWidth < 992 && window.innerWidth > 575) {
+                $('.owl-carousel').append('<div class="item"><a></a><div>');
+            }
+
+            let owl = $('.taxons-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                nav: true,
+                dots: false,
+                items: 5,
+                autoWidth: true,
+                responsiveClass:true,
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                responsive:{
+                    0:{
+                        items: 2,
+                        autoWidth: true,
+                        nav: false
+                    },
+                    576:{
+                        items: 2,
+                        autoWidth: true
+                    },
+                    768:{
+                        items: 3,
+                        autoWidth: true
+                    },
+                    992:{
+                        items: 4,
+                        autoWidth: true
+                    },
+                    1200:{
+                        items: 5,
+                        autoWidth: true
                     }
-                });
-            })(jQuery);
+                }
+            });
 
             calcPL();
 

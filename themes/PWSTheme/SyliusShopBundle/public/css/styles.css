@@ -852,6 +852,12 @@ span.error.birthdate {
     font-family: "Raleway Medium", "Raleway", sans-serif;
     color: #404040;
     margin-bottom: 8px;
+    max-width: 154px;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .taxons-carousel .item.current a:after {
