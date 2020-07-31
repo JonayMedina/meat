@@ -162,8 +162,8 @@ class HistoryService
 
         /** Kill previous carts. */
         $orders = $this->getOrders($customer);
-        foreach ($orders as $index => $order) {
-            $this->entityManager->remove($order);
+        foreach ($orders as $index => $order2Kill) {
+            $this->entityManager->remove($order2Kill);
         }
 
         try {
