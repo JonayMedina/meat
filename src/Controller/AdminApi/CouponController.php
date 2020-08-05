@@ -107,7 +107,7 @@ class CouponController extends AbstractFOSRestController
             $description = $form->get('description')->getData();
             $enabled = $form->get('enabled')->getData();
             $type = $form->get('type')->getData();
-            $amount = $form->get('amount')->getData();
+            $amount = (int) $form->get('amount')->getData();
             $oneUsagePerUser = $form->get('oneUsagePerUser')->getData();
             $limitUsageToXQuantityOfUsers = $form->get('limitUsageToXQuantityOfUsers')->getData();
             $usageLimit = $form->get('usageLimit')->getData();
