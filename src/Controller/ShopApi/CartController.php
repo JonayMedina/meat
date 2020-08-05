@@ -25,6 +25,8 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\ShopApiPlugin\Controller\Cart\AddCouponAction;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
+use Sylius\ShopApiPlugin\Controller\Cart\RemoveCouponAction;
+use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
@@ -45,6 +47,9 @@ class CartController extends AbstractFOSRestController
 
     /** @var AddCouponAction */
     private $addCouponAction;
+
+    /** @var RemoveCouponAction */
+    private $removeCouponAction;
 
     /** @var TranslatorInterface */
     private $translator;
@@ -74,6 +79,9 @@ class CartController extends AbstractFOSRestController
      */
     private $stateMachineFactory;
 
+    /** @var OrderProcessorInterface */
+    private $orderProcessor;
+
     /**
      * CartController constructor.
      * @param OrderRepository $repository
@@ -85,6 +93,8 @@ class CartController extends AbstractFOSRestController
      * @param AddressRepository $addressRepository
      * @param AboutStoreRepository $aboutStoreRepository
      * @param Factory $stateMachineFactory
+     * @param RemoveCouponAction $removeCouponAction
+     * @param OrderProcessorInterface $orderProcessor
      */
     public function __construct(
         OrderRepository $repository,
@@ -95,7 +105,9 @@ class CartController extends AbstractFOSRestController
         OrderService $orderService,
         AddressRepository $addressRepository,
         AboutStoreRepository $aboutStoreRepository,
-        Factory $stateMachineFactory
+        Factory $stateMachineFactory,
+        RemoveCouponAction $removeCouponAction,
+        OrderProcessorInterface $orderProcessor
     ) {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
@@ -106,6 +118,8 @@ class CartController extends AbstractFOSRestController
         $this->addressRepository = $addressRepository;
         $this->aboutStoreRepository = $aboutStoreRepository;
         $this->stateMachineFactory = $stateMachineFactory;
+        $this->removeCouponAction = $removeCouponAction;
+        $this->orderProcessor = $orderProcessor;
     }
 
     /**
@@ -253,6 +267,7 @@ class CartController extends AbstractFOSRestController
                         $date = iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", $coupon->getPromotion()->getEndsAt()->format('U')));
                         $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
                     } else {
+                        $this->isInIncompleteCart($coupon);
                         return $this->addCouponAction->__invoke($request);
                     }
                 } else {
@@ -394,5 +409,17 @@ class CartController extends AbstractFOSRestController
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param PromotionCoupon $coupon
+     */
+    private function isInIncompleteCart(PromotionCoupon $coupon) {
+        $cart = $this->repository->findOneBy(['promotionCoupon' => $coupon, 'state' => Order::STATE_CART]);
+
+        if ($cart instanceof Order) {
+            $cart->setPromotionCoupon(null);
+            $this->orderProcessor->process($cart);
+        }
     }
 }

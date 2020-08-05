@@ -39,6 +39,7 @@ services:
             $fcmServerKey: '%env(FCM_SERVER_KEY)%'
             $userRepository: '@sylius.repository.shop_user'
             $addCouponAction: '@sylius.shop_api_plugin.controller.cart.add_coupon_action'
+            $removeCouponAction: '@sylius.shop_api_plugin.controller.cart.remove_coupon_action'
             $epayGateWayIP: '%env(EPAY_GATEWAY_IP)%'
             $epayTerminalID: '%env(EPAY_TERMINAL_ID)%'
             $epayMerchant: '%env(EPAY_MERCHANT)%'
