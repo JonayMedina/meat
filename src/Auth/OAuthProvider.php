@@ -2,10 +2,10 @@
 
 namespace App\Auth;
 
-use Symfony\Component\Security\Core\Security;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Mailer\Sender\SenderInterface;
@@ -102,7 +102,7 @@ class OAuthProvider extends OAuthUserProvider
 
     /**
      * @param UserResponseInterface $response
-     * @return bool|UserInterface
+     * @return UserInterface
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
