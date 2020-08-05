@@ -2,6 +2,7 @@
 
 namespace App\Auth;
 
+use Symfony\Component\Security\Core\Security;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\EntityManagerInterface;
@@ -64,6 +65,9 @@ class OAuthProvider extends OAuthUserProvider
     /** @var RouterInterface */
     private $router;
 
+    /** @var Security */
+    private $security;
+
     /**
      * OAuthProvider constructor.
      * @param EntityManagerInterface $em
@@ -79,7 +83,7 @@ class OAuthProvider extends OAuthUserProvider
      * @param RouterInterface $router
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $em, RepositoryInterface $oauthRepository, UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory, SenderInterface $sender, SessionInterface $session, RouterInterface $router, TokenStorageInterface $tokenStorage)
+    public function __construct(EntityManagerInterface $em, RepositoryInterface $oauthRepository, UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory, SenderInterface $sender, SessionInterface $session, RouterInterface $router, TokenStorageInterface $tokenStorage, Security $security)
     {
         $this->em = $em;
         $this->oauthRepository = $oauthRepository;
@@ -93,25 +97,43 @@ class OAuthProvider extends OAuthUserProvider
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->router = $router;
+        $this->security = $security;
     }
 
     /**
      * @param UserResponseInterface $response
-     * @return UserInterface
+     * @return bool|UserInterface
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
+        /** @var ShopUser $loggedUser */
+        $loggedUser = $this->security->getUser();
+
         $oauth = $this->oauthRepository->findOneBy([
             'provider' => $response->getResourceOwner()->getName(),
             'identifier' => $response->getUsername(),
         ]);
 
         if ($oauth instanceof UserOAuthInterface) {
-            return $oauth->getUser();
+            $oauthUser = $oauth->getUser();
+
+            if ($loggedUser != null) {
+                if ($oauth->getUser()->getEmail() != $loggedUser->getEmail()) {
+                    $this->session->set('redirect_to_route', 'sylius_shop_account_dashboard');
+                    $this->session->set('redirect_param', 'fb_in_use');
+
+                    return $loggedUser;
+                } else {
+                    return $oauthUser;
+                }
+            } else {
+                return $oauthUser;
+            }
         }
 
         if (null !== $response->getEmail()) {
-            $user = $this->userRepository->findOneByEmail($response->getEmail());
+            /* if an user is currently logged connect the oauth to the current account */
+            $user = $loggedUser != null ? $loggedUser : $this->userRepository->findOneByEmail($response->getEmail());
 
             if ($user instanceof ShopUser) {
                 return $this->updateUserByOAuthUserResponse($user, $response, 'sylius_shop_account_dashboard');
