@@ -322,8 +322,9 @@ class CouponController extends AbstractFOSRestController
             ->orderBy('coupon.createdAt', 'DESC');
 
         if (!empty($search)) {
+
             $queryBuilder
-                ->andWhere('coupon.code LIKE :search OR promotion.description LIKE :search')
+                ->andWhere('coupon.code LIKE :search OR promotion.description LIKE :search OR coupon.id')
                 ->setParameter('search', '%'.$search.'%');
         }
 
