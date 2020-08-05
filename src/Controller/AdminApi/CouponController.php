@@ -324,7 +324,7 @@ class CouponController extends AbstractFOSRestController
         if (!empty($search)) {
 
             $queryBuilder
-                ->andWhere('coupon.code LIKE :search OR promotion.description LIKE :search OR coupon.id')
+                ->andWhere('coupon.code LIKE :search OR promotion.description LIKE :search OR coupon.id LIKE :search')
                 ->setParameter('search', '%'.$search.'%');
         }
 
