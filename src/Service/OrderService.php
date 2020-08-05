@@ -221,7 +221,7 @@ class OrderService
     {
         $payments = [];
         $items = [];
-        $coupon = [];
+        $coupon = null;
         $adjustments = [];
         $customer = [];
         $rating = [];
