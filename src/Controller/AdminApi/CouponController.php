@@ -89,6 +89,30 @@ class CouponController extends AbstractFOSRestController
 
     /**
      * @Route(
+     *     "/{code}.{_format}",
+     *     name="admin_api_coupons_show",
+     *     methods={"GET"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function showAction(Request $request)
+    {
+        $code = $request->get('code');
+        $coupon = $this->promotionCouponRepository->findOneBy(['code' => $code]);
+
+        if (!$coupon instanceof PromotionCoupon) {
+            throw new NotFoundHttpException('Coupon not found');
+        }
+
+        $view = $this->view($this->serializeCoupon($coupon), Response::HTTP_OK);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
      *     ".{_format}",
      *     name="admin_api_coupons_new",
      *     methods={"POST"}
