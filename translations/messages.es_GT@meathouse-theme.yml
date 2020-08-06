@@ -987,3 +987,5 @@ app.api.switch_email.email_already_in_use: 'Este correo electrónico ya está en
 app.api.switch_email.invalid_email_formats: 'Parece que el formato del correo electrónico es incorrecto.'
 app.api.switch_email.success_message: 'Hemos enviado un enlace a tu correo nuevo. Revisa tu correo para continuar con el cambio.'
 app.ui.checkout.%quantity%_%measure%: '%quantity% %measure%'
+app.ui.account.connect.facebook.in_use.title: 'Hubo un error al conectar tu cuenta'
+app.ui.account.connect.facebook.in_use.message: 'Parece que la cuenta de Facebook ya está conectada con otro usuario.'

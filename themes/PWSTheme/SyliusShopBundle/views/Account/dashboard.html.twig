@@ -439,6 +439,17 @@
                 $showMessage.find('.modal-footer button').html('{{ 'app.ui.agreed'|trans }}');
                 $showMessage.modal('show');
             }
+
+            if (getParameterByName('fb_in_use')) {
+                $showMessage.find('.modal-title').html('{{ 'app.ui.account.connect.facebook.in_use.title'|trans }}');
+                $showMessage.find('.modal-body').html('{{ 'app.ui.account.connect.facebook.in_use.message'|trans }}');
+                $showMessage.find('.modal-footer button').html('{{ 'app.ui.accept.short'|trans }}');
+                $showMessage.modal('show');
+            }
+
+            $('.modal-footer button').click(function () {
+                window.location.replace('{{ path('sylius_shop_account_dashboard') }}');
+            });
         });
     </script>
 {% endblock %}

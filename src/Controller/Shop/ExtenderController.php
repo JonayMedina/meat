@@ -511,7 +511,11 @@ class ExtenderController extends AbstractController
             $route = $session->get('redirect_to_route');
 
             if ($route == 'sylius_shop_account_dashboard') {
-                $params = ['connected' => true];
+                if ($session->get('redirect_param')) {
+                    $params = [$session->get('redirect_param') => true];
+                } else {
+                    $params = ['connected' => true];
+                }
             }
 
             $session->remove('redirect_to_route');
