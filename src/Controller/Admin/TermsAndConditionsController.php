@@ -9,9 +9,9 @@ use App\Form\Admin\TermsAndConditionsType;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\TermsAndConditionsRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -22,19 +22,63 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TermsAndConditionsController extends AbstractController
 {
     /**
-     *
-     * @Route("/terms", name="terms_index")
-     * @param Request $request
+     * @var TermsAndConditionsRepository
+     */
+    private $repository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var CustomerRepository
+     */
+    private $customerRepository;
+
+    /**
+     * TermsAndConditionsController constructor.
      * @param TermsAndConditionsRepository $repository
      * @param EntityManagerInterface $entityManager
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
+     * @param CustomerRepository $customerRepository
+     */
+    public function __construct(
+        TermsAndConditionsRepository $repository,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
+        CustomerRepository  $customerRepository
+    ) {
+        $this->repository = $repository;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->logger = $logger;
+        $this->customerRepository = $customerRepository;
+    }
+
+
+    /**
+     *
+     * @Route("/terms", name="terms_index")
+     * @param Request $request
      * @return Response
      * @throws NonUniqueResultException
      */
-    public function indexAction(Request $request, TermsAndConditionsRepository $repository, EntityManagerInterface $entityManager, TranslatorInterface $translator, LoggerInterface $logger)
+    public function indexAction(Request $request)
     {
-        $terms = $repository->findLatest();
+        $terms = $this->repository->findLatest();
 
         if (!$terms instanceof TermsAndConditions) {
             $terms = new TermsAndConditions();
@@ -44,16 +88,16 @@ class TermsAndConditionsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($terms);
+            $this->entityManager->persist($terms);
 
             try {
-                $entityManager->flush();
+                $this->entityManager->flush();
+                $this->sendNotificationToCustomers($terms);
 
-                // TODO: Send email to all registered users.
-                $this->addFlash('success', $translator->trans('app.ui.terms_and_conditions_success_message'));
+                $this->addFlash('success', $this->translator->trans('app.ui.terms_and_conditions_success_message'));
             } catch (\Exception $exception) {
-                $logger->error($exception->getMessage());
-                $this->addFlash('error', $translator->trans('app.ui.terms_and_conditions_error_while_saving_message'));
+                $this->logger->error($exception->getMessage());
+                $this->addFlash('error', $this->translator->trans('app.ui.terms_and_conditions_error_while_saving_message'));
             }
 
             return $this->redirectToRoute('terms_index');
@@ -63,5 +107,17 @@ class TermsAndConditionsController extends AbstractController
             'terms' => $terms,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @param TermsAndConditions|null $terms
+     */
+    private function sendNotificationToCustomers(TermsAndConditions $terms)
+    {
+        $customers = $this->customerRepository->findAll();
+
+        foreach ($customers as $customer) {
+            // TODO: Send email to all registered users.
+        }
     }
 }
