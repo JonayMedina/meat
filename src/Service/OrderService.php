@@ -582,14 +582,21 @@ class OrderService
             return [];
         }
 
-        return [
+        $age = $this->calculateAGe($customer->getBirthday());
+
+        $serializedCustomer = [
             'id' => $customer->getId(),
             'email' => $customer->getEmail(),
             'first_name' => $customer->getFirstName(),
             'last_name' => $customer->getLastName(),
             'gender' => $customer->getGender(),
-            'age' => $this->calculateAGe($customer->getBirthday()),
         ];
+
+        if (null !== $age) {
+            $serializedCustomer['age'] = $age;
+        }
+
+        return $serializedCustomer;
     }
 
     /**
@@ -599,7 +606,7 @@ class OrderService
     private function calculateAGe(?\DateTimeInterface $birthday)
     {
         if (!$birthday) {
-            return 0;
+            return null;
         }
 
         $formattedBirthday = $birthday->format('m/d/Y');
