@@ -599,7 +599,7 @@ class OrderService
     private function calculateAGe(?\DateTimeInterface $birthday)
     {
         if (!$birthday) {
-            return 0;
+            return null;
         }
 
         $formattedBirthday = $birthday->format('m/d/Y');
