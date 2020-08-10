@@ -3,357 +3,126 @@
 
 {% block body %}
     {% autoescape %}
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta content="width=device-width, initial-scale=1" name="viewport">
-            <meta name="x-apple-disable-message-reformatting">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta content="telephone=no" name="format-detection">
-            <style type="text/css">
-                * {
-                    margin: 0;
-                    padding: 0;
-                    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-                    box-sizing: border-box;
-                    font-size: 14px;
-                }
-
-                img {
-                    max-width: 100%;
-                }
-
-                body {
-                    -webkit-font-smoothing: antialiased;
-                    -webkit-text-size-adjust: none;
-                    width: 100% !important;
-                    height: 100%;
-                    line-height: 1.6;
-                }
-
-                /* Let's make sure all tables have defaults */
-                table td {
-                    vertical-align: top;
-                }
-
-                table {
-                    width: 100% !important;
-                }
-
-                code {
-                    padding: 13px;
-                    border-radius: 15px;
-                    background: #404040;
-                    color: #ffffff;
-                }
-
-                /* -------------------------------------
-                    BODY & CONTAINER
-                ------------------------------------- */
-                body {
-                    background-color: #f6f6f6;
-                }
-
-                .body-wrap {
-                    background-color: #f6f6f6;
-                    width: 100%;
-                }
-
-                .container {
-                    display: block !important;
-                    max-width: 600px !important;
-                    margin: 0 auto !important;
-                    /* makes it centered */
-                    clear: both !important;
-                }
-
-                .content {
-                    max-width: 600px;
-                    margin: 0 auto;
-                    display: block;
-                    padding: 20px;
-                }
-
-                /* -------------------------------------
-                    HEADER, FOOTER, MAIN
-                ------------------------------------- */
-                .main {
-                    background: #fff;
-                    border: 1px solid #e9e9e9;
-                    border-radius: 3px;
-                }
-
-                .content-wrap {
-                    padding: 20px;
-                }
-
-                .content-block {
-                    padding: 0 0 20px;
-                }
-
-                .header {
-                    width: 100%;
-                    margin-bottom: 20px;
-                }
-
-                .footer {
-                    width: 100%;
-                    clear: both;
-                    color: #999;
-                    padding: 20px;
-                }
-                .footer a {
-                    color: #999;
-                }
-                .footer p, .footer a, .footer .unsubscribe, .footer td {
-                    font-size: 12px;
-                }
-
-                /* -------------------------------------
-                    TYPOGRAPHY
-                ------------------------------------- */
-                h1, h2, h3 {
-                    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-                    color: #000;
-                    margin: 40px 0 0;
-                    line-height: 1.2;
-                    font-weight: 400;
-                }
-
-                .text-large {
-                    font-size: 32px;
-                    font-weight: 500;
-                }
-
-                h1 {
-                    font-size: 32px;
-                    font-weight: 500;
-                }
-
-                h2 {
-                    font-size: 24px;
-                }
-
-                h3 {
-                    font-size: 18px;
-                }
-
-                h4 {
-                    font-size: 14px;
-                    font-weight: 600;
-                }
-
-                p, ul, ol {
-                    margin-bottom: 10px;
-                    font-weight: normal;
-                }
-                p li, ul li, ol li {
-                    margin-left: 5px;
-                    list-style-position: inside;
-                }
-
-                /* -------------------------------------
-                    LINKS & BUTTONS
-                ------------------------------------- */
-                a {
-                    color: #ab162b;
-                    text-decoration: underline;
-                }
-
-                .btn-primary {
-                    text-decoration: none;
-                    color: #FFF !important;
-                    background-color: #ab162b;
-                    border: solid #ab162b;
-                    border-width: 5px 10px;
-                    line-height: 2;
-                    font-weight: bold;
-                    text-align: center;
-                    cursor: pointer;
-                    display: inline-block;
-                    border-radius: 5px;
-                    text-transform: capitalize;
-                }
-
-                /* -------------------------------------
-                    OTHER STYLES THAT MIGHT BE USEFUL
-                ------------------------------------- */
-                .last {
-                    margin-bottom: 0;
-                }
-
-                .first {
-                    margin-top: 0;
-                }
-
-                .text-center {
-                    text-align: center;
-                }
-
-                .text-right {
-                    text-align: right;
-                }
-
-                .text-left {
-                    text-align: left;
-                }
-
-                .clear {
-                    clear: both;
-                }
-
-                /* -------------------------------------
-                    ALERTS
-                    Change the class depending on warning email, good email or bad email
-                ------------------------------------- */
-                .alert {
-                    font-size: 16px;
-                    color: #fff;
-                    font-weight: 500;
-                    padding: 20px;
-                    text-align: center;
-                    border-radius: 3px 3px 0 0;
-                }
-                .alert a {
-                    color: #fff;
-                    text-decoration: none;
-                    font-weight: 500;
-                    font-size: 16px;
-                }
-                .alert.alert-warning {
-                    background: #f8ac59;
-                }
-                .alert.alert-bad {
-                    background: #ed5565;
-                }
-                .alert.alert-good {
-                    background: #1ab394;
-                }
-
-                /* -------------------------------------
-                    INVOICE
-                    Styles for the billing table
-                ------------------------------------- */
-                .invoice {
-                    margin: 40px auto;
-                    text-align: left;
-                    width: 80%;
-                }
-                .invoice td {
-                    padding: 5px 0;
-                }
-                .invoice .invoice-items {
-                    width: 100%;
-                }
-                .invoice .invoice-items td {
-                    border-top: #eee 1px solid;
-                }
-                .invoice .invoice-items .total td {
-                    border-top: 2px solid #333;
-                    border-bottom: 2px solid #333;
-                    font-weight: 700;
-                }
-
-                /* -------------------------------------
-                    RESPONSIVE AND MOBILE FRIENDLY STYLES
-                ------------------------------------- */
-                @media only screen and (max-width: 640px) {
-                    h1, h2, h3, h4 {
-                        font-weight: 600 !important;
-                        margin: 20px 0 5px !important;
-                    }
-
-                    h1 {
-                        font-size: 22px !important;
-                    }
-
-                    h2 {
-                        font-size: 18px !important;
-                    }
-
-                    h3 {
-                        font-size: 16px !important;
-                    }
-
-                    .container {
-                        width: 100% !important;
-                    }
-
-                    .content, .content-wrap {
-                        padding: 10px !important;
-                    }
-
-                    .invoice {
-                        width: 100% !important;
-                    }
-                }
-
-                {% block customcss %}
-                {% endblock %}
-            </style>
+        <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="es">
+        <head><!-- Required for Yahoo Mail app --></head>
+        <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <meta name="Generator" content="Created with TOWER ONE Mail Designer">
+            <meta name="Viewport" content="width=device-width, initial-scale=1.0">
+            {{ include('Email/_styles.html.twig') }}
+            <link href="https://fonts.googleapis.com/css?family=Raleway:regular,600,italic" rel="stylesheet" type="text/css" class="EQWebFont">
+            <link href="https://fonts.googleapis.com/css?family=Droid+Sans:700,regular" rel="stylesheet" type="text/css" class="EQWebFont">
+            <link href="https://fonts.googleapis.com/css?family=Roboto:700,regular" rel="stylesheet" type="text/css" class="EQWebFont">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         </head>
-        <body>
-            <div class="content">
-                <table class="main" width="100%" cellpadding="0" cellspacing="0">
-                    <tbody>
+        <body style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px;" background="{{ get_url(asset('bundles/syliusshop/img/email/page-bg.jpg')) }}">
+        <!--[if gte mso 9]>
+        <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+            <v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/page-bg.jpg')) }}" />
+        </v:background>
+        <![endif]-->
+
+        <span id="preheader" class="preheader" style="display:none!important;">{{ 'app.email.enjoy_the_mh_expirience'|trans }}</span>
+            <table width="100%" cellspacing="0" cellpadding="0" id="page-wrap" align="center" background="{{ get_url(asset('bundles/syliusshop/img/email/page-bg.jpg')) }}">
+                <tbody>
                     <tr>
-                        <td class="content-wrap">
-                            <table cellpadding="0" cellspacing="0">
-                                <tbody><tr>
-                                    <td class="text-center">
-                                        {% block image %}<img class="img-fluid" style="max-width: 130px;" src="{% block imgurl %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/logo.png{% endblock %}" alt="Logo">{% endblock %}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="content-block">
-                                        <h3 class="text-center">{% block title %}Lorem Ipsum{% endblock %}</h3>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    {% block content %}
-                                        <td class="content-block">
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.
-                                        </td>
-                                    {% endblock %}
-                                </tr>
-                                <tr>
-                                    <td class="content-block text-center">
-                                        {% block button %}
-                                            <a href="#" class="btn-primary">Confirm email address</a>
-                                        {% endblock %}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="footer">
-                    <table width="100%">
+                        <td>
+                    <table class="EQ-00" width="700" cellspacing="0" cellpadding="0" id="email-body" align="center">
                         <tbody>
-                        <tr>
-                            {% set social %}
-                                {% if about_store('facebook') %}
-                                    <a href="{{ about_store('facebook') }}" title="Facebook link">Facebook</a>&nbsp;
-                                {% endif %}
-                                {% if about_store('twitter') %}
-                                    <a href="{{ about_store('twitter') }}" title="Twitter link">Twitter</a>&nbsp;
-                                {% endif %}
-                                {% if about_store('instagram') %}
-                                    <a href="{{ about_store('instagram') }}" title="Instagram link">Instagram</a>&nbsp;
-                                {% endif %}
-                                {% if about_store('pinterest') %}
-                                    <a href="{{ about_store('pinterest') }}" title="Pinterest link">Pinterest</a>
-                                {% endif %}
-                            {% endset %}
-                            <td class="text-center content-block">{{ 'app.email.follow_us_on_%social_media%'|trans({'%social_media%': social})|raw }}</td>
+                            <tr>
+                            <td width="30" class="EQ-01">&nbsp;<!--Left page bg show-thru --></td>
+                            <td width="640" id="page-body" background="background.jpg" bgcolor="#f2f2f2">
+
+                                <!--Begin of layout container -->
+                                <div id="eqLayoutContainer">
+                                    <div class="EQ-10" width="100%">
+                                        <!--[if !mso 15]><!-->
+                                        <table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+                                            <tbody>
+                                            <tr>
+                                                <td valign="top" class="EQ-04" width="640">
+                                                    <table cellspacing="0" cellpadding="0" class="EQ-04" width="640">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td width="640">
+                                                                <div class="layout-block-image">
+                                                                    <img width="640" height="169" alt="" src="{{ get_url(asset('bundles/syliusshop/img/email/logo.png')) }}" border="0" style="display: block; width: 640px; height: 169px;">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+                                            <tr><td valign="top" class="EQ-04"><div class="layout-block-image"><img height="169" alt="" src="{{ get_url(asset('bundles/syliusshop/img/email/logo.png')) }}" border="0" style="display: block;" class="" width="640"></img><div style="width:0px;height:0px;max-height:0;max-width:0;overflow:hidden;display:none;visibility:hidden;mso-hide:all;"></div></div></td>
+                                            </tr></table></div><![endif]-->
+                                    </div>
+
+                                    <!--[if !mso ]><!-->
+                                    <div style="display: none; max-height: 0px; overflow: hidden;" class="mobile-only EQ-11" width="100%">
+                                        <table width="375" cellspacing="0" cellpadding="0" class="EQ-00 EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+                                            <tbody>
+                                            <tr>
+                                                <td valign="top" class="EQ-04" width="375">
+                                                    <table cellspacing="0" cellpadding="0" class="EQ-04 EQ-11" width="375" style="display: none; max-height: 0px; overflow: hidden;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td width="375">
+                                                                <div class="layout-block-image EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+                                                                    <img width="375" height="213" alt="" src="{{ get_url(asset('bundles/syliusshop/img/email/logo.png')) }}" border="0" style="display: none; max-height: 0px; overflow: hidden; width: 375px; height: 213px;" class="EQ-11">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--<![endif]-->
+
+                                    <div class="EQ-10" width="100%">
+                                        <!--[if !mso 15]><!-->
+                                        <table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+                                            <tbody>
+                                            <tr>
+                                                <td width="29" style="font-size:1px;">&nbsp;</td>
+                                                <td height="20" background="{{ get_url(asset('bundles/syliusshop/img/email/box-bg.jpg')) }}" bgcolor="#ffffff" width="582">
+                                                    <div class="spacer"></div>
+                                                </td>
+                                                <td width="29" style="font-size:1px;">&nbsp;</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+<tr><td width="29" class="layout-block-padding-left" style="font-size:0">&nbsp; </td><td class="layout-block-content-cell" style="font-size:0;" width="582" height="20"><v:rect style="width:582px;height:20px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg.jpg')) }}" color="#ffffff"></v:fill><div class="spacer"></div></v:rect></td><td width="29" class="layout-block-padding-right" style="font-size:0">&nbsp; </td>
+</tr></table></div><![endif]--></div>
+
+                                    {% block title %}
+                                        {{ include('Email/_title.html.twig', {'title': 'lorem ipsum'}) }}
+                                    {% endblock %}
+
+                                    {% block content %}
+                                    {% endblock %}
+
+                                    <!-- Footer -->
+                                    {% block footer %}
+                                        {{ include('Email/_footer.html.twig', {'kindly': 'app.email.footer.kindly'|trans}) }}
+                                    {% endblock %}
+                                </div>
+                                <!--End of layout container -->
+                            </td>
+                            <td width="30" class="EQ-01">&nbsp;<!--Right page bg show-thru --></td>
                         </tr>
                         </tbody>
-                    </table>
-                </div>
-            </div>
+                    </table><!--email-body -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!--page-wrap -->
         </body>
         </html>
     {% endautoescape %}

@@ -989,3 +989,10 @@ app.api.switch_email.success_message: 'Hemos enviado un enlace a tu correo nuevo
 app.ui.checkout.%quantity%_%measure%: '%quantity% %measure%'
 app.ui.account.connect.facebook.in_use.title: 'Hubo un error al conectar tu cuenta'
 app.ui.account.connect.facebook.in_use.message: 'Parece que la cuenta de Facebook ya está conectada con otro usuario.'
+app.email.terms.changed: 'Hemos actualizado nuestros terminos y condiciones.'
+app.email.terms.changed_title: '¡Hemos actualizado nuestros terminos y condiciones!'
+app.email.terms.changed_description_%name%: '¡Hola %name%! Te informamos que hemos actualizado nuestros términos y condiciones, los cuales entran en vigencia a partir de hoy.'
+app.email.terms.changed_doubts: 'Si tienes alguna duda, estamos a las ordenes en cualquiera de nuestras redes o líneas telefónicas. ¡Esperamos verte pronto!'
+app.email.enjoy_the_mh_expirience: 'Disfruta la experiencia Meat House.'
+app.email.footer.kindly: Atentamente
+app.email.procasa_meathouse: 'Procasa / Meat House'

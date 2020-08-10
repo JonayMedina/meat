@@ -217,12 +217,12 @@ class AppExtension extends AbstractExtension
 
     /**
      * Return Main URL.
-     * @throws Exception
+     * @param string|null $url
      * @return string
      */
-    public function getUrl()
+    public function getUrl(?string $url)
     {
-        return getenv('APP_URL');
+        return getenv('APP_URL') . $url;
     }
 
     /**

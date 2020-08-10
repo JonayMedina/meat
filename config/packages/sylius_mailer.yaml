@@ -15,7 +15,8 @@ sylius_mailer:
             enabled: false
         user_registration:
             subject: sylius.emails.user_registration.subject
-            template: "Email/userRegistration.html.twig"
+#            template: "Email/userRegistration.html.twig"
+            template: "Email/termsChanged.html.twig"
         password_reset:
             subject: sylius.emails.user.password_reset.subject
             template: "Email/passwordReset.html.twig"
@@ -48,4 +49,8 @@ sylius_mailer:
         order_ticket:
             subject: app.email.order.confirmation
             template: "Email/orderConfirmation.html.twig"
+            enabled: true
+        terms_and_conditions_changed:
+            subject: app.email.terms.changed
+            template: "Email/termsChanged.html.twig"
             enabled: true
