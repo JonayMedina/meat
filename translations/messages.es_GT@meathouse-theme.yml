@@ -445,6 +445,7 @@ app.email.contact_us.new_message_from_%name%_%email%: 'Nuevo mensaje de %name% (
 app.email.contact_us.message_received: '¡Se ha recibido un nuevo mensaje!'
 app.email.contact_us.message_sent: '¡Hemos recibido tu mensaje!'
 app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con nosotros, en breve estaremos respondiendo tu comentario.'
+app.email.contact_us.message_received.message_%name%_%email%_%comment%: 'Se ha recibido un nuevo mensaje de %name% con el correo %email%, con el siguiente comentario: %comment%'
 app.email.to_reset_password: 'Hemos recibido un mensaje diciendo que olvidaste tu contraseña. Para acceder a tu cuenta necesitas el siguiente código:'
 app.email.admin_password_request_subject: 'Recupera tu contraseña en %app_name%'
 app.email.admin.admin_password_request_message_title_%name%: 'Hola %name%, este es tu código para recuperar tu contraseña.'

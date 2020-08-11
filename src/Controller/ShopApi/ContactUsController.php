@@ -60,7 +60,7 @@ class ContactUsController extends AbstractFOSRestController
 
         if (isset($data)) {
             try {
-                $this->sender->send('message_received', [$this->settingsService->getComplaintsEmail()], ['name' => $data['name'], 'email' => $data['email'], "message" => $data['message']]);
+                $this->sender->send('message_received', [$this->settingsService->getComplaintsEmail()], ['name' => $data['name'], 'email' => $data['email'], "comment" => $data['message']]);
                 $this->sender->send('message_sent', [$data['email']]);
 
                 $statusCode = Response::HTTP_OK;
