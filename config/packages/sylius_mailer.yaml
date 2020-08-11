@@ -53,3 +53,11 @@ sylius_mailer:
             subject: app.email.terms.changed
             template: "Email/termsChanged.html.twig"
             enabled: true
+        approved_address:
+            subject: app.email.address.approved
+            template: "Email/approvedAddress.html.twig"
+            enabled: true
+        rejected_address:
+            subject: app.email.address.rejected
+            template: "Email/rejectedAddress.html.twig"
+            enabled: true
