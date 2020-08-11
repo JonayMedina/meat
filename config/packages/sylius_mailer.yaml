@@ -20,7 +20,7 @@ sylius_mailer:
             subject: sylius.emails.user.password_reset.subject
             template: "Email/passwordReset.html.twig"
         reset_password_token:
-            subject: sylius.emails.user.password_reset.subject
+            subject: app.email.password_reset
             template: "Email/passwordResetToken.html.twig"
         reset_password_pin:
             subject: sylius.emails.user.password_reset.subject
