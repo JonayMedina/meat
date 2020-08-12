@@ -29,7 +29,7 @@
                                     <tbody><tr>
                                         <td align="left" class="EQ-05" width="562">
                                             <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';">
-                                                <div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;">{{ 'app.email.order.message_%name%_%order_number%'|trans({'%name%': order.customer.firstName, '%order_number%': order.number}) }}</div><div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;"><br></div>
+                                                <div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;">{{ 'app.email.order.cancelled.message_%order_number%'|trans({'%order_number%': order.number}) }}</div><div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;"><br></div><div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;">{{ 'app.email.order.cancelled.message_extra'|trans }}</div><div style="color: rgb(64, 64, 64); font-family: Raleway, Raleway, sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;"><br></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -44,8 +44,113 @@
         <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
 <tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" class="layout-block-content-cell" valign="top" align="left"><v:rect style="width:582px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-1.jpg')) }}" color="#ffffff"></v:fill><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><div><div style="font-size:0"><table cellspacing="0" cellpadding="0" class="EQ-07">
 <tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" class="EQ-05" width="562"><div class="text" style="font-size: 16px; font-family: sans-serif;">
-														<div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;">{{ 'app.email.order.message_%name%_%order_number%'|trans({'%name%': order.customer.firstName, '%order_number%': order.number}) }}</div><div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;"><br></div>
+														<div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;">{{ 'app.email.order.cancelled.message_%order_number%'|trans({'%order_number%': order.number}) }}</div><div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;"><br></div><div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;">{{ 'app.email.order.cancelled.message_extra'|trans }}</div><div style="color: #404040; font-family: sans-serif; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;"><br></div>
 													</div></td><td style="font-size:1px;" width="10">&nbsp; </td>
+</tr></table></div></div></v:textbox></v:rect></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
+</tr></table></div><![endif]--></div>
+
+    <div width="100%">
+        <!--[if !mso 15]><!--><table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+            <tbody><tr>
+                <td width="29" class="EQ-16">&nbsp;</td>
+                <td width="562" valign="top" align="left" background="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-12.jpg')) }}" class="EQ-18" style="padding-left: 10px; padding-right: 10px;" bgcolor="#ffffff">
+                    <table cellspacing="0" cellpadding="0" class="EQ-07">
+                        <tbody><tr>
+                            <td width="562" align="left" class="layout-block-column-padded-column">
+                                <table width="273" cellspacing="0" cellpadding="0" align="left" class="EQ-06">
+                                    <tbody><tr>
+                                        <td align="left" valign="top" class="EQ-06" width="273">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande'; text-align: center;"><font face="Raleway, sans-serif" style="font-weight: bold;" color="#404040">{{ 'app.email.address.contact_phone'|trans }}</font>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody></table>
+                                <table cellspacing="0" cellpadding="0" align="left" class="layout-block-horizontal-spacer" width="17">
+                                    <tbody><tr>
+                                        <td width="17" class="layout-block-horizontal-spacer" style="line-height:1px;">&nbsp;</td>
+                                    </tr>
+                                    </tbody></table>
+                                <table width="272" cellspacing="0" cellpadding="0" align="left" class="EQ-06">
+
+                                    <tbody><tr class="EQ-08" style="display:none; height:0px;">
+                                        <td width="272"><div class="spacer"></div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="left" valign="top" width="272">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';">
+                                                <div class="eqstyle6" style="color: rgb(255, 45, 34); font-family: Raleway, sans-serif; font-size: 15px; font-weight: bold; letter-spacing: normal; line-height: 1.5; margin-bottom: 0px; margin-top: 0px; text-align: left;">{{ about_store('phone') }}</div><div class="eqstyle6" style="color: rgb(255, 45, 34); font-family: Raleway, sans-serif; font-size: 15px; font-weight: bold; letter-spacing: normal; line-height: 1.5; margin-bottom: 0px; margin-top: 0px; text-align: left;"><br></div></div>
+                                        </td>
+                                    </tr>
+                                    </tbody></table>
+                            </td>
+                        </tr>
+                        </tbody></table>
+                </td>
+                <td width="29" class="EQ-16">&nbsp;</td>
+            </tr>
+            </tbody></table>
+        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+<tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" valign="top" align="left" class="layout-block-content-cell"><v:rect style="width:582px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-12.jpg')) }}" color="#ffffff"></v:fill><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><div><div style="font-size:0"><table cellspacing="0" cellpadding="0" class="EQ-07">
+<tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" valign="top" class="EQ-06" width="273"><div class="text" style="font-size: 16px; font-family: sans-serif; text-align: center;"><font face="sans-serif" style="font-weight: bold;" color="#404040">{{ 'app.email.address.contact_phone'|trans }}</font>
+														</div></td><td class="layout-block-horizontal-spacer" width="17">&nbsp; </td><td width="272" align="left" valign="top"><div class="text" style="font-size: 16px; font-family: sans-serif;">
+														<div class="eqstyle6" style="color: #FF2D22; font-family: sans-serif; font-size: 15px; font-weight: bold; letter-spacing: normal; line-height: 150%; text-align: left;"><p style="padding: 0px; margin: 0px;">{{ about_store('phone') }}</p></div><div class="eqstyle6" style="color: #FF2D22; font-family: sans-serif; font-size: 15px; font-weight: bold; letter-spacing: normal; line-height: 150%; text-align: left;"><p style="padding: 0px; margin: 0px;"><br></p></div></div></td><td style="font-size:1px;" width="10">&nbsp; </td>
+</tr></table></div></div></v:textbox></v:rect></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
+</tr></table></div><![endif]--></div>
+
+    <div width="100%">
+        <!--[if !mso 15]><!--><table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+            <tbody><tr>
+                <td width="29" class="EQ-16">&nbsp;</td>
+                <td class="EQ-18" width="582">
+                    <table cellspacing="0" cellpadding="0" align="left" class="EQ-05">
+                        <tbody><tr>
+                            <td width="562" valign="top" align="left" style="padding-left: 10px; padding-right: 10px;">
+                                <table cellspacing="0" cellpadding="0" class="EQ-07">
+                                    <tbody><tr>
+                                        <td align="left" class="EQ-05" width="562">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';"><br></div>
+                                        </td>
+                                    </tr>
+                                    </tbody></table>
+                            </td>
+                        </tr>
+                        </tbody></table>
+                </td>
+                <td width="29" class="EQ-16">&nbsp;</td>
+            </tr>
+            </tbody></table>
+        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+<tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" class="layout-block-content-cell" valign="top" align="left"><table cellspacing="0" cellpadding="0" class="EQ-07">
+<tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" class="EQ-05" width="562"><div class="text" style="font-size: 16px; font-family: sans-serif;"><br></div></td><td style="font-size:1px;" width="10">&nbsp; </td>
+</tr></table></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
+</tr></table></div><![endif]--></div>
+
+    <div width="100%">
+        <!--[if !mso 15]><!--><table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+            <tbody><tr>
+                <td width="29" class="EQ-16">&nbsp;</td>
+                <td class="EQ-18" width="582">
+                    <table cellspacing="0" cellpadding="0" align="left" class="EQ-05">
+                        <tbody><tr>
+                            <td width="562" valign="top" align="left" background="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-58.jpg')) }}" style="padding-left: 10px; padding-right: 10px;" bgcolor="#ffffff">
+                                <table cellspacing="0" cellpadding="0" class="EQ-07">
+                                    <tbody><tr>
+                                        <td align="left" class="EQ-05" width="562">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';"><br></div>
+                                        </td>
+                                    </tr>
+                                    </tbody></table>
+                            </td>
+                        </tr>
+                        </tbody></table>
+                </td>
+                <td width="29" class="EQ-16">&nbsp;</td>
+            </tr>
+            </tbody></table>
+        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+<tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" class="layout-block-content-cell" valign="top" align="left"><v:rect style="width:582px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-58.jpg')) }}" color="#ffffff"></v:fill><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><div><div style="font-size:0"><table cellspacing="0" cellpadding="0" class="EQ-07">
+<tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" class="EQ-05" width="562"><div class="text" style="font-size: 16px; font-family: sans-serif;"><br></div></td><td style="font-size:1px;" width="10">&nbsp; </td>
 </tr></table></div></div></v:textbox></v:rect></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
 </tr></table></div><![endif]--></div>
 
