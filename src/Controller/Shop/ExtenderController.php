@@ -276,6 +276,7 @@ class ExtenderController extends AbstractController
      * @param string $tokenValue
      * @param OrderRepositoryInterface $orderRepository
      * @param PaymentGatewayService $paymentGateway
+     * @param SenderInterface $sender
      * @return RedirectResponse
      * @throws SMException
      */

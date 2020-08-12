@@ -2,28 +2,30 @@
 
 namespace App\Controller\AdminApi;
 
-use App\Service\PaymentGatewayService;
+use SM\SMException;
 use SM\Factory\Factory;
 use App\Model\APIResponse;
 use App\Entity\Order\Order;
 use App\Service\OrderService;
+use App\Service\PaymentGatewayService;
 use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
+use Sylius\Component\Order\OrderTransitions;
+use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderShippingStates;
-use Sylius\Component\Order\Model\OrderInterface;
-use Sylius\Component\Order\OrderTransitions;
-use Sylius\Component\Payment\PaymentTransitions;
-use Sylius\Component\Shipping\ShipmentTransitions;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Shipping\ShipmentTransitions;
 use Sylius\Component\Core\OrderShippingTransitions;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * OrderController
@@ -51,23 +53,29 @@ class OrderController extends AbstractFOSRestController
      */
     private $entityManager;
 
+    /** @var SenderInterface */
+    private $sender;
+
     /**
      * DashboardController constructor.
      * @param OrderRepository $orderRepository
      * @param OrderService $orderService
      * @param Factory $stateMachineFactory
      * @param EntityManagerInterface $entityManager
+     * @param SenderInterface $sender
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderService $orderService,
         Factory $stateMachineFactory,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        SenderInterface $sender
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->entityManager = $entityManager;
+        $this->sender = $sender;
     }
 
     /**
@@ -106,6 +114,7 @@ class OrderController extends AbstractFOSRestController
      *
      * @param Request $request
      * @return Response
+     * @throws SMException
      */
     public function sendAction(Request $request)
     {
@@ -134,6 +143,7 @@ class OrderController extends AbstractFOSRestController
             }
         }
 
+        $this->sender->send('order_shipped', [$order->getCustomer()->getEmail()], ['order' => $order]);
         $this->entityManager->flush();
 
         $statusCode = Response::HTTP_OK;
@@ -158,6 +168,7 @@ class OrderController extends AbstractFOSRestController
      *
      * @param Request $request
      * @return Response
+     * @throws SMException
      */
     public function paidAction(Request $request)
     {
@@ -203,6 +214,7 @@ class OrderController extends AbstractFOSRestController
      *
      * @param Request $request
      * @return Response
+     * @throws SMException
      */
     public function cancelAction(Request $request)
     {
@@ -301,6 +313,7 @@ class OrderController extends AbstractFOSRestController
             $stateMachine->apply(OrderShippingTransitions::TRANSITION_CANCEL);
         }
 
+        $this->sender->send('order_cancelled', [$order->getCustomer()->getEmail()], ['order' => $order]);
         $this->entityManager->flush();
 
         $statusCode = Response::HTTP_OK;
