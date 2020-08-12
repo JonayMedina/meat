@@ -111,6 +111,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('is_favorite', [$this, 'isFavorite']),
             new TwigFilter('shipping', [$this, 'getShippingAddresses']),
             new TwigFilter('card_mask', [$this, 'creditMask']),
+            new TwigFilter('mask', [$this, 'mask']),
             new TwigFilter('format_schedule', [$this, 'formatSchedules']),
         ];
     }
@@ -217,12 +218,12 @@ class AppExtension extends AbstractExtension
 
     /**
      * Return Main URL.
-     * @throws Exception
+     * @param string|null $url
      * @return string
      */
-    public function getUrl()
+    public function getUrl(?string $url)
     {
-        return getenv('APP_URL');
+        return getenv('APP_URL') . $url;
     }
 
     /**
@@ -366,6 +367,26 @@ class AppExtension extends AbstractExtension
         $array = str_split($mask, 4);
 
         return implode(" ", $array);
+    }
+
+    /**
+     * @param $str
+     * @return string|string[]
+     */
+    function mask($str) {
+        $start = 0;
+        $length = null;
+        $mask = preg_replace("/\S/", "*", $str);
+
+        if (is_null($length)) {
+            $mask = substr($mask, $start);
+            $str = substr_replace($str, $mask, $start);
+        } else {
+            $mask = substr($mask, $start, $length);
+            $str = substr_replace($str, $mask, $start, $length);
+        }
+
+        return $str;
     }
 
     /**

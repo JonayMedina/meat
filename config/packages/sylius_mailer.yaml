@@ -20,7 +20,7 @@ sylius_mailer:
             subject: sylius.emails.user.password_reset.subject
             template: "Email/passwordReset.html.twig"
         reset_password_token:
-            subject: sylius.emails.user.password_reset.subject
+            subject: app.email.password_reset
             template: "Email/passwordResetToken.html.twig"
         reset_password_pin:
             subject: sylius.emails.user.password_reset.subject
@@ -48,4 +48,24 @@ sylius_mailer:
         order_ticket:
             subject: app.email.order.confirmation
             template: "Email/orderConfirmation.html.twig"
+            enabled: true
+        order_cancelled:
+            subject: app.email.order.cancelled
+            template: "Email/orderCancelled.html.twig"
+            enabled: true
+        order_shipped:
+            subject: app.email.order.shipped
+            template: "Email/orderShipped.html.twig"
+            enabled: true
+        terms_and_conditions_changed:
+            subject: app.email.terms.changed
+            template: "Email/termsChanged.html.twig"
+            enabled: true
+        approved_address:
+            subject: app.email.address.approved
+            template: "Email/approvedAddress.html.twig"
+            enabled: true
+        rejected_address:
+            subject: app.email.address.rejected
+            template: "Email/rejectedAddress.html.twig"
             enabled: true

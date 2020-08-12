@@ -2,13 +2,14 @@
 
 namespace App\Service;
 
+use Psr\Log\LoggerInterface;
 use App\Entity\Notification;
 use App\Entity\User\ShopUser;
 use App\Entity\PushNotification;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 
 /**
@@ -33,19 +34,27 @@ class AddressService
     private $logger;
 
     /**
+     * @var SenderInterface
+     */
+    private $sender;
+
+    /**
      * AddressService constructor.
      * @param AddressRepositoryInterface $addressRepository
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
+     * @param SenderInterface $sender
      */
     public function __construct(
         AddressRepositoryInterface $addressRepository,
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        SenderInterface $sender
     ) {
         $this->addressRepository = $addressRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->sender = $sender;
     }
 
     /**
@@ -71,6 +80,7 @@ class AddressService
         }
 
         if ($user instanceof ShopUser) {
+            $this->sender->send('rejected_address', [$user->getEmail()], ['customer' => $user->getCustomer(), 'address' => $address]);
             $notification = new Notification(null, $user, 'Lo sentimos', 'Por el momento no podemos brindarte nuestro servicio en esta área.', PushNotification::TYPE_ADDRESS_REJECTED);
             $this->entityManager->persist($notification);
 
@@ -118,6 +128,7 @@ class AddressService
         }
 
         if ($user instanceof ShopUser) {
+            $this->sender->send('approved_address', [$user->getEmail()], ['customer' => $user->getCustomer(), 'address' => $address]);
             $notification = new Notification(null, $user, '¡Felicitaciones!', 'Se ha validado tu dirección de envío.', PushNotification::TYPE_ADDRESS_VALIDATED);
             $this->entityManager->persist($notification);
 
@@ -163,5 +174,4 @@ class AddressService
     {
         return $address->getParent();
     }
-
 }

@@ -5,14 +5,80 @@
 {% endblock %}
 
 {% block title %}
-    {{ 'app.email.contact_us.new_message_from_%name%_%email%'|trans({'%name%': name, "%email%": email }) }}
+    {{ include('Email/_title.html.twig', {'title': 'app.email.contact_us.message_received'|trans}) }}
 {% endblock %}
 
 {% block content %}
-    <td class="content-block text-center">
-        <p class="text-left">{{ message }}</p>
-    </td>
-{% endblock %}
+    <div width="100%" class="EQ-10">
+        <!--[if !mso 15]><!-->
+        <table width="640" cellspacing="0" cellpadding="0" class="EQ-00" style="mso-hide:all;">
+            <tbody>
+            <tr>
+                <td width="29">&nbsp;</td>
+                <td width="582">
+                    <table cellspacing="0" cellpadding="0" align="left" class="EQ-05">
+                        <tbody>
+                        <tr>
+                            <td width="562" valign="top" align="left" background="{{ get_url(asset('bundles/syliusshop/img/email/box-bg.jpg')) }}" style="padding-left: 10px; padding-right: 10px;" bgcolor="#ffffff">
+                                <table cellspacing="0" cellpadding="0" class="EQ-07">
+                                    <tbody>
+                                    <tr>
+                                        <td align="left" class="EQ-05" width="562">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';">
+                                                <div class="eqstyle2" style="color: rgb(0, 0, 0); font-family: Raleway, Arial, Roboto, 'Droid Sans', sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 1.5; text-align: left; text-decoration: none;">{{ 'app.email.contact_us.message_received.message_%name%_%email%_%comment%'|trans({'%name%': name, '%email%': email, '%comment%': comment})|raw }}</div><div class="eqstyle2" style="color: rgb(0, 0, 0); font-family: Raleway, Arial, Roboto, 'Droid Sans', sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 1.5; text-align: left; text-decoration: none;"><br></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="29">&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+        <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
+<tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" class="layout-block-content-cell" valign="top" align="left"><v:rect style="width:582px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg.jpg')) }}" color="#ffffff"></v:fill><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><div><div style="font-size:0"><table cellspacing="0" cellpadding="0" class="EQ-07">
+<tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" class="EQ-05" width="562"><div class="text" style="font-size: 16px; font-family: sans-serif;">
+														<div class="eqstyle2" style="color: #000000; font-family: Arial, sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 150%; text-align: left; text-decoration: none;">{{ 'app.email.contact_us.message_received.message_%name%_%email%_%comment%'|trans({'%name%': name, '%email%': email, '%comment%': comment})|raw }}</div><div class="eqstyle2" style="color: #000000; font-family: Arial, sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 150%; text-align: left; text-decoration: none;"><br></div>
+													</div></td><td style="font-size:1px;" width="10">&nbsp; </td>
+</tr></table></div></div></v:textbox></v:rect></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
+</tr></table></div><![endif]--></div>
 
-{% block button %}{% endblock %}
-{% block image %}{% endblock %}
+    <!--[if !mso ]><!-->
+
+    <div width="100%" class="mobile-only EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+        <table width="375" cellspacing="0" cellpadding="0" class="EQ-00 EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+            <tbody>
+            <tr>
+                <td width="19">&nbsp;</td>
+                <td width="337">
+                    <table cellspacing="0" cellpadding="0" align="left" class="EQ-05 EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+                        <tbody>
+                        <tr>
+                            <td width="317" valign="top" align="left" background="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-21.jpg')) }}" style="padding-left: 10px; padding-right: 10px;" bgcolor="#ffffff">
+                                <table cellspacing="0" cellpadding="0" class="EQ-07 EQ-11" style="display: none; max-height: 0px; overflow: hidden;">
+                                    <tbody>
+                                    <tr>
+                                        <td align="left" class="EQ-05" width="317">
+                                            <div class="text" style="font-size: 16px; font-family: 'Lucida Grande';">
+                                                <div class="eqstyle2" style="color: rgb(0, 0, 0); font-family: Raleway, Arial, Roboto, 'Droid Sans', sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 1.5; text-align: left; text-decoration: none;">{{ 'app.email.contact_us.message_received.message_%name%_%email%_%comment%'|trans({'%name%': name, '%email%': email, '%comment%': comment})|raw }}</div><div class="eqstyle2" style="color: rgb(0, 0, 0); font-family: Raleway, Arial, Roboto, 'Droid Sans', sans-serif; font-size: 16px; font-style: normal; font-weight: normal; line-height: 1.5; text-align: left; text-decoration: none;"><br></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="19">&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+    </div><!--<![endif]-->
+{% endblock %}

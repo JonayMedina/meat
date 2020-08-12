@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use Psr\Log\LoggerInterface;
+use App\Entity\Customer\Customer;
 use App\Entity\TermsAndConditions;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\Admin\TermsAndConditionsType;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\TermsAndConditionsRepository;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,6 +49,9 @@ class TermsAndConditionsController extends AbstractController
      */
     private $customerRepository;
 
+    /** @var SenderInterface */
+    private $sender;
+
     /**
      * TermsAndConditionsController constructor.
      * @param TermsAndConditionsRepository $repository
@@ -54,21 +59,23 @@ class TermsAndConditionsController extends AbstractController
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      * @param CustomerRepository $customerRepository
+     * @param SenderInterface $sender
      */
     public function __construct(
         TermsAndConditionsRepository $repository,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
         LoggerInterface $logger,
-        CustomerRepository  $customerRepository
+        CustomerRepository  $customerRepository,
+        SenderInterface $sender
     ) {
         $this->repository = $repository;
         $this->entityManager = $entityManager;
         $this->translator = $translator;
         $this->logger = $logger;
         $this->customerRepository = $customerRepository;
+        $this->sender = $sender;
     }
-
 
     /**
      *
@@ -93,7 +100,7 @@ class TermsAndConditionsController extends AbstractController
 
             try {
                 $this->entityManager->flush();
-                $this->sendNotificationToCustomers($terms);
+                $this->sendNotificationToCustomers();
 
                 $this->addFlash('success', $this->translator->trans('app.ui.terms_and_conditions_success_message'));
             } catch (\Exception $exception) {
@@ -110,15 +117,13 @@ class TermsAndConditionsController extends AbstractController
         ]);
     }
 
-    /**
-     * @param TermsAndConditions|null $terms
-     */
-    private function sendNotificationToCustomers(TermsAndConditions $terms)
+    private function sendNotificationToCustomers()
     {
         $customers = $this->customerRepository->findAll();
 
+        /** @var Customer $customer */
         foreach ($customers as $customer) {
-            // TODO: Send email to all registered users.
+            $this->sender->send('terms_and_conditions_changed', [$customer->getEmail()], ['customer' => $customer]);
         }
     }
 }

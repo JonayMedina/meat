@@ -170,7 +170,7 @@
                                                                 <p class="font-semi-bold">{{ 'app.ui.form.payment.cvv'|trans }}</p>
                                                             </div>
                                                             <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                                <p>{{ card.cvv|default('') }}</p>
+                                                                <p>{{ card.cvv|default('')|mask }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
