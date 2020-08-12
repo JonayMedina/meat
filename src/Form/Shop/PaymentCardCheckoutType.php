@@ -5,6 +5,7 @@ namespace App\Form\Shop;
 use App\Entity\Order\Order;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,7 +49,7 @@ class PaymentCardCheckoutType extends AbstractType
                     new NotBlank()
                 ]
             ])
-            ->add('cvv', NumberType::class, [
+            ->add('cvv', PasswordType::class, [
                 'label' => 'app.ui.form.payment.cvv',
                 'mapped' => false,
                 'constraints' => [

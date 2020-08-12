@@ -307,6 +307,7 @@ class PaymentGatewayService
         $payment->setCurrencyCode($currency);
         $payment->setMethod($paymentMethod);
         $payment->setAmount($amount);
+        $order->addPayment($payment);
 
         $this->executeSateMachine($order, $payment);
 
@@ -352,6 +353,7 @@ class PaymentGatewayService
                 $payment->setCurrencyCode($currency);
                 $payment->setMethod($paymentMethod);
                 $payment->setAmount($amount);
+                $order->addPayment($payment);
 
                 $this->executeSateMachine($order, $payment);
 
