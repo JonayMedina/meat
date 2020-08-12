@@ -163,6 +163,12 @@
                             <p class="pre-title">{{ 'app.ui.cart.sub-total'|trans }}</p>
                             <p>{{ money.convertAndFormat(itemsSubtotal) }}</p>
                         </div>
+                        {% if order.shippingTotal > 0 %}
+                            <div class="col-12">
+                                <p class="pre-title">{{ 'app.ui.cart.shipment'|trans }}</p>
+                                <p>{{ money.convertAndFormat(order.shippingTotal) }}</p>
+                            </div>
+                        {% endif %}
                         {% if order.promotionCoupon %}
                             <div class="col-12">
                                 <p class="pre-title">{{ 'app.ui.cart.discount'|trans }}</p>
