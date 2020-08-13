@@ -209,6 +209,21 @@
                 yearRange: "-65:-18",
             });
 
+            $form.find('span.eye').click(function () {
+                var $i = $(this).find('i');
+                var $password = $('input[name="sylius_customer_registration[user][plainPassword][first]"]');
+
+                if ($i.hasClass('fa-eye')) {
+                    $password.attr('type', 'text');
+                    $i.removeClass('fa-eye');
+                    $i.addClass('fa-eye-slash');
+                } else {
+                    $password.attr('type', 'password');
+                    $i.removeClass('fa-eye-slash');
+                    $i.addClass('fa-eye');
+                }
+            });
+
             formatToDMY($birthday);
         });
     </script>

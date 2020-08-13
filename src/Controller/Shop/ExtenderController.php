@@ -218,6 +218,7 @@ class ExtenderController extends AbstractController
             for ($i=0; $i<ShopUser::SHIPPING_ADDRESS_LIMIT; $i++) {
                 if (isset($profile['address_' . $i])) {
                     $address = $profile['address_' . $i];
+                    $address['phoneNumber'] = str_replace('-', '', $address['phoneNumber']);
 
                     if (!$address['id']) {
                         if ($address['fullAddress'] && $address['annotations'] && $address['phoneNumber']) {

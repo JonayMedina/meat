@@ -5,7 +5,16 @@
         {{ form_row(form.firstName) }}
         {{ form_row(form.lastName) }}
         {{ form_row(form.email) }}
-        {{ form_row(form.user.plainPassword.first) }}
+
+        <div class="required field">
+            {{ form_label(form.user.plainPassword.first) }}
+            <div class="div-input">
+                {{ form_widget(form.user.plainPassword.first) }}
+                <span class="eye"><i class="fas fa-eye fa-2x"></i></span>
+            </div>
+            {{ form_errors(form.user.plainPassword.first) }}
+        </div>
+
         {{ form_row(form.user.plainPassword.second) }}
 
         <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center flex-wrap">

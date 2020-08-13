@@ -370,7 +370,7 @@ sylius.email.label: Correo
 app.ui.welcome_to_%name%: '¡Bienvenido a %name%!'
 app.ui.view_your_profile: 'Ver tu perfil'
 app.ui.view_products: 'Ver productos'
-app.ui.welcome.first_text: 'Actualiza tu información, agrega tus datos de facturación y agregar direcciones de entrega.'
+app.ui.welcome.first_text: 'Actualiza tu información, agrega tus datos de facturación y agrega direcciones de entrega.'
 app.ui.welcome.second_text: 'Empieza una compra, busca productos y agrégalos a tu carrito.'
 app.ui.profile.hello_%name%: '¡Hola %name%!'
 app.ui.your_information: 'Tu información'

@@ -112,6 +112,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('shipping', [$this, 'getShippingAddresses']),
             new TwigFilter('card_mask', [$this, 'creditMask']),
             new TwigFilter('mask', [$this, 'mask']),
+            new TwigFilter('phone_format', [$this, 'phoneFormat']),
             new TwigFilter('format_schedule', [$this, 'formatSchedules']),
         ];
     }
@@ -387,6 +388,20 @@ class AppExtension extends AbstractExtension
         }
 
         return $str;
+    }
+
+    /**
+     * @param $str
+     * @return string|string[]|null
+     */
+    function phoneFormat($str) {
+        $str = str_replace(' ', '-', $str);
+
+        if (strpos($str, '-'))  {
+            return $str;
+        } else {
+            return preg_replace('/\d{4}/', '$0-', str_replace('.', null, trim($str)), 1);
+        }
     }
 
     /**

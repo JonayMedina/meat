@@ -3,7 +3,6 @@
 namespace App\Controller\ShopApi;
 
 use Facebook\Facebook;
-use GuzzleHttp\Client;
 use App\Model\APIResponse;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
@@ -236,9 +235,9 @@ class OAuthLoginController extends AbstractFOSRestController
      * @param $provider
      * @param $identifier
      * @param $accessToken
-     * @return array|null
+     * @return array|bool|null
      */
-    private function validateAccessToken($provider, $identifier, $accessToken): ?array
+    private function validateAccessToken($provider, $identifier, $accessToken)
     {
         if (self::PROVIDER_FACEBOOK === $provider) {
             try {
@@ -268,31 +267,37 @@ class OAuthLoginController extends AbstractFOSRestController
         }
 
         if (self::PROVIDER_APPLE === $provider) {
-            $client = new Client();
+//            $client = new Client();
+//
+//            try {
+//                $response = $client->request(
+//                    'POST',
+//                    'https://appleid.apple.com/auth/token',
+//                    [
+//                        'form_params' => [
+//                            'client_id' => $this->appleClientId,
+//                            'client_secret' => $this->appleClientSecret,
+//                            'code' => $accessToken,
+//                            'grant_type' => 'authorization_code'
+//                        ]
+//                    ]
+//                );
+//
+//                $headers = $response->getHeaders();
+//                $body = json_decode($response->getBody(), true);
+//
+//                return $body;
+//            } catch (\Exception $exception) {
+//                dd($exception);
+//
+//                $this->logger->error($exception->getMessage());
+//
+//                return null;
+//            }
 
-            try {
-                $response = $client->request(
-                    'POST',
-                    'https://appleid.apple.com/auth/token',
-                    [
-                        'form_params' => [
-                            'client_id' => $this->appleClientId,
-                            'client_secret' => $this->appleClientSecret,
-                            'code' => $accessToken,
-                            'grant_type' => 'authorization_code'
-                        ]
-                    ]
-                );
+            // TODO: Verify identity token
 
-                $headers = $response->getHeaders();
-                $body = json_decode($response->getBody(), true);
-
-                return $body;
-            } catch (\Exception $exception) {
-                $this->logger->error($exception->getMessage());
-
-                return null;
-            }
+            return true;
         }
 
         return null;
