@@ -11,8 +11,8 @@ use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 use Facebook\Exceptions\FacebookSDKException;
-use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Facebook\Exceptions\FacebookResponseException;
@@ -81,9 +81,9 @@ class OAuthLoginController extends AbstractFOSRestController
         $identifier = $request->get('identifier');
         $accessToken = $request->get('access_token');
         $provider = $request->get('provider');
-        $email = $request->get('email') ? $request->get('email') : null;
-        $firstName = $request->get('first_name') ? $request->get('first_name') : null;
-        $lastName = $request->get('last_name') ? $request->get('last_name') : null;
+        $email = $request->get('email');
+        $firstName = $request->get('first_name');
+        $lastName = $request->get('last_name');
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
