@@ -40,9 +40,6 @@ Sylius\Component\Customer\Model\Customer:
                   min: 2
                   max: 50
                   groups: ['sylius_user_registration']
-            - Email:
-                  message: 'app.ui.register.form.email.not_valid'
-                  groups: ['sylius_user_registration']
         firstName:
             - NotBlank:
                   groups: ['sylius_user_registration']
