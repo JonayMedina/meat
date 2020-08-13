@@ -24,7 +24,11 @@ App\Entity\Addressing\Address:
                     groups: ['app_address']
         taxId:
             - NotBlank:
-                  message: 'Ingresa el NIT para la factura.'
+                  message: 'app.ui.checkout.billing.add_tax_id'
+                  groups: ['app_billing']
+            - Regex: 
+                  pattern: '/^([0-9]{5,19}-[kK0-9]{1,2}|CF$)/'
+                  message: 'app.ui.checkout.billing.add_valid_tax_id'
                   groups: ['app_billing']
                   
 Sylius\Component\Customer\Model\Customer:
