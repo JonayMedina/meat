@@ -108,6 +108,9 @@
             var addresses = [];
             var $modal = $('#showMessage');
 
+            console.log(nAddresses);
+            console.log(limitOfAddress);
+
             {% if defaultAddress %}
                 address = {
                     index: '{{ i }}',
@@ -178,7 +181,7 @@
 
             if (addresses.length > 0) {
                 addresses.forEach(function (address) {
-                    appendTo($addressContainer, Mustache.render($addressTemplate.html(), address));
+                    appendTo($addressContainer, Mustache.render($addressTemplate.html(), address), true);
                 });
             } else {
                 addEmptyAddress();
@@ -224,10 +227,14 @@
                 appendTo($addressContainer, Mustache.render($addressTemplate.html(), defaultAddress));
             }
 
-            function appendTo($container, $address) {
+            function appendTo($container, $address, exists = false) {
                 $container.append($address);
-                index++;
-                nAddresses++;
+
+                if (!exists) {
+                    index++;
+                    nAddresses++;
+                }
+
                 refactorAddresses();
                 $('.phone-number').inputmask("9999 9999");
             }
@@ -319,6 +326,7 @@
                 $('.address:first-of-type .extra').find('.default').attr('value', 'true').prop('checked', true).change();
 
                 if (nAddresses >= limitOfAddress) {
+                    console.log('entre el primero');
                     $addAddress.removeClass('d-inline-block').addClass('d-none');
                     $cancel.removeClass('d-none').addClass('d-inline-block');
                 } else if (nAddresses >= 2) {
