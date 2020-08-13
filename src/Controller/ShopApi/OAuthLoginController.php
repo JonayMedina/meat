@@ -3,6 +3,7 @@
 namespace App\Controller\ShopApi;
 
 use Facebook\Facebook;
+use GuzzleHttp\Client;
 use App\Model\APIResponse;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
@@ -10,8 +11,8 @@ use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
 use Facebook\Exceptions\FacebookSDKException;
-use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Facebook\Exceptions\FacebookResponseException;
@@ -25,7 +26,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 class OAuthLoginController extends AbstractFOSRestController
 {
     const PROVIDER_FACEBOOK = 'facebook';
-
     const PROVIDER_APPLE = 'apple';
 
     /**
@@ -43,17 +43,27 @@ class OAuthLoginController extends AbstractFOSRestController
      */
     private $JWTManager;
 
+    /** @var string */
+    private $appleClientId;
+
+    /** @var string */
+    private $appleClientSecret;
+
     /**
      * CouponController constructor.
      * @param LoggerInterface $logger
      * @param EntityManagerInterface $entityManager
      * @param JWTTokenManagerInterface $JWTManager
+     * @param string $appleClientId
+     * @param string $appleClientSecret
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, JWTTokenManagerInterface $JWTManager)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, JWTTokenManagerInterface $JWTManager, string $appleClientId, string $appleClientSecret)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
         $this->JWTManager = $JWTManager;
+        $this->appleClientId = $appleClientId;
+        $this->appleClientSecret = $appleClientSecret;
     }
 
     /**
@@ -71,6 +81,9 @@ class OAuthLoginController extends AbstractFOSRestController
         $identifier = $request->get('identifier');
         $accessToken = $request->get('access_token');
         $provider = $request->get('provider');
+        $email = $request->get('email');
+        $firstName = $request->get('first_name');
+        $lastName = $request->get('last_name');
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -92,13 +105,38 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        $email = $serverResponse['email'];
-        $firstName = $serverResponse['first_name'];
-        $lastName = $serverResponse['last_name'];
+        if ($provider == self::PROVIDER_FACEBOOK) {
+            $email = $serverResponse['email'];
+            $firstName = $serverResponse['first_name'];
+            $lastName = $serverResponse['last_name'];
+        }
 
         $oauthUser = $this->getOAuthUser($provider, $identifier);
 
         if (!$oauthUser instanceof UserInterface) {
+            if ($email == null || $firstName == null || $lastName == null) {
+                $statusCode = Response::HTTP_BAD_REQUEST;
+
+                $message = 'Missing information: ';
+
+                if ($email == null) {
+                    $message .= ' Email, ';
+                }
+
+                if ($firstName == null) {
+                    $message .= ' First name, ';
+                }
+
+                if ($lastName == null) {
+                    $message .= ' Last name';
+                }
+
+                $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $message, []);
+                $view = $this->view($response, $statusCode);
+
+                return $this->handleView($view);
+            }
+
             $oauthUser = $this->createUser($provider, $identifier, $accessToken, $firstName, $lastName, $email);
         }
 
@@ -203,7 +241,6 @@ class OAuthLoginController extends AbstractFOSRestController
     private function validateAccessToken($provider, $identifier, $accessToken): ?array
     {
         if (self::PROVIDER_FACEBOOK === $provider) {
-
             try {
                 $fb = new Facebook([
                     'app_id' => $this->getParameter('fb_client_id'),
@@ -231,7 +268,31 @@ class OAuthLoginController extends AbstractFOSRestController
         }
 
         if (self::PROVIDER_APPLE === $provider) {
-            // TODO: implement Apple ID login.
+            $client = new Client();
+
+            try {
+                $response = $client->request(
+                    'POST',
+                    'https://appleid.apple.com/auth/token',
+                    [
+                        'form_params' => [
+                            'client_id' => $this->appleClientId,
+                            'client_secret' => $this->appleClientSecret,
+                            'code' => $accessToken,
+                            'grant_type' => 'authorization_code'
+                        ]
+                    ]
+                );
+
+                $headers = $response->getHeaders();
+                $body = json_decode($response->getBody(), true);
+
+                return $body;
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+
+                return null;
+            }
         }
 
         return null;
