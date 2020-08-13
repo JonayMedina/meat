@@ -2,10 +2,9 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Auth\AppleResourceOwner;
 use Facebook\Facebook;
-use App\Model\APIResponse;
 use GuzzleHttp\Client;
+use App\Model\APIResponse;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
