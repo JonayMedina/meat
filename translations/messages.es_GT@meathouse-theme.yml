@@ -1057,3 +1057,4 @@ app.email.order.shipped.title: '¡Esperamos que distrfutes tu orden!'
 app.email.order.shipped.message_%name%_%order_name%: '¡Hola %name%! Hemos despachado la orden %order_number% a la siguiente dirección:'
 app.form.user.email.label: Correo
 app.form.user.email.confirmation: 'Confirma tu correo'
+app.ui.form.user.change_password.not_the_same_of_current: 'Tu contraseña no puede ser igual a la anterior.'
