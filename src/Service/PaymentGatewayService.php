@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use SM\SMException;
 use SM\Factory\Factory;
 use App\Entity\AboutStore;
 use App\Entity\Order\Order;
@@ -11,7 +12,6 @@ use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Component\Order\OrderTransitions;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Order\Model\OrderInterface;
@@ -269,7 +269,7 @@ class PaymentGatewayService
     /**
      * @param Order $order
      * @return array|string[]
-     * @throws \SM\SMException
+     * @throws SMException
      */
     public function cashOnDelivery(Order $order): array
     {
@@ -309,7 +309,7 @@ class PaymentGatewayService
         $payment->setAmount($amount);
         $order->addPayment($payment);
 
-        $this->executeSateMachine($order, $payment);
+        $this->executeStateMachine($order, $payment);
 
         $this->entityManager->flush();
 
@@ -355,7 +355,7 @@ class PaymentGatewayService
                 $payment->setAmount($amount);
                 $order->addPayment($payment);
 
-                $this->executeSateMachine($order, $payment);
+                $this->executeStateMachine($order, $payment);
 
                 $this->entityManager->flush();
             } catch (\Exception $exception) {
@@ -842,15 +842,22 @@ class PaymentGatewayService
     /**
      * @param Order $order
      * @param Payment $payment
-     * @throws \SM\SMException
+     * @throws SMException
      */
-    private function executeSateMachine(Order $order, Payment $payment): void
+    private function executeStateMachine(Order $order, Payment $payment): void
     {
-        /** Order: cart -> new */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderTransitions::GRAPH);
+        /** OrderCheckout: shipping_skipped -> payment_selected */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
 
-        if ($stateMachine->can(OrderTransitions::TRANSITION_CREATE)) {
-            $stateMachine->apply(OrderTransitions::TRANSITION_CREATE);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
+        }
+
+        /** OrderCheckout: payment_selected -> completed => (Order: cart -> new) */
+        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
+
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
         }
 
         /** Payment: cart -> new */
@@ -877,20 +884,6 @@ class PaymentGatewayService
         }
 
         $this->paymentRepository->add($payment);
-
-        /** OrderCheckout: shipping_skipped -> payment_selected */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-
-        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT)) {
-            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_PAYMENT);
-        }
-
-        /** OrderCheckout: payment_selected -> completed */
-        $stateMachine = $this->stateMachineFactory->get($order, OrderCheckoutTransitions::GRAPH);
-
-        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_COMPLETE)) {
-            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_COMPLETE);
-        }
 
         $this->clearEmptyPayments($order);
     }
