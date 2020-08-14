@@ -20,7 +20,7 @@
 
 <div class="extra-data" {% if order.customer.addresses|shipping|length > 0 %}style="display: none"{% endif %}>
     {{ form_row(form.annotations) }}
-    {{ form_row(form.phoneNumber) }}
+    {{ form_row(form.phoneNumber, {'attr': {'class': 'phone-number'}}) }}
 </div>
 
 <p class="mh-color mt-3 new-address-message" {% if order.customer.addresses|shipping|length > 0 %}style="display: none"{% endif %}>{{ about_store('new-address-ms')|default('app.ui.new_address'|trans) }}</p>

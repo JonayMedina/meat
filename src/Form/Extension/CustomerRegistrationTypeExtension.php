@@ -7,9 +7,11 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Sylius\Component\Customer\Model\CustomerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
 
 /**
@@ -25,7 +27,14 @@ class CustomerRegistrationTypeExtension extends AbstractTypeExtension
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->remove('email')
             // Adding new fields works just like in the parent form type.
+            ->add('email', RepeatedType::class, [
+                'type' => EmailType::class,
+                'first_options' => ['label' => 'app.form.user.email.label'],
+                'second_options' => ['label' => 'app.form.user.email.confirmation'],
+                'invalid_message' => 'app.user.email.mismatch',
+            ])
             ->add('gender', ChoiceType::class, [
                 'required' => false,
                 'label' => 'sylius.form.customer.gender',

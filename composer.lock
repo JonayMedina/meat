@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bce2c261f2bd44f8a9dd033e7586af2d",
+    "content-hash": "2820eff5a48ff4bc7579c4dbce8ae670",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -8528,6 +8528,7 @@
             "keywords": [
                 "sonata"
             ],
+            "abandoned": true,
             "time": "2020-05-26T20:11:05+00:00"
         },
         {
@@ -16961,6 +16962,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-11-27T05:48:46+00:00"
         },
         {
@@ -18881,9 +18883,11 @@
     "platform": {
         "php": "^7.2",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-intl": "*",
         "ext-json": "*",
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-xml": "*"
     },
     "platform-dev": [],
     "platform-overrides": {

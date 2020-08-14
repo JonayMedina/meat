@@ -307,6 +307,7 @@
 {% endblock %}
 
 {% block extrajs %}
+    <script src="{{ asset('bundles/syliusshop/js/inputmask/jquery.inputmask.min.js') }}"></script>
     <script>
         $(function () {
             let $body = $('body');
@@ -557,6 +558,8 @@
             $scheduledInput.change(function () {
                 estimateDate();
             });
+
+            $phoneNumber.inputmask("9999 9999");
 
             function estimateDate() {
                 var $estimated = $('#estimated');

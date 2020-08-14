@@ -292,6 +292,8 @@
       <path value="$PROJECT_DIR$/vendor/symplify/coding-standard" />
       <path value="$PROJECT_DIR$/vendor/symplify/token-runner" />
       <path value="$PROJECT_DIR$/vendor/symplify/easy-coding-standard" />
+      <path value="$PROJECT_DIR$/vendor/symfony/class-loader" />
+      <path value="$PROJECT_DIR$/vendor/sonata-project/datagrid-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

@@ -25,10 +25,10 @@
     "require": {
         "php": "^7.2",
         "ext-curl": "*",
+        "ext-dom": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "ext-openssl": "*",
-        "ext-dom": "*",
         "ext-xml": "*",
         "aws/aws-sdk-php": "^3.140",
         "deployer/deployer": "^6.7",

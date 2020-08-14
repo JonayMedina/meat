@@ -75,11 +75,12 @@
 
 {% block extrajs %}
     <script src="{{ asset('bundles/syliusshop/js/mustache/mustache.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/inputmask/jquery.inputmask.min.js') }}"></script>
     <script id="address-template" type="x-tmpl-mustache">
         <div class="address address-{{ '{{ index }}' }}" data-index="{{ '{{ index }}' }}">
             {{ form_row(form.address.fullAddress, {'value': '{{ fullAddress }}'}) }}
             {{ form_row(form.address.annotations, {'value': '{{ askFor }}'}) }}
-            {{ form_row(form.address.phoneNumber, {'value': '{{ phoneNumber }}'}) }}
+            {{ form_row(form.address.phoneNumber, {'value': '{{ phoneNumber }}', 'attr': {'class': 'phone-number'}}) }}
             <div class="extra d-none">
                 <input class="d-none" type="text" name="sylius_customer_profile[address][id]" value="{{ '{{ id }}' }}">
                 <input class="d-none default" type="text" name="sylius_customer_profile[address][default]" value="{{ '{{ default }}' }}">
@@ -177,7 +178,7 @@
 
             if (addresses.length > 0) {
                 addresses.forEach(function (address) {
-                    appendTo($addressContainer, Mustache.render($addressTemplate.html(), address));
+                    appendTo($addressContainer, Mustache.render($addressTemplate.html(), address), true);
                 });
             } else {
                 addEmptyAddress();
@@ -223,11 +224,16 @@
                 appendTo($addressContainer, Mustache.render($addressTemplate.html(), defaultAddress));
             }
 
-            function appendTo($container, $address) {
+            function appendTo($container, $address, exists = false) {
                 $container.append($address);
-                index++;
-                nAddresses++;
+
+                if (!exists) {
+                    index++;
+                    nAddresses++;
+                }
+
                 refactorAddresses();
+                $('.phone-number').inputmask("9999 9999");
             }
 
             $('.delete-address').click(function () {

@@ -4,9 +4,17 @@
     <div class="col-12 col-sm-12 col-md-6 col-lg-6 border-right">
         {{ form_row(form.firstName) }}
         {{ form_row(form.lastName) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.user.plainPassword.first) }}
-        {{ form_row(form.user.plainPassword.second) }}
+        {{ form_row(form.email.first) }}
+        {{ form_row(form.email.second) }}
+
+        <div class="required field">
+            {{ form_label(form.user.plainPassword) }}
+            <div class="div-input">
+                {{ form_widget(form.user.plainPassword) }}
+                <span class="eye"><i class="fas fa-eye fa-2x"></i></span>
+            </div>
+            {{ form_errors(form.user.plainPassword) }}
+        </div>
 
         <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center flex-wrap">
             <label class="d-flex align-items-center checkbox">

@@ -56,7 +56,7 @@ class CouponType extends AbstractType
             ->add('usageLimit', NumberType::class, [
                 'constraints' => [
                     new NotBlank(['groups' => ['creation']]),
-                    new Range(['min' => 0, 'max' => 9999])
+                    new Range(['min' => 0, 'max' => 999])
                 ],
             ])
             ->add('startsAt', DateTimeType::class, [
