@@ -108,9 +108,6 @@
             var addresses = [];
             var $modal = $('#showMessage');
 
-            console.log(nAddresses);
-            console.log(limitOfAddress);
-
             {% if defaultAddress %}
                 address = {
                     index: '{{ i }}',
@@ -326,7 +323,6 @@
                 $('.address:first-of-type .extra').find('.default').attr('value', 'true').prop('checked', true).change();
 
                 if (nAddresses >= limitOfAddress) {
-                    console.log('entre el primero');
                     $addAddress.removeClass('d-inline-block').addClass('d-none');
                     $cancel.removeClass('d-none').addClass('d-inline-block');
                 } else if (nAddresses >= 2) {
