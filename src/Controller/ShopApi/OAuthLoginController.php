@@ -5,6 +5,7 @@ namespace App\Controller\ShopApi;
 use Facebook\Facebook;
 use GuzzleHttp\Client;
 use App\Model\APIResponse;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
@@ -296,8 +297,14 @@ class OAuthLoginController extends AbstractFOSRestController
                 $oauthUser = $this->entityManager->getRepository('App:User\UserOAuth')
                     ->findOneBy(['provider' => $provider, 'identifier' => $identifier]);
 
-                if ($oauthUser) {
-
+                if ($oauthUser instanceof UserOAuth) {
+                    if ($oauthUser->isVerified()) {
+                        return true;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
                 }
             }
         }
