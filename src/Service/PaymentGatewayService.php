@@ -884,6 +884,7 @@ class PaymentGatewayService
         }
 
         $this->paymentRepository->add($payment);
+        $order->setState(Order::STATE_NEW);
 
         $this->clearEmptyPayments($order);
     }
