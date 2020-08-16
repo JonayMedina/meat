@@ -287,7 +287,11 @@ class OAuthLoginController extends AbstractFOSRestController
                     $headers = $response->getHeaders();
                     $body = json_decode($response->getBody(), true);
 
-                    return $body;
+                    if ($body['access_token'] == $accessToken) {
+                        return true;
+                    } else {
+                        return null;
+                    }
                 } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage());
 
@@ -372,6 +376,10 @@ class OAuthLoginController extends AbstractFOSRestController
         $userOAuth->setUser($shopUser);
         $userOAuth->setIdentifier($identifier);
         $userOAuth->setAccessToken($accessToken);
+
+        if ($provider == self::PROVIDER_APPLE) {
+            $userOAuth->setIsVerified(true);
+        }
 
         $this->entityManager->persist($shopUser);
         $this->entityManager->persist($userOAuth);
