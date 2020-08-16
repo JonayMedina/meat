@@ -3,12 +3,14 @@
 namespace App\Controller\ShopApi;
 
 use Facebook\Facebook;
+use GuzzleHttp\Client;
 use App\Model\APIResponse;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Facebook\Exceptions\FacebookSDKException;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\User\Model\UserInterface;
@@ -27,19 +29,13 @@ class OAuthLoginController extends AbstractFOSRestController
     const PROVIDER_FACEBOOK = 'facebook';
     const PROVIDER_APPLE = 'apple';
 
-    /**
-     * @var LoggerInterface $logger
-     */
+    /** @var LoggerInterface $logger */
     private $logger;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * @var JWTTokenManagerInterface
-     */
+    /** @var JWTTokenManagerInterface */
     private $JWTManager;
 
     /** @var string */
@@ -83,6 +79,7 @@ class OAuthLoginController extends AbstractFOSRestController
         $email = $request->get('email');
         $firstName = $request->get('first_name');
         $lastName = $request->get('last_name');
+        $isRegister = false;
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -93,7 +90,11 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
+        if ($email && $firstName && $lastName) {
+            $isRegister = true;
+        }
+
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken, $isRegister);
 
         if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
@@ -235,9 +236,11 @@ class OAuthLoginController extends AbstractFOSRestController
      * @param $provider
      * @param $identifier
      * @param $accessToken
+     * @param bool $isRegister
      * @return array|bool|null
+     * @throws GuzzleException
      */
-    private function validateAccessToken($provider, $identifier, $accessToken)
+    private function validateAccessToken($provider, $identifier, $accessToken, $isRegister = false)
     {
         if (self::PROVIDER_FACEBOOK === $provider) {
             try {
@@ -267,37 +270,50 @@ class OAuthLoginController extends AbstractFOSRestController
         }
 
         if (self::PROVIDER_APPLE === $provider) {
-//            $client = new Client();
-//
-//            try {
-//                $response = $client->request(
-//                    'POST',
-//                    'https://appleid.apple.com/auth/token',
-//                    [
-//                        'form_params' => [
-//                            'client_id' => $this->appleClientId,
-//                            'client_secret' => $this->appleClientSecret,
-//                            'code' => $accessToken,
-//                            'grant_type' => 'authorization_code'
-//                        ]
-//                    ]
-//                );
-//
-//                $headers = $response->getHeaders();
-//                $body = json_decode($response->getBody(), true);
-//
-//                return $body;
-//            } catch (\Exception $exception) {
-//                dd($exception);
-//
-//                $this->logger->error($exception->getMessage());
-//
-//                return null;
-//            }
+            if ($isRegister) {
+                $client = new Client();
 
-            // TODO: Verify identity token
+                try {
+                    $response = $client->request(
+                        'POST',
+                        'https://appleid.apple.com/auth/token',
+                        [
+                            'form_params' => [
+                                'client_id' => $this->appleClientId,
+                                'client_secret' => $this->appleClientSecret,
+                                'code' => $accessToken,
+                                'grant_type' => 'authorization_code'
+                            ]
+                        ]
+                    );
 
-            return true;
+                    $headers = $response->getHeaders();
+                    $body = json_decode($response->getBody(), true);
+
+                    if ($body['access_token'] == $accessToken) {
+                        return true;
+                    } else {
+                        return null;
+                    }
+                } catch (\Exception $exception) {
+                    $this->logger->error($exception->getMessage());
+
+                    return null;
+                }
+            } else {
+                $oauthUser = $this->entityManager->getRepository('App:User\UserOAuth')
+                    ->findOneBy(['provider' => $provider, 'identifier' => $identifier]);
+
+                if ($oauthUser instanceof UserOAuth) {
+                    if ($oauthUser->isVerified()) {
+                        return true;
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            }
         }
 
         return null;
@@ -363,6 +379,10 @@ class OAuthLoginController extends AbstractFOSRestController
         $userOAuth->setUser($shopUser);
         $userOAuth->setIdentifier($identifier);
         $userOAuth->setAccessToken($accessToken);
+
+        if ($provider == self::PROVIDER_APPLE) {
+            $userOAuth->setIsVerified(true);
+        }
 
         $this->entityManager->persist($shopUser);
         $this->entityManager->persist($userOAuth);
