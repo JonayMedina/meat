@@ -5,7 +5,6 @@ namespace App\Controller\ShopApi;
 use Facebook\Facebook;
 use GuzzleHttp\Client;
 use App\Model\APIResponse;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
@@ -77,10 +76,10 @@ class OAuthLoginController extends AbstractFOSRestController
         $identifier = $request->get('identifier');
         $accessToken = $request->get('access_token');
         $provider = $request->get('provider');
-        $method = 'login';
         $email = $request->get('email');
         $firstName = $request->get('first_name');
         $lastName = $request->get('last_name');
+        $isRegister = false;
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -91,7 +90,11 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
+        if ($email && $firstName && $lastName) {
+            $isRegister = true;
+        }
+
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken, $isRegister);
 
         if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
