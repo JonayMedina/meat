@@ -2,17 +2,15 @@
 
 namespace App\Controller\ShopApi;
 
-use AppleSignIn\ASDecoder;
 use Exception;
 use Facebook\Facebook;
-use GuzzleHttp\Client;
 use App\Model\APIResponse;
+use AppleSignIn\ASDecoder;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Facebook\Exceptions\FacebookSDKException;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\User\Model\UserInterface;
