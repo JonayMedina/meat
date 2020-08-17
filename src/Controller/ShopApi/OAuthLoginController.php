@@ -343,10 +343,6 @@ class OAuthLoginController extends AbstractFOSRestController
         $userOAuth->setIdentifier($identifier);
         $userOAuth->setAccessToken($accessToken);
 
-        if ($provider == self::PROVIDER_APPLE) {
-            $userOAuth->setIsVerified(true);
-        }
-
         $this->entityManager->persist($shopUser);
         $this->entityManager->persist($userOAuth);
 
