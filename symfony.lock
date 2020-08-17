@@ -143,6 +143,9 @@
     "facebook/graph-sdk": {
         "version": "5.7.0"
     },
+    "firebase/php-jwt": {
+        "version": "v5.2.0"
+    },
     "friends-of-behat/page-object-extension": {
         "version": "0.1"
     },
@@ -196,6 +199,9 @@
     },
     "gedmo/doctrine-extensions": {
         "version": "v2.4.36"
+    },
+    "griffinledingham/php-apple-signin": {
+        "version": "1.1"
     },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"

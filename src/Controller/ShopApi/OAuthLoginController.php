@@ -2,15 +2,15 @@
 
 namespace App\Controller\ShopApi;
 
+use Exception;
 use Facebook\Facebook;
-use GuzzleHttp\Client;
 use App\Model\APIResponse;
+use AppleSignIn\ASDecoder;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
 use App\Entity\Customer\Customer;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use Facebook\Exceptions\FacebookSDKException;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\User\Model\UserInterface;
@@ -79,7 +79,7 @@ class OAuthLoginController extends AbstractFOSRestController
         $email = $request->get('email');
         $firstName = $request->get('first_name');
         $lastName = $request->get('last_name');
-        $isRegister = false;
+        $idToken = $request->get('id_token');
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -90,11 +90,7 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        if ($email && $firstName && $lastName) {
-            $isRegister = true;
-        }
-
-        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken, $isRegister);
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $provider == self::PROVIDER_APPLE ? $idToken : $accessToken);
 
         if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
@@ -236,11 +232,9 @@ class OAuthLoginController extends AbstractFOSRestController
      * @param $provider
      * @param $identifier
      * @param $accessToken
-     * @param bool $isRegister
      * @return array|bool|null
-     * @throws GuzzleException
      */
-    private function validateAccessToken($provider, $identifier, $accessToken, $isRegister = false)
+    private function validateAccessToken($provider, $identifier, $accessToken)
     {
         if (self::PROVIDER_FACEBOOK === $provider) {
             try {
@@ -270,49 +264,18 @@ class OAuthLoginController extends AbstractFOSRestController
         }
 
         if (self::PROVIDER_APPLE === $provider) {
-            if ($isRegister) {
-                $client = new Client();
+            try {
+                $appleVerifier = ASDecoder::getAppleSignInPayload($accessToken);
 
-                try {
-                    $response = $client->request(
-                        'POST',
-                        'https://appleid.apple.com/auth/token',
-                        [
-                            'form_params' => [
-                                'client_id' => $this->appleClientId,
-                                'client_secret' => $this->appleClientSecret,
-                                'code' => $accessToken,
-                                'grant_type' => 'authorization_code'
-                            ]
-                        ]
-                    );
-
-                    $headers = $response->getHeaders();
-                    $body = json_decode($response->getBody(), true);
-
-                    if ($body['access_token'] == $accessToken) {
-                        return true;
-                    } else {
-                        return null;
-                    }
-                } catch (\Exception $exception) {
-                    $this->logger->error($exception->getMessage());
-
-                    return null;
-                }
-            } else {
-                $oauthUser = $this->entityManager->getRepository('App:User\UserOAuth')
-                    ->findOneBy(['provider' => $provider, 'identifier' => $identifier]);
-
-                if ($oauthUser instanceof UserOAuth) {
-                    if ($oauthUser->isVerified()) {
-                        return true;
-                    } else {
-                        return null;
-                    }
+                if ($appleVerifier->verifyUser($identifier)) {
+                    return true;
                 } else {
                     return null;
                 }
+            } catch (Exception $exception) {
+                $this->logger->error($exception->getMessage());
+
+                return null;
             }
         }
 
