@@ -13,28 +13,4 @@ use Sylius\Component\User\Model\UserOAuth as BaseUserOAuth;
  */
 class UserOAuth extends BaseUserOAuth
 {
-    /**
-     * @var boolean
-     * @ORM\Column(name="is_verified", type="boolean", nullable=true)
-     */
-    private $isVerified;
-
-    /**
-     * @return bool
-     */
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    /**
-     * @param bool $isVerified
-     * @return UserOAuth
-     */
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
 }
