@@ -1841,7 +1841,7 @@
                                     <tbody><tr>
                                         <td align="left" class="EQ-05" width="562">
                                             <div class="text" style="font-size: 16px; font-family: Raleway, Raleway, sans-serif; color: rgb(64, 64, 64); font-style: normal; font-weight: 400; line-height: 1.5; text-align: left; text-decoration: none;">
-                                                {{ order.lastPayment.details['dateTime'] }}
+                                                {{ order.lastPayment.details['dateTime']|date('d/m/y H:i:s') }}
                                             </div>
                                         </td>
                                     </tr>
@@ -1856,7 +1856,7 @@
         <!--<![endif]--><!--[if gte mso 9]><div style="display:none;"><table cellspacing="0" cellpadding="0" class="EQ-00" width="640">
 <tr><td width="29" class="layout-block-padding-left">&nbsp; </td><td width="582" class="layout-block-content-cell" valign="top" align="left"><v:rect style="width:582px;" stroke="f"><v:fill type="tile" src="{{ get_url(asset('bundles/syliusshop/img/email/box-bg-58.jpg')) }}" color="#ffffff"></v:fill><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><div><div style="font-size:0"><table cellspacing="0" cellpadding="0" class="EQ-07">
 <tr><td style="font-size:1px;" width="10">&nbsp; </td><td align="left" class="EQ-05" width="562"><div class="text" style="font-size: 16px; font-family: sans-serif; color: #404040; font-style: normal; font-weight: 400; line-height: 150%; text-align: left; text-decoration: none;">
-														{{ order.lastPayment.details['dateTime'] }}
+														{{ order.lastPayment.details['dateTime']|date('d/m/y H:i:s') }}
 													</div></td><td style="font-size:1px;" width="10">&nbsp; </td>
 </tr></table></div></div></v:textbox></v:rect></td><td width="29" class="layout-block-padding-right">&nbsp; </td>
 </tr></table></div><![endif]--></div>
