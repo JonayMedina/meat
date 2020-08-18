@@ -359,7 +359,7 @@ class CategoryController extends AbstractFOSRestController
      * @param $position
      * @return Taxon
      */
-    private function updateCategory(Taxon $category, $name, $description, $parentId, $base64Content, $left, $right, $position): Taxon
+    private function updateCategory(Taxon $category, $name, $description, $parentId, $base64Content, $left = null, $right = null, $position = null): Taxon
     {
         $category->setCurrentLocale(Locale::DEFAULT_LOCALE);
 
@@ -371,15 +371,15 @@ class CategoryController extends AbstractFOSRestController
             $category->setDescription($description);
         }
 
-        if (!empty($left)) {
+        if ($left !== null) {
             $category->setLeft($left);
         }
 
-        if (!empty($right)) {
+        if ($right !== null) {
             $category->setRight($right);
         }
 
-        if (!empty($position)) {
+        if ($position !== null) {
             $category->setPosition($position);
         }
 
