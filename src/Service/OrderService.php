@@ -451,17 +451,17 @@ class OrderService
     }
 
     /**
-     * @param Address $address
+     * @param ?Address $address
      * @param bool $details
      * @return array
      */
-    public function serializeAddress(?Address $address, $details = false): array
+    public function serializeAddress(?Address $address, $details = false): ?array
     {
         $customer = null;
         $isDefault = false;
 
         if ($address == null) {
-            return [];
+            return null;
         }
 
         /** @var Customer $customer */
