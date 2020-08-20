@@ -223,7 +223,7 @@ class OrderService
         $items = [];
         $coupon = null;
         $adjustments = [];
-        $customer = [];
+        $customer = null;
         $rating = [];
         $shipments = [];
 
@@ -573,16 +573,16 @@ class OrderService
     }
 
     /**
-     * @param Customer $customer
+     * @param ?Customer $customer
      * @return array
      */
-    public function serializeCustomer(?Customer $customer)
+    public function serializeCustomer(?Customer $customer): ?array
     {
         if (!$customer) {
-            return [];
+            return null;
         }
 
-        $age = $this->calculateAGe($customer->getBirthday());
+        $age = $this->calculateAge($customer->getBirthday());
 
         $serializedCustomer = [
             'id' => $customer->getId(),
@@ -603,7 +603,7 @@ class OrderService
      * @param \DateTimeInterface|null $birthday
      * @return false|int|mixed|string|null
      */
-    private function calculateAGe(?\DateTimeInterface $birthday)
+    private function calculateAge(?\DateTimeInterface $birthday)
     {
         if (!$birthday) {
             return null;
