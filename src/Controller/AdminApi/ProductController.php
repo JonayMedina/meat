@@ -2,41 +2,43 @@
 
 namespace App\Controller\AdminApi;
 
-use App\Entity\Channel\Channel;
-use App\Entity\Channel\ChannelPricing;
+use App\Entity\Product\ProductTranslation;
+use Cocur\Slugify\Slugify;
+use Psr\Log\LoggerInterface;
 use App\Entity\Locale\Locale;
+use App\Entity\Taxonomy\Taxon;
+use Doctrine\ORM\QueryBuilder;
+use App\Entity\Channel\Channel;
 use App\Entity\Product\Product;
-use App\Entity\Product\ProductAssociation;
+use App\Form\AdminApi\ProductType;
 use App\Entity\Product\ProductImage;
 use App\Entity\Product\ProductTaxon;
-use App\Entity\Product\ProductVariant;
-use App\Entity\Taxonomy\Taxon;
-use App\Form\AdminApi\ProductAssociationType;
-use App\Form\AdminApi\ProductType;
 use App\Pagination\PaginationFactory;
 use App\Repository\ProductRepository;
+use App\Entity\Channel\ChannelPricing;
+use App\Entity\Product\ProductVariant;
+use Symfony\Component\Intl\Currencies;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
-use Hshn\Base64EncodedFile\HttpFoundation\File\UploadedBase64EncodedFile;
+use App\Entity\Product\ProductAssociation;
+use Symfony\Component\HttpFoundation\Request;
+use App\Form\AdminApi\ProductAssociationType;
 use Liip\ImagineBundle\Service\FilterService;
-use Psr\Log\LoggerInterface;
-use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository;
-use Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
-use Sylius\Component\Core\Uploader\ImageUploaderInterface;
-use Sylius\Component\Currency\Context\CurrencyContextInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Intl\Currencies;
-use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Sylius\Component\Core\Uploader\ImageUploaderInterface;
+use Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Hshn\Base64EncodedFile\HttpFoundation\File\Base64EncodedFile;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductVariantRepository;
+use Hshn\Base64EncodedFile\HttpFoundation\File\UploadedBase64EncodedFile;
+use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository;
 
 /**
  * ProductController
@@ -209,6 +211,10 @@ class ProductController extends AbstractFOSRestController
 
             $product = $this->createProduct($code);
             $product = $this->updateProduct($product, $name, $description, $category, $categories, $price, $offerPrice, $measurementUnit, $keywords, $photo);
+
+            /** Create slug */
+            $slug = $this->retrieveSlug($product);
+            $product->setSlug($slug);
 
             $this->entityManager->persist($product);
             $this->entityManager->flush();
@@ -479,6 +485,7 @@ class ProductController extends AbstractFOSRestController
         return [
             'id' => $product->getId(),
             'code' => $product->getCode(),
+            'slug' => $product->getSlug(),
             'category' => $category,
             'categories' => $categories,
             'inStock' => ($variant->getOnHand() > 0),
@@ -512,6 +519,7 @@ class ProductController extends AbstractFOSRestController
             'id' => $taxon->getId(),
             'name' => $taxon->getName(),
             'code' => $taxon->getCode(),
+            'slug' => $taxon->getSlug(),
             'photo' => $photoURL,
         ];
     }
@@ -528,11 +536,12 @@ class ProductController extends AbstractFOSRestController
         $channel = $this->channelContext->getChannel();
 
         if ($product instanceof Product) {
-            throw new BadRequestHttpException('Product already exists.');
+            throw new BadRequestHttpException('Product code already exists.');
         }
 
         $product = new Product();
         $product->setCode($code);
+        $product->setCurrentLocale(Locale::DEFAULT_LOCALE);
 
         $variant = new ProductVariant();
         $variant->setProduct($product);
@@ -567,9 +576,6 @@ class ProductController extends AbstractFOSRestController
         $variant = $product->getVariants()[0];
         /** @var Channel $channel */
         $channel = $this->channelContext->getChannel();
-
-        $product->setCurrentLocale(Locale::DEFAULT_LOCALE);
-        $product->setSlug($product->getCode());
 
         if (isset($name)) {
             $product->setName($name);
@@ -733,5 +739,31 @@ class ProductController extends AbstractFOSRestController
         $this->entityManager->flush();
 
         return $association;
+    }
+
+    /**
+     * @param Product|null $product
+     * @param int $iteration
+     * @return string
+     */
+    private function retrieveSlug(?Product $product, $iteration = 0)
+    {
+        $slugify = new Slugify();
+        $slug = $slugify->slugify($product->getName());
+
+        if ($iteration) {
+            $slug .= '-'.$iteration;
+        }
+
+        $existing = $this->entityManager->getRepository('App:Product\ProductTranslation')
+            ->findOneBy(['slug' => $slug, 'locale' => Locale::DEFAULT_LOCALE]);
+
+        if ($existing instanceof ProductTranslation) {
+            $iteration++;
+
+            return $this->retrieveSlug($product, $iteration);
+        }
+
+        return $slug;
     }
 }

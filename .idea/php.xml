@@ -2,7 +2,6 @@
 <project version="4">
   <component name="PhpIncludePathManager">
     <include_path>
-      <path value="$PROJECT_DIR$/vendor/ocramius/package-versions" />
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-shim" />
@@ -234,7 +233,6 @@
       <path value="$PROJECT_DIR$/vendor/behat/mink-extension" />
       <path value="$PROJECT_DIR$/vendor/instaclick/php-webdriver" />
       <path value="$PROJECT_DIR$/vendor/coduo/php-to-string" />
-      <path value="$PROJECT_DIR$/vendor/container-interop/container-interop" />
       <path value="$PROJECT_DIR$/vendor/friends-of-behat/page-object-extension" />
       <path value="$PROJECT_DIR$/vendor/friends-of-behat/symfony-extension" />
       <path value="$PROJECT_DIR$/vendor/friends-of-behat/suite-settings-extension" />
@@ -296,6 +294,9 @@
       <path value="$PROJECT_DIR$/vendor/sonata-project/datagrid-bundle" />
       <path value="$PROJECT_DIR$/vendor/griffinledingham/php-apple-signin" />
       <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />

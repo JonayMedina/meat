@@ -4,6 +4,8 @@ namespace App\Controller\AdminApi;
 
 use App\Entity\Locale\Locale;
 use App\Entity\Taxonomy\Taxon;
+use App\Entity\Taxonomy\TaxonTranslation;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\QueryBuilder;
 use App\Form\AdminApi\CategoryType;
 use App\Pagination\PaginationFactory;
@@ -160,6 +162,10 @@ class CategoryController extends AbstractFOSRestController
             $category = $this->createCategory($code);
             $category = $this->updateCategory($category, $name, $description, $parent, $photo, $left, $right, $position);
 
+            /** Create slug */
+            $slug = $this->retrieveSlug($category);
+            $category->setSlug($slug);
+
             $this->entityManager->persist($category);
             $this->entityManager->flush();
 
@@ -287,6 +293,7 @@ class CategoryController extends AbstractFOSRestController
         return [
             'id' => $category->getId(),
             'code' => $category->getCode(),
+            'slug' => $category->getSlug(),
             'name' => $category->getName(),
             'description' => $category->getDescription(),
             'parent' => $this->serializeCategory($category->getParent()),
@@ -343,7 +350,6 @@ class CategoryController extends AbstractFOSRestController
         $category = new Taxon();
         $category->setCurrentLocale(Locale::DEFAULT_LOCALE);
         $category->setCode($code);
-        $category->setSlug($code);
 
         return $category;
     }
@@ -421,5 +427,32 @@ class CategoryController extends AbstractFOSRestController
         }
 
         return $category;
+    }
+
+    /**
+     * @param Taxon $category
+     * @param int $iteration
+     * @return string
+     */
+    private function retrieveSlug(Taxon $category, $iteration = 0)
+    {
+        $slugify = new Slugify();
+
+        $slug = $slugify->slugify($category->getName());
+
+        if ($iteration) {
+            $slug .= '-'.$iteration;
+        }
+
+        $existing = $this->entityManager->getRepository('App:Taxonomy\TaxonTranslation')
+            ->findOneBy(['slug' => $slug]);
+
+        if ($existing instanceof TaxonTranslation) {
+            $iteration++;
+
+            return $this->retrieveSlug($category, $iteration);
+        }
+
+        return $slug;
     }
 }

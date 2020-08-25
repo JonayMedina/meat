@@ -31,6 +31,7 @@
         "ext-openssl": "*",
         "ext-xml": "*",
         "aws/aws-sdk-php": "^3.140",
+        "cocur/slugify": "^4.0",
         "deployer/deployer": "^6.7",
         "deployer/recipes": "^6.2",
         "econea/nusoap": "^0.9.7",

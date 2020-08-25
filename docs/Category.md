@@ -9,6 +9,7 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
 |--- |--- |--- |--- |--- |
 |id|Identificador único de categoría|INT|11|No|
 |code|Identificador único de categoría|VARCHAR|255|Sí|
+|slug|Identificador único de categoría (web)|VARCHAR|255|No|
 |name|Nombre de la categoría|VARCHAR|255|Sí|
 |parent|Id de la categoría padre|INT|11|No|
 |position|Posición de la categoría entre otras categorías.|INT|11|No|
@@ -44,7 +45,8 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
     "recordset": [
         {
             "id": 1,
-            "code": "carnes-rojas",
+            "code": "SKU001",
+            "slug": "carnes-rojas",
             "name": "Carnes Rojas",
             "parent": 1,
             "tree_root": null,
@@ -57,7 +59,8 @@ Listado de categorías disponibles con parámetros para paginación y búsqueda 
         },
 		{
             "id": 2,
-            "code": "Res",
+            "code": "SKU002",
+            "slug": "carnes-res",
             "name": "Res",
             "parent": 1,
             "left": 2,
@@ -100,11 +103,13 @@ Posibles códigos de respuesta:
 ```json
 {
     "id": 3,
-    "code": "cordero",
+    "code": "SKU003",
+    "slug": "cordeero",
     "name": "Cordero",
     "parent": {
         "id": 7,
-        "code": "promo",
+        "code": "SKU004",
+        "slug": "promo",
         "name": "Promociones",
         "left": 1,
         "right": 10,
@@ -138,11 +143,13 @@ Posibles códigos de respuesta:
 ```json
 {
     "id": 3,
-    "code": "cordero",
+    "code": "SKU003",
+    "slug": "cordero",
     "name": "Cordero",
     "parent": {
         "id": 7,
-        "code": "promo",
+        "code": "SKU004",
+        "slug": "promo",
         "name": "Promociones",
         "left": 1,
         "right": 10,
@@ -184,11 +191,13 @@ Posibles códigos de respuesta:
 ```json
 {
     "id": 3,
-    "code": "cordero",
+    "code": "SKU003",
+    "slug": "cordero",
     "name": "Cordero",
     "parent": {
         "id": 7,
-        "code": "promo",
+        "code": "SKU004",
+        "slug": "promo",
         "name": "Promociones",
         "left": 1,
         "right": 10,

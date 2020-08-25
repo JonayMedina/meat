@@ -53,24 +53,28 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
       "category": {
         "id": 1,
         "name": "Carnes Rojas",
-        "code": "carnes-rojas",
+        "code": "SKU002",
+        "slug": "carnes-rojas",
         "photo": "https://URL_DE_LA_FOTO.jpg"
       },
       "categories": [
         {
           "id": 1,
           "name": "Carnes Rojas",
-          "code": "carnes-rojas",
+          "code": "SKU002",
+          "slug": "carnes-rojas",
           "photo": "https://URL_DE_LA_FOTO.jpg"
         },
         {
           "id": 2,
           "name": "Carnes de Res",
-          "code": "res",
+          "code": "SKU003",
+          "slug": "res",
           "photo": "https://URL_DE_LA_FOTO.jpg"
         }
       ],
-      "code": "lomito",
+      "code": "SKU001",
+      "slug": "lomito",
       "name": "Lomito",
       "description": "Pieza de lomito",
       "price": 2450,
@@ -99,9 +103,10 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
 
 ```json
 {
-  "category":  "carnes-rojas",
-  "categories": ["carnes-rojas", "res"],
-  "code": "lomito",
+  "category":  "SKU001",
+  "categories": ["SKU002", "SKU003"],
+  "code": "SKU001",
+  "slug": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
@@ -129,24 +134,28 @@ Posibles códigos de respuesta:
   "category": {
     "id": 1,
     "name": "Carnes Rojas",
-    "code": "carnes-rojas",
+    "code": "SKU005",
+    "slug": "carnes-rojas",
     "photo": "https://URL_DE_LA_FOTO.jpg"
   },
   "categories": [
     {
       "id": 1,
       "name": "Carnes Rojas",
-      "code": "carnes-rojas",
+      "code": "SKU005",
+      "slug": "carnes-rojas",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     },
     {
       "id": 2,
       "name": "Carnes de Res",
-      "code": "res",
+      "code": "SKU002",
+      "slug": "res",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     }
   ],
   "code": "lomito",
+  "slug": "SKU001",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
@@ -182,24 +191,28 @@ Posibles códigos de respuesta:
   "category": {
     "id": 1,
     "name": "Carnes Rojas",
-    "code": "carnes-rojas",
+    "code": "SKU002",
+    "slug": "carnes-rojas",
     "photo": "https://URL_DE_LA_FOTO.jpg"
   },
   "categories": [
     {
       "id": 1,
       "name": "Carnes Rojas",
-      "code": "carnes-rojas",
+      "code": "SKU002",
+      "slug": "carnes-rojas",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     },
     {
       "id": 2,
       "name": "Carnes de Res",
-      "code": "res",
+      "code": "SKU002",
+      "slug": "res",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     }
   ],
-  "code": "lomito",
+  "code": "SKU001",
+  "slug": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
@@ -226,7 +239,7 @@ Posibles códigos de respuesta:
 
 ```json
 {
-  "category":  "carnes-rojas",
+  "category":  "SKU001",
   "offerPrice": null,
   "photo": "BASE64 image"
 }
@@ -245,24 +258,28 @@ Posibles códigos de respuesta:
   "category": {
     "id": 1,
     "name": "Carnes Rojas",
-    "code": "carnes-rojas",
+    "code": "SKU002",
+    "slug": "carnes-rojas",
     "photo": "https://URL_DE_LA_FOTO.jpg"
   },
   "categories": [
     {
       "id": 1,
       "name": "Carnes Rojas",
-      "code": "carnes-rojas",
+      "code": "SKU002",
+      "slug": "carnes-rojas",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     },
     {
       "id": 2,
       "name": "Carnes de Res",
-      "code": "res",
+      "code": "SKU001",
+      "slug": "res",
       "photo": "https://URL_DE_LA_FOTO.jpg"
     }
   ],
-  "code": "lomito",
+  "code": "SKU001",
+  "slug": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
@@ -288,14 +305,14 @@ Posibles códigos de respuesta:
 ```json
 {
   "similar_products": [
-    "CODE1",
-    "CODE2",
-    "CODE3"
+    "SKU001",
+    "SKU002",
+    "SKU003"
   ],
   "complimentary_products": [
-    "CODE4",
-    "CODE5",
-    "CODE6"
+    "SKU004",
+    "SKU005",
+    "SKU006"
   ]
 }
 ```
