@@ -68,10 +68,6 @@ class Product extends BaseProduct
 
     public function getMeasurementUnit()
     {
-        if (!$this->hasVariants()) {
-            return ProductVariant::MEASUREMENT_POUND_TYPE;
-        }
-
         return $this->getVariants()[0]->getMeasurementUnit();
     }
 

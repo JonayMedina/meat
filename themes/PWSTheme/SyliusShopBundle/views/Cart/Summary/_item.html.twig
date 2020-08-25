@@ -30,7 +30,7 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-9">
                     <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
                     <div class="price xs-pt-1">
-                        {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.lower')|trans})|raw }}
+                        {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <div class="quantity">
                             {{ form_widget(form.quantity, {'attr': {'form': main_form}}) }}
                         </div>
-                        <p class="type">{{ ('app.ui.measurement_units.' ~ product.measurementUnit ~ '.plural')|trans }}</p>
+                        <p class="type">{{ product.measurementUnit.plural }}</p>
                     </div>
                 </div>
 

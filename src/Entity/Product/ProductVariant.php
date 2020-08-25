@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Entity\Product;
 
 use App\Entity\PromotionBanner;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sylius\Component\Core\Model\ProductVariant as BaseProductVariant;
 use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
 
@@ -17,16 +18,6 @@ use Sylius\Component\Product\Model\ProductVariantTranslationInterface;
  */
 class ProductVariant extends BaseProductVariant
 {
-    const MEASUREMENT_UNIT_TYPE = 'unit';
-
-    const MEASUREMENT_POUND_TYPE = 'pound';
-
-    const MEASUREMENT_PACKAGE_TYPE = 'package';
-
-    const MEASUREMENT_PIECE_TYPE = 'piece';
-
-    const MEASUREMENT_LITTER_TYPE = 'liter';
-
     /**
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\PromotionBanner",
@@ -36,10 +27,11 @@ class ProductVariant extends BaseProductVariant
     private $promotionBanners;
 
     /**
-     * @var string
-     * @ORM\Column(type="string", length=150, nullable=true)
+     * @var array
+     * @Assert\NotBlank()
+     * @ORM\Column(type="json", length=150, nullable=true)
      */
-    private $measurementUnit = self::MEASUREMENT_POUND_TYPE;
+    private $measurementUnit = [];
 
     public function __construct()
     {
@@ -84,18 +76,21 @@ class ProductVariant extends BaseProductVariant
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getMeasurementUnit(): ?string
+    public function getMeasurementUnit(): ?array
     {
-        return $this->measurementUnit ?? self::MEASUREMENT_POUND_TYPE;
+        return $this->measurementUnit;
     }
 
     /**
-     * @param string $measurementUnit
+     * @param array $measurementUnit
+     * @return ProductVariant
      */
-    public function setMeasurementUnit(string $measurementUnit): void
+    public function setMeasurementUnit(array $measurementUnit): self
     {
         $this->measurementUnit = $measurementUnit;
+
+        return $this;
     }
 }

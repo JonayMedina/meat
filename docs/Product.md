@@ -16,7 +16,7 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
 |description|Descripción del producto|LONGTEXT|--|Sí|
 |price|Precio base del producto en GTQ (price * 100)|INT|11|Sí|
 |offerPrice|Precio de oferta del producto en GTQ (offerPrice * 100)|INT|11|Sí|
-|measurementUnit|Tipo de medida|ENUM: (pound, package, piece, liter)|100|Sí|
+|measurementUnit|Tipo de medida|JSON con dos valores, plural y singular|255|Sí|
 |keywords|Nombres clave para búsqueda de producto separados por coma|VARCHAR|255|No|
 |photo|Fotografía principal del producto|LONGTEXT (BASE64) |--|Sí|
 
@@ -76,7 +76,10 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
       "price": 2450,
       "offerPrice": 2200,
       "inStock": true,
-      "measurementUnit": "piece",
+      "measurementUnit": {
+          "singular": "Libra",
+          "plural": "Libras"
+      },
       "keywords": "lomito, res, vaca",
       "photo": "BASE64 image"
     }
@@ -103,7 +106,10 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
   "description": "Pieza de lomito",
   "price": 2450,
   "offerPrice": 2200,
-  "measurementUnit": "piece",
+  "measurementUnit": {
+     "singular": "Libra",
+     "plural": "Libras"
+  },
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
 }
@@ -146,7 +152,10 @@ Posibles códigos de respuesta:
   "price": 2450,
   "offerPrice": 2200,
   "inStock": true,
-  "measurementUnit": "piece",
+  "measurementUnit": {
+      "singular": "Libra",
+      "plural": "Libras"
+  },
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
 }
@@ -196,7 +205,10 @@ Posibles códigos de respuesta:
   "price": 2450,
   "offerPrice": 2200,
   "inStock": true,
-  "measurementUnit": "piece",
+  "measurementUnit": {
+      "singular": "Libra",
+      "plural": "Libras"
+  },
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
 }
@@ -256,7 +268,10 @@ Posibles códigos de respuesta:
   "price": 2450,
   "offerPrice": 2200,
   "inStock": true,
-  "measurementUnit": "piece",
+  "measurementUnit": {
+      "singular": "Libra",
+      "plural": "Libras"
+  },
   "keywords": "lomito, res, vaca",
   "photo": "BASE64 image"
 }

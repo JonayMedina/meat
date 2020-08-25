@@ -482,6 +482,7 @@ class ProductController extends AbstractFOSRestController
             'category' => $category,
             'categories' => $categories,
             'inStock' => ($variant->getOnHand() > 0),
+            'measurementUnit' => $product->getMeasurementUnit(),
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'currency' => [
@@ -590,6 +591,22 @@ class ProductController extends AbstractFOSRestController
         }
 
         if (isset($measurementUnit)) {
+            if (!isset($measurementUnit['singular'])) {
+                throw new BadRequestHttpException('Singular measurement unit cannot be empty.');
+            }
+
+            if (!isset($measurementUnit['plural'])) {
+                throw new BadRequestHttpException('Plural measurement unit cannot be empty.');
+            }
+
+            if (empty($measurementUnit['singular'])) {
+                throw new BadRequestHttpException('Singular measurement unit cannot be empty.');
+            }
+
+            if (empty($measurementUnit['plural'])) {
+                throw new BadRequestHttpException('Plural measurement unit cannot be empty.');
+            }
+
             $variant->setMeasurementUnit($measurementUnit);
         }
 

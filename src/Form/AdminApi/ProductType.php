@@ -4,7 +4,6 @@ namespace App\Form\AdminApi;
 
 use JBZoo\Image\Image;
 use App\Entity\Taxonomy\Taxon;
-use App\Entity\Product\ProductVariant;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,8 +11,8 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class ProductType extends AbstractType
@@ -44,14 +43,8 @@ class ProductType extends AbstractType
             ->add('offerPrice', NumberType::class, [
 
             ])
-            ->add('measurementUnit', ChoiceType::class, [
-                'choices' => [
-                    ProductVariant::MEASUREMENT_UNIT_TYPE => ProductVariant::MEASUREMENT_UNIT_TYPE,
-                    ProductVariant::MEASUREMENT_POUND_TYPE => ProductVariant::MEASUREMENT_POUND_TYPE,
-                    ProductVariant::MEASUREMENT_PACKAGE_TYPE => ProductVariant::MEASUREMENT_PACKAGE_TYPE,
-                    ProductVariant::MEASUREMENT_LITTER_TYPE => ProductVariant::MEASUREMENT_LITTER_TYPE,
-                    ProductVariant::MEASUREMENT_PIECE_TYPE => ProductVariant::MEASUREMENT_PIECE_TYPE,
-                ],
+            ->add('measurementUnit', CollectionType::class, [
+                'allow_add' => true,
                 'constraints' => [
                     new NotBlank(['groups' => ['creation']]),
                 ]

@@ -6,8 +6,8 @@ namespace App\View\ShopApi;
 
 class ProductView extends \Sylius\ShopApiPlugin\View\Product\ProductView
 {
-    /** @var string */
-    public $measurementUnit = '';
+    /** @var array */
+    public $measurementUnit = [];
 
     /** @var bool */
     public $isFavorite = false;
