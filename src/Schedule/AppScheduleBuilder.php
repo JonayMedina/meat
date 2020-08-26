@@ -35,7 +35,7 @@ class AppScheduleBuilder implements ScheduleBuilder
             ->at(1);
 
         $schedule
-            ->addCommand('sylius:remove-expired-carts ')
+            ->addCommand('sylius:remove-expired-carts')
             ->description('Removes carts that have been idle for a period set in `sylius_order.expiration.cart` configuration key.')
             ->withoutOverlapping(true)
             ->daysOfWeek('1,3,5,7')

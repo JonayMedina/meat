@@ -74,7 +74,8 @@ class Order extends BaseOrder
     /**
      * @ORM\OneToMany(
      *     targetEntity="App\Entity\Notification",
-     *     mappedBy="order"
+     *     mappedBy="order",
+     *     orphanRemoval=true
      * )
      */
     private $notifications;
