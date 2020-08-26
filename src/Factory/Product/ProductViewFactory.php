@@ -106,7 +106,7 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         /** @var Product $product */
         $productView->isFavorite = $this->favoriteService->isFavorite($product, $user);
         /** Translate measurement unit */
-        $productView->measurementUnit = $product->getMeasurementUnit()['singular'];
+        $productView->measurementUnit = $product->getMeasurementUnit();
 
         /** @var ProductImageInterface $image */
         foreach ($product->getImages() as $image) {
