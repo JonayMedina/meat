@@ -211,7 +211,7 @@
 
             $form.find('span.eye').click(function () {
                 var $i = $(this).find('i');
-                var $password = $('input[name="sylius_customer_registration[user][plainPassword][first]"]');
+                var $password = $('input[name="sylius_customer_registration[user][plainPassword]"]');
 
                 if ($i.hasClass('fa-eye')) {
                     $password.attr('type', 'text');
