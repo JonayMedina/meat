@@ -14,7 +14,7 @@ Listado de cupones disponibles con parametros para paginación y búsqueda de el
 |endsAt|Fecha de fin de la promoción|DATETIME|--|No|
 |enabled|Define si la promoción está o no habilitada|TINYINT|1|Sí|
 |type|Tipo de promoción|ENUM: order_fixed_discount, order_percentage_discount|1|Sí|
-|amount|Valor de la promoción|order_fixed_discount: INT(11), order_percentage_discount: DECIMAL (0-99)|--|Sí|
+|amount|Valor de la promoción|order_fixed_discount: INT(3), order_percentage_discount: INT (0-99)|--|Sí|
 |oneUsagePerUser|Si está habilitado, solo se permitirá un uso por cliente|TINYINT|1|Sí|
 |limitUsageToXQuantityOfUsers|Si está habilitado, se limita el uso del cupón a una cantidad de usuarios|TINYINT|1|Sí|
 |usageLimit|Limite de uso del cupón por cliente|INT|11|No|
