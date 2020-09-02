@@ -34,7 +34,7 @@
             </a>
             <style>
                 .taxons-carousel .item.current.{% if from == 'favorites' and category.code == 'pro' %}all{% else %}{{ category.code }}{% endif %} a {
-                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{% if category.images|length > 0 %}{{ category.images[0].path|imagine_filter('sylius_small') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}') !important;
+                    background: linear-gradient(rgba(171, 22, 43, .7), rgba(171, 22, 43, .7)), url('{% if category.images|length > 0 %}{{ category.images[0].path|imagine_filter('sylius_shop_category_thumbnail') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}') !important;
                     background-position: center !important;
                     background-repeat: no-repeat !important;
                     background-size: cover !important;
