@@ -1712,8 +1712,8 @@ label.icobutton input {
 }
 
 .taxons .image a img {
-    max-height: 216px;
-    visibility: hidden;
+    max-height: 285px;
+    /*visibility: hidden;*/
 }
 
 .taxons .content {
