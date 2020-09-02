@@ -6,6 +6,7 @@ use Exception;
 use Facebook\Facebook;
 use App\Model\APIResponse;
 use AppleSignIn\ASDecoder;
+use App\Service\JWTManager;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use App\Entity\User\UserOAuth;
@@ -48,11 +49,11 @@ class OAuthLoginController extends AbstractFOSRestController
      * CouponController constructor.
      * @param LoggerInterface $logger
      * @param EntityManagerInterface $entityManager
-     * @param JWTTokenManagerInterface $JWTManager
+     * @param JWTManager $JWTManager
      * @param string $appleClientId
      * @param string $appleClientSecret
      */
-    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, JWTTokenManagerInterface $JWTManager, string $appleClientId, string $appleClientSecret)
+    public function __construct(LoggerInterface $logger, EntityManagerInterface $entityManager, JWTManager $JWTManager, string $appleClientId, string $appleClientSecret)
     {
         $this->logger = $logger;
         $this->entityManager = $entityManager;
