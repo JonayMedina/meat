@@ -326,6 +326,7 @@
             var typingTimer;
             var doneTypingInterval = 1000;
             var $search = $('#site-search');
+            let $inputNumber = $('.quantity input[type="number"]');
 
             $modal.find('.custom-overlay-container .custom-overlay form button').click(function () {
                 $modal.modal('hide');
@@ -438,6 +439,25 @@
             $('.block-page').click(function () {
                 blockPage();
             });
+
+            $inputNumber.focusout(function () {
+                limitOnQuantity($(this));
+            });
+
+            $inputNumber.change(function () {
+                limitOnQuantity($(this));
+            });
+
+            function limitOnQuantity($input) {
+                let val = parseInt($input.val());
+                if (val <= 0) {
+                    $input.val(0);
+                } else if (val >= 99) {
+                    $input.val(99);
+                } else {
+                    $input.val(val);
+                }
+            }
 
             function initSearch() {
                 var suggestions = [];
