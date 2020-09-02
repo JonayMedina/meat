@@ -17,7 +17,8 @@
                                 <div class="col-12 col-sm-6 col-md-6 col-lg-4 hidden element {{ taxon.slug }} mb-4" style="display: none">
                                     <div class="bg-white">
                                         <div class="image">
-                                            <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" style="background: url('{{ taxon.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+{#                                            <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" style="background: url('{{ taxon.images.first.path|imagine_filter('sylius_shop_sub_category_thumbnail') }}')">#}
+                                            <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
                                                 <img src="{% if taxon.images|length > 0 %}{{ taxon.images.first.path|imagine_filter('sylius_shop_sub_category_thumbnail') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}" alt="{{ taxon.name }}" title="{{ taxon.name }}" width="auto" height="auto">
                                             </a>
                                         </div>
