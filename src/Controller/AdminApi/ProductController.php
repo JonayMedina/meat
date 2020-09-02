@@ -380,6 +380,52 @@ class ProductController extends AbstractFOSRestController
 
     /**
      * @Route(
+     *     "/{code}/enable.{_format}",
+     *     name="admin_api_enable_product",
+     *     methods={"PUT"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function enableAction(Request $request): Response
+    {
+        $product = $this->getProduct($request);
+        $statusCode = Response::HTTP_OK;
+
+        $product->setEnabled(true);
+        $this->entityManager->flush();
+
+        $view = $this->view($this->serializeProduct($product), $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{code}/disable.{_format}",
+     *     name="admin_api_disable_product",
+     *     methods={"PUT"}
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function disableAction(Request $request): Response
+    {
+        $product = $this->getProduct($request);
+        $statusCode = Response::HTTP_OK;
+
+        $product->setEnabled(false);
+        $this->entityManager->flush();
+
+        $view = $this->view($this->serializeProduct($product), $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
      *     "/{code}.{_format}",
      *     name="admin_api_product_delete",
      *     methods={"DELETE"}
@@ -489,6 +535,7 @@ class ProductController extends AbstractFOSRestController
             'category' => $category,
             'categories' => $categories,
             'inStock' => ($variant->getOnHand() > 0),
+            'enabled' => $product->isEnabled(),
             'measurementUnit' => $product->getMeasurementUnit(),
             'name' => $product->getName(),
             'description' => $product->getDescription(),

@@ -343,3 +343,19 @@ Posibles códigos de respuesta:
 
 * URL: /api/v1/products/:code/in-stock
 * Method: PUT
+
+
+## Deshabilitar un producto
+
+### Request
+
+* URL: /api/v1/products/:code/disable
+* Method: PUT
+
+
+## Habilitar un producto
+
+### Request
+
+* URL: /api/v1/products/:code/enable
+* Method: PUT
