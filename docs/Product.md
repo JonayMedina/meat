@@ -106,7 +106,6 @@ Listado de productos disponibles con parametros para paginación y búsqueda de 
   "category":  "SKU001",
   "categories": ["SKU002", "SKU003"],
   "code": "SKU001",
-  "slug": "lomito",
   "name": "Lomito",
   "description": "Pieza de lomito",
   "price": 2450,
