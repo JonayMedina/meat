@@ -532,6 +532,7 @@ app.ui.total_of_users_%total%: 'Cantidad de usuarios: %total%'
 app.ui.users_search_label: '¿A quién buscas?'
 app.ui.users_filter_by_role: 'Filtrar por'
 app.ui.roles.role_admin: Administrador
+app.ui.roles.role_admin_api: Administrador por API
 app.ui.roles.role_editor: Editor
 app.ui.first_name: Nombre
 app.ui.last_name: Apellido

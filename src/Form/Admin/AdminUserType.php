@@ -54,8 +54,9 @@ class AdminUserType extends AbstractType
             ->add('role', ChoiceType::class, [
                 'label' => 'app.ui.role',
                 'choices' => [
-                    'app.ui.roles.'.strtolower(AdminUser::ROLE_ADMIN) => AdminUser::ROLE_ADMIN,
                     'app.ui.roles.'.strtolower(AdminUser::ROLE_EDITOR) => AdminUser::ROLE_EDITOR,
+                    'app.ui.roles.'.strtolower(AdminUser::ROLE_ADMIN) => AdminUser::ROLE_ADMIN,
+                    'app.ui.roles.'.strtolower(AdminUser::ROLE_ADMIN_API) => AdminUser::ROLE_ADMIN_API,
                 ],
                 'mapped' => false,
                 'data' => $adminUser->getRoles()[0]

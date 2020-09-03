@@ -26,6 +26,11 @@ class AdminUser extends BaseAdminUser
     const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
+     * Can access admin api.
+     */
+    const ROLE_ADMIN_API = 'ROLE_ADMIN_API';
+
+    /**
      * Cannot create new users.
      */
     const ROLE_EDITOR = 'ROLE_EDITOR';
