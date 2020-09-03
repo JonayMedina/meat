@@ -65,3 +65,8 @@ liip_imagine:
         sylius_shop_thumbnail:
             filters:
                 thumbnail: { size: [480, 320], mode: outbound, allow_upscale: true }
+                
+        mobile_thumbnail:
+            filters:
+                thumbnail: { size: [900, 500], mode: outbound, allow_upscale: true }
+                
