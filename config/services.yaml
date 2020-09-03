@@ -50,6 +50,7 @@ services:
             $oauthFactory: '@sylius.factory.oauth_user'
             $appleClientId: '%env(APP_APPLE_CLIENT_ID)%'
             $appleClientSecret: '%env(APP_APPLE_SECRET)%'
+            $appUrl: '%env(APP_URL)%'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
