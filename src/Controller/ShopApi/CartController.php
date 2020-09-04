@@ -225,13 +225,15 @@ class CartController extends AbstractFOSRestController
             ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
 
         if ($shippingMethod) {
-            $shipment = new Shipment();
-            $shipment->setOrder($cart);
-            $shipment->setMethod($shippingMethod);
-            $shipment->setCreatedAt(new \DateTime());
-            $shipment->setState('ready');
+            if (count($cart->getShipments()) <= 0) {
+                $shipment = new Shipment();
+                $shipment->setOrder($cart);
+                $shipment->setMethod($shippingMethod);
+                $shipment->setCreatedAt(new \DateTime());
+                $shipment->setState('ready');
 
-            $this->entityManager->persist($shipment);
+                $this->entityManager->persist($shipment);
+            }
         }
 
         $this->entityManager->flush();
