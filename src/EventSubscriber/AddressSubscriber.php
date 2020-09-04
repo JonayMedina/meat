@@ -48,10 +48,10 @@ class AddressSubscriber implements EventSubscriber
             if (Address::TYPE_BILLING === $entity->getType()) {
                 $entity->setStatus(Address::STATUS_VALIDATED);
                 $args->getEntityManager()->flush();
+            } else {
+                /** Send to validation process */
+                $this->adminSyncService->syncAddressAfterCreation($entity);
             }
-
-            /** Send to validation process */
-            $this->adminSyncService->syncAddressAfterCreation($entity);
         }
     }
 
