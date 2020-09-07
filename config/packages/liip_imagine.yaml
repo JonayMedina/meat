@@ -29,25 +29,25 @@ liip_imagine:
             filters:
                 fixed:
                     width: 64
-                    hegiht: 64
+                    height: 64
                 thumbnail: { size: [64, 64], mode: outbound }
         shop_api_product_small:
             filters:
                 fixed:
                     width: 150
-                    hegiht: 112
+                    height: 112
                 thumbnail: { size: [150, 112], mode: outbound }
         shop_api_product_medium:
             filters:
                 fixed:
                     width: 260
-                    hegiht: 260
+                    height: 260
                 thumbnail: { size: [260, 260], mode: outbound }
         shop_api_product_large:
             filters:
                 fixed:
                     width: 550
-                    hegiht: 412
+                    height: 412
                 thumbnail: { size: [550, 412], mode: outbound }
 
         sylius_shop_product_original: ~
@@ -55,61 +55,61 @@ liip_imagine:
             filters:
                 fixed:
                     width: 64
-                    hegiht: 64
+                    height: 64
                 thumbnail: { size: [64, 64], mode: outbound }
         sylius_shop_product_small_thumbnail:
             filters:
                 fixed:
                     width: 150
-                    hegiht: 112
+                    height: 112
                 thumbnail: { size: [150, 112], mode: outbound }
         sylius_shop_product_thumbnail:
             filters:
                 fixed:
                     width: 900
-                    hegiht: 656
+                    height: 656
                 thumbnail: { size: [900, 656], mode: outbound, allow_upscale: true }
         sylius_shop_product_large_thumbnail:
             filters:
                 fixed:
                     width: 550
-                    hegiht: 412
+                    height: 412
                 thumbnail: { size: [550, 412], mode: outbound, allow_upscale: true }
         sylius_shop_category_thumbnail:
             filters:
                 fixed:
                     width: 879
-                    hegiht: 285
+                    height: 285
                 thumbnail: { size: [879, 285], mode: outbound, allow_upscale: true }
         sylius_shop_sub_category_thumbnail:
             filters:
                 fixed:
                     width: 879
-                    hegiht: 642
+                    height: 642
                 thumbnail: { size: [879, 642], mode: outbound, allow_upscale: true }
         sylius_shop_location_thumbnail:
             filters:
                 fixed:
                     width: 296
-                    hegiht: 216
+                    height: 216
                 thumbnail: { size: [296, 216], mode: outbound, allow_upscale: true }
         sylius_shop_large_thumbnail:
             filters:
                 fixed:
                     width: 375
-                    hegiht: 500
+                    height: 500
                 thumbnail: { size: [375, 500], mode: outbound, allow_upscale: true }
         sylius_shop_thumbnail:
             filters:
                 fixed:
                     width: 480
-                    hegiht: 320
+                    height: 320
                 thumbnail: { size: [480, 320], mode: outbound, allow_upscale: true }
                 
         mobile_thumbnail:
             filters:
                 fixed:
                     width: 900
-                    hegiht: 500
+                    height: 500
                 thumbnail: { size: [900, 500], mode: outbound, allow_upscale: true }
                 
