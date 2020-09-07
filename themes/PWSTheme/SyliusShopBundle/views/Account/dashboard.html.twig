@@ -374,7 +374,7 @@
                                                             <p class="title">{{ item.getVariant.product.name }}</p>
                                                         </div>
                                                         <div class="col-12 extra">
-                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ 'app.ui.checkout.%quantity%_%measure%'|trans({'%quantity%': item.quantity, '%measure%': item.quantity > 1 ? product.measurementUnit.plural : product.measurementUnit.singular }) }}</p>
+                                                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ 'app.ui.checkout.%quantity%_%measure%'|trans({'%quantity%': item.quantity, '%measure%': item.quantity > 1 ? item.getVariant.product.measurementUnit.plural : item.getVariant.product.measurementUnit.singular }) }}</p>
                                                             <p>{{ money.convertAndFormat(item.subtotal) }}</p>
                                                         </div>
                                                     </div>
