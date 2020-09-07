@@ -64,14 +64,20 @@ class AddressSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof Address) {
+            $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+            $changeSet = $unitOfWork->getEntityChangeSet($entity);
+
             /** Auto validate billing address */
             if (Address::TYPE_BILLING === $entity->getType()) {
                 $entity->setStatus(Address::STATUS_VALIDATED);
                 $args->getEntityManager()->flush();
+            } else {
+                if (isset($changeSet['fullAddress'])) {
+                    /** Send to validation process */
+                    $entity->setStatus(Address::STATUS_PENDING);
+                    $this->adminSyncService->syncAddressAfterCreation($entity, Sync::TYPE_UPDATE);
+                }
             }
-
-            /** Send to validation process */
-            $this->adminSyncService->syncAddressAfterCreation($entity, Sync::TYPE_UPDATE);
         }
     }
 }

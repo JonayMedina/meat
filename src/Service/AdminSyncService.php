@@ -85,7 +85,9 @@ class AdminSyncService
             'id' => $address->getId(),
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $metadata = [];
+        $metadata = [
+            'validated' => ($address->getStatus() == Address::STATUS_VALIDATED)
+        ];
 
         $this->bus->dispatch(new Sync(
             $type,

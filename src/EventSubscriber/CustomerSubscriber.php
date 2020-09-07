@@ -58,8 +58,13 @@ class CustomerSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof Customer) {
-            /** Check if we need to send admin notification. */
-            $this->adminSyncService->syncCustomerAfterCreation($entity, Sync::TYPE_UPDATE);
+            $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+            $changeSet = $unitOfWork->getEntityChangeSet($entity);
+
+            if (!isset($changeSet['defaultBillingAddress']) && !isset($changeSet['defaultAddress'])) {
+                /** Check if we need to send admin notification. */
+                $this->adminSyncService->syncCustomerAfterCreation($entity, Sync::TYPE_UPDATE);
+            }
         }
     }
 }
