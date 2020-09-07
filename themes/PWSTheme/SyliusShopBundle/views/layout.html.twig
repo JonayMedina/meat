@@ -95,6 +95,22 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
+
+
+    <style>
+        /* for chrome */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;;
+            margin: 0 !important;;
+        }
+
+        /* for mozilla */
+        input[type=number] {
+            -moz-appearance: textfield !important;
+        }
+    </style>
+
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
 </head>
 
