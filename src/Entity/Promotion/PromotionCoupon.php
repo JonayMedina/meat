@@ -57,7 +57,7 @@ class PromotionCoupon extends BasePromotionCoupon
      * @param bool $enabled
      * @return PromotionCoupon
      */
-    public function setEnabled(bool $enabled): self
+    public function setEnabled(?bool $enabled): self
     {
         $this->enabled = $enabled;
 
