@@ -428,9 +428,9 @@ class CouponController extends AbstractFOSRestController
             $promotion->setEndsAt($endsAt);
         }
 
-        if (isset($limitUsageToXQuantityOfUsers)) {
-            $promotion->setUsageLimit($limitUsageToXQuantityOfUsers);
-        }
+//        if (isset($limitUsageToXQuantityOfUsers)) {
+//            $promotion->setUsageLimit($limitUsageToXQuantityOfUsers);
+//        }
 
         $coupon->setUsageLimit($promotion->getUsageLimit());
         $coupon->setExpiresAt($promotion->getEndsAt());
