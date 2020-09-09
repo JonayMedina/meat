@@ -129,7 +129,7 @@ class CouponController extends AbstractFOSRestController
         if ($form->isSubmitted() && $form->isValid()) {
             $code = $form->get('code')->getData();
             $description = $form->get('description')->getData();
-            $enabled = $form->get('enabled')->getData();
+            $enabled = (bool)$form->get('enabled')->getData();
             $type = $form->get('type')->getData();
             $amount = (int) $form->get('amount')->getData();
             $oneUsagePerUser = $form->get('oneUsagePerUser')->getData();
