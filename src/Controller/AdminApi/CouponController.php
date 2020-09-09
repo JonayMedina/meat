@@ -439,9 +439,9 @@ class CouponController extends AbstractFOSRestController
             $coupon->setPerCustomerUsageLimit($perCustomerUsageLimit);
         }
 
-        if (isset($limitUsageToXQuantityOfUsers)) {
-            $coupon->setUsageLimit($limitUsageToXQuantityOfUsers);
-        }
+//        if (isset($limitUsageToXQuantityOfUsers)) {
+//            $coupon->setUsageLimit($limitUsageToXQuantityOfUsers);
+//        }
 
         if (isset($type) && isset($amount)) {
             /** Add Action */
