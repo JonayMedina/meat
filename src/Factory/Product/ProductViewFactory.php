@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Factory\Product;
 
 use App\Entity\Product\Product;
+use App\Entity\Product\ProductVariant;
 use App\Entity\User\ShopUser;
 use App\Service\FavoriteService;
 use Sylius\Component\Core\Model\ChannelInterface;
@@ -107,6 +108,11 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         $productView->isFavorite = $this->favoriteService->isFavorite($product, $user);
         /** Translate measurement unit */
         $productView->measurementUnit = $product->getMeasurementUnit();
+
+        /** @var ProductVariant $variant */
+        $variant = $product->getVariants()[0];
+
+        $productView->onHand = ($variant->getOnHand() > 0);
 
         /** @var ProductImageInterface $image */
         foreach ($product->getImages() as $image) {
