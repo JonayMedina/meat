@@ -73,11 +73,10 @@ class AddressService
         $customer = $address->getCustomer();
 
         if (!$customer instanceof Customer) {
-            $user = $this->entityManager->getRepository('App:User\ShopUser')
-                ->findOneBy(['username' => $address->getCreatedBy()]);
-        } else {
-            $user = $customer->getUser();
+            return;
         }
+
+        $user = $customer->getUser();
 
         if ($user instanceof ShopUser) {
             $this->sender->send('rejected_address', [$user->getEmail()], ['customer' => $user->getCustomer(), 'address' => $address]);
