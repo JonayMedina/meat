@@ -35,7 +35,6 @@ set('default_timeout', 30000000000);
 /** Set Telegram data */
 set('telegram_token', $TELEGRAM_TOKEN_HERE);
 set('telegram_chat_id', $TELEGRAM_CHATID_HERE);
-set('telegram_chat_id', 1303762180);
 set('telegram_text', '_{{user}}_ deploying `{{branch}}` to *{{target}}*');
 set('telegram_success_text', '_{{user}}_ has correctly deployed the `{{branch}}` branch to *{{target}}*');
 
