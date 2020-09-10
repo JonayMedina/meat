@@ -42,13 +42,13 @@ class ProductService
     public function serialize(Product $product)
     {
         $variant = $product->getVariants()[0];
-        $images = [];
+        $images = null;
 
         /** @var ChannelInterface $channel */
         $channel = $this->channel->getChannel();
 
         foreach ($product->getImages() as $key => $image) {
-            $images[$key] = $this->appUrl . '/media/cache/resolve/mobile_thumbnail/'. $image->getPath();
+            $images = $this->appUrl . '/media/cache/resolve/mobile_thumbnail/'. $image->getPath();
         }
 
         $product = [
