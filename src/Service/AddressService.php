@@ -63,7 +63,7 @@ class AddressService
     public function reject(Address $address): void
     {
         $address->setStatus(Address::STATUS_REJECTED);
-        $address->setValidatedAt(null);
+        $address->setValidatedAt(new \DateTime());
 
         /**
          * Send notification here...
