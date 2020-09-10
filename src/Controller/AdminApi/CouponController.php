@@ -178,6 +178,7 @@ class CouponController extends AbstractFOSRestController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $description = $form->get('description')->getData();
+            $enabled = (bool)$form->get('enabled')->getData();
             $type = $form->get('type')->getData();
             $amount = $form->get('amount')->getData();
             $oneUsagePerUser = $form->get('oneUsagePerUser')->getData();
@@ -186,7 +187,9 @@ class CouponController extends AbstractFOSRestController
             $startsAt = $form->get('startsAt')->getData();
             $endsAt = $form->get('endsAt')->getData();
 
+            $coupon->setEnabled($enabled);
             $coupon = $this->updateCoupon($coupon, $description, $type, $amount, $oneUsagePerUser, $limitUsageToXQuantityOfUsers, $usageLimit, $startsAt, $endsAt);
+
             $this->entityManager->flush();
             $view = $this->view($this->serializeCoupon($coupon), Response::HTTP_OK);
 
