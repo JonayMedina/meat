@@ -47,7 +47,7 @@
                                 {% for coupon in pagination %}
                                     {% set promotion = coupon.promotion %}
                                     <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }} {{ (not coupon.enabled) ? 'disabled' : '' }}">
-                                        <td>{{ coupon.id }}</td>
+                                        <td>{{ loop.index }}</td>
                                         <td>{{ coupon.code }}</td>
                                         <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
                                             <br> {{ promotion.endsAt ? promotion.endsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
