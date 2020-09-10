@@ -1,11 +1,11 @@
 {% extends 'Email/base.html.twig' %}
 
 {% block subject %}
-    {{ 'app.email.order.confirmation'|trans }}
+    {{ 'app.email.order.cancelled'|trans }}
 {% endblock %}
 
 {% block title %}
-    {{ include('Email/_title.html.twig', {'title': 'app.email.order.confirmation.title'|trans}) }}
+    {{ include('Email/_title.html.twig', {'title': 'app.email.order.cancelled'|trans}) }}
 {% endblock %}
 
 {% block content %}

@@ -12,6 +12,7 @@ use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Order\Model\OrderInterface;
@@ -340,7 +341,7 @@ class PaymentGatewayService
         $currency = $this->currencyContext->getCurrencyCode();
 
         /** Mark as paid */
-        if ('00' === $response['responseCode']) {
+        if (isset($response['responseCode']) && '00' === $response['responseCode']) {
             try {
                 /**
                  * Register payment in sylius.
@@ -390,6 +391,10 @@ class PaymentGatewayService
             ->setCvv2($cvv)
             ->request();
 
+        if (!isset($response['response'])) {
+            return [];
+        }
+
         $response['response']['responseMessage'] = $this->getResponseMessage($response['response']['responseCode']);
         $response['response']['cardHolder'] = $cardHolder;
         $response['response']['cardNumber'] = $this->maskCreditCard($cardNumber);
@@ -429,7 +434,23 @@ class PaymentGatewayService
             $client->decode_utf8 = FALSE;
 
             // Calls
-            return $client->call('AuthorizationRequest', $this->getParameters());
+            $result = $client->call('AuthorizationRequest', $this->getParameters());
+
+            if (!isset($response['responseCode'])) {
+                // Config
+                $client = new \nusoap_client(self::ENDPOINT, 'wsdl',  false, false, false, false, self::TIMEOUT);
+                $client->soap_defencoding = 'UTF-8';
+                $client->decode_utf8 = FALSE;
+                // Configure reverse
+                $this->configureReverse();
+
+                // Calls
+                $client->call('AuthorizationRequest', $this->getParameters());
+
+                return [];
+            }
+
+            return $result;
         } catch (\Exception $exception) {
             // Config
             $client = new \nusoap_client(self::ENDPOINT, 'wsdl',  false, false, false, false, self::TIMEOUT);
@@ -899,5 +920,55 @@ class PaymentGatewayService
                 $this->entityManager->remove($payment);
             }
         }
+    }
+
+    /**
+     * @param Order $order
+     * @return array
+     */
+    public function refund(Order $order)
+    {
+        /** @var Payment[] $payments */
+        $payments = $order->getPayments();
+        $result = [];
+
+        foreach ($payments as $payment) {
+            /** If payment was completed */
+            $details = $payment->getDetails();
+            $auditNumber = $details['auditNumber'] ?? null;
+
+            if ($auditNumber && $payment->getState() == PaymentInterface::STATE_COMPLETED && $payment->getMethod()->getCode() == PaymentGatewayService::PAYMENT_METHOD_EPAY) {
+                $param = [
+                    'posEntryMode' => self::POS_MODE_NORMAL
+                    , 'track2Data' => ""
+                    , 'paymentgwIP' => $this->getPaymentgwIP()
+                    , 'shopperIP' => $this->getShopperIP()
+                    , 'merchantServerIP' => $this->getMerchantServerIP()
+                    , 'merchantUser' => $this->merchantUser
+                    , 'merchantPasswd' => $this->merchantPasswd
+                    , 'terminalId' => $this->terminalId
+                    , 'merchant' => $this->merchant
+                    , 'messageType' => "0202"
+                    , 'auditNumber' => $auditNumber
+                    , 'additionalData' => ""
+                ];
+
+                $params = [['AuthorizationRequest' => $param]];
+
+                $client = new \nusoap_client(self::ENDPOINT, 'wsdl',  false, false, false, false, self::TIMEOUT);
+                $client->soap_defencoding = 'UTF-8';
+                $client->decode_utf8 = FALSE;
+                $result[] = [
+                    'payment' => [
+                        'id' => $payment->getId(),
+                        'amount' => $payment->getAmount(),
+                        'currency_code' => $payment->getCurrencyCode(),
+                    ],
+                    'response' => $client->call('AuthorizationRequest', $params)
+                ];
+            }
+        }
+
+        return $result;
     }
 }

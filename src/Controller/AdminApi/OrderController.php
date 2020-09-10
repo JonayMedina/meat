@@ -57,25 +57,33 @@ class OrderController extends AbstractFOSRestController
     private $sender;
 
     /**
+     * @var PaymentGatewayService
+     */
+    private $paymentGatewayService;
+
+    /**
      * DashboardController constructor.
      * @param OrderRepository $orderRepository
      * @param OrderService $orderService
      * @param Factory $stateMachineFactory
      * @param EntityManagerInterface $entityManager
      * @param SenderInterface $sender
+     * @param PaymentGatewayService $paymentGatewayService
      */
     public function __construct(
         OrderRepository $orderRepository,
         OrderService $orderService,
         Factory $stateMachineFactory,
         EntityManagerInterface $entityManager,
-        SenderInterface $sender
+        SenderInterface $sender,
+        PaymentGatewayService $paymentGatewayService
     ) {
         $this->orderRepository = $orderRepository;
         $this->orderService = $orderService;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->entityManager = $entityManager;
         $this->sender = $sender;
+        $this->paymentGatewayService = $paymentGatewayService;
     }
 
     /**
@@ -245,6 +253,22 @@ class OrderController extends AbstractFOSRestController
             }
         }
 
+        if ($order->getLastPayment()->getMethod()->getCode() == PaymentGatewayService::PAYMENT_METHOD_EPAY) {
+            $refunds = $this->paymentGatewayService->refund($order);
+            $success = false;
+
+            foreach ($refunds as $refund) {
+                if (!$success && $refund['response']['response']['responseCode'] == '00') {
+                    /** Cart: paid -> refunded */
+                    $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+
+                    if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_REFUND)) {
+                        $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REFUND);
+                    }
+                }
+            }
+        }
+
         /** Revert all payments */
         foreach ($order->getPayments() as $payment) {
             /** Payment: completed -> refund */
@@ -287,18 +311,6 @@ class OrderController extends AbstractFOSRestController
 
             if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_CANCEL)) {
                 $stateMachine->apply(OrderPaymentTransitions::TRANSITION_CANCEL);
-            }
-        }
-
-        if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID && $order->getLastPayment()->getMethod()->getCode() == PaymentGatewayService::PAYMENT_METHOD_EPAY) {
-            // TODO: Make refund here...
-
-
-            /** Cart: paid -> refunded */
-            $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-
-            if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_REFUND)) {
-                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_REFUND);
             }
         }
 

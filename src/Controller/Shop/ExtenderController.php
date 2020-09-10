@@ -295,7 +295,7 @@ class ExtenderController extends AbstractController
                 $formattedDate = $expDate[1].$expDate[0];
                 $result = $paymentGateway->orderPayment($order, $card['name'], str_replace(" ", "", $card['number']), $formattedDate, $card['cvv']);
 
-                if ($result['responseCode'] == "00") {
+                if (isset($result['responseCode']) && $result['responseCode'] == "00") {
                     $session->set('tokenValue', $order->getTokenValue());
                     $session->set('payment', null);
                     $session->set('card', null);
@@ -306,7 +306,7 @@ class ExtenderController extends AbstractController
                     $order->setCheckoutState(OrderCheckoutStates::STATE_PAYMENT_SELECTED);
                     $em->flush();
 
-                    return $this->redirectToRoute('sylius_shop_checkout_complete', ['error' => $result['responseCode']]);
+                    return $this->redirectToRoute('sylius_shop_checkout_complete', ['error' => $result['responseCode'] ?? 'Unknown']);
                 }
             } else {
                 $result = $paymentGateway->cashOnDelivery($order);
