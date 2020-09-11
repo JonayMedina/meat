@@ -435,6 +435,7 @@ class PaymentGatewayService
 
             // Calls
             $result = $client->call('AuthorizationRequest', $this->getParameters());
+            $response = $result['response'] ?? [];
 
             if (!isset($response['responseCode'])) {
                 // Config
