@@ -59,6 +59,15 @@ host('staging')
     ->stage('staging')
     ->set('deploy_path', '/var/www/staging');
 
+host('production')
+    ->hostname('172.26.0.134')
+    ->user('ubuntu')
+    ->set('branch', 'master')
+    ->port(22)
+    ->identityFile('~/pem/meathouse.pem')
+    ->stage('production')
+    ->set('deploy_path', '/var/www/production');
+
 /** Tasks */
 task('build', function () {
     run('cd {{release_path}} && build');
