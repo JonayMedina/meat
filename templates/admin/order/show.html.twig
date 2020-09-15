@@ -1,0 +1,174 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ '#' ~ order.number }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12 order">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('orders_index'), 'app.ui.orders_back_to_orders') }}
+                <br>
+                <h1>{{ 'app.ui.order_detail'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-12 header">
+                                        <div class="order-header">
+                                            <h2>{{ 'app.ui.order.label'|trans }} {{ '#' ~ order.number }}</h2>
+                                            <div class="legend">
+                                                <span class="{{ order.status }}">{{ ('app.ui.orders.states.'~order.status)|trans }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <table class="spaced" style="width: 100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.name'|trans }}</strong></td>
+                                                    <td>{{ order.customerName }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.email'|trans }}</strong></td>
+                                                    <td>
+                                                        {% if order.customer.email|default('') %}
+                                                            <a href="mailto: {{ order.customer.email|default('app.ui.n/a'|trans) }}">{{ order.customer.email|default('app.ui.n/a'|trans) }}</a>
+                                                        {% else %}
+                                                            {{ 'app.ui.n/a'|trans }}
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.addressing_step'|trans }}</strong></td>
+                                                    <td>
+                                                        {{ order.shippingAddress.fullAddress|default('app.ui.n/a'|trans) }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.form.address.annotations'|trans }}</strong></td>
+                                                    <td>{{ order.shippingAddress.annotations|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.form.address.phone_number'|trans }}</strong></td>
+                                                    <td>{{ order.shippingAddress.phoneNumber|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.date'|trans }}</strong></td>
+                                                    <td>{{ order.estimatedDeliveryDate ? order.estimatedDeliveryDate|localizeddate("medium") : 'app.ui.n/a'|trans }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.deliver_time'|trans }}</strong></td>
+                                                    <td>{{ order.preferredDeliveryTime|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.name_in_tax'|trans }}</strong></td>
+                                                    <td>{{ order.billingAddress.firstName|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.nit'|trans }}</strong></td>
+                                                    <td>{{ order.billingAddress.taxId|default('app.ui.tax_id.cf'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.address_in_tax'|trans }}</strong></td>
+                                                    <td>
+                                                        {{ order.billingAddress.fullAddress|default('app.ui.n/a'|trans) }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.payment_method'|trans }}</strong></td>
+                                                    <td>{{ order.payments[0].method.name|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>{{ 'app.ui.applied_discount'|trans }}</strong></td>
+                                                    <td>{{ order.promotionCoupon.code|default('app.ui.n/a'|trans) }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if order.status == 'shipped' or order.rating %}
+                    <div class="col-12">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <div class="row">
+                                    <div class="col-12 header">
+                                        <h2>{{ 'app.ui.rating'|trans }}</h2>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="stars">
+                                            {% for i in 1..constant('App\\Entity\\Order\\Order::MAX_RATING') %}
+                                                <span class="fa fa-star fa-3x {% if i <= order.rating  %}checked{% endif %}"></span>
+                                            {% endfor %}
+                                        </div>
+                                        {% if order.ratingComment %}
+                                        <div class="comment">
+                                            <p>{{ 'app.ui.comment'|trans }}</p>
+                                            <p>{{ order.ratingComment }}</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="text-right">
+                    {% if order.shippingAddress and order.shippingAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_PENDING') %}
+                    <a href="{{ path('orders_validate_address', {'id': order.id}) }}" class="btn btn-primary" style="width: 300px;">
+                        <i class="fa fa-user-check"></i>
+                        &nbsp;
+                        {{ 'app.ui.validate_this_address'|trans }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-12 header mb-3">
+                                <h2>{{ 'app.ui.products'|trans }}</h2>
+                            </div>
+                            <div class="col-12 products">
+                                <div class="row">
+                                    {% for item in order.items %}
+                                        <div class="col-12 product">
+                                            <p class="title">{{ item.variant }}</p>
+                                            <p><span><span>{{ 'app.ui.quantity'|trans }}:</span> {{ item.quantity }}</span> <strong>{{ item.total|price|number_format_currency(currency) }}</strong></p>
+                                            <div class="divider"></div>
+                                        </div>
+                                    {% endfor %}
+
+                                    <div class="col-12">
+                                        <p><span><span>{{ 'app.ui.sub_total'|trans }}</span></span> {{ order.itemsTotal|price|number_format_currency(currency) }}</p>
+                                        {% for adjustment in order.adjustments %}
+                                            <p class="discount"><span>{{ adjustment.label }}:</span> {{ adjustment.amount|price|number_format_currency(currency) }}</p>
+                                        {% endfor %}
+                                        <p class="total"><span>{{ 'app.ui.total'|trans }}</span> <strong>{{ order.total|price|number_format_currency(currency) }}</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

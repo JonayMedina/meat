@@ -1,37 +1,44 @@
-<div class="ui segment">
-    {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+<div class="col-12 segment pt-4 xs-pb-2-i products-list favorites-list" style="display: block;">
+    <div class="row">
+        {% for key, item in cart.items %}
+            {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id} %}
+        {% endfor %}
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12 mt-4 pt-2">
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-6 xs-mb-2">
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
+                    {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
+                </div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                    <div class="total row">
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                            <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.sub-total'|trans }}</p>
+                            <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.discount'|trans }}</p>
+                            <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
+                        </div>
+                        <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                            {% if cart.promotionCoupon %}
+                                <p class="pre-total sub-total xs-text-right" data-value="{{ cart.total + (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
+                                <p class="discount xs-text-right" data-value="{{ (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
+                            {% endif %}
+                            <p class="value xs-text-right" data-value="{{ cart.total }}">{{ money.convertAndFormat(cart.total) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-none">
+        {{ form_start(form, {'action': path('sylius_shop_cart_save'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate', 'id': form.vars.id}}) }}
         {{ form_errors(form) }}
         <input type="hidden" name="_method" value="PATCH"/>
         {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}
-
-    {{ sonata_block_render_event('sylius.shop.cart.summary.items', {'cart': cart, 'form': form}) }}
-
-    <table id="sylius-cart-items" class="ui very basic celled table">
-        <thead>
-        <tr>
-            <th>{{ 'sylius.ui.item'|trans }}</th>
-            <th>{{ 'sylius.ui.unit_price'|trans }}</th>
-            <th>{{ 'sylius.ui.qty'|trans }}</th>
-            <th></th>
-            <th class="right aligned">{{ 'sylius.ui.total'|trans }}</th>
-        </tr>
-        </thead>
-        <tbody>
-            {% for key, item in cart.items %}
-                {% include '@SyliusShop/Cart/Summary/_item.html.twig' with {'item': item, 'form': form.items[key], 'main_form': form.vars.id} %}
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if form.promotionCoupon is defined %}
-        <div class="ui hidden divider"></div>
-
-        {{ sonata_block_render_event('sylius.shop.cart.summary.before_coupon', {'cart': cart, 'form': form}) }}
-
-        {% include '@SyliusShop/Cart/Summary/_coupon.html.twig' with {'form': form.promotionCoupon, 'main_form': form.vars.id} %}
-
-        {{ sonata_block_render_event('sylius.shop.cart.summary.after_coupon', {'cart': cart, 'form': form}) }}
-    {% endif %}
-    <div class="ui hidden divider"></div>
-    {% include '@SyliusShop/Cart/Summary/_update.html.twig' with {'main_form': form.vars.id} %}
+        {% include '@SyliusShop/Cart/Summary/_update.html.twig' with {'main_form': form.vars.id} %}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
 </div>

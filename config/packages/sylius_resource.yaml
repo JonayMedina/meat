@@ -1,0 +1,57 @@
+# config/packages/sylius_resource.yaml
+sylius_resource:
+    resources:
+        app.terms_and_conditions:
+            driver: doctrine/orm # You can use also different driver here
+            classes:
+                model: App\Entity\TermsAndConditions
+                
+        app.about_store:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\AboutStore
+                
+        app.faq:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\FAQ
+                
+        app.location:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Location
+                
+        app.holiday:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Holiday
+                
+        app.segment:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Segment
+                
+        app.push_notification:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\PushNotification
+                
+        app.favorite:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Favorite
+                
+        app.shop_user_device:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\ShopUserDevice
+                
+        app.promotion_banner:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\PromotionBanner
+                
+        app.notification:
+            driver: doctrine/orm
+            classes:
+                model: App\Entity\Notification

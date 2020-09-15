@@ -1,0 +1,64 @@
+Sylius\Component\Addressing\Model\Address:
+    properties:
+        firstName:
+            - NotBlank:
+                  message: 'app.ui.checkout.billing.add_name'
+                  groups: ['app_billing']
+        phoneNumber:
+            - NotBlank:
+                  message: 'app.ui.checkout.address.add_phone'
+                  groups: ['app_address']
+                  
+App\Entity\Addressing\Address:
+    properties:
+        fullAddress:
+            - NotBlank:
+                  message: 'app.ui.checkout.address.add_address'
+                  groups: ['app_address']
+            - NotBlank:
+                  message: 'app.ui.checkout.billing.add_address'
+                  groups: ['app_billing']
+        annotations:
+            - NotBlank:
+                    message: 'app.ui.checkout.address.add_name'
+                    groups: ['app_address']
+        taxId:
+            - NotBlank:
+                  message: 'app.ui.checkout.billing.add_tax_id'
+                  groups: ['app_billing']
+            - Regex: 
+                  pattern: '/^(([0-9]{5,19}-[kK0-9]{1,2})|CF)$/'
+                  message: 'app.ui.checkout.billing.add_valid_tax_id'
+                  groups: ['app_billing']
+                  
+Sylius\Component\Customer\Model\Customer:
+    properties:
+        email:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length:
+                  min: 2
+                  max: 50
+                  groups: ['sylius_user_registration']
+        firstName:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length: 
+                  min: 2
+                  max: 25
+                  groups: ['sylius_user_registration']
+        lastName:
+            - NotBlank:
+                  groups: ['sylius_user_registration']
+            - Length:
+                  min: 2
+                  max: 25
+                  groups: ['sylius_user_registration']
+                  
+Sylius\Component\Core\Model\ShopUser:
+    properties:
+        plainPassword:
+            - Length:
+                  min: 8
+                  max: 20
+                  groups: ['sylius_shop_user_registration']

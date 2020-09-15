@@ -1,0 +1,71 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{% block subcontent %}
+    <div class="row login pass-change pt-5">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <a href="{{ path('sylius_shop_account_dashboard') }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_profile'|trans }}</a>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <h1 class="text-center">{{ 'app.ui.account.pre_change_email.title'|trans }}</h1>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment mt-4 pt-4">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    {{ form_start(form, {'action': path('user_pre_change_email'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate', 'id': 'add-Password'}}) }}
+                    {{ sonata_block_render_event('sylius.shop.account.change_password.after_content_header', {'form': form}) }}
+
+                    <div class="mb-5">
+                        <p>{{ 'app.ui.account.pre_change_email.instructions'|trans }}</p>
+                    </div>
+
+                    <div class="text-left">
+                        {{ form_row(form.password) }}
+                        {{ form_row(form.confirmPassword) }}
+                    </div>
+
+                    {{ sonata_block_render_event('sylius.shop.account.change_password.form', {'form': form}) }}
+
+                    {% if errors|length > 0 %}
+                        <div class="errors">
+                            <span class="invalid-feedback d-block"><span class="d-block">
+                                <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span>
+                                <span class="form-error-message">{{ errors['password']|trans }}</span></span>
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn-rounded mt-5 pt-3">{{ 'app.ui.account.pre_change_email.save_password'|trans }}</button>
+                    {{ form_row(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel">{{ 'app.ui.account.pre_change_email.error.title'|trans }}</h5>
+                </div>
+                <div class="modal-body text-center">{{ 'app.ui.account.pre_change_email.error.message'|trans }}</div>
+                <div class="modal-footer text-center">
+                    <a href="{{ path('sylius_shop_account_dashboard') }}" class="btn-rounded">{{ 'app.ui.agreed'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            if (getParameterByName('error')) {
+                $('#showMessage').modal('show');
+            }
+        });
+    </script>
+{% endblock %}
+

@@ -1,10 +1,13 @@
 parameters:
     sylius.security.admin_regex: "^/admin"
-    sylius.security.api_regex: "^/api"
-    sylius.security.shop_regex: "^"
+    sylius.security.shop_regex: "^" # shop-api has been added inside the brackets
     sylius_shop_api.security.regex: "^/shop-api"
 
 security:
+    role_hierarchy:
+        ROLE_ADMIN:  [ROLE_ADMIN, ROLE_ADMINISTRATION_ACCESS]
+        ROLE_ADMIN_API:  [ROLE_ADMIN_API, ROLE_ADMIN]
+        ROLE_EDITOR: [ROLE_EDITOR, ROLE_ADMINISTRATION_ACCESS]
     always_authenticate_before_granting: true
     providers:
         sylius_admin_user_provider:
@@ -19,38 +22,36 @@ security:
             context: admin
             pattern: "%sylius.security.admin_regex%"
             provider: sylius_admin_user_provider
-            form_login:
-                provider: sylius_admin_user_provider
-                login_path: sylius_admin_login
-                check_path: sylius_admin_login_check
-                failure_path: sylius_admin_login
-                default_target_path: sylius_admin_dashboard
-                use_forward: false
-                use_referer: true
-                csrf_token_generator: security.csrf.token_manager
-                csrf_parameter: _csrf_admin_security_token
-                csrf_token_id: admin_authenticate
-            remember_me:
-                secret: "%env(APP_SECRET)%"
-                path: /admin
-                name: APP_ADMIN_REMEMBER_ME
-                lifetime: 31536000
-                remember_me_parameter: _remember_me
-            logout:
-                path: sylius_admin_logout
-                target: sylius_admin_login
             anonymous: true
-
-        oauth_token:
-            pattern: "%sylius.security.api_regex%/oauth/v2/token"
-            security: false
-
-        api:
-            pattern: "%sylius.security.api_regex%/.*"
-            provider: sylius_admin_user_provider
-            fos_oauth: true
+            guard:
+                authenticators:
+                    - App\Security\AppAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
+        
+#        api:
+#            pattern: ^/api
+#            stateless: true
+#            provider: sylius_admin_user_provider
+#            #http_basic:
+#                #realm: "Meat House Secure Area"
+#            anonymous: true
+            
+        sylius_shop_api:
+            pattern: "%sylius_shop_api.security.regex%"
             stateless: true
             anonymous: true
+            provider: sylius_shop_user_provider
+            json_login:
+                check_path: /shop-api/login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
         shop:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH }
@@ -83,36 +84,33 @@ security:
             oauth:
                 resource_owners:
                     facebook: "/login/check-facebook"
-                login_path: /login
+                    apple: "/login/check-apple/"
+                login_path: sylius_shop_login
                 use_forward: false
-                failure_path: /login
+                default_target_path: grand_central
+                failure_path: grand_central
 
                 oauth_user_provider:
-                    service: sylius.oauth.user_provider
+                    service: user.oauth_user_provider
             anonymous: true
-            
-        sylius_shop_api:
-            pattern: "%sylius_shop_api.security.regex%"
-            stateless: true
-            anonymous: true
-            provider: sylius_shop_user_provider
-            json_login:
-                check_path: /shop-api/login
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
 
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
     access_control:
+        - { path: "%sylius_shop_api.security.regex%/login", roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius_shop_api.security.regex%/address-book", role: ROLE_USER}
         - { path: "%sylius_shop_api.security.regex%/me", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/favorites", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/devices", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/notifications", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/orders/.*/rating", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/carts", role: [IS_AUTHENTICATED_ANONYMOUSLY, ROLE_USER]}
+        - { path: "%sylius_shop_api.security.regex%/history", role: ROLE_USER}
+        - { path: "%sylius_shop_api.security.regex%/email", role: ROLE_USER}
+
+        #- { path: "^/api/", role: ROLE_ADMIN_API }
             
         - { path: "%sylius.security.admin_regex%/_partial", role: IS_AUTHENTICATED_ANONYMOUSLY, ips: [127.0.0.1, ::1] }
         - { path: "%sylius.security.admin_regex%/_partial", role: ROLE_NO_ACCESS }
@@ -120,12 +118,16 @@ security:
         - { path: "%sylius.security.shop_regex%/_partial", role: ROLE_NO_ACCESS }
 
         - { path: "%sylius.security.admin_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: "%sylius.security.api_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "%sylius.security.admin_regex%/forgot-password", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "%sylius.security.admin_regex%/validate-token", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "%sylius.security.admin_regex%/.*/new-password", role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: "%sylius.security.admin_regex%/.*/resend-code", role: IS_AUTHENTICATED_ANONYMOUSLY }
+
         - { path: "%sylius.security.shop_regex%/login", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.shop_regex%/register", role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: "%sylius.security.shop_regex%/verify", role: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: "%sylius.security.admin_regex%", role: ROLE_ADMINISTRATION_ACCESS }
-        - { path: "%sylius.security.api_regex%/.*", role: ROLE_API_ACCESS }
+
         - { path: "%sylius.security.shop_regex%/account", role: ROLE_USER }

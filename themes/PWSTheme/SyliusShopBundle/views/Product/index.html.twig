@@ -1,12 +1,4 @@
-{% extends '@SyliusShop/layout.html.twig' %}
-
-{#
-
-    Available variables:
-
-    * "products" - Paginator of products.
-
-#}
-
-{% block content %}
-{% endblock %}
+{{ render(url('sylius_shop_partial_taxon_show_by_slug', {
+    'slug': app.request.attributes.get('slug'),
+    'template': '@SyliusShop/Taxon/index.html.twig'
+})) }}

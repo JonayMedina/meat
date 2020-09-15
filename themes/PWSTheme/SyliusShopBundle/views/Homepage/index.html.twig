@@ -1,9 +1,106 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
 {% block content %}
-    <h2 class="ui horizontal section divider header">
-        {{ 'sylius.ui.latest_products'|trans }}
-    </h2>
+    <div id="homepage" class="container first">
+        {% block header %}{% endblock %}
+        {% block flashes %}{% endblock %}
 
-    {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_horizontalList.html.twig'})) }}
+        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+
+        <div class="row home pt-5">
+            {% include '/frontend/pages/widgets/_search.html.twig' with {'search': ''} %}
+        </div>
+
+        {{ render(url('store_categories')) }}
+
+        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+    </div>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            {{ render(url('store_banners')) }}
+        </div>
+    </div>
+    <div class="container">
+        {{ render(url('store_offers')) }}
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        jQuery(function () {
+            if (window.innerWidth < 992 && window.innerWidth > 575) {
+                $('.owl-carousel').append('<div class="item"><a></a><div>');
+            }
+
+            let owl = $('.taxons-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                nav: true,
+                dots: false,
+                items: 5,
+                autoWidth: true,
+                responsiveClass:true,
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                responsive:{
+                    0:{
+                        items: 2,
+                        autoWidth: true,
+                        nav: false
+                    },
+                    576:{
+                        items: 2,
+                        autoWidth: true
+                    },
+                    768:{
+                        items: 3,
+                        autoWidth: true
+                    },
+                    992:{
+                        items: 4,
+                        autoWidth: true
+                    },
+                    1200:{
+                        items: 5,
+                        autoWidth: true
+                    }
+                }
+            });
+
+            calcPL();
+
+            $(window).resize(function () {
+                calcPL();
+            });
+
+            function calcPL () {
+                var $container =  $('.container');
+                var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+                if (window.innerWidth < 992) {
+                    marg = 15;
+                }
+
+                $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
+                $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
+            }
+
+            $('.xpress-button').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                setTimeout(function () {
+                    $div.addClass('show');
+                }, 150);
+            });
+
+            $('button.close').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.removeClass('show');
+
+                setTimeout(function () {
+                    $div.find('div.custom-overlay').attr('style', 'display: none;');
+                }, 150);
+            });
+        });
+    </script>
 {% endblock %}

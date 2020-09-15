@@ -1,0 +1,5 @@
+<div id="sylius-billing-address">
+    {% include '@SyliusShop/Common/Form/_billing.html.twig' with {'form': form.billingAddress, 'order': order} %}
+
+    {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
+</div>
