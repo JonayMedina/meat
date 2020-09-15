@@ -30,13 +30,13 @@ security:
                 path: app_logout
                 target: app_login
         
-        api:
-            pattern: ^/api
-            stateless: true
-            provider: sylius_admin_user_provider
-            #http_basic:
-                #realm: "Meat House Secure Area"
-            anonymous: true
+#        api:
+#            pattern: ^/api
+#            stateless: true
+#            provider: sylius_admin_user_provider
+#            #http_basic:
+#                #realm: "Meat House Secure Area"
+#            anonymous: true
             
         sylius_shop_api:
             pattern: "%sylius_shop_api.security.regex%"
