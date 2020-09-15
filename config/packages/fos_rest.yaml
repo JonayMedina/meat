@@ -3,14 +3,29 @@ imports:
     - { resource: "@SyliusShopApiPlugin/Resources/config/app/sylius_mailer.yml" }
 
 fos_rest:
+    versioning: true
+    routing_loader:
+        default_format: json
+        include_format: false
     exception: true
     view:
         formats:
+            xml: true
             json: true
-            xml:  true
         empty_content: 204
+        failed_validation: HTTP_BAD_REQUEST
+        templating_formats:
+            html: true
+        serialize_null: true
+    serializer:
+        groups:               ['Default']
+        serialize_null:       true
     format_listener:
         rules:
             - { path: '^/shop-api', priorities: ['json'], fallback_format: json, prefer_extension: true }
-            - { path: '^/api/.*', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: true }
+            #- { path: '^/api', priorities: ['json', 'xml'], fallback_format: json, prefer_extension: true }
             - { path: '^/', stop: true }
+    param_fetcher_listener: true
+    access_denied_listener:
+        json: true
+        xml: true

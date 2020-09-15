@@ -1,0 +1,153 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block extracontent %}
+    <div class="row taxon pt-5">
+        {% include '/frontend/pages/widgets/_search.html.twig' with {'search': ''} %}
+
+        <div class="col-12">
+            {{ render(url('store_categories', {'current': get_principal_taxon(taxon).code })) }}
+        </div>
+
+        <div class="col-12">
+            {% if taxon.children|length > 0 %}
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row elements taxons mt-2">
+                            {% for taxon in taxon.children %}
+                                <div class="col-12 col-sm-6 col-md-6 col-lg-4 hidden element {{ taxon.slug }} mb-4" style="display: none">
+                                    <div class="bg-white">
+                                        <div class="image">
+{#                                            <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}" style="background: url('{{ taxon.images.first.path|imagine_filter('sylius_shop_sub_category_thumbnail') }}')">#}
+                                            <a class="d-block" href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
+                                                <img src="{% if taxon.images|length > 0 %}{{ taxon.images.first.path|imagine_filter('sylius_shop_sub_category_thumbnail') }}{% else %}https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/error/mobile.png{% endif %}" alt="{{ taxon.name }}" title="{{ taxon.name }}" width="auto" height="auto">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">
+                                                <p>{{ taxon.name }}</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {% include '@SyliusShop/Taxon/_breadcrumb.html.twig' %}
+
+                {{ render(url('store_products_by_taxon', {'code': taxon.code})) }}
+            {% endif %}
+        </div>
+        <div class="col-12 text-center mt-5">
+            <button id="load-more" class="btn-rounded" style="display: none">{{ 'app.ui.load_more_products'|trans }}</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            var $sticky = $('.sticky-button');
+
+            var owl = $('.taxons-carousel').owlCarousel({
+                loop: false,
+                margin: 15,
+                nav: true,
+                dots: false,
+                items: 5,
+                autoWidth: true,
+                responsiveClass:true,
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                responsive:{
+                    0:{
+                        items: 2,
+                        autoWidth: true,
+                        nav: false
+                    },
+                    576:{
+                        items: 2,
+                        autoWidth: true
+                    },
+                    768:{
+                        items: 3,
+                        autoWidth: true
+                    },
+                    992:{
+                        items: 4,
+                        autoWidth: true
+                    },
+                    1200:{
+                        items: 5,
+                        autoWidth: true
+                    }
+                }
+            });
+            owl.trigger('to.owl.carousel', $('#{{ get_principal_taxon(taxon).code }}').data('position'));
+
+            /* Load more elements */
+            var $loadMore = $('#load-more');
+            var $elements = $('.taxon .elements');
+            var x = {% if taxon.children|length > 0 %}9{% else %}12{% endif %};
+
+            if ($elements.find('.element').slice(0, x).removeClass('hidden').show()) {
+                removeLoadMore();
+            }
+
+            $loadMore.on('click', function (e) {
+                e.preventDefault();
+                x = x + {% if taxon.children|length > 0 %}9{% else %}12{% endif %};
+
+                if ($elements.find('.element').slice(0, x).removeClass('hidden').slideDown()) {
+                    removeLoadMore();
+                }
+            });
+
+            function removeLoadMore() {
+                if ($elements.find('.element.hidden').length <= 0) {
+                    $loadMore.remove();
+                } else {
+                    $loadMore.show();
+                }
+            }
+
+            {% if taxon.children|length <= 0 %}
+                $('.xpress-button').click(function () {
+                    let $div = $(this).closest('div.custom-overlay-container');
+                    $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                    setTimeout(function () {
+                        $div.addClass('show');
+                    }, 150);
+                });
+
+                $('button.close').click(function () {
+                    let $div = $(this).closest('div.custom-overlay-container');
+                    $div.removeClass('show');
+
+                    setTimeout(function () {
+                        $div.find('div.custom-overlay').attr('style', 'display: none;');
+                    }, 150);
+                });
+            {% endif %}
+
+            showSticky();
+
+            $(window).resize(function () {
+                showSticky();
+            });
+
+            function showSticky() {
+                if (window.innerWidth < 576) {
+                    $sticky.show();
+
+                    $sticky.click(function () {
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    });
+                } else {
+                    $sticky.hide();
+                }
+            }
+        });
+    </script>
+{% endblock %}

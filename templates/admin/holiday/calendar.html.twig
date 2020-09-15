@@ -1,0 +1,166 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.edit_holidays'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('holidays')) }}
+                <br>
+                <h1>{{ 'app.ui.edit_holidays'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-85">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/fullcalendar/fullcalendar.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/fullcalendar/fullcalendar.print.css') }}" media="print">
+    <style>
+        .sweet-alert.show-input input {
+            width: 465px;
+            margin: auto;
+        }
+
+        .sweet-alert input:focus {
+            outline: none;
+            box-shadow: none;
+            border: 1px solid #A99FA1;
+        }
+
+        .sweet-alert input {
+            border: 1px solid #D2C4C7;
+            border-radius: 25px;
+            height: 48px;
+            color: #917171;
+            background-color: #FAF5F6;
+        }
+
+        .sweet-alert button {
+            margin-top: 20px !important;
+        }
+
+        .sweet-alert h2 {
+            margin-top: 0 !important;
+        }
+
+        .sweet-alert p {
+            margin-bottom: 25px;
+        }
+
+        .sweet-alert h2 {
+            margin: 6px 0 !important;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+  {{ parent() }}
+  <script src="{{ asset('meathouse/js/plugins/fullcalendar/moment.min.js') }}"></script>
+  <script src="{{ asset('meathouse/js/plugins/fullcalendar/fullcalendar.min.js') }}"></script>
+  <script src="{{ asset('meathouse/js/plugins/fullcalendar/lang/'~ app.request.locale|split('_')[0] ~'.js') }}"></script>
+  <script>
+  $(document).ready(function() {
+      blockUI();
+      var $wrapper = $('#wrapper');
+      var $calendar = $wrapper.find('#calendar');
+
+      $calendar.fullCalendar({
+          locale: '{{ app.request.locale|split('_')[0] }}',
+          header: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'month,agendaWeek,agendaDay'
+          },
+          editable: true,
+          eventSources: [
+              {
+                  url: Routing.generate('holidays_ajax_index'),
+                  success: function() {
+                      unblockUI()
+                  },
+                  error: function() {
+                      error('{{ 'app.ui.error'|trans }}');
+                      unblockUI()
+                  }
+              }
+          ],
+          eventDrop: function (event, delta, revertFunc) {
+              blockUI();
+
+              $.ajax({
+                  url: Routing.generate('holidays_update_event', {id: event.id}),
+                  data: delta['_data'],
+                  type: "PUT",
+                  success: function() {
+                      unblockUI();
+                  },
+                  error: function() {
+                      unblockUI();
+                      revertFunc();
+                  }
+              });
+          },
+          dayClick: function(date) {
+
+              swal({
+                  title: "{{ 'app.ui.holidays_new'|trans }}",
+                  text: "{{ 'app.ui.holidays_new_on_date'|trans }}" + " " + date.format(),
+                  type: "input",
+                  showCancelButton: true,
+                  closeOnConfirm: false,
+                  inputPlaceholder: "{{ 'app.ui.holidays_please_enter_reason'|trans }}"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("{{ 'app.ui.this_field_cannot_be_blank'|trans }}");
+                        return false
+                    }
+
+                    blockUI();
+
+                    $.ajax({
+                        url: Routing.generate('holidays_new'),
+                        data: {name: inputValue, 'date': date.format()},
+                        type: "POST",
+                        success: function(response) {
+                            var event = response['recordset'];
+
+                            swal.close();
+
+                            setTimeout(function() {
+                                unblockUI();
+
+                                $calendar.fullCalendar('renderEvent', {
+                                    id: event['id'],
+                                    title: event['name'],
+                                    start: event['date'],
+                                    allDay: true
+                                });
+                            }, 1000);
+                        },
+                        error: function() {
+                            swal.close();
+                            unblockUI();
+                            error('{{ 'app.ui.error'|trans }}');
+                        }
+                    });
+                });
+          }
+      });
+  });
+  </script>
+{% endblock %}

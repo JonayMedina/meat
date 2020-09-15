@@ -1,0 +1,31 @@
+<div class="grouped fields">
+    <div class="field">
+        <div class="radio"><input type="radio" class="add-data" name="add_data" value="1" checked="checked"><label><p>{{ 'app.ui.checkout.billing.add_data'|trans }}</p></label><span class="check-mark"></span></div>
+    </div>
+    <div class="field">
+        <div id="skip-step" class="radio"><input type="radio" class="add-data" name="add_data" value="0"><label><p>{{ 'app.ui.checkout.billing.cf'|trans }}</p></label><span class="check-mark"></span></div>
+    </div>
+</div>
+
+<div class="skip-form">
+    {% set defaultBilling = order.customer.defaultBillingAddress %}
+    <div class="field">
+        {{ form_label(form.firstName, 'app.ui.checkout.billing.name') }}
+        {{ form_widget(form.firstName, {'value': defaultBilling ? defaultBilling.firstName : ''}) }}
+        <small>{{ form_help(form.firstName) }}</small>
+        <div class="form-error">
+            {{ form_errors(form.firstName) }}
+        </div>
+    </div>
+
+    {{ form_row(form.taxId, {'value': defaultBilling ? defaultBilling.taxId : ''}) }}
+
+    <div class="field text">
+        {{ form_label(form.fullAddress, 'app.ui.checkout.billing.address') }}
+        {{ form_widget(form.fullAddress, {'attr': {'placeholder': ''}, 'value': defaultBilling ? defaultBilling.fullAddress : '' }) }}
+        <small>{{ form_help(form.fullAddress) }}</small>
+        <div class="form-error">
+            {{ form_errors(form.fullAddress) }}
+        </div>
+    </div>
+</div>

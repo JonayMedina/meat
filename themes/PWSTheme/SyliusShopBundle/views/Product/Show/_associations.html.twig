@@ -1,0 +1,12 @@
+<div class="col-12 associations">
+    <div class="row">
+        {% for association in product.associations %}
+            {{ render(url('sylius_shop_partial_product_association_show', {'productId': product.id, 'id': association.id, 'template': '@SyliusShop/Product/Show/_association.html.twig'})) }}
+        {% else %}
+            <div class="col-12 association xs-pr-0">
+                <h4>{{ 'app.ui.latest_products'|trans }}</h4>
+                {{ render(url('sylius_shop_partial_product_index_latest', {'count': 4, 'template': '@SyliusShop/Product/_slider.html.twig'})) }}
+            </div>
+        {% endfor %}
+    </div>
+</div>

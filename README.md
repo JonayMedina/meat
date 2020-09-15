@@ -14,9 +14,11 @@ Installation
 
 ```bash
 $ cd project
+# Yarn debe estar en al menos la versión 1, sino dará problemas.
 $ yarn install
 $ yarn build
 $ php bin/console sylius:install
+$ php bin/console sylius:theme:assets:install
 $ php bin/console server:start
 $ open http://localhost:8000/
 ```

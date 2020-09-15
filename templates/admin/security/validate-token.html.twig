@@ -1,0 +1,100 @@
+{% extends '/admin/security.html.twig' %}
+{% import "admin/_macros.html.twig" as UI %}
+{% set email = app.request.get('user')|default('') %}
+
+{% block title %} {{ 'app.ui.validate_token.title'|trans }} {% endblock %}
+
+{% block styles %}
+    <style>
+        #top-left-actions {
+            margin-top: -40px;
+            text-align: left;
+            margin-left: 20px;
+            margin-bottom: 40px;
+        }
+
+        #top-left-actions .btn-back-button, .btn-back-button:hover {
+            color: #AB162B;
+            text-decoration: underline;
+        }
+
+        a, a:hover, a:active {
+            color: #AB162B;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="login-header top-box text-center ibox-content">
+        <div id="top-left-actions">
+            {{ UI.back(path('app_forgot_password'), 'app.ui.forgot_password_back_to_login') }}
+        </div>
+        <div>
+            <img src="{{ asset('meathouse/img/logo_black.png') }}" alt="{{ app_name }}">
+
+            <h1>{{ 'app.ui.validate_token.title'|trans }}</h1>
+            <p>{{ 'app.ui.validate_token.motd'|trans }}</p>
+        </div>
+
+        <div class="middle-box text-center loginscreen animated fadeInDown">
+            <div>
+                <form class="m-t" role="form" method="post" novalidate>
+
+                    {{ include('admin/security/_flashes.html.twig') }}
+
+                    <div class="form-group">
+                        {{ form_label(form.token) }}
+                        {{ form_widget(form.token) }}
+                    </div>
+                    <br><br>
+
+                    {{ form_widget(form._token) }}
+
+                    <button type="submit" class="btn btn-primary width-225 m-b">
+                        {{ 'app.ui.validate_token.submit_text'|trans }}
+                    </button>
+                </form>
+
+            </div>
+        </div>
+        <br><br>
+        <p>
+            {{ 'app.ui.forgot_password.didnt_receive_your_code'|trans }}
+
+            {% if email %}
+            <a href="#" id="resend-code">
+                {{ 'app.ui.validate_token.resend_code'|trans }}
+            </a>
+            {% endif %}
+        </p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function () {
+            var $wrapper = $('.login-header');
+
+            {% if email %}
+            $wrapper.on('click', '#resend-code', function (e) {
+                e.preventDefault();
+                blockUI();
+
+                $.ajax({
+                    type: 'POST',
+                    url: Routing.generate('app_resend_code', {email: '{{ email }}'}),
+                    success: function () {
+                        $wrapper.find('#token_password_token').select();
+                        unblockUI();
+                    },
+                    error: function () {
+                        unblockUI();
+                    }
+                });
+            });
+            {% endif %}
+        });
+    </script>
+{% endblock %}

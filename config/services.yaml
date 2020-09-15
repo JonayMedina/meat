@@ -2,6 +2,17 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: es_GT
+    app_name: "%env(APP_NAME)%"
+    dev_name: "%env(DEVELOPER_NAME)%"
+    uploads_base_url: 'https://s3.amazonaws.com/%env(AWS_S3_BUCKET_NAME)%'
+    fb_client_id: "%env(APP_FB_CLIENT_ID)%"
+    fb_client_secret: "%env(APP_FB_SECRET)%"
+    sylius.form.type.address.validation_groups: ['app_address']
+    aws.s3.key: "%env(AWS_S3_ACCESS_ID)%"
+    aws.s3.secret: "%env(AWS_S3_ACCESS_SECRET)%"
+    aws.s3.bucket: "%env(AWS_S3_BUCKET_NAME)%"
+    aws.s3.region: "%env(AWS_S3_REGION_ID)%"
+    aws.s3.version: "%env(AWS_S3_REGION_VERSION)%"
 
 services:
     # Default configuration for services in *this* file
@@ -16,10 +27,41 @@ services:
         # fetching services directly from the container via $container->get() won't work
         public: false
 
+        # setup special, global autowiring rules
+        bind:
+            $isDebug: '%kernel.debug%'
+            $env: '%kernel.environment%'
+            $uploadsFilesystem: '@oneup_flysystem.uploads_filesystem_filesystem'
+            $uploadedAssetsBaseUrl: '%uploads_base_url%'
+            $s3BucketName: '%env(AWS_S3_BUCKET_NAME)%'
+            $captchaKey: '%env(CAPTCHA_KEY)%'
+            $captchaSecret: '%env(CAPTCHA_SECRET_KEY)%'
+            $fcmServerKey: '%env(FCM_SERVER_KEY)%'
+            $userRepository: '@sylius.repository.shop_user'
+            $addCouponAction: '@sylius.shop_api_plugin.controller.cart.add_coupon_action'
+            $removeCouponAction: '@sylius.shop_api_plugin.controller.cart.remove_coupon_action'
+            $epayGateWayIP: '%env(EPAY_GATEWAY_IP)%'
+            $epayTerminalID: '%env(EPAY_TERMINAL_ID)%'
+            $epayMerchant: '%env(EPAY_MERCHANT)%'
+            $epayMerchantUser: '%env(EPAY_MERCHANT_USER)%'
+            $epayMerchantPassword: '%env(EPAY_MERCHANT_PASSWORD)%'
+            $oauthRepository: '@sylius.repository.oauth_user'
+            $userFactory: '@sylius.factory.shop_user'
+            $oauthFactory: '@sylius.factory.oauth_user'
+            $appleClientId: '%env(APP_APPLE_CLIENT_ID)%'
+            $appleClientSecret: '%env(APP_APPLE_SECRET)%'
+            $appUrl: '%env(APP_URL)%'
+
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:
             autowire: false
         Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType:
+            autowire: false
+        App\Controller\Shop\OrderExtendedController:
+            autowire: false
+        App\Controller\Shop\ProductExtendedController:
+            autowire: false
+        App\Controller\Shop\OrderItemExtendedController:
             autowire: false
 
     # Makes classes in src/ available to be used as services;
@@ -33,8 +75,163 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-
-    app.listener.admin.menu_builder:
-        class: App\Menu\AdminMenuListener
+        
+    Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository:
+        alias: 'sylius.repository.order'
+        
+    Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository:
+        alias: 'sylius.repository.promotion_coupon'
+        
+    Sylius\Component\Core\Factory\CartItemFactoryInterface:
+        alias: 'sylius.custom_factory.order_item'
+        
+    Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier:
+        alias: 'sylius.order_item_quantity_modifier.limiting'
+        
+    Sylius\Component\Order\Processor\CompositeOrderProcessor:
+        alias: 'sylius.order_processing.order_processor.composite'
+        
+    Sylius\Component\Core\Factory\AddressFactoryInterface:
+        alias: 'sylius.custom_factory.address'
+        
+    Sylius\CustomerReorderPlugin\Reorder\ReordererInterface:
+        alias: 'Sylius\CustomerReorderPlugin\Reorder\Reorderer'
+        
+    Sylius\Bundle\CoreBundle\Storage\CartSessionStorage:
+        alias: 'Sylius\Component\Core\Storage\CartStorageInterface'
+        
+    Sylius\Bundle\TaxonomyBundle\Doctrine\ORM\TaxonRepository:
+        alias: 'sylius.repository.taxon'
+        
+    Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductAssociationTypeRepository:
+        alias: 'sylius.repository.product_association_type'
+        
+    SM\Factory\Factory:
+        alias: 'sm.factory'
+        
+    Liip\ImagineBundle\Service\FilterService:
+        alias: 'liip_imagine.service.filter'
+        
+    App\Menu\MenuBuilder:
+        arguments: ["@knp_menu.factory"]
         tags:
-            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addAdminMenuItems }
+            - { name: knp_menu.menu_builder, method: createSidebarMenu, alias: sidebar } # The alias is what is used to retrieve the menu
+                
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+        
+    App\EventSubscriber\CustomerSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    App\EventSubscriber\ShopUserSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\OrderSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\NotificationSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+                
+    App\EventSubscriber\AddressSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    app.factory.product.listview:
+        class: App\Factory\Product\ListProductViewFactoryExtension
+        decorates: sylius.shop_api_plugin.factory.list_product_view_factory
+        arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.product_view_factory', '@sylius.shop_api_plugin.factory.product_variant_view_factory']
+        public: false
+        
+    App\Factory\Product\ProductViewFactory:
+        decorates: sylius.shop_api_plugin.factory.product_view_factory
+        arguments: ['@sylius.shop_api_plugin.factory.image_view_factory', '@sylius.shop_api_plugin.factory.limited_product_attribute_values_view_factory', '', '', '', 'App\View\ShopApi\ProductView', '%sylius.shop_api.view.product_taxon.class%', '%locale%']
+        public: false
+        
+    App\Factory\ShopApi\AddressViewFactory:
+        decorates: sylius.shop_api_plugin.factory.address_view_factory
+        arguments: ['App\View\ShopApi\AddressView']
+        public: false
+
+    app.service.token_generator.password_reset:
+        class: App\Service\UniqueTokenGeneratorExtended
+        decorates: sylius.shop_user.token_generator.password_reset
+        arguments: ['@sylius.random_generator', '@sylius.shop_user.token_uniqueness_checker.password_reset', 10]
+        public: false
+        
+    app.service.order:
+        class: App\Service\OrderService
+        public: true
+        
+    app.factory.shop_user_customer_view_factory:
+        class: App\Factory\ShopApi\CustomerViewFactory
+        decorates: sylius.shop_api_plugin.factory.customer_view_factory
+        arguments: ['App\View\ShopApi\CustomerView']
+        public: false
+
+    app.form.extension.type.customer_registration:
+        class: App\Form\Extension\CustomerRegistrationTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType }
+    
+    app.form.extension.type.customer_profile:
+        class: App\Form\Extension\CustomerProfileTypeExtension
+        tags:
+            - { name: form.type_extension, extended_types: Sylius\Bundle\CustomerBundle\Form\Type\CustomerProfileType }
+                
+    app.form.extension.type.address:
+        class: App\Form\Extension\AddressTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\AddressingBundle\Form\Type\AddressType }
+            
+    app.form.extension.type.checkout.address:
+        class: App\Form\Extension\AddressTypeCheckoutExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\Checkout\AddressType }
+            
+    app.form.extension.type.cart:
+        class: App\Form\Extension\CartTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\OrderBundle\Form\Type\CartType, priority: -5 }
+            
+    app.form.extension.type.shop_user_registration:
+        class: App\Form\Extension\ShopUserRegistrationTypeExtension
+        tags:
+            - { name: form.type_extension, extended_type: Sylius\Bundle\CoreBundle\Form\Type\User\ShopUserRegistrationType }
+                
+    app.controller.shop.extender:
+        class: App\Controller\Shop\ExtenderController
+        tags: ['controller.service_arguments']
+        
+    app.shop_api.cart:
+        class: App\Controller\ShopApi\CartController
+        tags: ['controller.service_arguments']
+            
+    Symfony\Component\Asset\Context\RequestStackContext: '@assets.context'
+                
+    Aws\S3\S3Client:
+        arguments:
+            -   version: '%env(AWS_S3_REGION_VERSION)%' # or 'latest'
+                region: '%env(AWS_S3_REGION_ID)%' # 'eu-central-1' for example
+                credentials:
+                    key: '%env(AWS_S3_ACCESS_ID)%'
+                    secret: '%env(AWS_S3_ACCESS_SECRET)%'
+                    
+    App\Service\AdminSyncService:
+        public: true
+                    
+    sensio_framework_extra.view.listener:
+        alias: Sensio\Bundle\FrameworkExtraBundle\EventListener\TemplateListener
+        
+    App\EventListener\LoginListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+    
+    user.oauth_user_provider:
+        class: App\Auth\OAuthProvider
+        public: true

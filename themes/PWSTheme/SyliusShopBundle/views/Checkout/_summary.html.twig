@@ -1,0 +1,74 @@
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+{% set itemsSubtotal = sylius_order_items_subtotal(order) %}
+{% set taxIncluded = sylius_order_tax_included(order) %}
+{% set taxExcluded = sylius_order_tax_excluded(order) %}
+
+<div class="row">
+    <div class="col-12 d-flex justify-content-between">
+        <h2>{{ 'app.ui.checkout.order.summary'|trans }}</h2>
+        <a class="d-block d-sm-block d-md-none text-underline" data-toggle="collapse" href="#summary-collapse" role="button" aria-expanded="false" aria-controls="summary-collapse">{{ 'app.ui.checkout.view_details'|trans }}</a>
+    </div>
+    <div class="col-12 d-none d-sm-none d-md-block">
+        <div class="row">
+            {% for item in order.items %}
+                <div class="col-12 item">
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="title">{{ item.getVariant.product.name }}</p>
+                        </div>
+                        <div class="col-12 extra">
+                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ 'app.ui.checkout.%quantity%_%measure%'|trans({'%quantity%': item.quantity, '%measure%': item.quantity > 1 ? item.getVariant.product.measurementUnit.plural : item.getVariant.product.measurementUnit.singular }) }}</p>
+                            <p>{{ money.convertAndFormat(item.subtotal) }}</p>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div id="summary-collapse" class="col-12 collapse d-block d-sm-block d-md-none">
+        <div class="row">
+            {% for item in order.items %}
+                <div class="col-12 item">
+                    <div class="row">
+                        <div class="col-12">
+                            <p class="title">{{ item.getVariant.product.name }}</p>
+                        </div>
+                        <div class="col-12 extra">
+                            <p><span>{{ 'app.ui.checkout.order.quantity'|trans }}</span> {{ item.quantity }} {{ 'app.ui.pound'|trans }}</p>
+                            <p>{{ money.convertAndFormat(item.subtotal) }}</p>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-12 totals">
+        <div class="row">
+            <div class="col-12">
+                <p class="pre-title">{{ 'app.ui.cart.sub-total'|trans }}</p>
+                <p>{{ money.convertAndFormat(itemsSubtotal) }}</p>
+            </div>
+
+            {% if order.shippingTotal > 0 %}
+            <div class="col-12">
+                <p class="pre-title">{{ 'app.ui.cart.shipment'|trans }}</p>
+                <p>{{ money.convertAndFormat(order.shippingTotal) }}</p>
+            </div>
+            {% endif %}
+
+            {% if order.promotionCoupon %}
+            <div class="col-12">
+                <p class="pre-title">{{ 'app.ui.cart.discount'|trans }}</p>
+                <p>{{ money.convertAndFormat(order.orderPromotionTotal)|replace({'-': ''}) }}</p>
+            </div>
+            {% endif %}
+            <div class="col-12">
+                <p class="pre-title total">{{ 'app.ui.checkout.order.total'|trans }}</p>
+                <p class="total">{{ money.convertAndFormat(order.total) }}</p>
+            </div>
+        </div>
+    </div>
+</div>

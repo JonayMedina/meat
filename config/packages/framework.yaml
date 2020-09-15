@@ -1,4 +1,5 @@
 framework:
+    ide: 'phpstorm://open?file=%%f&line=%%l'
     translator: { fallbacks: ["%locale%"] }
     secret: '%env(APP_SECRET)%'
     form: true

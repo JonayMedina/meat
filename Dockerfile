@@ -30,6 +30,8 @@ RUN set -eux; \
 		libzip-dev \
 		mariadb-dev \
 		zlib-dev \
+		librabbitmq-dev \
+        libssh-dev \
 	; \
 	\
 	docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include --with-webp-dir=/usr/include --with-freetype-dir=/usr/include/; \
@@ -43,11 +45,13 @@ RUN set -eux; \
 	; \
 	pecl install \
 		apcu-${APCU_VERSION} \
+		amqp \
 	; \
 	pecl clear-cache; \
 	docker-php-ext-enable \
 		apcu \
 		opcache \
+		amqp \
 	; \
 	\
 	runDeps="$( \

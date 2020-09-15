@@ -1,0 +1,27 @@
+{% import "admin/_macros.html.twig" as UI %}
+
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.firstName},
+    {'span': 6, 'field': form.lastName}
+]) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.email},
+    {'span': 6, 'field': form.role}
+]) }}
+
+{% if not user.id %}
+    {{ UI.row([
+        {'span': 6, 'field': form.temporalPassword},
+    ]) }}
+{% endif %}
+
+<div class="form-group margin-top-25">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_user'|trans }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

@@ -1,0 +1,3 @@
+zenstruck_schedule:
+    # The default timezone for tasks (override at task level), null for system default
+    timezone:             America/Guatemala

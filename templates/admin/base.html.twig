@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} - {{ app_name }}</title>
+
+    <link rel="icon" type="image/png" href="{{asset('meathouse/img/favicon.png')}}">
+
+    <link href="{{asset('meathouse/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/font-awesome/css/all.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/font-awesome/css/v4-shims.min.css')}}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/datapicker/datepicker3.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/toastr/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/sweetalert/sweetalert.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+    <link href="{{asset('meathouse/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('meathouse/css/custom.min.css')}}" rel="stylesheet">
+
+    {% block styles %}
+    {% endblock %}
+    <style>
+        button.close {
+            margin-top: -3px;
+        }
+
+        .custom-file-label::after {
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            background-color: #404040;
+            color: #FFFFFF;
+            content: "{{ 'app.ui.browse'|trans }}"
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            background-image: url("{{ asset('meathouse/img/icons/dropdown.svg') }}") !important;
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 11px);
+            background-position-y: 16px;
+            border: 1px solid #dfdfdf;
+            border-radius: 2px;
+            margin-right: 2rem;
+            padding: 1rem;
+            padding-right: 2rem !important;
+        }
+    </style>
+    <style>
+        /* Fonts */
+        @font-face {
+            font-family: "Raleway Medium";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Medium.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Regular";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Regular.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway SemiBold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-SemiBold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Bold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Bold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway ExtraBold";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-ExtraBold.ttf') }}");
+        }
+
+        @font-face {
+            font-family: "Raleway Light";
+            src: url("{{ asset('meathouse/fonts/raleway/Raleway-Light.ttf') }}");
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+
+            <ul class="nav metismenu">
+                <li class="nav-header text-center">
+                    <a href="{{ path('dashboard_index') }}">
+                        <img id="main-logo" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/admin/logo.png" alt="{{ app_name }}">
+                    </a>
+                </li>
+            </ul>
+            {{ knp_menu_render('sidebar', {'currentClass': 'active'}) }}
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div id="toggle-main-menu" style="display: none;">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-hide-main-menu" href="#">
+                            <i class="fa fa-arrow-left"></i>
+                            &nbsp;
+                            <span>
+                            {{ 'app.ui.hide_main_menu'|trans }}
+                        </span>
+                        </a>
+
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-show-main-menu" href="#">
+                            <i class="fa fa-arrow-right" style="font-size: 20px;"></i>
+                            &nbsp;
+                            <span style="font-size: 15px;">
+                            {{ 'app.ui.show_main_menu'|trans }}
+                        </span>
+                        </a>
+                    </div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <div class="dropdown m-r-sm" style="margin-right: 30px;">
+                            <a data-toggle="dropdown" class="dropdown-toggle count-info text-primary" href="#">
+                                <span class="block m-t-xs font-bold">{{app.user}} <i class="fa fa-caret-down"></i></span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">{{ 'app.ui.logout'|trans }}</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissable fade show">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('danger') %}
+                        <div class="alert alert-danger alert-dismissable fade show">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('warning') %}
+                        <div class="alert alert-warning alert-dismissable fade show">
+                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="{{asset('meathouse/js/jquery-3.1.1.min.js')}}"></script>
+<script src="{{ asset('meathouse/js/popper.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('meathouse/js/inspinia.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/pace/pace.min.js') }}"></script>
+
+<script src="{{ asset('meathouse/js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/toastr/toastr.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+<script src="{{ asset('meathouse/js/plugins/blockUI/jquery.blockUI.min.js') }}"></script>
+
+<!-- FOS JS Routing -->
+<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+{{ include('admin/_defaults.html.twig') }}
+
+<script>
+    $(document).ready(function () {
+        var $sideMenu = $('#side-menu');
+        var $activeList = $sideMenu.find('li.active');
+        var $parent = $activeList.closest('li.dropdown');
+
+        var $mainMenuToggle = $('#toggle-main-menu');
+
+        if ($parent.length) {
+            // keep dropdown open
+            $parent.addClass('active');
+            var $ul = $parent.find('ul.nav');
+            var $a = $parent.find('[aria-expanded=false]');
+
+            $a.attr('aria-expanded', 'true');
+            $ul.attr('aria-expanded', 'true');
+            $ul.addClass('in');
+        }
+
+        setTimeout(function () {
+            $mainMenuToggle.fadeIn('fast');
+        }, 500);
+    });
+</script>
+<script src="{{ asset('meathouse/js/app.js') }}"></script>
+{% block javascript %}
+{% endblock %}
+
+</body>
+
+</html>
