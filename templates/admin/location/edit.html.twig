@@ -1,0 +1,37 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.edit_location'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('locations_index')) }}
+                <br>
+                <h1>{{ 'app.ui.edit_location'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        {% include '/admin/location/_form.html.twig' with {'form': form, 'edit': true, 'errors': errors} %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
+    <script>
+        $(function () {
+            $('.inputmask').inputmask("9{1,2}:99 aa");
+            $('#location_phoneNumber').inputmask("9999-9999")
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,166 @@
+{% extends "/admin/base.html.twig" %}
+
+{% block title %}{{ 'app.ui.coupons'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                <h1>{{ 'app.ui.coupons'|trans }} <small>{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_active_coupons_%total%{% endtrans %}</small></h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="{{ path('coupons_new') }}" class="btn btn-primary btn-lg btn-standard-width">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        &nbsp;
+                        {{'app.ui.new_coupon'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
+
+                        <div class="search-box">
+                            <form action="" method="get">
+                                <input type="search" name="filter" class="search-box-input form-control" placeholder="{{ 'app.ui.search_box.coupon'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                            </form>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th>{{ 'app.ui.tables.header.number'|trans() }}</th>
+                                    <th>{{ 'app.ui.coupon'|trans() }}</th>
+                                    <th>{{ 'app.ui.duration'|trans() }}</th>
+                                    <th>{{ 'app.ui.discount_type'|trans }}</th>
+                                    <th class="actions-header">{{ 'app.ui.actions'|trans }}</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for coupon in pagination %}
+                                    {% set promotion = coupon.promotion %}
+                                    <tr class="{{ coupon.isOutdated ? 'out-dated' : '' }} {{ coupon.hasNoQuota ? 'no-quota': '' }} {{ (not coupon.enabled) ? 'disabled' : '' }}">
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ coupon.code }}</td>
+                                        <td>{{ promotion.startsAt ? promotion.startsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }} -
+                                            <br> {{ promotion.endsAt ? promotion.endsAt|localizeddate("medium", "short") : 'app.ui.n/a'|trans }}</td>
+                                        <td>
+                                            {{ coupon.type(channel.code)|default('app.ui.n/a'|trans) }}
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="active-switch-{{ loop.index }}" class="switch-input" data-id="{{ coupon.id }}" {% if coupon.enabled %}checked{% endif %}>
+                                            <label for="active-switch-{{ loop.index }}" class="switch-label"></label>
+                                            &nbsp;
+                                            <a href="{{ path('coupons_show', {id: coupon.id}) }}" class="btn btn-default btn-action-button">
+                                                {{ 'app.ui.view'|trans }}
+                                            </a>
+                                            &nbsp;
+                                            <a href="{{ path('coupons_delete', {id: coupon.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-error-message="{{ 'app.ui.coupon_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.coupon_remove_title'|trans }}" data-text="{{ 'app.ui.coupon_remove_text'|trans({'%code%': coupon.code}) }}">
+                                                {{ 'app.ui.delete'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            {{ 'app.ui.no_coupons_found'|trans }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/switch-input/switch-input.css') }}">
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+
+<script>
+$(document).ready(function() {
+    var $switch = $('.switch-input');
+
+    function updateCouponCounter() {
+        $.ajax({
+            type: 'GET',
+            url: Routing.generate('coupons_counter'),
+            success: function(response) {
+                var $label = $('h1 small');
+                $label.html(response['message']);
+            },
+        });
+    }
+
+    $switch.on('change', function() {
+        var message = '';
+        var id = $(this).data('id');
+        var $tr = $(this).closest('tr');
+        var isOutdated = $tr.hasClass('out-dated');
+        var hasNoQuota = $tr.hasClass('no-quota');
+        var isDisabled = $tr.hasClass('disabled');
+
+        if (isOutdated && isDisabled) {
+            message = '{{ 'app.ui.coupon_enable_outdated_coupon_message'|trans }}';
+        } else if (hasNoQuota && isDisabled) {
+            message = '{{ 'app.ui.coupon_enable_no_quota_coupon_message'|trans }}';
+        }
+
+        if (message) {
+            swal({
+              title: '',
+              text: message,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#AB162B",
+              confirmButtonText: '{{ 'app.ui.edit_coupon'|trans }}',
+              cancelButtonText: '{{ 'app.ui.cancel'|trans }}',
+              closeOnConfirm: true
+            }, function () {
+                blockUI();
+                window.location = Routing.generate('coupons_edit', {id: id});
+            });
+
+            $(this).prop('checked', false);
+        } else {
+            blockUI();
+
+            $.ajax({
+                type: 'GET',
+                url: Routing.generate('coupons_toggle_status', {'id': id}),
+                success: function() {
+                    updateCouponCounter();
+                    success('{{ 'app.ui.coupon_has_been_updated'|trans }}', '{{ 'app.ui.saved'|trans }}');
+                    unblockUI();
+                    $tr.addClass('disabled');
+                },
+                error: function() {
+                    error('{{ 'app.ui.standard_error_message'|trans }}', '{{ 'app.ui.error'|trans }}');
+                    unblockUI();
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

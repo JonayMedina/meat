@@ -1,0 +1,143 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.purchase_settings'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('purchase_settings')) }}
+                <br>
+                <h1>{{ 'app.ui.purchase_settings'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                       <div class="show-container">
+                           {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+                           <div class="row padding-bottom-35 border-bottom">
+                               <div class="col-lg-4">
+                                   {{ form_row(form.maximumPurchaseValue) }}
+                               </div>
+                           </div>
+
+                           <div class="row padding-bottom-35 border-bottom padding-top-35">
+                               <div class="col-lg-4">
+                                   {{ form_row(form.minimumPurchaseValue) }}
+                               </div>
+                           </div>
+
+                           <div class="row padding-bottom-35 border-bottom padding-top-35">
+                               <div class="col-lg-4">
+                                   {{ form_row(form.daysToChooseInAdvanceToPurchase) }}
+                               </div>
+                           </div>
+
+                           <div class="row padding-bottom-35 border-bottom padding-top-35">
+                               <div class="col-lg-12 text-center">
+
+                                   {% for index in 0..2 %}
+                                       {% set schedule = settings.deliveryHours(false)[index]|default(null) %}
+                                       <div class="row padding-top-15">
+                                           <div class="col-md-2">
+                                               <input type="checkbox" id="active-switch-{{ index }}" class="switch-input" value="1" name="deliveryHours[{{ index }}][enabled]" {% if schedule['enabled'] is defined %} checked{% endif %}>
+                                               <label for="active-switch-{{ index }}" class="switch-label"></label>
+                                           </div>
+
+                                           <div class="col-md-3">
+                                               <input type="text" class="form-control name-input" maxlength="15" name="deliveryHours[{{ index }}][name]" value="{% if schedule['name'] is defined %}{{ schedule['name']  }}{% endif %}">
+                                           </div>
+
+                                           <div class="col-md-1">
+                                               {{ 'app.ui.delivery_hours.between'|trans }}
+                                           </div>
+
+                                           <div class="col-md-2">
+                                               <input type="time" class="form-control start-input" name="deliveryHours[{{ index }}][start]" value="{% if schedule['start'] is defined %}{{ schedule['start']  }}{% endif %}">
+                                           </div>
+
+                                           <div class="col-md-2">
+                                               <input type="time" class="form-control end-input" name="deliveryHours[{{ index }}][end]" value="{% if schedule['end'] is defined %}{{ schedule['end']  }}{% endif %}">
+                                           </div>
+                                       </div>
+                                   {% endfor %}
+
+                               </div>
+                           </div>
+
+                           <div class="form-group padding-top-35">
+                               <div class="text-center">
+                                   <a href="#" id="submit-form" class="btn btn-primary width-250" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</a>
+                               </div>
+                           </div>
+
+                           {{ form_end(form) }}
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/switch-input/switch-input.css') }}">
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script>
+    $(document).ready(function () {
+        var $wrapper = $('#wrapper');
+
+        $wrapper.on('click', '#submit-form', function(e) {
+            e.preventDefault();
+            var $form = $('.show-container form');
+            var isValid = true;
+
+            $.each($('.switch-input'), function() {
+                var $checkbox = $(this);
+                var $row = $checkbox.closest('.row');
+
+                if ($checkbox.is(':checked')) {
+                    if (isValid) {
+                        var $name = $row.find('.name-input');
+                        var $start = $row.find('.start-input');
+                        var $end = $row.find('.end-input');
+
+                        if (!$name.val()) {
+                            $name.focus();
+                            swal({'title': '', 'type': 'error', 'text': '{{ 'app.ui.purchase_settings_empty_schedule_message'|trans }}'});
+
+                            isValid = false;
+                        }
+
+                        if (!$start.val() && isValid) {
+                            $start.focus();
+                            swal({'title': '', 'type': 'error', 'text': '{{ 'app.ui.purchase_settings_empty_schedule_message'|trans }}'});
+
+                            isValid = false;
+                        }
+
+                        if (!$end.val() && isValid) {
+                            $end.focus();
+                            swal({'title': '', 'type': 'error', 'text': '{{ 'app.ui.purchase_settings_empty_schedule_message'|trans }}'});
+
+                            isValid = false;
+                        }
+                    }
+                }
+            });
+
+            if (isValid) {
+                $form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

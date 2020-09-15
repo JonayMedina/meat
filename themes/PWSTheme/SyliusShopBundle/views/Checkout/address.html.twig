@@ -1,0 +1,601 @@
+{% extends '@SyliusShop/Checkout/layout.html.twig' %}
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+{% block extracontent %}
+    {{ sonata_block_render_event('sylius.shop.checkout.address.after_steps', {'order': order}) }}
+
+    <div class="row profile pt-4 checkout checkout-address">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+            <h1 class="text-center">{{ 'app.ui.checkout.title'|trans }}</h1>
+        </div>
+
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-pl-0 xs-pr-0 xs-mb-0">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                    <div class="segment">
+                        {% include '@SyliusShop/Checkout/_summary.html.twig' with {'order': order} %}
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="segment" id="address-step">
+                                {{ sonata_block_render_event('sylius.shop.checkout.address.before_form', {'order': order}) }}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2>{{ 'app.ui.checkout.first.title'|trans }}</h2>
+                                    </div>
+                                    <div class="col-12">
+                                        {{ form_start(form, {'action': path('sylius_shop_checkout_address'), 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
+                                        <input type="hidden" name="_method" value="PUT" />
+
+                                        {% include '@SyliusShop/Checkout/Address/_form.html.twig' %}
+
+                                        {{ sonata_block_render_event('sylius.shop.checkout.address.before_navigation', {'order': order}) }}
+
+                                        {% include '@SyliusShop/Checkout/Address/_navigation.html.twig' %}
+
+                                        {{ form_row(form._token) }}
+                                        {{ form_end(form, {'render_rest': false}) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="segment">
+                                <div class="row">
+                                    {% set billing = order.billingAddress %}
+
+                                    {% if not billing %}
+                                        <div class="col-12">
+                                            <h2 class="mb-0">{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                        </div>
+                                    {% else %}
+                                        {% if billing.firstName != '' and billing.firstName != '-' and billing.taxId != '' and billing.taxId != '-' and billing.fullAddress != '' and billing.fullAddress != '-' %}
+                                            <div class="col-12">
+                                                <h2>{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                            </div>
+                                            <div class="col-12 your-info">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ billing.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center">
+                                                <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                            </div>
+                                        {% else %}
+                                            <div class="col-12">
+                                                <h2 class="mb-0">{{ 'app.ui.checkout.second.title'|trans }}</h2>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="segment">
+                                <div class="row">
+                                    {% set type = app.session.get('payment') %}
+                                    {% if not type %}
+                                        <div class="col-12">
+                                            <h2 class="mb-0">{{ 'app.ui.checkout.third.title'|trans }}</h2>
+                                        </div>
+                                    {% else %}
+                                        {% set card = app.session.get('card') %}
+                                        <div class="col-12">
+                                            <h2>{{ 'app.ui.checkout.third.title'|trans }}</h2>
+                                        </div>
+                                        <div class="col-12 your-info">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <p class="font-semi-bold">{{ 'app.ui.checkout.payment.method.title'|trans }}</p>
+                                                        </div>
+                                                        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                            <p>{{ ('app.ui.checkout.order.payment.' ~ type)|trans|default('app.ui.checkout.order.payment.card'|trans) }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% if type == 'card' %}
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.number'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.number|default('')|card_mask }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.name'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.name|default('') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.expiration_date'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.expirationDate|default('') }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="row">
+                                                            <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                                <p class="font-semi-bold">{{ 'app.ui.form.payment.cvv'|trans }}</p>
+                                                            </div>
+                                                            <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                                <p>{{ card.cvv|default('')|mask }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <p class="warning text-center mt-4">{{ 'app.ui.checkout.payment.warning'|trans }}</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-12 text-center">
+                                            <a href="{{ path('sylius_shop_checkout_billing') }}" class="d-inline-block btn-rounded inverted">{{ 'sylius.ui.edit'|trans }}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if order.customer.defaultAddress %}
+        {% set dfAddress = order.customer.defaultAddress %}
+        <div class="modal smaller fade" id="defaultAddressModal" tabindex="-1" role="dialog" aria-labelledby="defaultAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-center" id="defaultAddressModalLabel">{{ 'app.ui.checkout.your_order_will_be_send_to'|trans }}</h6>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="row">
+                            <div class="col-12 your-info">
+                                <div class="row">
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ dfAddress.fullAddress }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ dfAddress.annotations }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ dfAddress.phoneNumber }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p class="to-format-date-without-time" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-4 col-lg-5">
+                                                <p class="font-semi-bold">{{ 'app.ui.checkout.schedule'|trans }}</p>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-8 col-lg-7">
+                                                <p>{{ order.preferredDeliveryTime|default('app.ui.checkout.order.preferred_time.none'|trans) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button id="cleanForm" type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.edit'|trans }}</button>
+                        <a id="skip-billing" class="btn-rounded">{{ 'app.ui.yes_its_correct'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if order.customer.addresses|shipping|length > 0  %}
+        <div class="modal smaller fade" id="deleteAddressModal" tabindex="-1" role="dialog" aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-center" id="deleteAddressModalLabel">{{ 'app.ui.checkout.address.limit'|trans }}</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <p>{{ 'app.ui.checkout.address.limit.instructions'|trans }}</p>
+                            <div class="col-12 list">
+                                {% for address in order.customer.addresses|shipping|slice(0, constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')) %}
+                                    <div class="radio">
+                                        <input type="radio" name="delete_address" value="{{ address.id }}">
+                                        <label><p>{{ address.fullAddress }}</p></label>
+                                        <span class="check-mark"></span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <p class="error-message mt-4 mh-color" style="display: none">{{ 'app.ui.checkout.address.delete.select_one_address'|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <button id="cleanForm" type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.cancel'|trans }}</button>
+                        <a id="delete-address" class="btn-rounded">{{ 'app.ui.account.delete_address'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{{ asset('bundles/syliusshop/js/inputmask/jquery.inputmask.min.js') }}"></script>
+    <script>
+        $(function () {
+            let $body = $('body');
+            let $radio = $('input[type="radio"]');
+            let $showScheduled = $('#show-scheduled');
+            let $addressModal = $('#defaultAddressModal');
+            let $deleteAddressModal = $('#deleteAddressModal');
+            let $scheduled = $('.scheduled-date');
+            var $preferred = 0;
+            var $modal = $('#showMessage');
+            let $extraData = $('.extra-data');
+            let $addressDropdown = $('#addressDropdown');
+            let $addressInput = $('.address-input');
+            let $scheduledInput = $('#sylius_checkout_address_scheduledDate');
+            let $fullAddress = $('#sylius_checkout_address_shippingAddress_fullAddress');
+            let $annotations = $('#sylius_checkout_address_shippingAddress_annotations');
+            let $phoneNumber = $('#sylius_checkout_address_shippingAddress_phoneNumber');
+            let $addressId = $('#sylius_checkout_address_addressId');
+            let $addAddress = $('#address-add-change');
+            let $firstAddress = $('.dropdown .dropdown-item:first-of-type');
+            let $newAddressMsg = $('.new-address-message');
+            let currentAddresses = {{ order.customer.addresses|shipping|length|e('js') }};
+            let limit = {{ constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')|e('js') }};
+            {% set holidays = get_holidays() %}
+            var unavailableDates = [
+                {% for holiday in holidays %}
+                "{{ holiday.date|date('d-m-Y') }}",
+                {% endfor %}
+            ];
+            var deliveryHours = [
+                {% for deliveryHour in about_store('delivery-hours')|format_schedule %}
+                    '{{ deliveryHour }}',
+                {% endfor %}
+            ];
+            moment.locale('es');
+            var step = document.querySelector("#address-step");
+
+            step.scrollIntoView({behavior: 'smooth'});
+
+            {% if order.preferredDeliveryTime %}
+                {% set preferred = order.preferredDeliveryTime %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.first'|trans %}
+                    $preferred = 1;
+                {% endif %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.second'|trans %}
+                    $preferred = 2;
+                {% endif %}
+                {% if preferred == 'app.ui.checkout.order.preferred_time.third'|trans %}
+                    $preferred = 3;
+                {% endif %}
+            {% endif %}
+
+            if ($radio.closest('div.toggle').find('label').length <=0 ) {
+                $radio.closest('div.toggle').append("<label></label>");
+            }
+
+            $('input[type="radio"]:first-of-type').closest('div.toggle').find('label').html("<p>{{ 'app.ui.checkout.order.preferred_time.none'|trans }}</p>");
+            deliveryHours[0] ? $('input[type="radio"][value="1"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[0] + "</p>") : $('input[type="radio"][value="1"]').closest('div.toggle').hide();
+            deliveryHours[1] ? $('input[type="radio"][value="2"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[1] + "</p>") : $('input[type="radio"][value="2"]').closest('div.toggle').hide();
+            deliveryHours[2] ? $('input[type="radio"][value="3"]').closest('div.toggle').find('label').html("<p>" + deliveryHours[2] + "</p>") : $('input[type="radio"][value="3"]').closest('div.toggle').hide();
+            $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            if ($preferred > 0) {
+                $('input[type="radio"][value="' + $preferred + '"]').prop('checked', true).change();
+            }
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
+            $showScheduled.click(function () {
+                $(this).hide();
+                $scheduled.slideDown(450);
+            });
+
+            $('.scheduled-date .close-btn').click(function () {
+                $scheduled.find('input').val(null);
+                $scheduled.hide();
+                $showScheduled.slideDown(450);
+                estimateDate();
+            });
+
+            $body.find('.to-format-date').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(moment(date).format('LLLL'));
+            });
+
+            $body.find('.to-format-date-without-time').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
+            });
+
+            $firstAddress.addClass('selected');
+
+            $('.dropdown-item').click(function () {
+                selectAddress($(this));
+            });
+
+            $('.dropdown-item i').tooltip();
+
+            $addAddress.click(function () {
+                if ($(this).hasClass('choose')) {
+                    $(this).removeClass('choose');
+                    $(this).html('{{ 'app.ui.checkout.add_new_address'|trans }}');
+                    $addressInput.hide();
+                    $addressDropdown.fadeIn(450);
+                    $newAddressMsg.hide();
+                    selectAddress($('.dropdown-item.selected'));
+                } else {
+                    if (currentAddresses < limit) {
+                        $(this).html('{{ 'app.ui.checkout.choose_address'|trans }}');
+                        $fullAddress.val(null);
+                        $addressDropdown.hide();
+                        $addressInput.fadeIn(450);
+                        $extraData.fadeIn(450);
+                        $newAddressMsg.fadeIn(450);
+                        $annotations.val(null);
+                        $phoneNumber.val(null);
+                        $addressId.val(null);
+                        $(this).addClass('choose');
+                    } else {
+                        $deleteAddressModal.modal('show');
+                    }
+                }
+            });
+
+            if ($('#sylius-shipping-address').find('.sylius-validation-error').length > 0) {
+                $addAddress.trigger('click');
+            } else {
+                selectAddress($firstAddress, true);
+            }
+
+            $deleteAddressModal.find('.radio').click(function () {
+                $deleteAddressModal.find('.radio input').removeClass('checked');
+                $(this).find('input').addClass('checked');
+            });
+
+            $('#delete-address').click(function (evt) {
+                evt.preventDefault();
+
+                if ($deleteAddressModal.find('input.checked').length > 0) {
+                    $deleteAddressModal.find('.error-message').hide();
+
+                    deleteAddress($deleteAddressModal.find('input.checked'));
+                } else {
+                    $deleteAddressModal.find('.error-message').fadeIn(450);
+                }
+            });
+
+            $('#skip-billing').click(function () {
+                $('#sylius_checkout_address_skipBilling').val('true');
+                $addressModal.modal('hide');
+                $('#next-step').trigger('click');
+            });
+
+            function selectAddress($this, notShow = false) {
+                $('.dropdown .dropdown-item').removeClass('selected');
+                $this.addClass('selected');
+
+                $this.closest('.dropdown').find('button span').html($this.data('full-address'));
+                $fullAddress.val($this.data('full-address'));
+                $annotations.val($this.data('annotations'));
+                $phoneNumber.val($this.data('phone-number'));
+                $addressId.val($this.data('id'));
+
+                if (!notShow) {
+                    $extraData.fadeIn(450);
+                }
+            }
+
+            function deleteAddress($input) {
+                var id = $input.val();
+
+                $deleteAddressModal.modal('hide');
+                blockPage();
+                $.ajax({
+                    url: Routing.generate("store_api_address_delete", { version: 1 }),
+                    data: JSON.stringify({
+                        address: id
+                    }),
+                    method: "DELETE",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function () {
+                    $addressDropdown.find('.address-' + id).remove();
+                    currentAddresses--;
+                    $addAddress.trigger('click');
+                    $('.dropdown-item').removeClass('selected');
+                    $('.dropdown-item:first-of-type').addClass('selected');
+
+                    unblockPage();
+                })
+                .fail(function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                });
+            }
+
+            var today = new Date();
+            var min = new Date();
+            var max = new Date();
+            min.setDate(today.getDate() + 1);
+            max.setDate(today.getDate() + {{ about_store('days-to-choose')|default(0)|e('js') }});
+
+            function unavailable(date) {
+                var day = date.getDate() < 9 ? "0" + date.getDate() : date.getDate();
+                var month = (date.getMonth() + 1) < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
+                var dmy = day + "-" + month + "-" + date.getFullYear();
+
+                if (!unavailableDates.includes(dmy)) {
+                    return [true, ""];
+                } else {
+                    return [false, "", "Unavailable"];
+                }
+            }
+
+            $('.datepicker').datepicker({
+                minDate: min,
+                maxDate: max,
+                beforeShowDay: unavailable
+            }).attr('autocomplete', 'off');
+
+            $('#sylius_checkout_address_differentBillingAddress').prop('checked', true).change();
+
+            {% if not order.estimatedDeliveryDate %}
+                estimateDate();
+            {% endif %}
+
+            {% if order.customer.defaultAddress %}
+                $addressModal.modal('show');
+            {% endif %}
+
+            $('#sylius_checkout_address_preferredTime .radio').click(function () {
+                estimateDate();
+            });
+
+            $scheduledInput.change(function () {
+                estimateDate();
+            });
+
+            $phoneNumber.inputmask("9999 9999");
+
+            function estimateDate() {
+                var $estimated = $('#estimated');
+                blockPage();
+                $estimated.fadeOut(450);
+
+                $.ajax({
+                    url: Routing.generate("store_api_cart_estimated_date", { version: 1, token: '{{ order.tokenValue }}' }),
+                    method: "POST",
+                    data: JSON.stringify({
+                        preferred: $("#sylius_checkout_address_preferredTime input[type='radio']:checked").val(),
+                        scheduled: $scheduledInput.val(),
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function (data) {
+                    let recordset = data['recordset'];
+                    var message = '{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'date'}) }}';
+                    var date = new Date(recordset['estimated'])
+                    message = message.replace('date', moment(date).format('LLLL'));
+
+                    $estimated.text(message);
+                    $estimated.fadeIn(450);
+
+                    unblockPage();
+                })
+                .fail(function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                });
+            }
+        });
+    </script>
+{% endblock %}

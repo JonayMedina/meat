@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Promotion;
 
+use App\Model\BlameableTrait;
+use App\Model\IpTraceableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Sylius\Component\Core\Model\Promotion as BasePromotion;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity
@@ -13,4 +17,29 @@ use Sylius\Component\Core\Model\Promotion as BasePromotion;
  */
 class Promotion extends BasePromotion
 {
+    use BlameableTrait, IpTraceableTrait;
+
+    private $codeAlreadyInUse = false;
+
+    /**
+     * @Assert\Callback
+     * @param ExecutionContextInterface $context
+     * @param $payload
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        if ($this->codeAlreadyInUse) {
+            $context->buildViolation('app.ui.coupon_code_is_already_in_use')
+                ->atPath('code')
+                ->addViolation();
+        }
+    }
+
+    /**
+     * @param bool $codeAlreadyInUse
+     */
+    public function setCodeAlreadyInUse(bool $codeAlreadyInUse): void
+    {
+        $this->codeAlreadyInUse = $codeAlreadyInUse;
+    }
 }

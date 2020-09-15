@@ -1,0 +1,230 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+{% block extracontent %}
+    {{ sonata_block_render_event('sylius.shop.register.after_content_header') }}
+    {% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+    {% set messageFB = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms fb">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+
+    <div class="row register pt-5">
+        <div class="col-12 segment">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <h1 class="text-center">{{ 'app.ui.create_your_account' | trans }}</h1>
+                    <div class="instructions margin-0-auto">
+                        <p>{{ 'app.ui.register_page_message' | trans }}</p>
+                        <p>{{ 'app.ui.have_account_already' | trans }}<a href="{{ path('sylius_shop_login') }}">{{ 'app.ui.sign_in_here'|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    {{ sonata_block_render_event('sylius.shop.register.before_form') }}
+
+                    {{ form_start(form, {'action': path('sylius_shop_register'), 'attr': {'class': 'ui loadable register form margin-0-auto', 'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+                    {% include '@SyliusShop/Register/_form.html.twig' %}
+
+                    {{ sonata_block_render_event('sylius.shop.register.form', {'form': form}) }}
+
+                    <p class="text-center small">{{ 'app.ui.required_fields' | trans }}</p>
+
+                    <div class="terms-conditions d-none d-sm-none d-md-flex d-lg-flex justify-content-center flex-wrap">
+                        <label class="d-flex align-items-center checkbox">
+                            <input type="checkbox" name="sylius_customer_registration[termsAccepted]" required="required" value="1">
+                            <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
+                            <span class="check-mark"></span>
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="create-btn" type="submit" class="btn-rounded">
+                            {{ 'app.ui.create_an_account'|trans }}
+                        </button>
+                    </div>
+                    {{ form_row(form._token) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+
+                    <div class="text-center">
+                        <h3 class="text-center mt-3">{{ 'app.ui.create_an_account_using_social_networks' | trans }}</h3>
+
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'facebook' }) }}" class="btn-login-with facebook">
+                            <i class="fab fa-facebook-square"></i>
+
+                            {{ 'app.ui.register_with_%name%'|trans({'%name%': "Facebook"}) }}
+                        </a>
+                        <br>
+                        <a href="{{ path('hwi_oauth_service_redirect', {'service': 'apple' }) }}" class="btn-login-with apple">
+                            <i class="fab fa-apple"></i>
+                            {{ 'app.ui.login_with_%name%'|trans({'%name%': 'Apple'}) }}
+                        </a>
+                    </div>
+
+                    <p class="text-center mt-4">{{ 'app.ui.by_registering_you_are_accepting_%link%'|trans({'%link%': messageFB})|raw }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" role="dialog" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">{{ 'app.ui.terms_and_conditions' | trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ render(url('store_terms')) }}
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button id="not-accept" type="button" class="btn-rounded mr-3" data-dismiss="modal">{{ 'app.ui.not_accept' | trans }}</button>
+                    <button id="accept" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept' | trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        jQuery(function ($) {
+            let $form = $("form.register");
+            let $terms = $('input[name="sylius_customer_registration[termsAccepted]"]');
+            let $radio = $('input[type="radio"]');
+            let $register = $('#create-btn');
+            let $birthday = $('#sylius_customer_registration_birthday');
+
+            $('input[type="radio"][value=""]').closest('div.field').attr('class', 'd-none');
+
+            if ($radio.closest('div.toggle').find('label').length <=0 ) {
+                $radio.closest('div.toggle').append("<label></label>");
+            }
+
+            $('input[type="radio"][value="f"]').prop('checked', true).change().closest('div.toggle').find('label').html("<p>F</p>");
+            $('input[type="radio"][value="m"]').closest('div.toggle').find('label').html("<p>M</p>");
+            $radio.closest('div.toggle').removeClass("toggle").removeClass("ui").removeClass("checkbox").addClass("radio").append("<span class=\"check-mark\"></span>");
+
+            $('#not-accept').click(function () {
+                $terms.prop('checked', false).change();
+            });
+
+            $('#accept').click(function () {
+                $terms.prop('checked', true).change();
+            });
+
+            $terms.on('change', function () {
+                checkTerms(true);
+            });
+
+            $('.radio').click(function () {
+                var $input = $(this).find('input');
+
+                $input.prop('checked', true).change();
+            });
+
+            $('a.show-terms').click(function () {
+                var $btn = $(this);
+                var $buttons = $('#termsModal .modal-footer button');
+
+                if ($btn.hasClass('fb')) {
+                    $buttons.hide();
+                } else {
+                    $buttons.show();
+                }
+            });
+
+            if ($('body').find('.field.error').length > 0) {
+                $terms.prop('checked', false).change();
+                checkBirthdate();
+            }
+
+            $form.submit(function (e) {
+                if (!checkBirthdate() || !$terms.prop('checked')) {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                    checkTerms();
+                    checkBirthdate();
+                }
+            });
+
+            $register.click(function (evt) {
+                evt.preventDefault();
+                formatToYMD($birthday);
+
+                $form.trigger('submit');
+            });
+
+            function checkTerms(changed = false) {
+                if (changed) {
+                    $terms.prop('checked', !$terms.prop('checked'));
+                }
+
+                if (!$terms.prop('checked')) {
+                    $register.prop('disabled', true).change();
+                    $terms.closest('label').addClass('error');
+
+                    if ($terms.closest('.terms-conditions').find('span.error').length <= 0) {
+                        $terms.closest('.terms-conditions').append('<span class="error">{{ 'app.ui.register.accept_terms'|trans }}</span>');
+                    }
+                } else {
+                    $register.prop('disabled', false).change();
+                    $terms.closest('label').removeClass('error');
+                    $terms.closest('.terms-conditions').find('span.error').remove();
+                }
+            }
+
+            function checkBirthdate() {
+                var $birthDate = $birthday;
+
+                if ((Boolean) ($birthDate.val())) {
+                    var birthdate = moment($birthDate.val(), "YYYY-MM-DD");
+                    var years = moment().diff(birthdate, 'years');
+
+                    if (years < 18) {
+                        if ($birthDate.closest('.field').find('span.error').length <= 0) {
+                            $birthDate.closest('.field').append('<span class="error birthdate">{{ 'app.ui.register.must_be_of_legal_age'|trans }}</span>');
+                        }
+                    } else {
+                        $birthDate.closest('.field').find('span.error').remove();
+                    }
+
+                    return years >= 18;
+                }
+
+                return true;
+            }
+
+            function formatToYMD($input) {
+                $input.val($input.val().split('/').reverse().join("-"))
+            }
+
+            function formatToDMY($input) {
+                $input.val($input.val().split('-').reverse().join("/"))
+            }
+
+            $('.datepicker').prop('type', 'text').datepicker({
+                changeYear: true,
+                changeMonth: true,
+                yearRange: "-65:-18",
+            });
+
+            $form.find('span.eye').click(function () {
+                var $i = $(this).find('i');
+                var $password = $('input[name="sylius_customer_registration[user][plainPassword]"]');
+
+                if ($i.hasClass('fa-eye')) {
+                    $password.attr('type', 'text');
+                    $i.removeClass('fa-eye');
+                    $i.addClass('fa-eye-slash');
+                } else {
+                    $password.attr('type', 'password');
+                    $i.removeClass('fa-eye-slash');
+                    $i.addClass('fa-eye');
+                }
+            });
+
+            formatToDMY($birthday);
+        });
+    </script>
+{% endblock %}

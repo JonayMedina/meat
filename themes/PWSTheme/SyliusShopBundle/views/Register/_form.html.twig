@@ -1,0 +1,32 @@
+{% set message = '&ensp;<a data-toggle="modal" data-target="#termsModal" class="text-lowercase show-terms">' ~ ('app.ui.terms_and_conditions'|trans) ~ '</a>' %}
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6 border-right">
+        {{ form_row(form.firstName) }}
+        {{ form_row(form.lastName) }}
+        {{ form_row(form.email.first) }}
+        {{ form_row(form.email.second) }}
+
+        <div class="required field">
+            {{ form_label(form.user.plainPassword) }}
+            <div class="div-input">
+                {{ form_widget(form.user.plainPassword) }}
+                <span class="eye"><i class="fas fa-eye fa-2x"></i></span>
+            </div>
+            {{ form_errors(form.user.plainPassword) }}
+        </div>
+
+        <div class="terms-conditions d-flex d-sm-flex d-md-none d-lg-none justify-content-center flex-wrap">
+            <label class="d-flex align-items-center checkbox">
+                {{ form_widget(form.termsAccepted) }}
+                <p>{{ 'app.ui.accept_the_%link%'|trans({'%link%': message})|raw }}</p>
+                <span class="check-mark"></span>
+            </label>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <p class="small">{{ 'app.ui.optional_fields_to_offers' | trans }}</p>
+        {{ form_row(form.birthday) }}
+        {{ form_row(form.gender) }}
+    </div>
+</div>

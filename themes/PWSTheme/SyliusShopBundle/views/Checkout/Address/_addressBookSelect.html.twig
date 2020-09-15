@@ -1,0 +1,17 @@
+{% if app.user is not empty and app.user.customer is not empty and app.user.customer.addresses|length > 0 %}
+    {% set defaultAddress = app.user.customer.defaultAddress ? app.user.customer.defaultAddress : app.user.customer.addresses[0]  %}
+    <div id="addressDropdown" class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>{{ defaultAddress.fullAddress }}</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% for address in app.user.customer.addresses|shipping|slice(0, constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT')) %}
+                <a class="dropdown-item address-{{ address.id }} {{ address.status }}" data-id="{{ address.id }}" data-full-address="{{ address.fullAddress }}" data-annotations="{{ address.annotations }}" data-phone-number="{{ address.phoneNumber }}">
+                    {{ address.fullAddress }}
+                    <i class="fas fa-exclamation-circle" data-toggle="tooltip" data-placement="top" title="{{ ('app.ui.address.status.' ~ address.status)|trans }}"></i>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

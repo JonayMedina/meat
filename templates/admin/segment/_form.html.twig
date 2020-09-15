@@ -1,0 +1,101 @@
+{% import "admin/_macros.html.twig" as UI %}
+
+<style>
+    .checks-inline .form-check {
+        display: inline;
+        margin-right: 20px;
+    }
+
+    #segment_gender {
+        margin-top: 10px;
+    }
+</style>
+
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+{{ UI.row([
+    {'span': 6, 'field': form.name},
+]) }}
+
+<div class="row">
+    <fieldset class="form-group col-lg-12" style="margin-bottom: 0;">
+        <legend class="col-form-label required">{{ 'app.ui.segment.age_range'|trans }}</legend>
+    </fieldset>
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            <br>
+            {{ 'app.ui.age_range_between'|trans }}
+        </div>
+    </div>
+
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.minAge) }}
+            {{ form_errors(form.minAge) }}
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            {{ form_widget(form.maxAge) }}
+            {{ form_errors(form.maxAge) }}
+        </div>
+    </div>
+    <div class="col-lg-2">
+        <div class="form-group">
+            <br>
+            {{ 'app.ui.age_range__years'|trans }}
+        </div>
+    </div>
+</div>
+
+<div class="checks-inline">
+
+    {{ UI.row([
+        {'span': 6, 'field': form.gender},
+    ]) }}
+</div>
+
+
+<div class="row">
+    <fieldset class="form-group col-lg-12">
+        <legend class="col-form-label required">{{ 'app.ui.frequency'|trans }}</legend>
+    </fieldset>
+
+    <div class="col-lg-2">
+        {% for key, cohice in form.frequencyType.children %}
+            <div style="margin-bottom: 40px;">
+                {{ form_widget(cohice) }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-lg-4">
+        <div class="form-check">
+            {{ form_widget(form.purchaseTimes) }}
+            {{ form_errors(form.purchaseTimes) }}
+        </div>
+        <div class="form-check padding-top-15">
+            {{ form_widget(form.fixedAmount) }}
+            {{ form_errors(form.fixedAmount) }}
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div style="padding-top: 5px;">
+            {{ 'app.ui.segment.purchase_times_or_greater_in_monthly_purchases'|trans }}
+        </div>
+        <div style="padding-top: 40px;">
+            {{ 'app.ui.segment.fixed_amount_or_greater_in_monthly_purchases'|trans }}
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group margin-top-25">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ newButtonLabel|default('app.ui.save_segment'|trans) }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

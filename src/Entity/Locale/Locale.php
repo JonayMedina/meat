@@ -13,4 +13,5 @@ use Sylius\Component\Locale\Model\Locale as BaseLocale;
  */
 class Locale extends BaseLocale
 {
+    const DEFAULT_LOCALE = 'es_GT';
 }

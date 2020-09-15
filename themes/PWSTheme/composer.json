@@ -1,0 +1,14 @@
+{
+  "name": "meathouse/theme",
+  "authors": [
+    {
+      "name": "Hafid Roca",
+      "email": "rroca@praga.ws"
+    }
+  ],
+  "extra": {
+    "sylius-theme": {
+      "title": "Meathouse Theme"
+    }
+  }
+}
