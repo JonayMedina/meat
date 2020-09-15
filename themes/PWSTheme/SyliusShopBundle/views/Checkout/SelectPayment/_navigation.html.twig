@@ -1,0 +1,8 @@
+{% set enabled = order.payments|length %}
+
+<div class="row">
+    <div class="col-12 text-center">
+        <div class="divider mt-3"></div>
+        <button type="submit" id="next-step" class="btn-rounded block-page {% if not enabled %} disabled{% endif %}" {% if not enabled %} disabled="disabled"{% endif %}>{{ 'app.ui.checkout.complete_order'|trans }}</button>
+    </div>
+</div>

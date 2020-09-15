@@ -1,0 +1,1061 @@
+app.ui.dashboard: Dashboard
+app.ui.login_with_facebook: Facebook
+app.ui.login_with_apple: Apple
+app.ui.gender.label: Género
+app.ui.gender.female: Femenino
+app.ui.gender.male: Masculino
+app.ui.gender.undefined: 'No definido'
+app.ui.total: Total
+app.ui.n/a: N/A
+app.ui.user_age: 'Edades de usuario'
+app.ui.purchases_per_user: 'Compras por usuario'
+app.ui.start_date: 'Fecha de inicio'
+app.ui.end_date: 'Fecha de fin'
+app.ui.filter: Filtrar
+app.ui.purchases_in_date_range: 'Compras en rango de fechas'
+app.ui.number_of_orders: 'Cantidad de pedidos'
+app.ui.average_rating: 'Rating promedio'
+app.ui.product: Producto
+app.ui.current_price: 'Precio actual'
+app.ui.quantity: Cantidad
+app.ui.top_%x%_most_purchased_products: 'Top %x% productos más comprados'
+app.ui.users_with_purchases: 'Usuarios con compras'
+app.ui.users_without_purchases: 'Usuarios sin compras'
+app.ui.order.label: Orden
+app.ui.order.status.label: Estado
+app.ui.order.status.delivered: Entregado
+app.ui.order.status.cancelled: Cancelado
+app.ui.order.status.pending: Pendiente
+app.ui.order_history: 'Histórico de órdenes'
+app.ui.news_banner: 'Banner de noticias'
+app.ui.coupons: Cupones
+app.ui.send_push: 'Envío push'
+app.ui.users: Usuarios
+app.ui.ratings: Calificaciones
+app.ui.purchase_admin: 'Admin de compra'
+app.ui.locations: Ubicaciones
+app.ui.faqs: 'FAQ''s'
+app.ui.faqs_list: 'Preguntas frecuentes'
+app.ui.about_procasa: 'Sobre Procasa'
+app.ui.about_procasa.alternative: 'Acerca de Procasa'
+app.ui.terms_and_conditions: 'Términos y condiciones'
+app.ui.today: Hoy
+app.ui.clear: Limpiar
+app.ui.dates.sunday: Domingo
+app.ui.dates.monday: Lunes
+app.ui.dates.tuesday: Martes
+app.ui.dates.wednesday: Miércoles
+app.ui.dates.thursday: Jueves
+app.ui.dates.friday: Viernes
+app.ui.dates.saturday: Sábado
+app.ui.dates.sun: Dom
+app.ui.dates.mon: Lun
+app.ui.dates.tue: Mar
+app.ui.dates.wed: Mie
+app.ui.dates.thu: Jue
+app.ui.dates.fri: Vie
+app.ui.dates.sat: Sab
+app.ui.dates.su: Do
+app.ui.dates.mo: Lu
+app.ui.dates.tu: Ma
+app.ui.dates.we: Mi
+app.ui.dates.th: Ju
+app.ui.dates.fr: Vi
+app.ui.dates.sa: Sa
+app.ui.dates.january: Enero
+app.ui.dates.february: Febrero
+app.ui.dates.march: Marzo
+app.ui.dates.april: Abril
+app.ui.dates.may: Mayo
+app.ui.dates.june: Junio
+app.ui.dates.july: Julio
+app.ui.dates.august: Agosto
+app.ui.dates.september: Septiembre
+app.ui.dates.october: Octubre
+app.ui.dates.november: Noviembre
+app.ui.dates.december: Diciembre
+app.ui.dates.jan: Ene
+app.ui.dates.feb: Feb
+app.ui.dates.mar: Mar
+app.ui.dates.apr: Abr
+app.ui.dates.ma_: May
+app.ui.dates.jun: Jun
+app.ui.dates.jul: Jul
+app.ui.dates.aug: Ago
+app.ui.dates.sep: Sep
+app.ui.dates.oct: Oct
+app.ui.dates.nov: Nov
+app.ui.dates.dec: Dic
+app.ui.no_products_found: 'No se encontraron productos para mostrar en este listado.'
+app.ui.tables.header.number: No.
+app.ui.from_a_total_of_%orders%_orders: 'De un total de %orders% ordenes'
+app.ui.your_profile: 'Tu perfil'
+app.ui.logout: Salir
+app.ui.segments: Segmentos
+app.ui.purchase_texts: 'Textos de compras'
+app.ui.purchase_settings: 'Configuración de compra'
+app.ui.holidays: 'Días de feriado'
+app.ui.searcher: Buscador
+app.ui.category_color: 'Color en categorías'
+app.ui.category_color_saved: 'Se han guardado los cambios en el color de la categoría'
+app.ui.category_color_error: 'Hubo un error al guardar los cambios de color de categoría, inténtelo de nuevo más tarde'
+app.ui.qty_of_active_coupons_%total%: 'Cantidad de cupones activos: %total%'
+app.ui.new_coupon: 'Nuevo cupón'
+app.ui.coupon: Cupón
+app.ui.discount_type: 'Tipo de descuento'
+app.ui.actions: Acciones
+app.ui.duration: Duración
+app.ui.view: Ver
+app.ui.edit: Editar
+app.ui.question: Pregunta
+app.ui.answer: Respuesta
+app.ui.delete: Borrar
+app.ui.search_box.coupon: '¿Qué cupón buscas?'
+app.ui.no_coupons_found: 'No hay cupones existentes. Selecciona el botón "Nuevo cupón" para crear un nuevo cupón.'
+app.ui.coupon_has_been_updated: 'El cupón fue actualizado correctamente.'
+app.ui.saved: ¡Guardado!
+app.ui.standard_error_message: 'Hubo un error al intengar guardar el contenido, inténtelo de nuevo más tarde.'
+app.ui.error: Error
+app.ui.yes: Sí
+app.ui.no: 'No'
+app.ui.delete_title: '¿Está seguro?'
+app.ui.delete_text: 'Está a punto de eliminar este recurso, esta acción no podrá deshacerse.'
+app.ui.coupon_detail: 'Detalle del cupón'
+app.ui.edit_coupon: Editar
+app.ui.coupon_code_name: 'Nombre del código'
+app.ui.coupon_code_status: Estado
+app.ui.active: Activo
+app.ui.inactive: Inactivo
+app.ui.description: Descripción
+app.ui.block-ui-message: Cargando...
+app.ui.cancel: Cancelar
+app.ui.save: Guardar
+app.ui.coupon_code: 'Crea el código'
+app.ui.coupon_description: 'Descripción (opcional)'
+app.ui.coupon_starts_at: 'Fecha de inicio'
+app.ui.coupon_ends_at: 'Fecha fin'
+app.ui.coupon_type: 'Tipo de descuento'
+app.ui.coupon_amount: 'Cantidad de descuento'
+app.ui.coupon_one_usage_per_user: 'Un uso por usuario unicamente'
+app.ui.coupon_new_success_message: 'Se ha creado el nuevo cupón.'
+app.ui.coupon_new_error_message: 'Hubo un error al crear el cupón, por favor inténtelo de nuevo más tarde.'
+app.ui.coupon_edit_success_message: 'Se ha actualizado el cupón.'
+app.ui.coupon_edit_error_message: 'Hubo un error al actualizar el cupón, por favor inténtelo de nuevo más tarde.'
+app.ui.limit_usage_to_x_quantity_of_users: 'Limitar el uso del cupón a x cantidad de usuarios'
+app.ui.back: Regresar
+app.ui.coupon_order_percentage_discount: 'Porcentaje de descuento'
+app.ui.coupon_order_fixed_discount: 'Cantidad de descuento'
+app.ui.usage_limit: 'Cantidad de usos'
+app.ui.coupon_error_on_remove_message: 'Hubo un error al eliminar el cupón, es posible que esta ya haya sido usado en una orden anterior y por lo tanto, no puede eliminarse.'
+app.ui.fixed_discount_input_placeholder: 'Escribe la cantidad de quetzales de descuento'
+app.ui.percentage_input_placeholder: 'Escribe el % de descuento'
+app.ui.hide_main_menu: 'Esconder menú'
+app.ui.show_main_menu: 'Mostrar menú'
+app.ui.quantiy_of_usages: 'Cantidad de usos'
+app.ui.total_of_discounts: 'Cantidad total descontada'
+app.ui.coupon_duration: Duración
+app.ui.coupon_usage_limit: 'Límite de uso'
+app.ui.created_at: 'Fecha de creación'
+app.ui.created_by: 'Creado por'
+app.ui.updated_at: 'Última actualización'
+app.ui.coupon_limit_to_%x%_users: 'Limitar el uso del cupón a %x% usuarios'
+app.ui.abandoned: Abandonado
+app.ui.about: 'Sobre nosotros'
+app.ui.accept: 'Sí acepto'
+app.ui.not_accept: 'No acepto'
+app.ui.accepted: Aceptado
+app.ui.access_token: 'Token de acceso'
+app.ui.access_your_store_account_or_create_a_new_one: 'Escribe tus credenciales para ingresar a tu cuenta. Si no tienes una, '
+app.ui.account_credentials: 'Credenciales de la cuenta'
+app.ui.account_panel_outline: 'Disfrute de todas las características disponibles en su espacio personal para examinar, controlar y gestionar todos sus datos'
+app.ui.action: Acción
+app.ui.add: Añadir
+app.ui.add_action: 'Añadir acción'
+app.ui.add_address: 'Añadir dirección'
+app.ui.add_association: 'Añadir asociación'
+app.ui.add_attribute: 'Añadir atributo'
+app.ui.add_attributes: 'Agregar atributos'
+app.ui.add_channel: 'Añadir canal'
+app.ui.add_choice: 'Añadir opción'
+app.ui.add_coupon: 'Añadir cupón'
+app.ui.add_image: 'Añadir imagen'
+app.ui.add_member: 'Añadir miembro'
+app.ui.add_menu_element: 'Agregar elemento al menú'
+app.ui.add_new_email: 'Agregar nuevo correo electrónico'
+app.ui.add_new_permission: 'Añadir nuevo permiso'
+app.ui.add_new_role: 'Añadir nuevo rol'
+app.ui.add_province: 'Añadir provincia'
+app.ui.add_rule: 'Añadir regla'
+app.ui.add_to_cart: 'Añadir al carrito'
+app.ui.add_value: 'Añadir valor'
+app.ui.add_your_review: 'Agregue su reseña'
+app.ui.adding_new_customer_groups: 'Agregar nuevo grupo de clientes'
+app.ui.adding_new_email: 'Añadiendo nuevo correo electrónico'
+app.ui.adding_new_locale: 'Añadiendo nuevo idioma'
+app.ui.additional_information: 'Información adicional'
+app.ui.address: Dirección
+app.ui.address_book: 'Libreta de direcciones'
+app.ui.addressing: Dirección
+app.ui.addressing_step: 'Dirección de entrega'
+app.ui.adjustments: Ajustes
+app.ui.administration: Administración
+app.ui.administration_dashboard: 'Panel de administración'
+app.ui.administration_panel_login: 'Panel de administración'
+app.ui.admin_users: Administradores
+app.ui.all: Todos
+app.ui.all_your_addresses: 'Todas tus direcciones'
+app.ui.amount: Cantidad
+app.ui.an_error_occurred: 'Se ha producido un error'
+app.ui.api: Api
+app.ui.apply_coupon: 'Aplicar cupón'
+app.ui.archival: Archivo
+app.ui.archive: Archivar
+app.ui.are_your_sure_you_want_to_perform_this_action: '¿Está seguro que quiere realizar esta acción?'
+app.ui.association: Asociación
+app.ui.association_types: 'Tipos de asociación'
+app.ui.associations: Asociaciones
+app.ui.assortment: Varios
+app.ui.attributes: Atributos
+app.ui.author: Autor
+app.ui.authorized: Autorizado
+app.ui.availability: Disponibilidad
+app.ui.available_for_channels: 'Disponible para canales'
+app.ui.available_on: 'Disponible el'
+app.ui.available_on_hand: 'Existencias disponibles'
+app.ui.available_until: 'Disponible hasta'
+app.ui.average_order_value: 'Valor de pedido promedio'
+app.ui.awaiting_payment: 'Esperando pago'
+app.ui.back_to_store: 'Volver a la tienda'
+app.ui.back_to_details: 'Volver a detalles'
+app.ui.backorder: 'En espera'
+app.ui.backordered: 'Pendientes de entrega'
+app.ui.balance_due: Saldo
+app.ui.base_currency: 'Moneda base'
+app.ui.bill_to: 'Facturar a'
+app.ui.billing_address: 'Dirección de facturación'
+app.ui.billing_address_changes_history: 'Historia de cambios de dirección de facturación'
+app.ui.blocks: Bloques
+app.ui.body: Cuerpo
+app.ui.browse_products: 'Ver los productos'
+app.ui.browse_all_products: 'Ver todos los productos'
+app.ui.browse_your_addresses: 'Ver sus direcciones'
+app.ui.browse_your_orders_from_the_past: 'Ver sus pedidos anteriores'
+app.ui.build: Construir
+app.ui.by_position: 'Por posición'
+app.ui.calculator: Calculadora
+app.ui.call_us: ¡Llámanos!
+app.ui.cancelled: Cancelado
+app.ui.cart: Carrito
+app.ui.cart_locked: 'Carrito bloqueado'
+app.ui.cart_summary: 'Resumen del carrito'
+app.ui.categorization: Categorización
+app.ui.users_list_of_all_users_registered_in_store: 'Usuarios <small>Lista de todos los usuarios registrados en la tienda</small>'
+app.ui.value: Valor
+app.ui.values: Valores
+app.ui.variant: Variante
+app.ui.variant_choice: 'Opción tipo variante'
+app.ui.variant_selection_method: 'Método de selección variante'
+app.ui.variants: Variantes
+app.ui.verified: Verificado
+app.ui.verify: Verificar
+app.ui.view_and_edit_cart: 'Ver y modificar carrito'
+app.ui.view_more: 'Ver más'
+app.ui.view_product_details: 'Ver detalles de %product%'
+app.ui.view_your_order_or_change_payment_method: 'Ver pedido o cambiar forma de pago'
+app.ui.view_your_store: 'Ver su tienda'
+app.ui.void: Vacío
+app.ui.volume_based_pricing: 'Precio por volumen'
+app.ui.warning: Advertencia
+app.ui.welcome: ¡Bienvenido!
+app.ui.wholesalers: Mayoristas
+app.ui.catalogue: Catálogo
+app.ui.work_with_us: 'Trabaja con nosotros'
+app.ui.download_app: 'Simplifícate y descarga el app de '
+app.ui.register_page_message: 'Completa los campos para crear una cuenta en Meat House.'
+app.ui.have_account_already: 'Si ya tienes una cuenta, '
+app.ui.create_your_account: 'Crea tu cuenta'
+app.ui.optional_fields_to_offers: 'Campos opcionales para promociones optimizadas.'
+app.ui.required_fields: 'Los campos con un asterisco (*) son obligatorios para registrarte.'
+app.ui.by_registering_you_are_accepting_%link%: 'Al registrarte, estás aceptando los%link%'
+app.ui.login_with: 'Ingresar con '
+app.ui.register_with_%name%: 'Regístrame con %name%'
+app.ui.register.accept_terms: 'Debes aceptar los términos y condiciones para continuar'
+app.ui.register.must_be_of_legal_age: 'Debes ser mayor de edad para crear una cuenta'
+app.ui.create_an_account_using_social_networks: 'Crea tu cuenta usando redes sociales'
+app.ui.enter_email_to_reset_password: 'Ingresa el correo con el que te registraste. Te enviaremos instrucciones para recuperar tu contraseña.'
+app.ui.send_instructions: 'Enviar instrucciones'
+app.ui.purchase_history: 'Historial de compras'
+app.ui.my_favorites: 'Mis favoritos'
+app.ui.view_my_profile: 'Ver mi perfil'
+app.ui.login.title: Ingresar
+app.ui.login.welcome_message: '¡Bienvenido al Administrador de Procasa!'
+app.ui.login.motd: 'Escribe tus credenciales para ingresar a tu cuenta.'
+app.ui.login.email: Correo
+app.ui.login.password: Contraseña
+app.ui.login.request_new_password: 'Solicitar nueva contraseña'
+app.ui.login.logged_in_as_%user%_message: 'Ya has ingresado como %user%'
+app.ui.save_changes: 'Guardar cambios'
+app.ui.terms_and_conditions_text: 'Este es el texto que deberá ser aceptado por los usuarios que se registren en Procasa. Cada vez que se modifiquen, los usuarios ya registrados serán informados por medio de un correo electrónico.'
+app.ui.terms_and_conditions_success_message: 'Se ha guardaro la nueva versión de los términos y condiciones.'
+app.ui.success_default_title: ¡Felicidades!
+app.ui.error_default_title: ¡Error!
+app.ui.terms_and_conditions_error_while_saving_message: 'Hubo un error al guardar los cambios, ningún correo fue enviado, por favor intentelo de nuevo más tarde.'
+app.ui.about_procasa_text: 'Este es el texto en la sección de "Acerca de Procasa" en la Web. Aquí deberás colocar la historia de la empresa, visión, misión y lo que quieras que tus clientes y clientes potenciales conozcan de Procasa.'
+app.ui.about_procasa_phrase: Frase
+app.ui.about_procasa_phrase_author: Author
+app.ui.about_us: 'Sobre nosotros'
+app.ui.about_store_success_message: 'Se han guardado las configuraciones de la tienda.'
+app.ui.about_store_error_while_saving_message: 'Hubo un error al guardar las configuraciones, por favor intentelo de nuevo más tarde.'
+app.ui.coupon_enable_outdated_coupon_message: 'Para habilitar este cupón, primero debes editar la fecha y hora de inicio y fin'
+app.ui.coupon_enable_no_quota_coupon_message: 'Para habilitar este cupón, primero debes editar el límite de usuarios/el límite de usos'
+app.ui.coupon_remove_title: '¿Estás seguro de eliminar este cupón?'
+app.ui.coupon_remove_text: 'Cupón %code%'
+app.ui.settings.first_purchase_title: 'Primera compra'
+app.ui.settings.first_purchase_text: 'Este texto es el que se muestra en el checkout para lo usuarios que ya están registrados y están ralizando su primera compra.'
+app.ui.settings.new_address_title: 'Nueva dirección'
+app.ui.settings.new_address_text: 'Este texto es el que se muestra en el checkout cuando un usuario ya ha realizado compras con el App pero eligió una dirección que no se había validado.'
+app.ui.settings.purchase_texts_success_message: 'Se han actualizado los textos de compra.'
+app.ui.settings.purchase_texts_error_while_saving_message: 'Hubo un error al guardar los textos de compra, por favor vuelta a intentarlo más tarde.'
+app.ui.powered_by_%name%: 'Powered by %name%'
+app.ui.register: Regístrate
+app.ui.create_an_account: 'Crear una cuenta'
+app.ui.frontend.about_procasa: 'Acerca de Procasa'
+app.ui.frontend.login: 'Iniciar sesión'
+app.ui.sign_in_here: 'ingresa aquí'
+app.ui.forgot_password: 'Olvidé mi contraseña'
+app.ui.create_here: 'creala aquí.'
+app.ui.accept_the_%link%: 'Acepto los%link%'
+app.ui.show_searcher.title: 'Mostrar buscador'
+app.ui.show_searcher.text: 'Esta opción habilitará o deshabilitará el buscador del catálogo y favoritos en la página web y App de Procasa.'
+app.ui.show_searcher.help: 'El buscador se está mostrando actualmente en el catálogo y favoritos.'
+app.ui.purchase_settings_edit: Editar
+app.ui.purchase_settings_max_purchase: 'Máximo de compra'
+app.ui.purchase_settings_min_purchase: 'Mínimo de compra'
+app.ui.purchase_settings_days_to_choose_in_advance_to_purchase: 'Días a elegir con anticipación la compra'
+app.ui.purchase_settings_delivery_hours: 'Horarios de entrega'
+app.ui.settings.purchase_settings_success_message: '¡Se actualizaron las configuraciones de compra!'
+app.ui.settings.purchase_settings_error_while_saving_message: 'Hubo un error al guardar las configuraciones de compra, inténtelo de nuevo más tarde'
+app.ui.delivery_hours.at_morning: 'En la mañana'
+app.ui.delivery_hours.at_noon: 'Al medio día'
+app.ui.delivery_hours.in_the_afternoon: 'Por la tarde'
+app.ui.delivery_hours.between: Entre
+app.ui.purchase_settings_delivery_hours_default_schedule: 'Sin preferencia'
+app.ui.purchase_settings_schedule_between_shifts: '%name% (entre %start% - %end%)'
+app.ui.purchase_settings_empty_schedule_message: 'Debes llenar todos los campos de todos los horarios habilitados'
+app.ui.new_faq: 'Nueva pregunta frecuente'
+app.ui.edit_faq: 'Editar pregunta frecuente'
+app.ui.qty_of_faqs_%total%: 'Cantidad de preguntas: %total%'
+app.ui.search_label: Buscar
+app.ui.faq_reorder: Reordena
+app.ui.faq_content: Contenido
+app.ui.faq_remove_title: '¿Estás seguro de que deseas borrar esta pregunta?'
+app.ui.faq_error_on_remove_message: 'Hubo un error al borrar esta pregunta, por favor intentelo de nuevo más tarde.'
+app.ui.faq_new_success_message: 'Se ha guardado la nueva pregunta.'
+app.ui.faq_new_error_message: 'Hubo un error al crear la pregunta, intentelo de nuevo más tarde.'
+app.ui.faq_edit_success_message: 'Se ha actualizado la pregunta'
+app.ui.faq_edit_error_message: 'Hubo un error al actualizar la pregunta, intentelo de nuevo más tarde.'
+app.ui.faq_remove_success_message: 'Se ha eliminado la pregunta'
+app.ui.faq_remove_error_message: 'Hubo un error al eliminar la pregunta, intentelo de nuevo más tarde.'
+sylius.form.login.username: Correo
+sylius.form.login.password: Contraseña
+sylius.form.login.remember_me: Recordarme
+sylius.form.option.name: Nombre
+sylius.form.notes: 'Notas adicionales'
+sylius.form.variant.tracked: 'Con seguimiento'
+sylius.form.customer.gender: Género
+sylius.form.customer.email: Correo
+sylius.form.user.password.label: Contraseña
+sylius.form.user.email: Correo
+sylius.email.label: Correo
+app.ui.welcome_to_%name%: '¡Bienvenido a %name%!'
+app.ui.view_your_profile: 'Ver tu perfil'
+app.ui.view_products: 'Ver productos'
+app.ui.welcome.first_text: 'Actualiza tu información, agrega tus datos de facturación y agrega direcciones de entrega.'
+app.ui.welcome.second_text: 'Empieza una compra, busca productos y agrégalos a tu carrito.'
+app.ui.profile.hello_%name%: '¡Hola %name%!'
+app.ui.your_information: 'Tu información'
+app.ui.profile.add: Agregar
+app.ui.profile.add_delivery_information: 'Ingresa tu información de entrega <br> para tu próxima compra.'
+app.ui.login_with_%name%: 'Ingresar con %name%'
+app.ui.connect_with_%name%: 'Conectar con %name%'
+app.ui.deconnect_from_%name%: 'Desconectar de %name%'
+app.ui.your_account: 'Tu cuenta'
+app.ui.profile.change_email: 'Cambiar de correo'
+app.ui.you_dont_have_favorites: 'No tienes productos favoritos.<br>Agrega uno desde el catálogo.'
+app.ui.to_catalog: 'Ir al catálogo'
+app.ui.billing_data: 'Datos de facturación'
+app.ui.you_dont_have_billing_data: 'Ingresa tu información de facturación<br>para tu próxima compra.'
+'Credenciales no válidas.': 'Este usuario no existe. Por favor revisa la información que ingresaste e inténtalo de nuevo.'
+app.ui.login.form.error: 'Debes ingresar ambos campos para continuar.'
+app.ui.error.required: 'El campo no puede estar vacío.'
+app.ui.error.must_be_email: 'Deber ser un correo electrónico.'
+app.ui.error.not_greater_than_%x%: 'No puede ser mayor a %x% caracteres.'
+app.ui.error.not_less_than_%x%: 'No puede ser menor a %x% caracteres.'
+app.ui.faq_time_to_order: 'Horario para realizar pedido'
+app.ui.faq_order_delivery_time: 'Horario de entrega de pedido'
+app.ui.new_schedule_faq: 'Nueva pregunta de horario'
+app.ui.qty_of_locations_%total%: 'Cantidad de ubicaciónes: %total%'
+app.ui.new_location: 'Nueva ubicación'
+app.ui.name: Nombre
+app.ui.phone_number: Teléfono
+app.ui.phone_number_extension: Extensión
+app.ui.phone_number_extension.short: Ext.
+app.ui.location_error_on_remove_message: 'Hubo un error al borrar la ubiación, inténtelo de nuevo más tarde.'
+app.ui.location_remove_text: ''
+app.ui.location_remove_title: '¿Estas seguro que deseas borrar esta ubicación?'
+app.ui.choose_file: 'Sin archivo'
+app.ui.image: Imagen
+app.ui.browse: Examinar
+app.ui.location.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 296 x 216 px.'
+app.ui.edit_location: 'Editar ubicacicón'
+app.ui.location_schedule: Horario
+app.ui.saturday: Sábados
+app.ui.location_monday_to_friday: 'Lunes a viernes'
+app.ui.location_new_success_message: 'Se ha creado la nueva ubicación.'
+app.ui.location_new_error_message: 'Hubo un error al guardar la ubiación, intentelo de nuevo más tarde.'
+app.ui.location_edit_success_message: 'Se ha actualizado la ubicación.'
+app.ui.location_edit_error_message: 'Hubo un error al guardar los cambios de la ubicación, por favor intentelo de nuevo más tarde.'
+app.ui.holiday_reason: Motivo
+app.ui.holiday_day: Día
+app.ui.holiday_month: Mes
+app.ui.calendar_holiday: Editar
+app.ui.qty_of_holiday_%total%: 'Cantidad de días de feriado: %total%'
+app.ui.holiday_remove_text: '%name%'
+app.ui.holiday_error_on_remove_message: 'Hubo un error al eliminar el día festivo, por favor inténtelo de nuevo más tarde.'
+app.ui.holiday_remove_title: '¿Estás seguro de borrar este día festivo?'
+app.ui.filter_order_by_date: Cronológico
+app.ui.filter_order_by: 'Ordenar por'
+app.ui.filter_order_by_reason: ABC
+app.ui.filter_by_month: 'Filtrar por'
+app.ui.edit_holidays: 'Editar días de feriado'
+app.ui.holidays_please_enter_reason: 'Ingresa el nombre del día festivo'
+app.ui.holidays_new: 'Nuevo día festivo'
+app.ui.holidays_new_on_date: 'Crea un día festivo en la fecha:'
+app.ui.this_field_cannot_be_blank: 'Este campo no puede ir vacío.'
+app.email.follow_us_on_%social_media%: 'Siguenos en %social_media%'
+app.email.default_message: 'Mensaje por defecto'
+app.email.welcome_to_%company%_%user%: '¡Bienvenido a %company%, %user%!'
+app.email.register_message: 'Bienvenido a nuestra tienda, es un gusto tenerte con nosotros. ¡Disfruta de todos nuestros productos al mejor precio!'
+app.email.register_message_%name%: '¡Hola %name%! ahora puedes hacer tus pedidos fácilmente desde la App o Web de Meat House. Te invitamos a conocer los beneficios que tienes con tu cuenta Meat House.'
+app.email.user_registration: '¡Bienvenido a Meat House!'
+app.email.password_reset: 'Solicitud de recuperación de contraseña'
+app.email.hello_%name%: '¡Hola %name%!'
+app.email.here_is_your_code: 'Reestablece tu contraseña usando este código.'
+app.email.contact_us.new_message_from_%name%_%email%: 'Nuevo mensaje de %name% (%email%)'
+app.email.contact_us.message_received: '¡Se ha recibido un nuevo mensaje!'
+app.email.contact_us.message_sent: '¡Hemos recibido tu mensaje!'
+app.email.contact_us.message_sent.message: 'Gracias por ponerte en contacto con nosotros, en breve estaremos respondiendo tu comentario.'
+app.email.contact_us.message_received.message_%name%_%email%_%comment%: 'Se ha recibido un nuevo mensaje de %name% con el correo %email%, con el siguiente comentario: %comment%'
+app.email.to_reset_password: 'Hemos recibido un mensaje diciendo que olvidaste tu contraseña. Para acceder a tu cuenta necesitas el siguiente código:'
+app.email.admin_password_request_subject: 'Recupera tu contraseña en %app_name%'
+app.email.admin.admin_password_request_message_title_%name%: 'Hola %name%, este es tu código para recuperar tu contraseña.'
+app.email.admin_password_request_message: 'Usa este código para recuperar tu contraseña.'
+app.email.admin.click_here_to_get_a_new_password: 'Restablecer su contraseña'
+app.email.reset_password.click_here: 'O haz click en el siguiente enlace:'
+app.email.reset_password.reset: 'Recupera tu contraseña haciendo click aquí.'
+app.ui.enter_the_token: 'Ingresa el código'
+app.ui.reset_instructions: 'Te enviamos un código a tu correo. Por favor revista tu correo y escribe abajo el código que te enviamos.'
+app.ui.recover: Recuperar
+'app.ui.did_not_get_your_code?_%link%': '¿No te llegó tu código? %link%'
+app.ui.resend_code_here: 'Reenvíalo haciendo click aquí.'
+app.ui.code: Código
+app.ui.create_new_password: 'Crea una nueva contraseña'
+app.ui.new_password_instructions: 'Escribe la contraseña que ahora usarás para ingresar a tu cuenta.'
+app.ui.reset: Recuperar
+app.form.user_reset_password.confirmation: 'Reescribe tu nueva contraseña'
+app.ui.locations_no_items_on_table: 'No se encontraron ubicaciones, puede crear una pulsando sobre el botón "Nueva ubicación"'
+app.ui.back_to_profile: 'Regresa a tu perfil'
+app.ui.category_color_text: 'Selecciona el tema que deseas aplicar en las categorías. (NOTA: Al seleccionarlo, afectará a ambas plataformas, web y app.)'
+app.ui.about_procasa_links: Links
+app.ui.app_store_url: 'URL a la AppStore'
+app.ui.play_store_url: 'URL a la PlayStore'
+app.ui.pinterest_url: 'URL de Pinterest'
+app.ui.instagram_url: 'URL de Instagram'
+app.ui.twitter_url: 'URL de Twitter'
+app.ui.facebook_url: 'URL de Facebook'
+app.ui.category_color_not_sure_title: '¿No estás seguro cómo se verá la imagen?'
+app.ui.category_color_not_sure_text: 'Sube una imagen y observa cómo se ve mejor. Esto no afecta a ninguna de las plataformas ya que es solo una prueba.'
+app.ui.category_color_light_theme: 'Tema claro'
+app.ui.category_color_dark_theme: 'Tema oscuro'
+app.ui.theme_subtitle_text: 'Muestra en app'
+app.ui.category_color_seafood: Mariscos
+app.ui.category_color_chicken: Pollo
+app.ui.add_your_information: 'Agrega tu información'
+app.ui.profile.update.optional_fields_to_offers: 'Agrega tu fecha de nacimiento y género para recibir promociones especiales.'
+app.form.address.full_address: 'Dirección de entrega'
+app.form.address.annotations: 'Preguntar por'
+app.form.address.ask_for: 'Preguntar por'
+app.form.address.phone_number: 'Teléfono de contacto'
+app.ui.address.full_address.instructions: 'Ingresa tu dirección exacta, códigos de accesso y/o indicaciones para encontrarla.'
+app.ui.add_another_address: 'Agregar otra dirección'
+app.error.tasty_ham: '¡Qué rico jamón!'
+app.error.404.message: 'Pero no era donde querías llegar ¿cierto? Lo más seguro es que llegaste por error, para volver al catálogo de nuestros productos presiona el botón.'
+app.ui.go_to_home: 'Ir al catálogo'
+app.error.oops: ¡Oops!
+app.error.500.message: 'Ha ocurrido un error y se quemó un poquito. Espera un poco mientras lo arreglamos e inténtalo nuevamente.'
+app.ui.work_with_us.message_%email%: 'Envíanos tu CV y tu área de interés a trabajar a %email% para aplicar a trabajar con nosotros.'
+app.ui.email: 'Correo electrónico '
+app.ui.contact_info: 'Información de contacto'
+app.ui.google_play_logo: 'Google Play Logo'
+app.ui.app_store_logo: 'App Store Logo'
+app.ui.frequent_questions: 'Preguntas frecuentes'
+app.ui.wholesalers.message_%phone%: 'Comunícate al %phone% si deseas comprar nuestros productos por caja.'
+app.ui.change_password: 'Cambio de contraseña'
+app.form.user_change_password.confirmation: 'Reescribe tu nueva contraseña'
+app.ui.my_cart: 'Mi carrito'
+app.ui.minimum_purchase_price_message_%price%: 'Recuerda que el mínimo de compra es de Q.%price%.00.'
+app.ui.cart.empty_instructions: 'No tienes productos en tu carrito. Para agregar productos, ve al catálogo y agrega el producto que quieras comprar.'
+app.ui.cart.empty: 'Carrito vacío'
+app.ui.favorites.empty: 'No tienes favoritos aún'
+app.ui.favorites.empty_instructions: 'Puedes agregar tus personalizaciones de compra por producto y no volver a configurarla para tu siguiente compra.'
+app.ui.order_history.empty: 'No tienes compras recientes'
+app.ui.order_history.empty_instructions: 'Actualmente no cuentas con algúna compra reciente.<br>Empieza una ahora:'
+app.ui.comments: Comentarios
+app.ui.date_and_time: 'Fecha y hora'
+app.ui.order_number: 'Número de orden'
+app.ui.score: Calificación
+app.ui.show_comments: 'Mostrar comentario'
+app.ui.comment: Comentario
+app.ui.rating_comments_sort_desc: 'Calificación de mayor a menor'
+app.ui.rating_comments_sort_asc: 'Calificación de menor a mayor'
+app.ui.rating_comments_2_stars: 'Calificación 2'
+app.ui.rating_comments_3_stars: 'Calificación 3'
+app.ui.rating_comments_sort_recent: Recientes
+app.ui.rating_comments_5_stars: 'Calificación 5'
+app.ui.rating_comments_4_stars: 'Calificación 4'
+app.ui.rating_comments_with_comment: 'Con comentario'
+app.ui.rating_comments_all_stars: Calificación
+app.ui.rating_comments_1_stars: 'Calificación 1'
+app.ui.comments_no_results_found: 'No hay resultados. Intentálo de nuevo con otra búsqueda.'
+app.ui.average_rating_%avg%: 'Rating promedio: %avg%'
+app.ui.total_of_users_%total%: 'Cantidad de usuarios: %total%'
+app.ui.users_search_label: '¿A quién buscas?'
+app.ui.users_filter_by_role: 'Filtrar por'
+app.ui.roles.role_admin: Administrador
+app.ui.roles.role_admin_api: Administrador por API
+app.ui.roles.role_editor: Editor
+app.ui.first_name: Nombre
+app.ui.last_name: Apellido
+app.ui.role: Rol
+app.ui.user_error_on_remove_message: 'Hubo un error al eliminar este usuario, puede que esté en uso.'
+app.ui.user_remove_title: '¿Estás seguro que deseas borrar este usuario?'
+app.ui.user_remove_text: '%name%'
+app.ui.users_sort_recent: Reciente
+app.ui.users_sort_asc: ABC
+app.ui.users_no_results_found: 'No hay usuarios que coincidan con esta búsqueda. Intentálo de nuevo con otra búsqueda.'
+app.ui.new_user: 'Nuevo usuario'
+app.ui.contact_us: Contáctanos
+app.ui.contact_us.message: '¿Tienes dudas, sugerencias o algo que necesites de Procasa? Escríbenos y con gusto nos pondremos en contacto contigo.'
+app.ui.close: Cerrar
+app.ui.search: Buscar
+app.ui.search.placeholder: '¿Qué estás buscando hoy?'
+app.ui.produc.%price%_peer_%measure%: '%price% por %measure%'
+app.ui.express_buy: 'Xpress Buy'
+app.ui.cart.icon: 'Icono del carrito'
+app.ui.express_buy.package: Paquete
+app.ui.temporal_password: 'Contraseña temporal'
+app.ui.back_to_users: 'Regresar a usuarios'
+app.ui.save_user: 'Guardar usuario'
+app.ui.user_new_success_message: 'Se ha creado el nuevo usuario'
+app.ui.user_new_error_message: 'Hubo un error al guardar este nuevo usuario, intentelo de nuevo más tarde.'
+app.ui.edit_user: Editar
+app.ui.user_detail: 'Detalle de usuario'
+app.ui.user_edit_success_message: 'Se ha actualizado el usuario'
+app.ui.user_edit_error_message: 'Hubo un error al actualizar este usuario, intentelo de nuevo más tarde.'
+app.ui.first_login.motd: 'Escribe la contraseña que ahora usarás para ingresar a tu cuenta.'
+app.ui.first_login.create_a_password: 'Crea una contraseña'
+app.ui.first_login.repeat_your_password: 'Reescribe tu contraseña'
+app.ui.first_login.password: 'Tu contraseña'
+app.ui.first_password.success: 'Se ha cambiado tu contraseña, ¡Bienvenido!'
+app.ui.first_password.error: 'Hubo un error al cambiar la contraseña, por favor intentalo de nuevo más tarde.'
+app.ui.complaints_email: 'Correo electrónico de quejas'
+app.ui.contact_email: 'Correo electrónico de contacto'
+app.ui.no_segments_found: 'No hay segmentos existentes. Selecciona el botón "Nuevo segmento" para crear un nuevo segmento.'
+app.ui.frequency: Frecuencia
+app.ui.age_range: 'Rango de edades'
+app.ui.search_box.segment: '¿Qué estas buscando?'
+app.ui.new_segment: 'Nuevo segmento'
+app.ui.qty_of_segments_%total%: 'Cantidad de segmentos: %total%'
+app.ui.segment.gender.f: Femenino
+app.ui.segment.gender.m: Masculino
+app.ui.segment.gender.both: Ambos
+app.ui.segment.frequency_type.amount: 'Por monto de %currency%%amount% o mayor'
+app.ui.segment.frequency_type.times: 'Por compra más de %times% veces al mes'
+app.ui.segment_remove_text: '%name%'
+app.ui.segment_remove_title: '¿Estás seguro de eliminar este segmento?'
+app.ui.segment_error_on_remove_message: 'Hubo un error al eliminar este segmento, por favor inténtalo de nuevo más tarde.'
+app.ui.back_to_segments: 'Regresar a segmentos'
+app.ui.age_range_between: Entre
+app.ui.save_segment: 'Guardar segmento'
+app.ui.age_range__years: Años
+app.ui.segment.frequency_type.amount.label: 'Por monto'
+app.ui.segment.frequency_type.times.label: 'Por veces'
+app.ui.segment.purchase_times_or_greater_in_monthly_purchases: 'o más en compras al mes'
+app.ui.segment.fixed_amount_or_greater_in_monthly_purchases: 'o mayor en compras mensualmente'
+app.ui.segment.name: 'Nombre del segmento'
+app.ui.segment.age_range: 'Rango de edades'
+app.ui.segment_new_success_message: 'Se ha creado el nuevo segmento'
+app.ui.segment_new_error_message: 'Hubo un error al guardar el segmento, intentelo de nuevo más tarde'
+app.ui.edit_segment: 'Editar segmento'
+app.ui.segment_edit_success_message: 'Se ha actualizado el segmento'
+app.ui.segment_edit_error_message: 'Hubo un error al actualizar el segmento, por favor intentelo de nuevo más tarde.'
+app.ui.no_push_found: 'No hay notificaciones push existentes. Selecciona el botón "Nueva push" para crear uno nuevo.'
+app.ui.coupon_or_promotion: 'Cupón / Promoción'
+app.ui.new_push: 'Nueva push'
+app.ui.segment_label: Segmento
+app.ui.date: Fecha
+app.ui.search_box.push: '¿Qué estás buscando?'
+app.ui.push_remove_text: app.ui.push_remove_text
+app.ui.push_remove_title: app.ui.push_remove_title
+app.ui.push_error_on_remove_message: app.ui.push_error_on_remove_message
+app.ui.all_segments: Todos
+app.ui.push: Notificaciones
+app.ui.favorites.search.placeholder: 'Busca entre tus favoritos'
+app.ui.sold_out: Agotado
+app.ui.message: Mensaje
+app.ui.send_menssage: 'Enviar mensaje'
+app.ui.email.short: Correo
+app.ui.error.enter_valid_email: 'Ingrese un correo válido'
+app.ui.contact_us.form.error: 'Debes ingresar todos los campos para continuar'
+app.ui.contact_us.success: '¡Tu mensaje fue enviado de manera exitosa!'
+app.ui.contact_us.success.message: 'Pronto nos pondremos en contacto para darle seguimiento a tu mensaje.'
+app.ui.contact_us.error: '¡Parece que hubo un error al enviar tu mensaje!'
+app.ui.contact_us.error.message: 'Un error detuvo la entrega de tu mensaje, intentalo nuevamente.'
+app.ui.accept.short: Aceptar
+app.ui.captcha.error.message: 'Por favor verifica el captcha para continuar.'
+app.ui.back_to_home: 'Regresar al catálogo'
+app.ui.product.price_by_%measure%_%price%: 'Precio: %price% por %measure%'
+app.ui.product.price_by_%measure%_%price%_%offer%: 'Precio: %price% %offer% por %measure%'
+app.ui.product.add_to_favorites: 'Agregar a favoritos'
+app.ui.push_type: Tipo
+app.ui.push_created_by: 'Creado por'
+app.ui.push_created_at: 'Fecha de creación'
+app.ui.push_description: Descripción
+app.ui.push_title: Titulo
+app.ui.push_detail: 'Detalle de push'
+app.ui.back_to_push: 'Regresar a envío push'
+app.ui.push.types.promotion: Cupón
+app.ui.push.types.info: Informativa
+app.ui.select_a_coupon: 'Seleccione un cupón'
+app.ui.push_new_success_message: 'Se ha creado la notificación y pronto se estará enviando.'
+app.ui.push_new_error_message: 'Hubo un error al crear la notificación, por favor intentelo de nuevo más tarde.'
+app.ui.latest_products: 'Últimos productos:'
+app.ui.package: paquete
+app.ui.favorites.modal.unlogged.title: '¿Se te antoja para después?'
+app.ui.favorites.modal.unlogged.message: '¡Crea una cuenta y agrega favoritos para facilitar tu compra!'
+app.api.favorites.add.success: '¡Producto agregado a favoritos!'
+app.api.favorites.add.error.title: '¡Parece que hubo un error al agregar a favoritos!'
+app.api.favorites.add.error.message: 'Un error no permitió agregar el producto a favoritos, intentalo nuevamente.'
+app.api.favorites.add.error.non_existent_product: 'Parece que el producto que deseas agregar a favoritos no existe...'
+app.api.favorites.remove.success: '¡Producto removido de favoritos!'
+app.api.favorites.remove.error.title: '¡Parece que hubo un error al remover de favoritos!'
+app.api.favorites.remove.error.message: 'Un error no permitió remover el producto de favoritos, intentalo nuevamente.'
+app.api.favorites.remove.error.non_existent_product: 'Parece que el producto que deseas remover de favoritos no existe...'
+app.ui.product.favorite: Favorito
+app.ui.product.added_to_favorites_%name%: 'Agregamos %name% a tus favoritos.'
+app.ui.forgot_password.request_password_title: 'Solicitar contraseña'
+app.ui.forgot_password_email: Correo
+app.ui.forgot_password.motd: 'Escribe el correo de tu usuario para solicitar una nueva contraseña.'
+app.ui.forgot_password.request_a_new_password: 'Solicitud de nueva contraseña'
+app.ui.forgot_password_back_to_login: 'Regresar a login'
+app.ui.forgot_password.not_found_error: 'Este correo no existe en nuestro sistema. Prueba con otro o habla con tu supervisor.'
+app.ui.validate_token.submit_text: Recuperar
+app.ui.forgot_password_token: Código
+app.ui.validate_token.motd: 'Te enviamos un código a tu correo. Por favor revisa tu correo y escribe abajo el código que te enviamos.'
+app.ui.validate_token.title: 'Solicitud enviada'
+app.ui.forgot_password.didnt_receive_your_code: '¿No te llegó tu código?'
+app.ui.validate_token.resend_code: 'Reenvialo haciendo click aquí'
+app.ui.validate_token.user_not_found: 'El código es incorrecto. Por favor revisa tu correo.'
+app.ui.new_password.submit_text: Recuperar
+app.ui.new_password.motd: 'Escribe la contraseña que ahora usarás para ingresar a tu cuenta.'
+app.ui.new_password.title: 'Crear una nueva contraseña'
+app.ui.forgot_password.password_updated: 'Se ha restablecido el acceso a su cuenta con la nueva contraseña.'
+app.ui.product_id: 'Id de producto'
+app.ui.new_banner: 'Nueva promoción'
+app.ui.news_banner_title: 'Carrousel de promociones'
+app.ui.forgot_password.error_on_save_code: 'Hubo un error al guardar el cóigo de seguridad, por favor contactese con los desarrolladores.'
+app.ui.view_more_products: 'Ver más productos'
+app.ui.go_to_my_cart: 'Ir a mi carrito'
+app.ui.complement_with: 'Compleméntalo con:'
+app.ui.product.image: 'Imagen del producto'
+app.ui.check: Chequeado
+app.ui.added_%product%_to_cart: 'Agregamos %product% a tu carrito'
+app.ui.cart.add_product.error: '¡Hubo un error al agregar el producto a tu carrito!'
+app.ui.cart.add_product.error.message: 'Un error no permitio agregar el producto a tu carrito, intentalo nuevamente...'
+app.ui.favorites.all: Todas
+app.ui.sub_total: Subtotal
+app.ui.favorites.delete: 'Eliminar <br> de favoritos'
+app.ui.favorites.delete_from: 'Eliminar de favoritos'
+app.ui.favorites.delete_favorite: 'Eliminar favorito'
+'app.ui.favorites.delete.are_you_sure?': '¿Estás seguro de eliminar este producto de tus favoritos?'
+app.ui.pound: libra
+app.ui.return_to_favorites: 'Regresar a favoritos'
+app.ui.cart.add_product.error.unavailable: 'El producto se encuenta agotado.'
+app.ui.search.empty: 'Búsqueda sin resultados'
+app.ui.search.empty.message: 'Parece que no existen coincidencias con la información que ingresaste. Inténtalo nuevamente cambiando tu búsqueda.'
+app.ui.loading: Cargando...
+app.ui.load_more_products: 'Cargar más productos'
+app.ui.back_to_%taxon%: 'Regresar a %taxon%'
+app.ui.view_detail: 'Ver detalle'
+app.ui.deliver_time: Horario
+app.ui.deliver_date: Entrega
+app.ui.orders.export_to_excel: 'Exportar a Excel'
+app.ui.orders_list: Órdenes
+app.ui.orders_download: 'Dump listado de ordenes'
+app.ui.orders.states.---: '---'
+app.ui.orders.states.pending: Pendiente
+app.ui.orders.states.cancelled: Cancelada
+app.ui.orders.states.delivered: Entregada
+app.ui.order.status.all: Todos
+app.ui.order.sort.order_number: 'Número de orden'
+app.ui.order.sort.recent: 'Más reciente'
+app.ui.orders_no_items_on_table: "Aún no hay ordenes aquí.\n<br>\nEsperemos hasta que se cree la primera orden."
+app.ui.order_detail: 'Detalle de orden'
+app.ui.orders_back_to_orders: 'Regresar a órdenes'
+app.ui.name_in_tax: 'Nombre en factura'
+app.ui.address_in_tax: 'Dirección en factura'
+app.ui.nit: NIT
+app.ui.payment_method: 'Método de pago'
+app.ui.applied_discount: 'Descuento aplicado'
+app.ui.products: Productos
+app.ui.orders.export_to_excel_97: 'Exportar a Excel 97'
+app.ui.orders.export_to_csv: 'Exportar a CSV'
+app.ui.orders.export_to_html: 'Exportar a HTML'
+app.ui.order_status: Estado
+app.ui.rating: Calificación
+app.ui.orders.export_to_pdf: 'Descargar PDF'
+app.ui.orders_search_label: 'Busca una orden'
+app.ui.tax_id.cf: C/F
+app.ui.proceed_to_pay: 'Proceder a pago'
+app.ui.promotion_banner_remove_text: '%code%'
+app.ui.promotion_banner_remove_title: '¿Está seguro de eliminar esta promoción?'
+app.ui.promotion_banner_error_on_remove_message: 'Hubo un error al borrar esta promoción, por favor inténtelo de nuevo más tarde.'
+app.ui.promotion_banner.limit_alert_message: 'No puedes agregar más promociones al carrousel. Por favor borra uno para agregar otro.'
+app.ui.banners_product_if_applicable: 'Producto al que llevará (si aplica)'
+app.ui.banner_no_product_selected: '---'
+app.ui.banner_new_success_message: 'Se ha creado la nueva promoción'
+app.ui.banner_new_error_message: 'Hubo un error al crear la promoción, inténtelo de nuevo más tarde.'
+app.ui.banner_edit_success_message: 'Se ha actualizado la promoción'
+app.ui.banner_edit_error_message: 'Hubo un error al actualizar la promoción, inténtelo de nuevo más tarde.'
+app.ui.banner_web.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 1440 x 500 px.'
+app.ui.banner_tablet.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 767 x 350 px.'
+app.ui.banner_mobile.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 320 x 296 px.'
+app.ui.banner_app.image_help: 'Debe ser JPG o PNG, 72 DPI con dimensiones 882 x 399 px.'
+app.ui.edit_banner: 'Editar promoción en carrousel'
+app.ui.banners.app: App
+app.ui.banners.mobile: Móvil
+app.ui.banners.tablet: Tablet
+app.ui.banners.web: Web
+app.ui.new_banner_in_carrousel: 'Nueva promoción en carrousel'
+app.ui.banners_limit_error: 'Buen intento, pero esta operación no está permitida.'
+app.ui.banners_limit_error_message: '<strong>Eres una persona muy inteligente...</strong> pero el limite sigue siendo de %limit% promociones simulataneas. <br>Tal vez puedas comunicarte con <strong>%vendor%</strong> para aumentar el limite de las promociones.'
+app.ui.banners_no_items_on_table: 'Aún no hay promociones, da click en el botón "Nueva promoción" para crear una nueva.'
+app.ui.cart.delete: Eliminar
+app.ui.coupon.apply: Aplicar
+app.ui.coupon.instructions: '¿Tienes algún cupón? <br> Ingrésalo aquí:'
+app.ui.cart.your_total: 'Tu total'
+app.ui.cart.delete_product: 'Eliminar del carrito'
+'app.ui.cart.delete_product.are_you_sure?': '¿Estás seguro de eliminar este producto de tu carrito?'
+app.ui.cart.delete_from: 'Eliminar de mi carrito'
+app.ui.cart.delete_product.error: '¡Error al eliminar el producto!'
+app.ui.cart.delete_product.error.message: 'Un error no permitio eliminar el producto de tu carrito, inténtalo nuevamente...'
+app.ui.cart.minimum.title: '¡Debes alcanzar el mínimo de compra!'
+app.ui.cart.minimum.message_%price%: 'Debes comprar al menos Q%price% para seguir.'
+app.ui.cart.max.title: '¡Sobrepasaste el máximo de compra!'
+app.ui.cart.max.message_%price%: 'Tu compra supera los Q%price%. Has superado el máximo de venta en línea. Por favor revisa tu pedido y vuelve a intentarlo.'
+app.ui.cart.update.error: '¡Hubo un error al actualizar tu carrito!'
+app.ui.cart.update.error.message: 'Un error no permitió actualizar tu carrito, inténtalo nuevamente...'
+app.ui.cart.sub-total: Subtotal
+app.ui.cart.shipment: Envío
+app.ui.cart.discount: Descuento
+app.ui.reset_password.error.title: '¡Parece que hubo un error!'
+app.ui.reset_password.check_you_email.message: 'El código es incorrecto. Por favor revisa tu correo...'
+app.ui.reset_password.error.enter_email: 'Ingresa un correo valido...'
+app.ui.reset_password.error.message: 'Un error no permitio enviar el código a tu correo, inténtalo nuevamente...'
+app.ui.reset_password.error.not_registered: 'Este correo no ha sido registrado en nuestro sistema. Prueba con otro o registrate.'
+app.ui.reset_password.success: '¡Código envíado!'
+app.ui.reset_password.success.message: 'Hemos envíado un código a tu correo, revisa e ingresa el código en el campo para continuar.'
+app.ui.reset_password.finished: ¡Terminaste!
+app.ui.reset_password.finished.message: 'Has actualizado tu contraseña correctamente. Ingresa nuevamente a tu cuenta con la nueva contraseña.'
+app.ui.promotion_banner: Promoción
+app.ui.push.promotion_types.banner: Promoción
+app.ui.push.promotion_types.coupon: Cupón
+app.ui.cart.coupon.error.title: '¡Parece que hubo un error!'
+app.ui.cart.coupon.error.message: 'Solo puedes agregar un cupón por carrito, guarda tu cupón e ingresalo en tu próxima compra.'
+app.ui.checkout.title: 'Realiza tu pago'
+app.ui.checkout.order.quantity: 'Cantidad:'
+app.ui.checkout.order.total: Total
+app.ui.checkout.order.summary: 'Tu compra'
+app.ui.checkout.first.title: 'Paso 1: Tu información'
+app.ui.checkout.second.title: 'Paso 2: Datos de facturación'
+app.ui.checkout.third.title: 'Paso 3: Método de pago'
+app.ui.checkout.order.phone.message: 'Al ser tu primera orden, llamaremos para confirmar tu pedido en el transcurso del día.'
+app.ui.checkout.order.schedule: 'Programar mi orden para una fecha'
+app.ui.checkout.order.preferred_time: '¿En qué horario prefieres recibir tu orden?'
+app.ui.checkout.order.preferred_time.none: 'Sin preferencia'
+app.ui.checkout.order.preferred_time.first: 'En la mañana (entre 8:30 - 12:00)'
+app.ui.checkout.order.preferred_time.second: 'Medio día (entre 12:00 - 14:00)'
+app.ui.checkout.order.preferred_time.third: 'Por la tarde (entre 14:00 - 17:00)'
+app.ui.checkout.order.preferred_time.first.short: 'En la mañana'
+app.ui.checkout.order.preferred_time.second.short: 'Medio día'
+app.ui.checkout.order.preferred_time.third.short: 'Por la tarde'
+app.api.cart.coupon.error: 'Hubo un problema al agregar tu cupón de descuento, inténtalo nuevamente...'
+app.api.cart.coupon_not_found: 'Parece que el cupón que ingresaste no existe...'
+app.api.cart.not_found: 'Parece que el carrito especificado no existe...'
+api.address_book.shipping_limit_reached: 'El límite de %limit% direcciones de envío ha sido alcanzado.'
+api.address_book.billing_limit_reached: 'El límite de %limit% direcciones de facturación ha sido alcanzado.'
+api.address_book.billing_one_address_limit_reached: 'Solo puedes tener una dirección de facturación.'
+app.ui.cart.coupon.error.add_code.message: 'Debes ingresar un código de cupón para agregarlo a tu carrito.'
+app.ui.checkout.form.scheduled_date: 'Programar mi orden para el'
+app.ui.checkout.order.estimated_%date%: 'Tu orden llegará el %date%'
+app.ui.checkout.view_details: 'Ver detalle'
+app.ui.checkout.date: Fecha
+app.ui.checkout.schedule: Horario
+app.ui.checkout.billing.name: 'Nombre en Factura'
+app.ui.checkout.billing.tax_id: NIT
+app.ui.checkout.billing.address: 'Dirección en factura'
+app.ui.checkout.billing.add_data: 'Ingresar datos'
+app.ui.checkout.billing.cf: 'Consumidor Final'
+app.ui.checkout.billing.cf.short: CF
+app.ui.checkout.billing.city: Ciudad
+app.ui.checkout.complete_order: 'Completar tu compra'
+app.ui.checkout.order.payment.cash_on_delivery: Efectivo
+app.ui.checkout.order.payment.bank_transfer: 'Transferencia bancaria'
+app.ui.checkout.order.payment.card: Tarjeta
+app.ui.checkout.order.payment.card.message: 'No guardaremos la información de tu tarjeta'
+app.ui.form.payment.number: 'Número de tarjeta'
+app.ui.form.payment.name: Nombre
+app.ui.form.payment.expiration_date: 'Fecha de vencimiento'
+app.ui.form.payment.cvv: CVV
+app.ui.order.completed.title: '¡Gracias por tu compra!'
+app.ui.order.completed.message: 'Tu número de orden es <strong>#%order%</strong>. Hemos enviado el comprobante de tu compra al correo <strong>%email%</strong> que ingresaste.'
+app.ui.checkout.payment.method: 'Método de pago'
+app.ui.keep_buying: 'Seguir comprando'
+app.ui.cart.abandoned.title: 'Has abandonado tu carrito en el espacio'
+app.ui.cart.abandoned.message: '¿Deseas continuar esta compra?'
+app.ui.cart.abandoned.delete: 'No, borrar mi carrito'
+app.ui.cart.abandoned.got_to_cart: 'Llévame a mi carrito'
+app.ui.cart.abandoned.delete.error.title: 'Hubo un error al eliminar tu carrito'
+app.ui.cart.abandoned.delete.error.message: 'Un error no permitio eliminar tu carrito, intentalo nuevamente más tarde'
+app.ui.view_all: 'Ver todos'
+app.ui.view_history: 'Ver historial'
+app.ui.customer.default_address: 'Dirección predeterminada'
+app.ui.customer.addresses: 'Direcciones almacenadas'
+app.ui.address.validated: 'Dirección aprobada'
+app.ui.address.not_validated: 'Dirección pendiente de aprobación'
+app.ui.last_order: 'Última compra'
+app.ui.buy_back: 'Volver a comprar'
+app.ui.account.password.changed.title: '¡Cambiamos tu contraseña!'
+app.ui.account.password.changed.message: 'Tu contraseña se cambio con éxito.'
+app.ui.account.add_billing: 'Agrega tus datos de facturación'
+app.ui.account.billing.changed.title: '¡Cambiamos tus datos!'
+app.ui.account.billing.changed.message: 'Tus datos de facturación fueron cambiados con éxito.'
+app.api.cart.no_carts_available_for_current_user: 'No existen carritos para este usuario.'
+app.ui.account.change_email: 'Cambio de correo'
+app.ui.account.change_email.send: 'Enviar validación'
+app.ui.account.change_email.instructions: '<p>Para cambiar tu correo, te enviaremos un mensaje a tu correo nuevo en el cual debes seguir las instrucciones para que este cambio sea realizado.</p><p class="text-danger-light-i">Si no validas el cambio de correo, éste no se ejecutará y seguirás ingresando a Meat House con tu correo actual.</p>'
+app.ui.account.change_email.success.title: 'Validación de correo enviada'
+app.ui.account.change_email.success.message_%email%: 'Por favor ve al correo %email% y valida el cambio. Si no lo validas, el cambio de correo no se tomará en cuenta.'
+app.ui.form.current_email: 'Escribe tu correo actual'
+app.ui.form.new_email: 'Escribe el nuevo correo'
+app.ui.change_email.error.incorrect_actual_email: 'Tu correo actual es incorrecto. Inténtalo de nuevo.'
+app.ui.change_email.error.same_email: 'No puedes utilizar el mismo correo para realizar este cambio.'
+app.ui.change_email.error.email_is_used: 'Parece que el nuevo correo ya está en uso, prueba con otro.'
+app.email.change_email.subject: '¿Solicitaste un cambio de correo?'
+app.email.change_email.title: '¿Solicitaste un cambio de correo?'
+app.email.change_email.instructions: 'Recibimos una solicitud tuya para cambiar el correo de tu cuenta. Para validar este cambio de correo, por favor da click en el siguiente link:'
+app.email.change_email.validate: 'Verificar mi correo'
+app.ui.account.change_email.verified.title: '¡Cambio exitoso!'
+app.ui.account.change_email.verified.message: 'El cambio de tu correo fue realizado de manera exitosa.'
+app.ui.account.change_email.error.title: 'Hubo un error al realizar el cambio'
+app.ui.account.change_email.error.message: 'Un error no permitio finalizar el proceso de cambio de correo, inténtalo nuevamente...'
+app.ui.agreed: 'De acuerdo'
+app.ui.account.delete_address: 'Eliminar dirección'
+app.ui.form.profile.this_my_default_address: 'Esta es mi dirección predeterminada'
+app.api.address.remove.success: '¡Dirección eliminada con éxito!'
+app.api.address.remove.error.title: 'Hubo un error'
+app.api.address.remove.error.message: 'Un error no permitio eliminar la dirección'
+app.api.address.remove.error.cant_delete: 'Parece que la dirección ya fue usada en una orden y no podemos eliminarla.'
+app.api.address.remove.error.non_exists: 'La dirección especificada no existe.'
+app.api.cart.estimate.success: '¡Tu orden tiene fecha estimada!'
+app.api.cart.estimate.error.title: '!Hubo un error!'
+app.api.cart.estimate.error.message: 'Un error no permitio obtener la fecha estimada de entrega de tu orden'
+app.api.cart.estimate.error.non_exists: 'La orden especificada no existe.'
+app.email.order.confirmation: '¡Gracias por tu compra!'
+app.email.order.message%code%: 'Tu orden #%code% fue recibida con éxito.'
+app.email.order.message%date%: 'Tu orden #%code% será entregada el %date%'
+app.ui.checkout.payment.method.title: Pago
+app.ui.checkout.payment.warning: 'No guardaremos la información de tu tarjeta'
+app.ui.history.your_%n%_last_orders: 'Tus últimas %n% compras'
+'app.ui.history.order#%number%': 'Orden #%number%'
+app.ui.history.performed_on_%date%: 'Realizada el %date%'
+app.ui.history.view_order_detail: 'Ver detalle de compra'
+app.ui.back_to_history: 'Regresar al historial'
+app.api.order.reorder.error.title: '¡Hubo un error!'
+app.api.order.reorder.error.non_exists: 'Parece que la orden no existe'
+app.api.order.reorder.error: 'Un error no permitio agregar la orden a tu carrito'
+app.api.order.reorder.success: 'Agregamos tu orden al carrito'
+app.api.order.reorder.success.message: 'Ahora puedes editar tu pedido desde el carrito y proceder al pago.'
+app.api.order.reorder.success.changed.message: 'Hay algúnos productos que se actualizaron de precio y/o ya no se encuentran en nuestro catálogo, por favor revísa tu orden en el carrito.'
+app.ui.go_to_cart: 'Ir al carrito'
+app.ui.checkout.your_order_will_be_send_to: 'Tu orden se enviará a:'
+app.ui.yes_its_correct: 'Sí, es correcto'
+app.ui.checkout.add_new_address: 'Agregar nueva dirección'
+app.ui.checkout.choose_address: 'Escoger una guardada'
+app.ui.address.status.pending: Pendiente
+app.ui.address.status.validated: Validada
+app.ui.address.status.rejected: Rechazada
+app.ui.checkout.address.limit: 'Has alcanzado tu límite de direcciones por perfil'
+app.ui.checkout.address.limit.instructions: 'Para agregar una por favor elige cuál de estas direcciones deseas eliminar'
+app.ui.checkout.address.delete.select_one_address: 'Debes seleccionar una dirección para eleminar'
+app.ui.validate_this_address: 'Validar esta dirección de entrega'
+app.ui.payment.response.00: Aprobada
+app.ui.payment.response.01: 'Refiérase al Emisor'
+app.ui.payment.response.02: 'Refiérase al Emisor'
+app.ui.payment.response.05: 'Transacción No Aceptada'
+app.ui.payment.response.13: 'Monto Inválido'
+app.ui.payment.response.19: 'Transacción no realizada, intente de nuevo'
+app.ui.payment.response.31: 'Tarjeta no soportada por switch'
+app.ui.payment.response.35: 'Transacción ya ha sido ANULADA'
+app.ui.payment.response.36: 'Transacción a ANULAR no EXISTE'
+app.ui.payment.response.37: 'Transacción de ANULACION REVERSADA'
+app.ui.payment.response.38: 'Transacción a ANULAR con Error'
+app.ui.payment.response.41: 'Tarjeta Extraviada'
+app.ui.payment.response.43: 'Tarjeta Robada'
+app.ui.payment.response.51: 'No tiene fondos disponibles'
+app.ui.payment.response.58: 'Transacción no permitida en la terminal'
+app.ui.payment.response.89: 'Terminal inválida'
+app.ui.payment.response.91: 'Emisor no disponible'
+app.ui.payment.response.94: 'Transacción duplicada'
+app.ui.payment.response.96: 'Error del sistema, intente más tarde'
+app.ui.payment.response.error: 'Parece que hubo un error'
+app.ui.payment.response.error.message: 'Un error no permitio terminar con el proceso de compra, intenta nuevamente...'
+app.ui.new_address: 'Las nuevas direcciones deben ser validadas.'
+app.ui.schedule.%schedule%_%start%_%end%: '%schedule% (entre %start% - %end%)'
+app.ui.orders_no_items_in_search: 'No se encontraron coincidencias con estos términos de búsqueda.'
+app.ui.create: Crear
+app.ui.segment.create: 'Crear segmento'
+app.ui.push.create: 'Crear push'
+app.ui.search_coupon: 'Buscar un cupón'
+app.ui.dashboard.facebook.password: 'Debido a que creaste tu cuenta con Facebook, no posees ni necesitas una contraseña.'
+app.ui.account.disconnect.facebook.title: 'Desconectar de Facebook'
+app.ui.account.disconnect.facebook.instructions: 'Antes de desconectar tu cuenta de Meat House con tu Facebook debes ingresar un correo y una contraseña para que puedas volver a acceder a tu cuenta de Meat House.'
+app.ui.account.disconnect.facebook.success.title: 'Hemos desconectado tu cuenta de Facebook'
+app.ui.account.disconnect.facebook.success.message: 'La próxima vez que entres a Meat House deberás ingresar utilizando tu correo y contraseña.'
+app.ui.account.disconnect.facebook.error.title: 'Hubo un error al desconectar tu cuenta'
+app.ui.account.disconnect.facebook.error.message: 'Un error no permitio desconectar tu cuenta de Facebook, intentalo más tarde...'
+app.ui.account.connect.facebook.success.title: 'Hemos conectado tu cuenta a tu Facebook'
+app.ui.account.connect.facebook.success.message: 'La próxima vez que entres a Meat House puedes ingresar utilizando Facebook o bien tu correo y contraseña.'
+app.ui.form.disconnect.email: 'Correo electrónico'
+app.ui.form.disconnect.confirm_email: 'Confirma tu correo electrónico'
+app.ui.form.disconnect.password: 'Crea una contraseña'
+app.ui.form.disconnect.facebook.button: 'Desconectar mi Facebook'
+app.ui.disconnect.facebook.error.not_same_email: 'Parece que los correos no coinciden.'
+app.ui.form.add_password.password: 'Nueva contraseña'
+app.ui.form.add_password.confirm_password: 'Reescribe tu nueva contraseña'
+app.ui.account.pre_change_email.title: 'Creación de contraseña'
+app.ui.account.pre_change_email.instructions: 'Actualmente estás registrado con Facebok y no cuentas con una contraseña. Si quieres cambiar tu correo deberás crear una contraseña primero para que esté asociada a tu nuevo correo.'
+app.ui.account.pre_change_email.save_password: 'Guardar contraseña'
+app.ui.account.pre_change_email.error.title: 'Hubo un error al agregar tu contraseña'
+app.ui.account.pre_change_email.error.message: 'Un error no permitio agregar tu contraseña, intentanlo más tarde...'
+app.ui.pre_change_email.error.not_same_password: 'Parece que las contraseñas no coinciden.'
+sylius.shop_api.coupon.not_valid: 'Parece que el cupón no es valido'
+app.ui.admin.coupon.leave.title: '¿Deseas regresar?'
+app.ui.admin.coupon.leave.message: 'Si regresas, todos los datos que has completado no se guardarán. ¿Deseas regresar?'
+app.ui.admin.yes: Sí
+app.ui.admin.no: No
+app.ui.admin.create_location: 'Crear ubicación'
+app.ui.admin.create_faq: 'Crear pregunta'
+app.ui.admin.none: '-'
+app.ui.admin.not_empty: 'Debes llenar este campo para continuar.'
+app.ui.measurement_units.unit: 'Unidad'
+app.ui.measurement_units.pound: 'Libra'
+app.ui.measurement_units.package: 'Paquete'
+app.ui.measurement_units.piece: 'Pieza'
+app.ui.measurement_units.litter: 'Litro'
+app.ui.measurement_units.unit.lower: 'unidad'
+app.ui.measurement_units.pound.lower: 'libra'
+app.ui.measurement_units.package.lower: 'paquete'
+app.ui.measurement_units.piece.lower: 'pieza'
+app.ui.measurement_units.litter.lower: 'litro'
+app.ui.measurement_units.unit.plural: 'unidades'
+app.ui.measurement_units.pound.plural: 'libras'
+app.ui.measurement_units.package.plural: 'paquetes'
+app.ui.measurement_units.piece.plural: 'piezas'
+app.ui.measurement_units.litter.plural: 'litros'
+app.api.cart.coupon_expired_at: 'Este cupón venció el %date%. Intenta usar otro cupón.'
+app.api.switch_email.invalid_current_email: 'Tu correo actual es incorrecto. Inténtalo de nuevo'
+app.api.switch_email.enter_email: 'Tiene que ingresar todos los datos.'
+app.api.switch_email.user_not_found: 'Tiene que iniciar sesión primero.'
+app.api.switch_email.new_email_is_same_to_current: 'No puedes utilizar el mismo correo para realizar este cambio.'
+app.api.switch_email.email_already_in_use: 'Este correo electrónico ya está en uso por otro cliente.'
+app.api.switch_email.invalid_email_formats: 'Parece que el formato del correo electrónico es incorrecto.'
+app.api.switch_email.success_message: 'Hemos enviado un enlace a tu correo nuevo. Revisa tu correo para continuar con el cambio.'
+app.ui.checkout.%quantity%_%measure%: '%quantity% %measure%'
+app.ui.account.connect.facebook.in_use.title: 'Hubo un error al conectar tu cuenta'
+app.ui.account.connect.facebook.in_use.message: 'Parece que la cuenta de Facebook ya está conectada con otro usuario.'
+app.email.terms.changed: '¡Hemos actualizado nuestros terminos y condiciones!'
+app.email.terms.changed_title: '¡Hemos actualizado nuestros terminos y condiciones!'
+app.email.terms.changed_description_%name%: '¡Hola %name%! Te informamos que hemos actualizado nuestros términos y condiciones, los cuales entran en vigencia a partir de hoy.'
+app.email.terms.changed_doubts: 'Si tienes alguna duda, estamos a las ordenes en cualquiera de nuestras redes o líneas telefónicas. ¡Esperamos verte pronto!'
+app.email.enjoy_the_mh_expirience: 'Disfruta la experiencia Meat House.'
+app.email.footer.kindly: Atentamente
+app.email.footer.extended_kindly: '¡Esperamos verte pronto!<br>Atentamente'
+app.email.procasa_meathouse: 'Procasa / Meat House'
+app.email.register.profile_message: 'Actualiza tu información, agrega tus datos de facturación y agrega direcciones de entrega.'
+app.email.register.products_message: 'Empieza una compra, busca productos y agrégalos a tu carrito.'
+app.email.register.favorites_message: 'Agrega productos favoritos para encontrar fácilmente los productos que más compras.'
+app.email.register.footer_message: 'Además puedes recibir promociones y cupones de descuento especiales para ti, después de crear tu perfil.'
+app.email.password_reset.title: '¿Problemas con tu contraseña?'
+app.email.password_reset.footer.message: 'Utilizalo para completar el campo de recuperación de contraseña y luego cambiar tu contraseña. Si por alguna razón pierdes la pantalla para ingresar el código, debes volver a genera uno nuevo.'
+app.email.footer.change_email.kindly: '¡Si necesitas algo más, no dudes en contáctarnos!<br>Atentamente'
+app.email.change_email.footer.instructions: 'Si tu no hiciste esta solicitud de cambio de correo, por favor revisa tu cuenta.'
+app.email.address.approved: '¡Tu dirección ha sido aprobada!'
+app.email.address.approved.title: '¡Dirección aprobada!'
+app.email.address.approved.kindly: '¡Esperamos que disfrutes nuestros productos!<br>Atentamente'
+app.email.address.approved.message_%name%: '¡Hola %name%! Te informamos que tu dirección fue aprobada para la entrega.  Ya puedes recibir pedidos en esta dirección:'
+app.email.address.detail_address: 'Dirección de entrega:'
+app.email.address.ask_for: 'Preguntar por:'
+app.email.address.phone: 'Teléfono de contacto:'
+app.email.address.contact_phone: 'Teléfono:'
+app.email.address.rejected: '¡Lo sentimos! No tenemos cobertura para tu dirección'
+app.email.address.rejected.title: '¡Lo sentimos! Sin cobertura.'
+app.email.address.rejected.message: 'Lamentamos informarte que revisamos la dirección de entrega de tu pedido y de momento no contamos con cobertura en ese sector. Si necesitas más información, puedes comunicarte con nuestro departamento de atención al cliente:'
+app.email.order.confirmation.title: '¡Gracias por tu compra!'
+app.email.order.kindly: '¡Esperamos que disfrutes nuestros productos!<br>Atentamente'
+app.email.order.message_%name%_%order_number%: '¡Hola %name%! Próximamente esteremos entregando tu orden %order_number% a la siguiente dirección:'
+app.email.order.delivery_info: 'Información de entrega:'
+app.email.order.delivery_date: 'Fecha:'
+app.email.order.delivery_schedule: 'Horario:'
+app.email.order.your_order: 'Tu compra:'
+app.email.order.item.quantity: 'Cantidad:'
+app.email.order.subtotal: 'Subtotal'
+app.email.order.shipment: 'Envío'
+app.email.order.discount: 'Descuento'
+app.email.order.total: 'Total'
+app.email.order.billing_info: 'Información de facturación:'
+app.email.order.billing.name: 'Nombre en factura:'
+app.email.order.billing.nit: 'NIT:'
+app.email.order.billing.address: 'Dirección en factura:'
+app.email.order.payment_info: 'Información de pago:'
+app.email.order.app: 'Meat House'
+app.email.order.afiliation: 'Afiliación'
+app.email.order.enterprise: 'Visanet Guatemala C. A.'
+app.email.order.payment.datetime: 'Fecha y hora'
+app.email.order.payment.reference: 'Número de referencia'
+app.email.order.payment.authorization: 'Número de autorización'
+app.email.order.payment.audit: 'Número de auditoría'
+app.email.order.payment.card_number: 'Número de tarjeta'
+app.email.order.payment.card_holder: 'Nombre de la tarjeta'
+app.email.order.payment.amount: 'Monto pagado'
+app.email.order.payment.epay: '(1) Pagado electrónicamente'
+app.email.order.cancelled: '¡Lo sentimos! Tu pedido fue cancelado'
+app.email.order.cancelled.title: 'Tu compra fue cancelada'
+app.email.order.cancelled.message_%order_number%: 'Lamentamos informarte que revisamos tu orden %order_number% y hemos encontrado cierta información que nos impide proceder con tu compra.'
+app.email.order.cancelled.message_extra: 'Si necesitas más información ponte en contacto con nuestros operadores para resolver cualquier duda.'
+app.email.order.shipped: '¡Esperamos que distrfutes tu orden!'
+app.email.order.shipped.title: '¡Esperamos que distrfutes tu orden!'
+app.email.order.shipped.message_%name%_%order_name%: '¡Hola %name%! Hemos despachado la orden %order_number% a la siguiente dirección:'
+app.form.user.email.label: Correo
+app.form.user.email.confirmation: 'Confirma tu correo'
+app.ui.form.user.change_password.not_the_same_of_current: 'Tu contraseña no puede ser igual a la anterior.'

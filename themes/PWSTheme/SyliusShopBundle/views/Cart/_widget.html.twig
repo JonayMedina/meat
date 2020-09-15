@@ -1,34 +1,49 @@
-{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
-
-<div id="sylius-cart-button" class="ui circular cart button">
-    {{ sonata_block_render_event('sylius.shop.partial.cart.summary.before_widget_content', {'cart': cart}) }}
-
-    <i class="cart icon"></i>
-{#    <span id="sylius-cart-total">#}
-{#        {{ money.convertAndFormat(cart.itemsTotal) }}#}
-{#    </span>#}
-{#    {% transchoice cart.items|length %}sylius.ui.item.choice{% endtranschoice %}#}
-
-    {{ 'sylius.ui.cart'|trans }}
-
-    {{ sonata_block_render_event('sylius.shop.partial.cart.summary.after_widget_content', {'cart': cart}) }}
-</div>
-<div class="ui large flowing cart hidden popup">
-    {{ sonata_block_render_event('sylius.shop.partial.cart.summary.before_popup_content', {'cart': cart}) }}
-
-    {% if cart.empty %}
-        {{ 'sylius.ui.your_cart_is_empty'|trans }}.
-    {% else %}
-    <div class="ui list">
-        {% for item in cart.items %}
-        <div class="item">{{ item.quantity }} x <strong>{{ item.product }}</strong> {{ money.convertAndFormat(item.unitPrice) }}</div>
-        {% endfor %}
-        <div class="item"><strong>{{ 'sylius.ui.subtotal'|trans }}</strong>: {{ money.convertAndFormat(cart.itemsTotal) }}</div>
+<a id="go-to-cart" href="{{ path('sylius_shop_cart_summary') }}" class="ui circular cart button">
+    <div class="cart-icon {% if not cart.empty %}not-empty{% endif %}">
+        <img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg">
     </div>
-    <a href="{{ path('sylius_shop_cart_summary') }}" class="ui fluid basic text button">{{ 'sylius.ui.view_and_edit_cart'|trans }}</a>
-    <div class="ui divider"></div>
-    <a href="{{ path('sylius_shop_checkout_start') }}" class="ui fluid primary button">{{ 'sylius.ui.checkout'|trans }}</a>
-    {% endif %}
+    {{ 'app.ui.cart'|trans }}
+</a>
 
-    {{ sonata_block_render_event('sylius.shop.partial.cart.summary.after_popup_content', {'cart': cart}) }}
-</div>
+{% if not cart.empty %}
+    <script>
+        $(function () {
+            let $errorModal = $('#showErrorMessage');
+
+            $('#delete-cart').click(function (evt) {
+                evt.preventDefault();
+                $('#showCartModal').modal('hide');
+                blockPage();
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ path('sylius_shop_api_drop_cart', {'token': cart.tokenValue}) }}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function () {
+                    $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
+                    $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
+
+                    unblockPage();
+                    $errorModal.modal('show');
+                });
+            });
+
+            if (!(Boolean) (localStorage.getItem('showed'))) {
+                if ($('#homepage').length > 0) {
+                    if (localStorage.getItem('cart') !== '{{ cart.tokenValue }}') {
+                        $('#showCartModal').modal('show');
+                        localStorage.setItem('cart', '{{ cart.tokenValue }}');
+                        localStorage.setItem('showed', 'true');
+                    } else {
+                        localStorage.setItem('showed', 'true');
+                    }
+                }
+            }
+        });
+    </script>
+{% endif %}

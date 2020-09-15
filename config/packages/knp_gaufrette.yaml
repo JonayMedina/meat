@@ -1,0 +1,11 @@
+knp_gaufrette:
+    adapters:
+        sylius_image:
+            aws_s3:
+                service_id: Aws\S3\S3Client
+                bucket_name: "%aws.s3.bucket%"
+                detect_content_type: true
+                options:
+                    directory: "media/image"
+                    acl: "public-read"
+    stream_wrapper: ~

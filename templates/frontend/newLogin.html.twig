@@ -1,0 +1,103 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+
+{% block extracontent %}
+    {{ sonata_block_render_event('sylius.shop.login.after_content_header') }}
+
+    <div class="row login new-login pt-5">
+        <div class="col-12 segment">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-center">{{ 'app.ui.reset_password.finished' | trans }}</h1>
+                    <p class="text-center">{{ 'app.ui.reset_password.finished.message' | trans }}</p>
+                </div>
+                <div class="col-12">
+                    {{ sonata_block_render_event('sylius.shop.login.before_login') }}
+
+                    {{ form_start(form, {'action': path('sylius_shop_login_check'), 'attr': {'class': 'ui loadable form margin-0-auto', 'novalidate': 'novalidate'}}) }}
+                    {% include '@SyliusShop/Login/_form.html.twig' %}
+
+                    {{ sonata_block_render_event('sylius.shop.login.form', {'form': form}) }}
+
+                    <div class="error" style="display: none">
+                        <span>{{ 'app.ui.login.form.error'|trans }}</span>
+                    </div>
+
+                    <button id="send" type="submit" class="btn-rounded margin-0-auto">{{ 'app.ui.login.title'|trans }}</button>
+                    <input type="hidden" name="_csrf_shop_security_token" value="{{ csrf_token('shop_authenticate') }}">
+                    {{ form_end(form, {'render_rest': false}) }}
+
+                    {{ sonata_block_render_event('sylius.shop.login.after_login') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extrajs %}
+    <script>
+        $(function () {
+            let $form = $("form");
+
+            $form.validate({
+                rules: {
+                    _username: {
+                        required: true,
+                        email: true,
+                        maxlength: 50
+                    },
+                    _password: {
+                        required: true,
+                        // minlength: 8,
+                        maxlength: 20
+                    }
+                },
+                messages: {
+                    _username: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        email: '{{ 'app.ui.error.enter_valid_email'|trans }}',
+                        maxlength: '{{ 'app.ui.error.not_greater_than_%x%'|trans({'%x%': 50}) }}'
+                    },
+                    _password: {
+                        required: '{{ 'app.ui.error.required'|trans }}',
+                        minlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 8}) }}',
+                        maxlength: '{{ 'app.ui.error.not_less_than_%x%'|trans({'%x%': 20}) }}'
+                    }
+                },
+                invalidHandler: function(event, validator) {
+                    // 'this' refers to the form
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        $("div.error").show();
+                    } else {
+                        $("div.error").hide();
+                    }
+                }
+            });
+
+            $form.submit(function (e) {
+                if (!$form.valid()) {
+                    e.preventDefault();
+                    $form.removeClass('loading');
+                } else {
+                    $("div.error").hide();
+                }
+            });
+
+            $form.find('span.eye').click(function () {
+                var $i = $(this).find('i');
+                var $password = $('input[name="_password"]');
+
+                if ($i.hasClass('fa-eye')) {
+                    $password.attr('type', 'text');
+                    $i.removeClass('fa-eye');
+                    $i.addClass('fa-eye-slash');
+                } else {
+                    $password.attr('type', 'password');
+                    $i.removeClass('fa-eye-slash');
+                    $i.addClass('fa-eye');
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "/admin/base.html.twig" %}
+
+{% block title %}{{ 'app.ui.faqs_list'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                <h1>{{ 'app.ui.faqs_list'|trans }} <small class="d-inline-block">{% trans with {'%total%': total|default('app.ui.n/a'|trans)} %}app.ui.qty_of_faqs_%total%{% endtrans %}</small></h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="{{ path('faqs_new') }}" class="btn btn-primary btn-lg btn-standard-width">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        &nbsp;
+                        {{'app.ui.new_faq'|trans}}
+                    </a>
+                    <br>
+                    <a href="{{ path('faqs_new', {type: 'schedule'}) }}" class="btn btn-primary btn-lg btn-standard-width mt-3">
+                        <i class="fa fa-plus-circle pull-left"></i>
+                        {{'app.ui.new_schedule_faq'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
+
+                        <div class="search-box search-box-fullwidth">
+                            <form action="" method="get">
+                                <input type="search" name="filter" class="search-box-input form-control" maxlength="150" placeholder="{{ 'app.ui.search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                            </form>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table id="faq-table" class="table top-products-table">
+                                <thead>
+                                <tr>
+                                    <th class="width-80">&nbsp;</th>
+                                    <th style="width: 10%;">{{ 'app.ui.faq_reorder'|trans }}</th>
+                                    <th>{{ 'app.ui.faq_content'|trans }}</th>
+                                    <th class="actions-header">
+
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for faq in faqs %}
+                                    <tr data-id="{{ faq.id }}">
+                                        <td class="text-center">
+                                            <i class="fa fa-reorder text-primary pointer handle"></i>
+                                        </td>
+                                        <td>
+                                            <div class="min-height-40">
+                                                <h4>{{ 'app.ui.question'|trans }}</h4>
+                                            </div>
+
+                                            <div>
+                                                <h4>{{ 'app.ui.answer'|trans }}</h4>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="min-height-48">
+                                                {{ faq.question|truncate(114) }}
+                                            </div>
+
+                                            <div>
+                                                {% if faq.type == constant('App\\Entity\\FAQ::TYPE_QUESTION') %}
+                                                    {{ faq.answer }}
+                                                {% endif %}
+
+                                                {% if faq.type == constant('App\\Entity\\FAQ::TYPE_SCHEDULE') %}
+
+                                                    {% if faq.timeToPlaceAnOrder %}
+                                                        <strong>{{ 'app.ui.faq_time_to_order'|trans }}</strong>
+                                                        <br>
+
+                                                        {% for time in faq.timeToPlaceAnOrder %}
+                                                            {% if time['start'] is defined and time['end'] is defined and time['start'] and time['end'] %}
+                                                                {{ time['start'] }} - {{ time['end'] }}
+                                                                <br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <br>
+                                                    {% endif %}
+
+                                                    {% if faq.orderDeliveryTime %}
+                                                        <strong>{{ 'app.ui.faq_order_delivery_time'|trans }}</strong>
+                                                        <br>
+                                                        {% for time in faq.orderDeliveryTime %}
+                                                            {% if time['name'] is defined and time['start'] is defined and time['end'] is defined and time['name'] and time['start'] and time['end'] %}
+                                                                {{ time['name'] }}: {{ time['start'] }} - {{ time['end'] }}
+                                                                <br>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('faqs_edit', {id: faq.id}) }}" class="btn btn-default btn-action-button">
+                                                {{ 'app.ui.edit'|trans }}
+                                            </a>
+                                            {% if faq.type == constant('App\\Entity\\FAQ::TYPE_QUESTION') %}
+                                            &nbsp;
+                                            <a href="{{ path('faqs_delete', {id: faq.id}) }}" class="btn btn-danger btn-action-button btn-delete" data-reload="true" data-error-message="{{ 'app.ui.faq_error_on_remove_message'|trans }}" data-title="{{ 'app.ui.faq_remove_title'|trans }}" data-text="">
+                                                {{ 'app.ui.delete'|trans }}
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('meathouse/js/plugins/jquery-ui/jquery.ui.touch-punch.min.js') }}"></script>
+    <script>
+    $(document).ready(function() {
+        var $wrapper = $('#wrapper');
+        var $table = $wrapper.find('#faq-table');
+        var $tbody = $table.find('tbody');
+
+        $tbody.sortable({
+            cursor: "move",
+            handle: ".handle",
+            update: function( event, ui ) {
+                var order = [];
+                blockUI();
+
+                $.each($tbody.find('tr'), function() {
+                    var $tr = $(this);
+                    order.push($tr.data('id'));
+                });
+
+                console.log(order);
+
+                $.ajax({
+                    url: Routing.generate('faqs_reorder'),
+                    type: 'POST',
+                    data: { order: order },
+                    success: function() {
+                        unblockUI();
+                    },
+                    error: function() {
+                        unblockUI();
+                        error('{{ 'app.ui.error'|trans }}');
+                    }
+                });
+            }
+        });
+
+        $tbody.disableSelection();
+
+    });
+    </script>
+{% endblock %}

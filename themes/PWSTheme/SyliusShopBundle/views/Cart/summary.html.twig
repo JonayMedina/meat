@@ -1,17 +1,322 @@
 {% extends '@SyliusShop/layout.html.twig' %}
+{% form_theme form '@SyliusShop/Form/theme.html.twig' %}
+{% import '@SyliusUi/Macro/messages.html.twig' as messages %}
+{% set header = 'sylius.ui.your_shopping_cart' %}
 
-{#
+{% block title %}{{ parent() }} | {{ header|trans }}{% endblock %}
 
-    Available variables:
+{% block extracontent %}
+    <div class="row profile pt-4 favorites page cart-summary">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+            <h1 class="text-center">{{ 'app.ui.my_cart'|trans }}</h1>
+            {% if not cart.empty %}
+                {% if (cart.total/100) < about_store('min-purchase') %}
+                    <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
+                {% endif %}
+            {% else %}
+                <p>{{ 'app.ui.minimum_purchase_price_message_%price%'|trans({'%price%': about_store('min-purchase')}) }}</p>
+            {% endif %}
+        </div>
 
-    * "cart" - The order (= cart) entity;
-    * "form" - Cart editing form;
-    * "form.items" - Individual cart items;
-    * "form.promotionCoupon" - The coupon field.
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5">
+            {% if not cart.empty %}
+                {{ sonata_block_render_event('sylius.shop.cart.summary.after_content_header', {'cart': cart}) }}
 
-#}
+                <div class="row products-exist">
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.before_items', {'cart': cart}) }}
 
-{% form_theme form '@SyliusShop/Ui/Form/theme.html.twig' %}
+                    {% include '@SyliusShop/Cart/Summary/_items.html.twig' %}
 
-{% block content %}
+                    {{ sonata_block_render_event('sylius.shop.cart.summary.after_items', {'cart': cart}) }}
+                </div>
+
+                <div class="row products-exist">
+                    <div class="col-12 buttons text-right">
+                        <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
+                        <a id="to-pay" class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
+                    </div>
+                </div>
+
+                {{ sonata_block_render_event('sylius.shop.cart.summary.before_suggestions', {'cart': cart}) }}
+
+                <div id="empty-cart" class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0" style="display: none">
+                    <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/empty-cart.png" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-5 mb-5 xs-text-left">{{ 'app.ui.cart.empty_instructions'|trans }}</h2>
+                    <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+
+                <div class="modal smaller fade" id="deleteFavorite" tabindex="-1" role="dialog" aria-labelledby="deleteFavoriteLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="deleteFavoriteLabel">{{ 'app.ui.cart.delete_product'|trans }}</h5>
+                            </div>
+                            <div class="modal-body text-center">
+                                <p>{{ 'app.ui.cart.delete_product.are_you_sure?'|trans }}</p>
+                                <div class="content"></div>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <button type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.back'|trans }}</button>
+                                <button id="delete" data-id="" type="button" class="btn-rounded">{{ 'app.ui.cart.delete_from'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                            </div>
+                            <div class="modal-body text-center"></div>
+                            <div class="modal-footer text-center">
+                                <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">
+                    <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/empty-cart.png" title="{{ 'app.ui.cart.empty'|trans }}" alt="{{ 'app.ui.cart.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-5 mb-5 xs-text-left">{{ 'app.ui.cart.empty_instructions'|trans }}</h2>
+                    <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {% if not cart.empty %}
+    <script>
+        $(function () {
+            var $deleteModal = $('#deleteFavorite');
+            var $modal = $('#showMessage');
+            var $productsList = $('.products-list');
+            var $toPay = $('#to-pay');
+            var $updateCart = $('#sylius_cart');
+            var $updateCartBtn = $('#sylius-cart-update');
+            var $couponAdd = $('#coupon-add');
+            var toCheckout = false;
+            var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
+            var $coupon = $('#sylius_cart_promotionCoupon');
+
+            $('.quantity-up').click(function () {
+                updateCart();
+            });
+
+            $('.quantity-down').click(function () {
+                updateCart();
+            });
+
+            $('input[type="number"]').change(function () {
+                updateCart();
+            });
+
+            {% if cart.promotionCoupon %}
+                $coupon.attr('readonly', true);
+            {% endif %}
+
+            $toPay.click(function (evt) {
+                evt.preventDefault();
+                var value = convertToMoney($('.total .value').attr('data-value'));
+
+                if (withCoupon) {
+                    var subTotal = convertToMoney($('.total .sub-total').attr('data-value'));
+
+                    if (subTotal < {{ about_store('min-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
+                        $modal.modal('show');
+                    } else if (value > {{ about_store('max-purchase')|e('js') }}) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.max.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
+                        $modal.modal('show');
+                    } else {
+                        goToCheckout();
+                    }
+                } else if (value < {{ about_store('min-purchase')|e('js') }}) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.minimum.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.minimum.message_%price%'|trans({'%price%': about_store('min-purchase') }) }}');
+                    $modal.modal('show');
+                } else if (value > {{ about_store('max-purchase')|e('js') }}) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.max.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.max.message_%price%'|trans({'%price%': about_store('max-purchase') }) }}');
+                    $modal.modal('show');
+                } else {
+                    goToCheckout();
+                }
+            });
+
+            $couponAdd.click(function (evt) {
+                evt.preventDefault();
+
+                if (withCoupon) {
+                    $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+                    $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.message'|trans }}');
+                    $modal.modal('show');
+                } else {
+
+                    if (!(Boolean) ($coupon.val())) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.coupon.error.add_code.message'|trans }}');
+                        $modal.modal('show');
+                    } else {
+                        blockPage();
+                        $.ajax({
+                            type: 'PUT',
+                            url: '{{ path('sylius_shop_api_add_coupon_to_cart', {'token': cart.tokenValue}) }}',
+                            data: {
+                                'coupon': $coupon.val()
+                            },
+                            success: function () {
+                                withCoupon = true;
+                                updateCart();
+                            },
+                            error: function (error) {
+                                let recordset = error['responseJSON'];
+                                var errorMsg = '{{ 'app.api.cart.coupon.error'|trans }}';
+                                $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+
+                                if (recordset['message']) {
+                                    errorMsg = recordset['message'];
+                                }
+
+                                $modal.find('.modal-body').html(errorMsg);
+
+                                unblockPage();
+                                $modal.modal('show');
+                            }
+                        });
+                    }
+                }
+            });
+
+            function updateCart() {
+                setTimeout(function () {
+                    toCheckout = false;
+                    $updateCartBtn.trigger('click');
+                }, 500);
+            }
+
+            function goToCheckout() {
+                toCheckout = true;
+                $updateCartBtn.trigger('click');
+            }
+
+            $('a.delete').click(function () {
+                var id = $(this).data('id');
+                var item = $(this).data('item');
+                var $content = $('.products-list').find('.prt-' + id)[0].outerHTML;
+
+                $deleteModal.find('.content').html($content);
+                $deleteModal.find('#delete').attr('data-id', item);
+                $deleteModal.modal('show');
+            });
+
+            $('#delete').click(function () {
+                var id = $(this).attr('data-id');
+
+                $deleteModal.modal('hide');
+                $('#delete-'+ id).submit();
+            });
+
+            findFirstProduct();
+
+            function findFirstProduct() {
+                var i = 0;
+
+                $productsList.find('.product-item.view').each(function () {
+                    var $product = $(this);
+
+                    if (i === 0) {
+                        $product.addClass('first');
+                    } else {
+                        $product.removeClass('first');
+                    }
+
+                    i++;
+                });
+            }
+
+            function convertToMoney(price) {
+                var length = price.length - 2;
+                var float = price.slice(0, length) + "." + price.slice(-2);
+
+                return parseFloat(float);
+            }
+
+            $('form.delete-product').on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+
+                blockPage();
+                $.ajax({
+                    type: 'POST',
+                    url: $this.attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        updateCart();
+                    },
+                    error: function (error) {
+                        let recordset = error['responseJSON']['recordset'];
+                        var errorMsg = '{{ 'app.ui.cart.delete_product.error.message'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.delete_product.error'|trans }}');
+
+                        if (recordset['errors']) {
+                            errorMsg = recordset['errors']['errors'][0];
+                        }
+
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
+            });
+
+            $updateCart.on('submit', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                if (!withCoupon) {
+                    $coupon.val(null);
+                }
+
+                var $this = $(this);
+
+                blockPage();
+                $.ajax({
+                    type: 'POST',
+                    url: $this.attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        var logged = {% if is_granted('ROLE_USER') %}true{% else %}false{% endif %}
+
+                        if (logged) {
+                            if (toCheckout) {
+                                window.location.href = "{{ path('sylius_shop_checkout_start') }}";
+                            } else {
+                                location.reload();
+                            }
+                        } else {
+                            if (toCheckout) {
+                                window.location.href = "{{ path('sylius_shop_register_to_checkout') }}";
+                            } else {
+                                location.reload();
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.update.error'|trans }}');
+                        $modal.find('.modal-body').html('{{ 'app.ui.cart.update.error.message'|trans }}');
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
+            });
+        });
+    </script>
+    {% endif %}
 {% endblock %}

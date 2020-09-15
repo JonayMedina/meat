@@ -1,0 +1,65 @@
+{% extends "/admin/base.html.twig" %}
+
+{% block title %}{{ 'app.ui.searcher'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                <h1>{{ 'app.ui.show_searcher.title'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+
+                        <div class="row border-bottom padding-bottom-35">
+                            <div class="col-lg-12">
+                                <p>{{ 'app.ui.show_searcher.text'|trans }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row border-bottom padding-top-35 padding-bottom-35">
+                            <div class="col-lg-12 padding-left-100">
+                                <input type="checkbox" id="active-switch-searcher" class="switch-input" {% if about.showProductSearchBox %}checked{% endif %}>
+                                <label for="active-switch-searcher" class="switch-label"></label>
+                                &nbsp;
+                                {{ 'app.ui.show_searcher.help'|trans }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/switch-input/switch-input.css') }}">
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script>
+$(document).ready(function() {
+  $('#active-switch-searcher').on('change', function() {
+      blockUI();
+
+      $.ajax({
+        type: 'POST',
+        url: Routing.generate('toggle_searcher'),
+        success: function() {
+            unblockUI();
+        },
+        error: function() {
+            unblockUI();
+            console.error('{{ 'app.ui.an_error_occurred'|trans }}');
+        }
+      });
+  });
+});
+</script>
+{% endblock %}

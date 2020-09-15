@@ -1,13 +1,22 @@
 imports:
     - { resource: "@SyliusCoreBundle/Resources/config/app/config.yml" }
 
-    - { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
-    - { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
+    #- { resource: "@SyliusAdminBundle/Resources/config/app/config.yml" }
+    #- { resource: "@SyliusAdminApiBundle/Resources/config/app/config.yml" }
 
     - { resource: "@SyliusShopBundle/Resources/config/app/config.yml" }
 
 parameters:
     sylius_core.public_dir: '%kernel.project_dir%/public'
+    
+winzou_state_machine:
+    sylius_order_checkout:
+        callbacks:
+            after:
+                meat_house_sync_order_checkout_completed:
+                    on: ["complete"]
+                    do: ["@App\\Service\\AdminSyncService", "syncOrderAfterCheckoutCompleted"]
+                    args: ["object"]
 
 sylius_addressing:
     resources:
@@ -27,20 +36,20 @@ sylius_addressing:
             classes:
                 model: App\Entity\Addressing\ZoneMember
 
-sylius_admin_api:
-    resources:
-        api_client:
-            classes:
-                model: App\Entity\AdminApi\Client
-        api_access_token:
-            classes:
-                model: App\Entity\AdminApi\AccessToken
-        api_refresh_token:
-            classes:
-                model: App\Entity\AdminApi\RefreshToken
-        api_auth_code:
-            classes:
-                model: App\Entity\AdminApi\AuthCode
+#sylius_admin_api:
+#    resources:
+#        api_client:
+#            classes:
+#                model: App\Entity\AdminApi\Client
+#        api_access_token:
+#            classes:
+#                model: App\Entity\AdminApi\AccessToken
+#        api_refresh_token:
+#            classes:
+#                model: App\Entity\AdminApi\RefreshToken
+#        api_auth_code:
+#            classes:
+#                model: App\Entity\AdminApi\AuthCode
 
 sylius_attribute:
     resources:
@@ -60,6 +69,7 @@ sylius_channel:
         channel:
             classes:
                 model: App\Entity\Channel\Channel
+                repository: App\Repository\ChannelRepository
 sylius_core:
     resources:
         product_image:
@@ -104,9 +114,11 @@ sylius_order:
         order:
             classes:
                 model: App\Entity\Order\Order
+                controller: App\Controller\Shop\OrderExtendedController
         order_item:
             classes:
                 model: App\Entity\Order\OrderItem
+                controller: App\Controller\Shop\OrderItemExtendedController
         order_item_unit:
             classes:
                 model: App\Entity\Order\OrderItemUnit
@@ -143,6 +155,8 @@ sylius_product:
         product:
             classes:
                 model: App\Entity\Product\Product
+                repository: App\Repository\ProductRepository
+                controller: App\Controller\Shop\ProductExtendedController
             translation:
                 classes:
                     model: App\Entity\Product\ProductTranslation
@@ -238,6 +252,7 @@ sylius_user:
             user:
                 classes:
                     model: App\Entity\User\ShopUser
+                    controller: App\Controller\Shop\UserExtendedController
         oauth:
             user:
                 classes:

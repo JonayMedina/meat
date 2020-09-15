@@ -1,0 +1,20 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block extracontent %}
+    <div class="row work-with-us">
+        <div class="col-12 pt-5 pb-5">
+            <div class="row xs-segment">
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-text-center sm-mt-5 sm-pl-0-i sm-pr-0-i sm-order-2 xs-mt-2">
+                    <img class="w-75 sm-w-100-i" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/work-with-us.png" alt="500" title="500" width="auto" height="auto">
+                </div>
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-flex sm-order-1">
+                    <div class="text-center xs-text-left-i">
+                        <h1>{{ 'app.ui.work_with_us'|trans }}</h1>
+                        {% set email = '<a class="ff-rw-bold" href="mailto:' ~ about_store('contact-email')|default('example@mnc.com') ~ '">' ~ about_store('contact-email')|default('example@mnc.com') ~ '</a>' %}
+                        <p>{{ 'app.ui.work_with_us.message_%email%'|trans({'%email%': email})|raw }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

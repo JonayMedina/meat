@@ -5,11 +5,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>{% block title %}{{ sylius.channel.name }}{% endblock %}</title>
-    <link rel="icon" href="{{ asset('bundles/syliusshop/img/favicon.ico') }}" type="image/x-icon" />
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <link rel="icon" href="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/favicon.ico" type="image/x-icon" />
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="description" content="{{ sylius.channel.description }}"/>
+    <meta property="og:image" content="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/logo.png"/>
 
     {% block metatags %}
     {% endblock %}
@@ -22,58 +23,237 @@
 
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'assets/shop/css/style.css'} %}
 
+        <style>
+            /* Fonts */
+            @font-face {
+                font-family: "Raleway";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Regular.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Medium";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Medium.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Regular";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Regular.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway SemiBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-SemiBold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Bold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Bold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway ExtraBold";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-ExtraBold.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Light";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Light.ttf') }}");
+            }
+
+            @font-face {
+                font-family: "Raleway Italic";
+                src: url("{{ asset('bundles/syliusshop/fonts/raleway/Raleway-Italic.ttf') }}");
+            }
+
+            {% if about_store('show-search') %}
+            .search-box label {
+                width: calc(80% + 30px);
+            }
+            {% endif %}
+
+            .lb-data .lb-close{
+                background: url("https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg") !important;
+                background-size: cover !important;
+                margin-top: 10px !important;
+                width: 20px !important;
+                height: 20px !important;
+            }
+        </style>
+
         {{ sonata_block_render_event('sylius.shop.layout.stylesheets') }}
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-sylius.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/extended-bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/styles.min.css') }}">
         <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/fontawesome/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/owl-carousel/owl.carousel.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/animocons/icons.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/hover/hover.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/syliusshop/css/normalize.min.css') }}">
+        {% block extracss %}{% endblock %}
     {% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+
+
+    <style>
+        /* for chrome */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none !important;;
+            margin: 0 !important;;
+        }
+
+        /* for mozilla */
+        input[type=number] {
+            -moz-appearance: textfield !important;
+        }
+    </style>
 
     {{ sonata_block_render_event('sylius.shop.layout.head') }}
 </head>
 
-<body class="pushable">
+<body>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/{{ app.request.locale|slice(0, 2) }}/sdk.js#xfbml=1&version=v6.0"></script>
 {{ sonata_block_render_event('sylius.shop.layout.before_body') }}
 <div class="pusher">
     {% block top %}
         <div class="top-menu">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-right">
-                        {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
+{#            <div class="container">#}
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    {{ sonata_block_render_event('sylius.shop.layout.before_currency_switcher') }}
 
-                        {{ render(controller('sylius.controller.shop.currency_switch:renderAction')) }}
-                        {{ render(controller('sylius.controller.shop.locale_switch:renderAction')) }}
+                    {{ sonata_block_render_event('sylius.shop.layout.before_security_widget') }}
+                    {{ render(controller('sylius.controller.shop.security_widget:renderAction')) }}
 
-                        {{ sonata_block_render_event('sylius.shop.layout.before_security_widget') }}
+                    {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
+                </nav>
+{#            </div>#}
+        </div>
+    {% endblock %}
 
-                        {{ render(controller('sylius.controller.shop.security_widget:renderAction')) }}
+    {% block content %}
+        <div class="container first">
+            {% block header %}{% endblock %}
+            {% block flashes %}{% endblock %}
 
-                        {{ sonata_block_render_event('sylius.shop.layout.after_security_widget') }}
+            {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+
+            {% block extracontent %}
+            {% endblock %}
+
+            {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+        </div>
+    {% endblock %}
+
+    {% block contentFluid %}
+    {% endblock %}
+
+    <!-- Modal -->
+    {% block addedCartModal %}
+        <div class="modal fade" id="product-in-cart" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="product-in-cartLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="product-in-cartLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-8">
+                                <div class="row info">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                                        <img class="product-image" src="" alt="{{ 'app.ui.product.image'|trans }}" title="{{ 'app.ui.product.image'|trans }}" width="auto" height="auto">
+                                        <img class="d-none d-lg-block" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/check.svg" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-8 product-text md-mt-2"><p></p></div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-4 calculated md-mt-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p>{{ 'app.ui.quantity'|trans }}</p>
+                                        <p class="quantity-text"></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p>{{ 'app.ui.total'|trans }}</p>
+                                        <p class="total-text"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded inverted">{{ 'app.ui.view_more_products'|trans }}</a>
+                            <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.go_to_my_cart'|trans }}</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-none d-lg-block">
+                        <h4>{{ 'app.ui.complement_with'|trans }}</h4>
+                        {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }}
                     </div>
                 </div>
             </div>
         </div>
     {% endblock %}
 
-    <div class="container">
-        {% block header %}
-            <header>
-                {% include '@SyliusShop/_header.html.twig' %}
-
-                {{ sonata_block_render_event('sylius.shop.layout.after_header') }}
-
-                {{ render(url('sylius_shop_partial_taxon_index_by_code', {'code': 'category', 'template': '@SyliusShop/Taxon/_horizontalMenu.html.twig'})) }}
-            </header>
-        {% endblock %}
-
-        {% include '@SyliusShop/_flashes.html.twig' %}
-
-        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
-
-        {% block content %}
-        {% endblock %}
-
-        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+    <div class="modal smaller fade" id="showErrorMessage" tabindex="-1" role="dialog" aria-labelledby="showErrorMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showErrorMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="modal smaller fade" id="reorderMessage" tabindex="-1" role="dialog" aria-labelledby="reorderMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="reorderMessageLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                    </button>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded d-inline-block">{{ 'app.ui.go_to_cart'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal smaller add-favorites fade" id="showCartModal" tabindex="-1" role="dialog" aria-labelledby="showCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/add-to-favorites.png" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                    <h5 class="modal-title text-center" id="showCartModalLabel">{{ 'app.ui.cart.abandoned.title'|trans }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p class="text-center">{{ 'app.ui.cart.abandoned.message'|trans }}</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button id="delete-cart" class="btn-rounded inverted">{{ 'app.ui.cart.abandoned.delete'|trans }}</button>
+                    <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.cart.abandoned.got_to_cart'|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block modals %}
+    {% endblock %}
 
     {% block footer %}
         {% include '@SyliusShop/_footer.html.twig' %}
@@ -81,12 +261,247 @@
 </div>
 
 {% block javascripts %}
-    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'assets/shop/js/app.js'} %}
-
     {{ sonata_block_render_event('sylius.shop.layout.javascripts') }}
 
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <script src="{{ asset('bundles/syliusshop/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/app.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/jq-validation/jquery.validate.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/jq-validation/additional-methods.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/owl-carousel/owl.carousel.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/blockUi/jquery.blockUi.min.js') }}" defer></script>
+    <script src="{{ asset('bundles/syliusshop/js/lightbox/lightbox.min.js') }}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/animocons/mo.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/animocons/animocon.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/moment/moment.min.js') }}"></script>
+    <script src="{{ asset('bundles/syliusshop/js/moment/moment-with-locales.min.js') }}"></script>
+    {% include '@SyliusUi/_javascripts.html.twig' with {'path': 'bundles/syliusshop/js/app.min.js'} %}
+    <script>
+        function blockPage() {
+            $('body').addClass('blocked');
+            $.blockUI({ message: '<img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/loader.gif">' });
+        }
 
-    <script src="{{ asset('bundles/syliusshop/css/bootstrap.min.js') }}"></script>
+        /**
+         * Datepicker JS defaults
+         * */
+        if ($.datepicker) {
+            $.datepicker.setDefaults( $.datepicker.regional[ "{{ app.request.locale|slice(0, 2) }}" ] );
+            $.datepicker.setDefaults({
+                dayNames: ["{{ 'app.ui.dates.sunday' | trans }}", "{{ 'app.ui.dates.monday' | trans }}", "{{ 'app.ui.dates.tuesday' | trans }}", "{{ 'app.ui.dates.wednesday' | trans }}", "{{ 'app.ui.dates.thursday' | trans }}", "{{ 'app.ui.dates.friday' | trans }}", "{{ 'app.ui.dates.saturday' | trans }}"],
+                dayNamesShort: ["{{ 'app.ui.dates.sun' | trans }}", "{{ 'app.ui.dates.mon' | trans }}", "{{ 'app.ui.dates.tue' | trans }}", "{{ 'app.ui.dates.wed' | trans }}", "{{ 'app.ui.dates.thu' | trans }}", "{{ 'app.ui.dates.fri' | trans }}", "{{ 'app.ui.dates.sat' | trans }}"],
+                dayNamesMin: ["{{ 'app.ui.dates.su' | trans }}", "{{ 'app.ui.dates.mo' | trans }}", "{{ 'app.ui.dates.tu' | trans }}", "{{ 'app.ui.dates.we' | trans }}", "{{ 'app.ui.dates.th' | trans }}", "{{ 'app.ui.dates.fr' | trans }}", "{{ 'app.ui.dates.sa' | trans }}"],
+                monthNames: ["{{ 'app.ui.dates.january' | trans }}", "{{ 'app.ui.dates.february' | trans }}", "{{ 'app.ui.dates.march' | trans }}", "{{ 'app.ui.dates.april' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.june' | trans }}", "{{ 'app.ui.dates.july' | trans }}", "{{ 'app.ui.dates.august' | trans }}", "{{ 'app.ui.dates.september' | trans }}", "{{ 'app.ui.dates.october' | trans }}", "{{ 'app.ui.dates.november' | trans }}", "{{ 'app.ui.dates.december' | trans }}"],
+                monthNamesShort: ["{{ 'app.ui.dates.jan' | trans }}", "{{ 'app.ui.dates.feb' | trans }}", "{{ 'app.ui.dates.mar' | trans }}", "{{ 'app.ui.dates.apr' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.jun' | trans }}", "{{ 'app.ui.dates.jul' | trans }}", "{{ 'app.ui.dates.aug' | trans }}", "{{ 'app.ui.dates.sep' | trans }}", "{{ 'app.ui.dates.oct' | trans }}", "{{ 'app.ui.dates.nov' | trans }}", "{{ 'app.ui.dates.dec' | trans }}"],
+                prevText: "<",
+                nextText: ">",
+                dateFormat: "dd/mm/yy",
+                hideIfNoPrevNext: true,
+                showOtherMonths: true,
+            });
+        }
+
+        function getPaymentResponse($code) {
+            var response = {
+                '00': '{{ 'app.ui.payment.response.00'|trans }}',
+                '01': '{{ 'app.ui.payment.response.01'|trans }}',
+                '02': '{{ 'app.ui.payment.response.02'|trans }}',
+                '05': '{{ 'app.ui.payment.response.05'|trans }}',
+                '13': '{{ 'app.ui.payment.response.13'|trans }}',
+                '19': '{{ 'app.ui.payment.response.19'|trans }}',
+                '31': '{{ 'app.ui.payment.response.31'|trans }}',
+                '35': '{{ 'app.ui.payment.response.35'|trans }}',
+                '36': '{{ 'app.ui.payment.response.36'|trans }}',
+                '37': '{{ 'app.ui.payment.response.37'|trans }}',
+                '38': '{{ 'app.ui.payment.response.38'|trans }}',
+                '41': '{{ 'app.ui.payment.response.41'|trans }}',
+                '43': '{{ 'app.ui.payment.response.43'|trans }}',
+                '51': '{{ 'app.ui.payment.response.51'|trans }}',
+                '58': '{{ 'app.ui.payment.response.58'|trans }}',
+                '89': '{{ 'app.ui.payment.response.89'|trans }}',
+                '91': '{{ 'app.ui.payment.response.91'|trans }}',
+                '94': '{{ 'app.ui.payment.response.94'|trans }}',
+                '96': '{{ 'app.ui.payment.response.96'|trans }}',
+            };
+
+            return response[$code];
+        }
+
+        window.onunload = showedFalse;
+
+        function showedFalse() {
+            localStorage.setItem('showed', '');
+        }
+
+        $(function () {
+            let $modal = $('#product-in-cart');
+            let $errorModal = $('#showErrorMessage');
+            var typingTimer;
+            var doneTypingInterval = 1000;
+            var $search = $('#site-search');
+            let $inputNumber = $('.quantity input[type="number"]');
+
+            $modal.find('.custom-overlay-container .custom-overlay form button').click(function () {
+                $modal.modal('hide');
+            });
+
+            $('form.product-buy').on('submit', function (e) {
+                e.preventDefault();
+                var $this = $(this);
+
+                var url = '{{ path('sylius_shop_ajax_cart_add_item', {'productId': 'product-id'}) }}';
+                url = url.replace('product-id', $(this).data('id'));
+
+                if ($this.hasClass('unavailable')) {
+                    $errorModal.find('.modal-title').html('{{ 'app.ui.cart.add_product.error'|trans }}');
+                    $errorModal.find('.modal-body').html('{{ 'app.ui.cart.add_product.error.unavailable'|trans }}');
+
+                    $errorModal.modal('show');
+                } else {
+                    blockPage();
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: $(this).serialize(),
+                        success: function () {
+                            var message = '{{ 'app.ui.added_%product%_to_cart'|trans({'%product%': '&nbsp;<span class="mh-red">product-name</span>&nbsp;'})|raw }}';
+                            var quantity = $this.find('input').val();
+                            var dataPrice = (String) ($this.data('price'));
+                            var currency = dataPrice.slice(0, 1);
+                            var price = dataPrice.replace(/\D/g, "")/100;
+                            var total = quantity*price;
+
+                            message = message.replace('product-name', $this.data('name'));
+                            $modal.find('.product-text p').html(message);
+                            $modal.find('.product-image').attr('src', $this.data('img'));
+                            $modal.find('.quantity-text').html(quantity + ' ' + $this.data('measure'));
+                            $modal.find('.total-text').html(currency + ' ' + total.toFixed(2));
+                            $('#go-to-cart div.cart-icon').addClass('not-empty');
+
+                            unblockPage();
+
+                            localStorage.setItem('showed', 'true');
+                            $modal.find('.custom-overlay-container').removeClass('show');
+                            $modal.find('.custom-overlay').attr('style', 'display: none;');
+                            $modal.modal('show');
+                        },
+                        error: function (data) {
+                            var recordset = data['responseJSON'];
+                            var errorMsg = '{{ 'app.ui.cart.add_product.error.message'|trans }}';
+                            $errorModal.find('.modal-title').html('{{ 'app.ui.cart.add_product.error'|trans }}');
+
+                            if (recordset['errors']) {
+                                errorMsg = recordset['errors']['errors'][0];
+                            }
+
+                            $errorModal.find('.modal-body').html(errorMsg);
+
+                            unblockPage();
+                            $errorModal.modal('show');
+                        }
+                    });
+                }
+            });
+
+            /* Custom Quantity Input */
+            $('<div class="quantity-button quantity-down">-</div>').insertBefore('.quantity input');
+            $('<div class="quantity-button quantity-up">+</div>').insertAfter('.quantity input');
+            $('.quantity').each(function() {
+                var spinner = jQuery(this),
+                    input = spinner.find('input[type="number"]'),
+                    btnUp = spinner.find('.quantity-up'),
+                    btnDown = spinner.find('.quantity-down'),
+                    min = input.attr('min'),
+                    max = input.attr('max');
+
+                btnUp.click(function() {
+                    var oldValue = parseFloat(input.val());
+
+                    if (oldValue >= max) {
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue + 1;
+                    }
+
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+                btnDown.click(function() {
+                    var oldValue = parseFloat(input.val());
+                    if (oldValue <= min) {
+
+                        var newVal = oldValue;
+                    } else {
+                        var newVal = oldValue - 1;
+                    }
+
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+            });
+
+            $search.on('keyup', function () {
+                clearTimeout(typingTimer);
+
+                typingTimer = setTimeout(function () {
+                    initSearch();
+                }, doneTypingInterval);
+            });
+
+            $('.block-page').click(function () {
+                blockPage();
+            });
+
+            $inputNumber.focusout(function () {
+                limitOnQuantity($(this));
+            });
+
+            $inputNumber.change(function () {
+                limitOnQuantity($(this));
+            });
+
+            function limitOnQuantity($input) {
+                let val = parseInt($input.val());
+                if (val <= 0) {
+                    $input.val(0);
+                } else if (val >= 99) {
+                    $input.val(99);
+                } else {
+                    $input.val(val);
+                }
+            }
+
+            function initSearch() {
+                var suggestions = [];
+                var url = '{{ path('shop_api_search', {'term': 'term-val'}) }}';
+
+                url = url.replace('term-val', $search.val());
+
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    success: function (data) {
+                        data['recordset'].forEach(function (item) {
+                            suggestions.push(item['name']);
+                        });
+
+                        autocomplete(document.getElementById("site-search"), suggestions);
+
+                        $('#autocomplete-list div').click(function () {
+                            $('#search button').trigger('click');
+                        });
+                    },
+                    error: function (error) {}
+                });
+            }
+        });
+    </script>
+    {% block extrajs %}{% endblock %}
+    {% block formjs %}{% endblock %}
 {% endblock %}
 
 {% include '@SyliusUi/Modal/_confirmation.html.twig' %}
