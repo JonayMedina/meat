@@ -25,6 +25,10 @@ meathouse_frontend:
     resource: "Controller/Frontend"
     type:     annotation
     prefix:   /store
+        
+meathouse_admin_api:
+    resource: .
+    type:     extra
     
 #meathouse_admin_api:
 #    resource: "Controller/AdminApi"

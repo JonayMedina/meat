@@ -42,7 +42,7 @@ class AdminSyncService
     {
         $url = $this->urlGenerator->generate('admin_api_orders_show', [
             'id' => $order->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        ]);
 
         $metadata = [
             'id' => $order->getId(),
@@ -83,7 +83,7 @@ class AdminSyncService
 
         $url = $this->urlGenerator->generate('admin_api_address_show', [
             'id' => $address->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        ]);
 
         $metadata = [
             'validated' => ($address->getStatus() == Address::STATUS_VALIDATED)
@@ -105,7 +105,7 @@ class AdminSyncService
     {
         $url = $this->urlGenerator->generate('admin_api_orders_show', [
             'id' => $order->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        ]);
 
         $metadata = [
             'id' => $order->getId(),
@@ -134,7 +134,7 @@ class AdminSyncService
     {
         $url = $this->urlGenerator->generate('admin_api_customers_show', [
             'id' => $customer->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        ]);
 
         $metadata = [
             'id' => $customer->getId(),
