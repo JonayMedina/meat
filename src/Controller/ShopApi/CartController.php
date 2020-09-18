@@ -16,6 +16,7 @@ use App\Entity\Shipping\ShippingMethod;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AboutStoreRepository;
 use App\Entity\Promotion\PromotionCoupon;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -305,10 +306,11 @@ class CartController extends AbstractFOSRestController
      * )
      * @param Request $request
      * @param PaymentGatewayService $paymentService
+     * @param SenderInterface $sender
      * @return Response
-     * @throws \SM\SMException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function payAction(Request $request, PaymentGatewayService $paymentService) {
+    public function payAction(Request $request, PaymentGatewayService $paymentService, SenderInterface $sender) {
         $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
@@ -346,6 +348,7 @@ class CartController extends AbstractFOSRestController
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
+                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
 
                 $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
 
@@ -359,6 +362,7 @@ class CartController extends AbstractFOSRestController
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
+                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
 
                 $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
                 $view = $this->view($response, $statusCode);
