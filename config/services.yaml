@@ -235,6 +235,3 @@ services:
     user.oauth_user_provider:
         class: App\Auth\OAuthProvider
         public: true
-        
-    App\Routing\AdminApiRouteLoader:
-        tags: [ routing.loader ]
