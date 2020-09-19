@@ -22,16 +22,24 @@ class AdminSyncService
     private $urlGenerator;
 
     /**
+     * @var string $apiUrl
+     */
+    private $apiUrl;
+
+    /**
      * WelcomeCommand constructor.
      * @param MessageBusInterface $bus
      * @param UrlGeneratorInterface $urlGenerator
+     * @param string $apiUrl
      */
     public function __construct(
         MessageBusInterface $bus,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        $apiUrl
     ) {
         $this->bus = $bus;
         $this->urlGenerator = $urlGenerator;
+        $this->apiUrl = $apiUrl;
     }
 
     /**
@@ -40,9 +48,7 @@ class AdminSyncService
      */
     public function syncOrderAfterCheckoutCompleted(Order $order): void
     {
-        $url = $this->urlGenerator->generate('admin_api_orders_show', [
-            'id' => $order->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->apiUrl . '/v1/orders/' . $order->getId();
 
         $metadata = [
             'id' => $order->getId(),
@@ -81,9 +87,7 @@ class AdminSyncService
             return;
         }
 
-        $url = $this->urlGenerator->generate('admin_api_address_show', [
-            'id' => $address->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->apiUrl . '/v1/addresses/' . $address->getId();
 
         $metadata = [
             'validated' => ($address->getStatus() == Address::STATUS_VALIDATED)
@@ -103,9 +107,7 @@ class AdminSyncService
      */
     public function syncOrderAfterRating(Order $order): void
     {
-        $url = $this->urlGenerator->generate('admin_api_orders_show', [
-            'id' => $order->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->apiUrl . '/v1/orders/' . $order->getId();
 
         $metadata = [
             'id' => $order->getId(),
@@ -132,9 +134,7 @@ class AdminSyncService
      */
     public function syncCustomerAfterCreation(Customer $customer, $type = Sync::TYPE_PERSIST): void
     {
-        $url = $this->urlGenerator->generate('admin_api_customers_show', [
-            'id' => $customer->getId(),
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->apiUrl . '/v1/customers/' . $customer->getId();
 
         $metadata = [
             'id' => $customer->getId(),
