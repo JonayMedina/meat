@@ -9,6 +9,7 @@ use App\Entity\PushNotification;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
@@ -87,8 +88,10 @@ class SendRatingNotificationCommand extends Command
             ->createQueryBuilder('o')
             ->andWhere('o.ratingNotificationSent = :ratingNotificationSent')
             ->andWhere('o.estimatedDeliveryDate >= :estimatedDeliveryDate')
+            ->andWhere('o.paymentState = :paymentState')
             ->setParameter('estimatedDeliveryDate', date('Y-m-d H:i:s'))
             ->setParameter('ratingNotificationSent', false)
+            ->setParameter('paymentState', PaymentInterface::STATE_COMPLETED)
             ->getQuery()
             ->getResult();
     }
