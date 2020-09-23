@@ -352,11 +352,14 @@ class CartController extends AbstractFOSRestController
                         // TODO: Translate this.
                         $message = 'Parece que hubo un error, inténtalo más tarde.';
                     }
+                } else {
+                    /**
+                     * Seems everything was Ok, response code == 00
+                     * Inject order into response
+                     */
+                    $result['order'] = $this->orderService->serializeOrder($order);
+                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
                 }
-
-                /** Inject order into response */
-                $result['order'] = $this->orderService->serializeOrder($order);
-                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
 
                 $response = new APIResponse($statusCode, $type, $message, $result);
 
