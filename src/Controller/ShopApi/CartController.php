@@ -340,17 +340,25 @@ class CartController extends AbstractFOSRestController
                 $expDate = trim($request->get('exp_date'));
                 $cvv = trim($request->get('cvv'));
 
+                $type = APIResponse::TYPE_INFO;
                 $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+                $message = $result['responseMessage'];
 
                 if ('00' !== $result['responseCode']) {
                     $statusCode = Response::HTTP_BAD_REQUEST;
+                    $type = APIResponse::TYPE_ERROR;
+
+                    if (empty($message)) {
+                        // TODO: Translate this.
+                        $message = 'Parece que hubo un error, inténtalo más tarde.';
+                    }
                 }
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
                 $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
 
-                $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
+                $response = new APIResponse($statusCode, $type, $message, $result);
 
                 $view = $this->view($response, $statusCode);
 
