@@ -53,13 +53,13 @@ class PushNotificationMessageHandler implements MessageHandlerInterface
         $pushNotification = $this->repository->find($message->getPushId());
         $users = $this->getUsers($pushNotification);
 
-        foreach ($users as $user) {
+        if ($pushNotification->getType() == PushNotification::TYPE_INFO) {
+            $type = $pushNotification->getType();
+        } else {
             $type = $pushNotification->getPromotionType();
+        }
 
-            if (empty($type)) {
-                $type = $pushNotification->getType();
-            }
-
+        foreach ($users as $user) {
             if ($type == 'banner') {
                 $type = 'promotion';
             }

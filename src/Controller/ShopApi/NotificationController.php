@@ -247,19 +247,21 @@ class NotificationController extends AbstractFOSRestController
             $banner = $pushNotification->getPromotionBanner();
             $promotionObject = null;
 
-            if ($banner->getProductVariant() instanceof ProductVariant) {
+            if ($banner && $banner->getProductVariant() instanceof ProductVariant) {
                 /** @var Product $product */
                 $product = $banner->getProductVariant()->getProduct();
                 $promotionObject = $this->productService->serialize($product);
             }
 
-            $object['promotion_banner'] = [
-                'id' => $banner->getId(),
-                'name' => $banner->getName(),
-                'starts_at' => $banner->getStartDate() ? $banner->getStartDate()->format('c') : null,
-                'ends_at' => $banner->getEndDate() ? $banner->getEndDate()->format('c') : null,
-                'product' => $promotionObject,
-            ];
+            if ($banner) {
+                $object['promotion_banner'] = [
+                    'id' => $banner->getId(),
+                    'name' => $banner->getName(),
+                    'starts_at' => $banner->getStartDate() ? $banner->getStartDate()->format('c') : null,
+                    'ends_at' => $banner->getEndDate() ? $banner->getEndDate()->format('c') : null,
+                    'product' => $promotionObject,
+                ];
+            }
         }
 
         if ($notification->getType() == PushNotification::TYPE_PROMOTION && $pushNotification->getPromotionType() == PushNotification::PROMOTION_TYPE_COUPON) {
