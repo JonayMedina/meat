@@ -51,6 +51,7 @@ services:
             $appleClientId: '%env(APP_APPLE_CLIENT_ID)%'
             $appleClientSecret: '%env(APP_APPLE_SECRET)%'
             $appUrl: '%env(APP_URL)%'
+            $apiUrl: '%env(API_URL)%'
 
     _instanceof:
         Sylius\Bundle\ResourceBundle\Controller\ResourceController:

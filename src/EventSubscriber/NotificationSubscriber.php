@@ -50,7 +50,7 @@ class NotificationSubscriber implements EventSubscriber
     {
         $entity = $args->getEntity();
 
-        if ($entity instanceof Notification) {
+        if ($entity instanceof Notification && empty($entity->getResponse())) {
             /** Send to fcm here... */
             $user = $entity->getUser();
             $devices = $user->getDevices();

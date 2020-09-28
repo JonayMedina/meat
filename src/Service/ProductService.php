@@ -18,37 +18,38 @@ class ProductService
      */
     private $filterService;
 
-    /**
-     * @var string
-     */
-    private $appUrl;
+    /** images sizes available to resize into */
+    private $imageSizes = [
+        'original' => 'shop_api_product_original',
+        'large' => 'shop_api_product_large',
+        'medium' => 'shop_api_product_medium',
+        'small' => 'shop_api_product_small',
+        'tiny' => 'shop_api_product_tiny',
+    ];
 
     /**
      * ProductService constructor.
      * @param ChannelContextInterface $channel
      * @param FilterService $filterService
-     * @param string $appUrl
      */
-    public function __construct(
-        ChannelContextInterface $channel,
-        FilterService $filterService,
-        $appUrl
-    ) {
+    public function __construct(ChannelContextInterface $channel, FilterService $filterService)
+    {
         $this->channel = $channel;
         $this->filterService = $filterService;
-        $this->appUrl = $appUrl;
     }
 
     public function serialize(Product $product)
     {
         $variant = $product->getVariants()[0];
-        $images = null;
+        $images = [];
 
         /** @var ChannelInterface $channel */
         $channel = $this->channel->getChannel();
 
         foreach ($product->getImages() as $key => $image) {
-            $images = $this->appUrl . '/media/cache/resolve/mobile_thumbnail/'. $image->getPath();
+            foreach ($this->imageSizes as $label => $imageSize) {
+                $images[$key][$label] = $this->filterService->getUrlOfFilteredImage($image->getPath(), $imageSize);
+            }
         }
 
         $product = [
