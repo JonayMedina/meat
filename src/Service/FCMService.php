@@ -34,6 +34,9 @@ class FCMService
 			return ['error' => 'cURL must be active in this system.'];
 		}
 
+		/** Flutter notification requirement */
+		$data['click_action'] = "FLUTTER_NOTIFICATION_CLICK";
+
 		$apiKey = $this->fcmServerKey;
 		$post = ['registration_ids' => $ids, 'notification' => $notification, 'data' => $data];
 		$headers = ['Authorization: key=' . $apiKey, 'Content-Type: application/json'];

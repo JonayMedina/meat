@@ -16,6 +16,7 @@ use App\Entity\Shipping\ShippingMethod;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AboutStoreRepository;
 use App\Entity\Promotion\PromotionCoupon;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -305,10 +306,11 @@ class CartController extends AbstractFOSRestController
      * )
      * @param Request $request
      * @param PaymentGatewayService $paymentService
+     * @param SenderInterface $sender
      * @return Response
-     * @throws \SM\SMException
+     * @throws \Psr\Cache\InvalidArgumentException
      */
-    public function payAction(Request $request, PaymentGatewayService $paymentService) {
+    public function payAction(Request $request, PaymentGatewayService $paymentService, SenderInterface $sender) {
         $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
@@ -338,16 +340,28 @@ class CartController extends AbstractFOSRestController
                 $expDate = trim($request->get('exp_date'));
                 $cvv = trim($request->get('cvv'));
 
+                $type = APIResponse::TYPE_INFO;
                 $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+                $message = $result['responseMessage'];
 
                 if ('00' !== $result['responseCode']) {
                     $statusCode = Response::HTTP_BAD_REQUEST;
+                    $type = APIResponse::TYPE_ERROR;
+
+                    if (empty($message)) {
+                        // TODO: Translate this.
+                        $message = 'Parece que hubo un error, inténtalo más tarde.';
+                    }
+                } else {
+                    /**
+                     * Seems everything was Ok, response code == 00
+                     * Inject order into response
+                     */
+                    $result['order'] = $this->orderService->serializeOrder($order);
+                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
                 }
 
-                /** Inject order into response */
-                $result['order'] = $this->orderService->serializeOrder($order);
-
-                $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['responseMessage'], $result);
+                $response = new APIResponse($statusCode, $type, $message, $result);
 
                 $view = $this->view($response, $statusCode);
 
@@ -359,6 +373,7 @@ class CartController extends AbstractFOSRestController
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
+                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
 
                 $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
                 $view = $this->view($response, $statusCode);
