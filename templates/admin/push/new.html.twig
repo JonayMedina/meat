@@ -1,0 +1,94 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.new_push'|trans }}{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/select2/select2-bootstrap4.min.css') }}">
+    <style>
+        .select2-selection.select2-selection--single {
+            height: 38px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option {
+            color: #ab162b;
+            line-height: 16px;
+            font-size: 14px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px;
+        }
+
+        .select2-selection__rendered {
+            padding-top: 5px;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #EBE7E7;
+            color: #ab162b;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: #FAF5F6;
+            background: url(/meathouse/img/icons/search.svg) no-repeat scroll 4px 2px;
+            padding-left:30px;
+            color: #ab162b;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                {{ UI.back(path('push_index'), 'app.ui.back_to_push') }}
+                <br>
+                <h1>{{ 'app.ui.new_push'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        {{ include('/admin/push/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+    <script src="{{ asset('meathouse/js/plugins/select2/select2.full.min.js') }}"></script>
+    <script>
+        $(function () {
+            var $promotionTypePushDiv = $('#promotion-type-push');
+
+            $('.select2').select2({
+                'placeholder': '{{ 'app.ui.search_coupon'|trans }}'
+            });
+
+            $('input[type=radio][name="push_notification[type]"]').change(function() {
+                var value = $('input[name="push_notification[type]"]:checked').val();
+
+                if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_PROMOTION') }}') {
+                    $promotionTypePushDiv.slideDown('fast');
+                }
+
+                if (value === '{{ constant('App\\Entity\\PushNotification::TYPE_INFO') }}') {
+                    $promotionTypePushDiv.slideUp('fast');
+                }
+            }).change();
+
+            $('#push_notification_promotionType_0').prop('checked', true).change();
+        });
+    </script>
+{% endblock %}

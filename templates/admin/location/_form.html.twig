@@ -1,0 +1,80 @@
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+<div class="row">
+    <div class="col-lg-7">
+        {{ form_row(form.name) }}
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+<div class="row">
+    <div class="col-lg-12">
+        {{ form_row(form.address) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        {{ form_row(form.phoneNumber) }}
+    </div>
+    <div class="col-lg-3">
+        {{ form_row(form.extension) }}
+    </div>
+    <div class="col-lg-5">
+        {{ form_label(form.photoType) }}
+        <i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'app.ui.location.image_help'|trans }}"></i>
+
+        {{ form_widget(form.photoType) }}
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+<label for="">
+    {{ 'app.ui.location_schedule'|trans }}
+    {% if errors|length > 0 %}
+        {% if errors['schedule'] %}
+            <span class="invalid-feedback d-block">
+                <span class="d-block">
+                    <span class="form-error-icon badge badge-danger text-uppercase">{{ 'app.ui.error'|trans }}</span>
+                    <span class="form-error-message"><strong>{{ errors['schedule']|trans }}</strong></span>
+                </span>
+            </span>
+        {% endif %}
+    {% endif %}
+</label>
+
+<div class="row">
+    <div class="col-lg-3 text-muted">
+        {{'app.ui.location_monday_to_friday'|trans}}
+    </div>
+
+    <div class="col-lg-2">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[in_week][start]" value="{{ location.schedule['in_week']['start']|default('') }}">
+    </div>
+    <div class="col-lg-2">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[in_week][end]" value="{{ location.schedule['in_week']['end']|default('') }}">
+    </div>
+</div>
+
+<div class="row padding-top-25">
+    <div class="col-lg-3 text-muted">
+        {{'app.ui.saturday'|trans}}
+    </div>
+    <div class="col-lg-2">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[weekend][start]" value="{{ location.schedule['weekend']['start']|default('') }}">
+    </div>
+    <div class="col-lg-2">
+        <input type="text" class="form-control inputmask {% if errors|length > 0 %}is-invalid{% endif %}" name="schedule[weekend][end]" value="{{ location.schedule['weekend']['end']|default('') }}">
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+<br>
+
+<div class="form-group">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{% if edit %}{{ 'app.ui.save_changes'|trans }}{% else %}{{ 'app.ui.admin.create_location'|trans }}{% endif %}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

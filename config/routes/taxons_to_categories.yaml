@@ -1,0 +1,88 @@
+# sylius_admin_api_taxon_index                           GET              ANY      ANY    /api/v{version}/taxons/
+# sylius_admin_api_taxon_create                          POST             ANY      ANY    /api/v{version}/taxons/
+# sylius_admin_api_taxon_update                          PUT|PATCH        ANY      ANY    /api/v{version}/taxons/{code}
+# sylius_admin_api_taxon_show                            GET              ANY      ANY    /api/v{version}/taxons/{code}
+# sylius_admin_api_taxon_delete                          DELETE           ANY      ANY    /api/v{version}/taxons/{code}
+
+
+#sylius_admin_api_taxon_index:
+#    path: /api/v{version}/categories/
+#    methods: [GET]
+#    defaults:
+#        _controller: sylius.controller.taxon:indexAction
+#        _sylius:
+#            serialization_groups: ['Default']
+#            grid: 'sylius_admin_api_taxon'
+#            serialization_version: '$version'
+#            section: 'admin_api'
+#            criteria:
+#                code: '$code'
+#            permission: false
+#    options:
+#        compiler_class: Symfony\Component\Routing\RouteCompiler
+#
+#
+#sylius_admin_api_taxon_create:
+#    path: /api/v{version}/categories/
+#    methods: [POST]
+#    defaults:
+#        _controller: sylius.controller.taxon:createAction
+#        _sylius:
+#            serialization_groups: ['Default', 'Detailed']
+#            form: 'Sylius\\Bundle\\TaxonomyBundle\\Form\\Type\\TaxonType'
+#            serialization_version: '$version'
+#            section: 'admin_api'
+#            criteria:
+#                code: '$code'
+#            permission: false
+#    options:
+#        compiler_class: Symfony\Component\Routing\RouteCompiler
+#
+#
+#sylius_admin_api_taxon_update:
+#    path: /api/v{version}/categories/{code}
+#    methods: [PUT, PATCH]
+#    defaults:
+#        _controller: sylius.controller.taxon:updateAction
+#        _sylius:
+#            serialization_groups: ['Default', 'Detailed']
+#            form: 'Sylius\Bundle\TaxonomyBundle\Form\Type\TaxonType'
+#            serialization_version: '$version'
+#            section: 'admin_api'
+#            criteria:
+#                code: '$code'
+#            permission: false
+#    options:
+#        compiler_class: Symfony\Component\Routing\RouteCompiler
+#
+#
+#sylius_admin_api_taxon_show:
+#    path: /api/v{version}/categories/{code}
+#    methods: [GET]
+#    defaults:
+#        _controller: sylius.controller.taxon:showAction
+#        _sylius:
+#            serialization_groups: ['Default', 'Detailed']
+#            serialization_version: '$version'
+#            section: 'admin_api'
+#            criteria:
+#                code: '$code'
+#            permission: false
+#    options:
+#        compiler_class: Symfony\Component\Routing\RouteCompiler
+#
+#
+#sylius_admin_api_taxon_delete:
+#    path: /api/v{version}/categories/{code}
+#    methods: [DELETE]
+#    defaults:
+#        _controller: sylius.controller.taxon:showAction
+#        _sylius:
+#            csrf_protection: false
+#            serialization_version: '$version'
+#            section: 'admin_api'
+#            criteria:
+#                code: '$code'
+#            permission: false
+#    options:
+#        compiler_class: Symfony\Component\Routing\RouteCompiler

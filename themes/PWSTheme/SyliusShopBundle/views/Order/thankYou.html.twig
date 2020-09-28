@@ -1,20 +1,157 @@
 {% extends '@SyliusShop/layout.html.twig' %}
 
-{% block content %}
-    {% set lastPayment = order.payments.last() %}
-    <div id="sylius-thank-you">
-        {{ 'sylius.ui.thank_you'|trans }}
-        {{ 'sylius.ui.placed_an_order'|trans }}
-    </div>
-    {{ sonata_block_render_event('sylius.shop.order.thank_you.after_message', {'order': order}) }}
+{% block extracontent %}
+    <div class="row profile pt-4 checkout completed">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4">
+            <h1 class="text-center">{{ 'app.ui.order.completed.title'|trans }}</h1>
+        </div>
 
-    {% if lastPayment != false %}
-        {% if lastPayment.method.instructions is not null %}
-            <div id="sylius-payment-method-instructions">
-                {{ lastPayment.method.instructions }}
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-pl-0 xs-pr-0 xs-mb-0">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-7 col-lg-7">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="segment">
+                                {{ sonata_block_render_event('sylius.shop.checkout.address.before_form', {'order': order}) }}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <p>{{ 'app.ui.order.completed.message'|trans({'%order%': order.number, '%email%': order.customer.email})|raw }}</p>
+                                        <div class="divider"></div>
+                                    </div>
+                                    <div class="col-12 your-info mt-4">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.name'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.customer.firstName }} {{ order.customer.lastName }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.addressing_step'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.fullAddress }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.form.address.ask_for'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.annotations }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.form.address.phone_number'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.shippingAddress.phoneNumber }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.schedule'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.preferredDeliveryTime|default('app.ui.checkout.order.preferred_time.none'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.name'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.firstName|default('app.ui.checkout.billing.cf'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.tax_id'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.taxId|default('app.ui.checkout.billing.cf.short'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.billing.address'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.billingAddress.fullAddress|default('app.ui.checkout.billing.city'|trans) }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <p class="font-semi-bold">{{ 'app.ui.checkout.payment.method'|trans }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+                                                        <p>{{ order.lastPayment.method.name }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <a href="{{ path('sylius_shop_homepage') }}" class="d-inline-block btn-rounded">{{ 'app.ui.keep_buying'|trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-5 col-lg-5 d-none d-sm-block">
+                    <div class="segment">
+                        {% include '@SyliusShop/Checkout/_summary.html.twig' with {'order': order} %}
+                    </div>
+                </div>
             </div>
-        {% endif %}
-        <a href="{{ path('sylius_shop_order_show', {'tokenValue': order.tokenValue}) }}"
-           id="sylius-show-order">{{ 'sylius.ui.view_your_order_or_change_payment_method'|trans }}</a>
-    {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            var $body = $('body');
+            moment.locale('es');
+
+            $body.find('.to-format-date').each(function () {
+                var $input = $(this);
+                var date = $input.data('date');
+
+                $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
+            });
+        });
+    </script>
 {% endblock %}

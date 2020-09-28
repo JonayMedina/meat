@@ -1,0 +1,42 @@
+{{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+
+{{ form_row(form.code) }}
+{{ form_row(form.description) }}
+<div class="hr-line-dashed"></div>
+<div class="row">
+    <div class="col-lg-6">
+        {{ form_row(form.type) }}
+    </div>
+    <div class="col-lg-6">
+        {{ form_row(form.amount) }}
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+<div class="row">
+    <div class="col-lg-6">
+        {{ form_row(form.startsAt) }}
+    </div>
+
+    <div class="col-lg-6">
+        {{ form_row(form.endsAt) }}
+    </div>
+</div>
+
+<div class="hr-line-dashed"></div>
+
+{{ form_row(form.oneUsagePerUser) }}
+{{ form_row(form.limitUsageToXQuantityOfUsers) }}
+
+<div id="usage-limit-wrapper" style="display: none;">
+    {{ form_label(form.usageLimit, null, {'label_attr': {'style': 'float:left; margin-right: 10px; margin-top: 10px; color: #917171;'} }) }}
+    {{ form_widget(form.usageLimit) }}
+</div>
+
+<div class="form-group">
+    <div class="text-center">
+        <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save'|trans }}</button>
+    </div>
+</div>
+
+{{ form_end(form) }}

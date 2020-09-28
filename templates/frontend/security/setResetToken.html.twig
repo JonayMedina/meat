@@ -1,0 +1,98 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block extracontent %}
+    {% set message = '&ensp;<br><a id="resend-code" class="text-lowercase">' ~ ('app.ui.resend_code_here'|trans) ~ '</a>' %}
+    <div class="row forgot-password pt-5">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <a href="{{ path('sylius_shop_request_password_reset_token') }}"><i class="fas fa-chevron-left"></i> {{ 'sylius.ui.back'|trans }}</a>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 segment">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <h1 class="text-center">{{ 'app.ui.enter_the_token'|trans }}</h1>
+                    <p class="text-center">{{ 'app.ui.reset_instructions'|trans|raw }}</p>
+
+                    {{ sonata_block_render_event('sylius.shop.request_password_reset_token.after_content_header') }}
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <form name="sylius_user_request_password_reset" method="post" action="{{ path('store_set_token') }}" class="ui large loadable form margin-0-auto" novalidate="novalidate">
+                        <div class="required field">
+                            {{ form_label(form.token) }}
+                            {{ form_widget(form.token) }}
+                        </div>
+
+                        {{ form_widget(form._token) }}
+                        <button type="submit" class="btn-rounded">{{ 'app.ui.recover'|trans }}</button>
+
+                        <p class="text-center mt-4">{{ 'app.ui.did_not_get_your_code?_%link%'|trans({'%link%': message})|raw }}</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel">{{ 'app.ui.reset_password.error.title'|trans }}</h5>
+                </div>
+                <div class="modal-body text-center">{% if error is defined %}{{ error|trans }}{% endif %}</div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function () {
+            let $modal = $('#showMessage');
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.get('token')) {
+                $('#token_password_token').val(urlParams.get('token'));
+            }
+
+            {% if error is defined %}
+                $modal.modal('show');
+            {% endif %}
+
+            $('form button').click(function () {
+                localStorage.deleteItem('user_email');
+            });
+
+            $('#resend-code').click(function () {
+                blockPage();
+
+                $.ajax({
+                    url: Routing.generate("store_api_forgotten_password", { version: 1}),
+                    method: "POST",
+                    data: JSON.stringify({
+                        email:  localStorage.getItem('user_email')
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function (data) {
+                    let recordset = data['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                })
+                .fail(function (error) {
+                    let recordset = error['responseJSON']['recordset'];
+                    $modal.find('.modal-title').html(recordset['title']);
+                    $modal.find('.modal-body').html(recordset['message']);
+
+                    unblockPage();
+                    $modal.modal('show');
+                });
+            });
+        });
+    </script>
+{% endblock %}

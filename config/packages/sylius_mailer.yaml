@@ -1,0 +1,71 @@
+sylius_mailer:
+    sender:
+        name: '%env(APP_NAME)%'
+        address: no-reply@meathouse.com
+    emails:
+        api_reset_password_token:
+            subject: sylius.emails.user.reset_password_token.subject
+            template: "Email/ShopApi/passwordReset.html.twig"
+        contact_request:
+            subject: sylius.emails.contact_request.subject
+            template: "@SyliusShop/Email/contactRequest.html.twig"
+        order_confirmation:
+            subject: app.email.order.confirmation
+            template: "Email/orderConfirmation.html.twig"
+            enabled: false
+        user_registration:
+            subject: sylius.emails.user_registration.subject
+            template: "Email/userRegistration.html.twig"
+        password_reset:
+            subject: sylius.emails.user.password_reset.subject
+            template: "Email/passwordReset.html.twig"
+        reset_password_token:
+            subject: app.email.password_reset
+            template: "Email/passwordResetToken.html.twig"
+        reset_password_pin:
+            subject: sylius.emails.user.password_reset.subject
+            template: "Email/passwordReset.html.twig"
+        verification_token:
+            subject: sylius.emails.user.verification_token.subject
+            template: "@SyliusShop/Email/verification.html.twig"
+            enabled: false
+        message_received:
+            subject: app.email.contact_us.message_received
+            template: "Email/contactUs/received.html.twig"
+            enabled: true
+        message_sent:
+            subject: app.email.contact_us.message_sent
+            template: "Email/contactUs/sent.html.twig"
+            enabled: true
+        admin_forgot_password_request_token:
+            subject: app.email.admin_password_request
+            template: "Email/admin/password_request_token.html.twig"
+            enabled: true
+        change_email_verification:
+            subject: app.email.change_email.subject
+            template: "Email/changeEmailVerification.html.twig"
+            enabled: true
+        order_ticket:
+            subject: app.email.order.confirmation
+            template: "Email/orderConfirmation.html.twig"
+            enabled: true
+        order_cancelled:
+            subject: app.email.order.cancelled
+            template: "Email/orderCancelled.html.twig"
+            enabled: true
+        order_shipped:
+            subject: app.email.order.shipped
+            template: "Email/orderShipped.html.twig"
+            enabled: true
+        terms_and_conditions_changed:
+            subject: app.email.terms.changed
+            template: "Email/termsChanged.html.twig"
+            enabled: true
+        approved_address:
+            subject: app.email.address.approved
+            template: "Email/approvedAddress.html.twig"
+            enabled: true
+        rejected_address:
+            subject: app.email.address.rejected
+            template: "Email/rejectedAddress.html.twig"
+            enabled: true
