@@ -88,11 +88,11 @@ class SendRatingNotificationCommand extends Command
         return $this->orderRepository
             ->createQueryBuilder('o')
             ->andWhere('o.ratingNotificationSent = :ratingNotificationSent')
+            ->andWhere('o.estimatedDeliveryDate IS NOT NULL')
+            // TODO: When on production, change <= by >= in next sentence.
             ->andWhere('o.estimatedDeliveryDate <= :estimatedDeliveryDate')
-            ->andWhere('o.paymentState = :paymentState')
             ->setParameter('estimatedDeliveryDate', date('Y-m-d H:i:s'))
             ->setParameter('ratingNotificationSent', false)
-            ->setParameter('paymentState', OrderPaymentStates::STATE_PAID)
             ->getQuery()
             ->getResult();
     }
