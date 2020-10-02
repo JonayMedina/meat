@@ -80,7 +80,7 @@ after('deploy:failed', 'deploy:unlock');
 before('deploy:symlink', 'database:migrate');
 
 /** Notify via Telegram */
-after('success', 'telegram:notify:success');
+// after('success', 'telegram:notify:success');
 
 /** Notify to sentry */
 after('deploy', 'deploy:sentry');
