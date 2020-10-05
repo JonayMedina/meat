@@ -147,6 +147,10 @@ class HistoryService
                 $hasChanged = true;
             }
 
+            if (!$variant->getProduct()->isEnabled()) {
+                $hasChanged = true;
+            }
+
             if ($variant->getOnHand() < $orderItem->getQuantity()) {
                 $hasChanged = true;
             }
