@@ -68,7 +68,7 @@ class PushNotificationType extends AbstractType
             ])
             ->add('promotionBanner', null, [
                 'label' => 'app.ui.promotion_banner',
-                'placeholder' => 'app.ui.select_a_coupon',
+                'placeholder' => 'app.ui.select_a_promotion',
                 'query_builder' => function (EntityRepository $er) use ($now) {
                     return $er->createQueryBuilder('promotion_banner')
                         ->andWhere('promotion_banner.startDate <= :now')

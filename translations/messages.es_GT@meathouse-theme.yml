@@ -637,6 +637,7 @@ app.ui.back_to_push: 'Regresar a envío push'
 app.ui.push.types.promotion: Cupón
 app.ui.push.types.info: Informativa
 app.ui.select_a_coupon: 'Seleccione un cupón'
+app.ui.select_a_promotion: 'Seleccione un banner promocional'
 app.ui.push_new_success_message: 'Se ha creado la notificación y pronto se estará enviando.'
 app.ui.push_new_error_message: 'Hubo un error al crear la notificación, por favor intentelo de nuevo más tarde.'
 app.ui.latest_products: 'Últimos productos:'
