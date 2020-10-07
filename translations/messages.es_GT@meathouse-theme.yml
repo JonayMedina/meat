@@ -1060,3 +1060,4 @@ app.email.order.shipped.message_%name%_%order_name%: '¡Hola %name%! Hemos despa
 app.form.user.email.label: Correo
 app.form.user.email.confirmation: 'Confirma tu correo'
 app.ui.form.user.change_password.not_the_same_of_current: 'Tu contraseña no puede ser igual a la anterior.'
+app.ui.checkout.order.estimated_date.none: 'Sin preferencia'
