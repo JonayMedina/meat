@@ -94,7 +94,8 @@ class NotificationController extends AbstractFOSRestController
         $queryBuilder = $this->repository
             ->createQueryBuilder('notification')
             ->andWhere('notification.user = :user')
-            ->setParameter('user', $this->getUser());
+            ->setParameter('user', $this->getUser())
+            ->orderBy('notification.createdAt', 'DESC');
 
         $list = [];
         $paginatedCollection = $paginationFactory->createCollection($queryBuilder, '', $page, $limit, 'shop_api_notifications', [], 'Notification list.', $statusCode, 'info');
@@ -264,7 +265,7 @@ class NotificationController extends AbstractFOSRestController
             }
         }
 
-        if ($notification->getType() == PushNotification::TYPE_PROMOTION && $pushNotification->getPromotionType() == PushNotification::PROMOTION_TYPE_COUPON) {
+        if ($notification->getType() == PushNotification::PROMOTION_TYPE_COUPON && $pushNotification->getPromotionType() == PushNotification::PROMOTION_TYPE_COUPON) {
             $coupon = $pushNotification->getPromotionCoupon();
 
             $object['coupon'] = [

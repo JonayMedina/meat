@@ -74,8 +74,11 @@ class FavoriteController extends AbstractFOSRestController
 
         /** @var Favorite[] $favorites */
         $favorites = $this->repository->createQueryBuilder('favorite')
+            ->leftJoin('favorite.product', 'product')
             ->andWhere('favorite.shopUser = :shopUser')
+            ->andWhere('product.enabled = :enabled')
             ->setParameter('shopUser', $shopUser)
+            ->setParameter('enabled', true)
             ->orderBy('favorite.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
