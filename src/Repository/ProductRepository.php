@@ -25,9 +25,11 @@ class ProductRepository extends BaseProductRepository
             ->leftJoin('o.options', 'options')
             ->andWhere('translations.name LIKE :name')
             ->andWhere('translations.locale = :locale')
+            ->andWhere('o.enabled = :enabled')
             ->addSelect(['translations', 'images', 'options'])
             ->setParameter('name', '%' . $phrase . '%')
             ->setParameter('locale', $locale)
+            ->setParameter('enabled', true)
             ->setMaxResults($limit)
             ->setFirstResult($offset);
     }

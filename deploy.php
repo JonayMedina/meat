@@ -80,7 +80,22 @@ after('deploy:failed', 'deploy:unlock');
 before('deploy:symlink', 'database:migrate');
 
 /** Notify via Telegram */
-after('success', 'telegram:notify:success');
+// after('success', 'telegram:notify:success');
+
+/** Restart fpm */
+task('reload:php-fpm', function () {
+    run('sudo /etc/init.d/php-fpm restart'); // Using SysV Init scripts
+});
+
+/** Restart supervisor */
+task('reload:php-fpm', function () {
+    run('sudo /etc/init.d/supervisor restart'); // Using SysV Init scripts
+});
+
+/** Restart nginx */
+task('reload:php-fpm', function () {
+    run('sudo /etc/init.d/nginx restart'); // Using SysV Init scripts
+});
 
 /** Notify to sentry */
 after('deploy', 'deploy:sentry');

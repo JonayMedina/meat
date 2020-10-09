@@ -68,7 +68,7 @@
                                     <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-8 col-lg-9">
-                                    <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                    <p {% if order.estimatedDeliveryDate %}class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}"{% endif %}>{% if order.estimatedDeliveryDate %}{{ order.estimatedDeliveryDate|date('d/m/y') }}{% else %}{{ 'app.ui.checkout.order.estimated_date.none'|trans }}{% endif %}</p>
                                 </div>
                             </div>
                         </div>
