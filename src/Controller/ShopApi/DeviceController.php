@@ -108,6 +108,35 @@ class DeviceController extends AbstractFOSRestController
     }
 
     /**
+     * @Route(
+     *     "/{key}.{_format}",
+     *     name="shop_api_delete_device",
+     *     methods={"DELETE"}
+     * )
+     *
+     * @param ShopUserDevice $shopUserDevice
+     * @return Response
+     */
+    public function deleteAction(ShopUserDevice $shopUserDevice)
+    {
+        $this->entityManager->remove($shopUserDevice);
+
+        try {
+            $this->entityManager->flush();
+            $statusCode = Response::HTTP_NO_CONTENT;
+
+            $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, '', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
+
+            return $this->renderError($exception->getMessage());
+        }
+    }
+
+    /**
      * @param $message
      * @param int $statusCode
      * @return Response
