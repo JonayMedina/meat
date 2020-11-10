@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class PaymentGatewayService
 {
-    const ENDPOINT = "https://epaytestvisanet.com.gt/paymentcommerce.asmx?WSDL";
+    const ENDPOINT = "https://epayvisanet.com.gt/paymentcommerce.asmx?WSDL";
 
     const MESSAGE_TYPE_SELL = "0200";
 
