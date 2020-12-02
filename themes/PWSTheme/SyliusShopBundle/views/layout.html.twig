@@ -187,7 +187,7 @@
                             </div>
                         </div>
                         <div class="buttons">
-                            <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded inverted">{{ 'app.ui.view_more_products'|trans }}</a>
+                            <a href="{{ path('sylius_shop_homepage') }}" class="btn-rounded inverted view-more-products">{{ 'app.ui.view_more_products'|trans }}</a>
                             <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.go_to_my_cart'|trans }}</a>
                         </div>
                     </div>
@@ -419,11 +419,12 @@
 
                 btnUp.click(function() {
                     var oldValue = parseFloat(input.val());
+                    var newVal = 0;
 
                     if (oldValue >= max) {
-                        var newVal = oldValue;
+                        newVal = oldValue;
                     } else {
-                        var newVal = oldValue + 1;
+                        newVal = oldValue + 1;
                     }
 
                     spinner.find("input").val(newVal);
@@ -432,11 +433,12 @@
 
                 btnDown.click(function() {
                     var oldValue = parseFloat(input.val());
-                    if (oldValue <= min) {
+                    var newVal = 0;
 
-                        var newVal = oldValue;
+                    if (oldValue <= min) {
+                        newVal = oldValue;
                     } else {
-                        var newVal = oldValue - 1;
+                        newVal = oldValue - 1;
                     }
 
                     spinner.find("input").val(newVal);
@@ -455,6 +457,12 @@
             $('.block-page').click(function () {
                 blockPage();
             });
+
+            $('body').on('click', '.view-more-products', (function (evt) {
+                evt.preventDefault();
+                localStorage.setItem('viewing', 'true');
+                window.location = $(this).attr('href');
+            }));
 
             $inputNumber.focusout(function () {
                 limitOnQuantity($(this));

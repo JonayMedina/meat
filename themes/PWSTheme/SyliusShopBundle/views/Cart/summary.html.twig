@@ -32,7 +32,7 @@
 
                 <div class="row products-exist">
                     <div class="col-12 buttons text-right">
-                        <a class="btn-rounded inverted d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
+                        <a class="btn-rounded inverted d-inline-block view-more-products" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.view_more_products'|trans }}</a>
                         <a id="to-pay" class="btn-rounded d-inline-block" href="{{ path('sylius_shop_checkout_start') }}">{{ 'app.ui.proceed_to_pay'|trans }}</a>
                     </div>
                 </div>
@@ -100,6 +100,8 @@
             var toCheckout = false;
             var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
             var $coupon = $('#sylius_cart_promotionCoupon');
+
+            localStorage.setItem('viewing', '');
 
             $('.quantity-up').click(function () {
                 updateCart();
