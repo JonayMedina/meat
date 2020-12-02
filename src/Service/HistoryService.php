@@ -147,6 +147,10 @@ class HistoryService
                 $hasChanged = true;
             }
 
+            if (!$variant->getProduct()->isEnabled()) {
+                $hasChanged = true;
+            }
+
             if ($variant->getOnHand() < $orderItem->getQuantity()) {
                 $hasChanged = true;
             }
@@ -195,9 +199,10 @@ class HistoryService
         return $this->orderRepository
             ->createQueryBuilder('o')
             ->andWhere('o.customer = :customer')
-            ->andWhere('o.paymentState = :paymentState')
+            ->andWhere('o.paymentState = :paymentStatePaid OR o.paymentState = :paymentStateAwaitingPayment')
             ->setParameter('customer', $customer)
-            ->setParameter('paymentState', OrderPaymentStates::STATE_PAID)
+            ->setParameter('paymentStatePaid', OrderPaymentStates::STATE_PAID)
+            ->setParameter('paymentStateAwaitingPayment', OrderPaymentStates::STATE_AWAITING_PAYMENT)
             ->orderBy('o.estimatedDeliveryDate', 'DESC')
             ->addOrderBy('o.id', 'DESC')
             ->setMaxResults($limit ? $limit : self::HISTORY_LIMIT);

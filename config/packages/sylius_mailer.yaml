@@ -1,7 +1,7 @@
 sylius_mailer:
     sender:
         name: '%env(APP_NAME)%'
-        address: no-reply@meathouse.com
+        address: no-reply@meathouse.com.gt
     emails:
         api_reset_password_token:
             subject: sylius.emails.user.reset_password_token.subject
