@@ -1061,3 +1061,4 @@ app.form.user.email.label: Correo
 app.form.user.email.confirmation: 'Confirma tu correo'
 app.ui.form.user.change_password.not_the_same_of_current: 'Tu contraseña no puede ser igual a la anterior.'
 app.ui.checkout.order.estimated_date.none: 'Sin preferencia'
+app.email.order.we_call_your_%phone%_to_confirmate: '¡Te llamaremos del <strong style="font-size: 20px">%phone%</strong> para validar tu nueva dirección!'
