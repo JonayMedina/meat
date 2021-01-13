@@ -218,25 +218,6 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
         }
 
-        /**
-         * Add shipment here...
-         * @var ShippingMethod $shippingMethod
-         */
-        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
-            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
-
-        if ($shippingMethod) {
-            if (count($cart->getShipments()) <= 0) {
-                $shipment = new Shipment();
-                $shipment->setOrder($cart);
-                $shipment->setMethod($shippingMethod);
-                $shipment->setCreatedAt(new \DateTime());
-                $shipment->setState('ready');
-
-                $this->entityManager->persist($shipment);
-            }
-        }
-
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -447,6 +428,26 @@ class CartController extends AbstractFOSRestController
 
         if (!$order instanceof Order) {
             throw new NotFoundHttpException('Cart not found');
+        }
+
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
+
+        if ($shippingMethod) {
+            if (count($order->getShipments()) <= 0) {
+                $shipment = new Shipment();
+                $shipment->setOrder($order);
+                $shipment->setMethod($shippingMethod);
+                $shipment->setCreatedAt(new \DateTime());
+                $shipment->setState('ready');
+
+                $this->entityManager->persist($shipment);
+                $this->entityManager->flush();
+            }
         }
 
         $order->recalculateAdjustmentsTotal();
