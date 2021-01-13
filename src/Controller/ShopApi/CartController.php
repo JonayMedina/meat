@@ -429,6 +429,39 @@ class CartController extends AbstractFOSRestController
     }
 
     /**
+     * @Route(
+     *     "/{token}/re-calculate.{_format}",
+     *     name="shop_api_re_calculate_cart",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+    public function recalculateAction(Request $request)
+    {
+        $token = $request->get('token');
+        $statusCode = Response::HTTP_OK;
+
+        /** @var Order $order */
+        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+        if (!$order instanceof Order) {
+            throw new NotFoundHttpException('Cart not found');
+        }
+
+        $order->recalculateAdjustmentsTotal();
+        $order->recalculateItemsTotal();
+
+        $this->entityManager->flush();
+        $serialized = $this->orderService->serializeOrder($order);
+
+        $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Success', $serialized);
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
      * @param PromotionCoupon $coupon
      */
     private function isInIncompleteCart(PromotionCoupon $coupon) {
