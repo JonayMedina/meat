@@ -206,6 +206,12 @@ class CartController extends AbstractFOSRestController
 
         $this->entityManager->persist($addressCloned);
 
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $this->addShipping($cart);
+
         /** OrderCheckoutState: cart -> addressed */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
         if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
@@ -434,21 +440,7 @@ class CartController extends AbstractFOSRestController
          * Add shipment here...
          * @var ShippingMethod $shippingMethod
          */
-        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
-            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
-
-        if ($shippingMethod) {
-            if (count($order->getShipments()) <= 0) {
-                $shipment = new Shipment();
-                $shipment->setOrder($order);
-                $shipment->setMethod($shippingMethod);
-                $shipment->setCreatedAt(new \DateTime());
-                $shipment->setState('ready');
-
-                $this->entityManager->persist($shipment);
-                $this->entityManager->flush();
-            }
-        }
+        $this->addShipping($order);
 
         $order->recalculateAdjustmentsTotal();
         $order->recalculateItemsTotal();
@@ -471,6 +463,26 @@ class CartController extends AbstractFOSRestController
         if ($cart instanceof Order) {
             $cart->setPromotionCoupon(null);
             $this->orderProcessor->process($cart);
+        }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function addShipping(Order $order)
+    {
+        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
+
+        if ($shippingMethod && !$order->hasShipments()) {
+            $shipment = new Shipment();
+            $shipment->setOrder($order);
+            $shipment->setMethod($shippingMethod);
+            $shipment->setCreatedAt(new \DateTime());
+            $shipment->setState('ready');
+
+            $this->entityManager->persist($shipment);
+            $this->entityManager->flush();
         }
     }
 }

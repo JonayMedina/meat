@@ -90,7 +90,7 @@ class SendRatingNotificationCommand extends Command
             ->andWhere('o.ratingNotificationSent = :ratingNotificationSent')
             ->andWhere('o.estimatedDeliveryDate IS NOT NULL')
             // TODO: When on production, change >= by <= in next sentence.
-            ->andWhere('o.estimatedDeliveryDate >= :estimatedDeliveryDate')
+            ->andWhere('o.estimatedDeliveryDate <= :estimatedDeliveryDate')
             ->setParameter('estimatedDeliveryDate', date('Y-m-d H:i:s'))
             ->setParameter('ratingNotificationSent', false)
             ->getQuery()
