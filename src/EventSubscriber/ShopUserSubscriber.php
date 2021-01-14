@@ -5,8 +5,11 @@ namespace App\EventSubscriber;
 use DateTime;
 use Exception;
 use App\Entity\User\ShopUser;
+use Doctrine\ORM\ORMException;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Sylius\Component\Mailer\Sender\SenderInterface;
 
 /**
  * Class ShopUserSubscriber
@@ -14,6 +17,22 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  */
 class ShopUserSubscriber implements EventSubscriber
 {
+    /**
+     * @var SenderInterface
+     */
+    private $sender;
+
+    /**
+     * ShopUserSubscriber constructor.
+     * @param SenderInterface $sender
+     */
+    public function __construct(
+        SenderInterface $sender
+    ) {
+        $this->sender = $sender;
+    }
+
+
     /**
      * @return array
      */
@@ -36,14 +55,17 @@ class ShopUserSubscriber implements EventSubscriber
 
             /** Add email to ShopUser if not set && is valid email. */
             $this->updateShopUserEmail($entity, $args);
+
+            /** Send welcome email */
+            $this->sendWelcomeEmail($entity);
         }
     }
 
     /**
      * @param ShopUser $user
      * @param LifecycleEventArgs $args
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function updateShopUserEmail(ShopUser $user, LifecycleEventArgs $args)
     {
@@ -60,8 +82,8 @@ class ShopUserSubscriber implements EventSubscriber
     /**
      * @param ShopUser $user
      * @param LifecycleEventArgs $args
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     private function setTermsAndConditions(ShopUser $user, LifecycleEventArgs $args)
     {
@@ -69,5 +91,14 @@ class ShopUserSubscriber implements EventSubscriber
         $user->setVerifiedAt(new DateTime());
 
         $args->getEntityManager()->flush();
+    }
+
+    /**
+     * Send welcome email.
+     * @param ShopUser $user
+     */
+    private function sendWelcomeEmail(ShopUser $user)
+    {
+        $this->sender->send('user_registration', [$user->getCustomer()->getEmail()], ['user' => $user]);
     }
 }

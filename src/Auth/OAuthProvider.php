@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Mailer\Sender\SenderInterface;
 use Sylius\Component\User\Model\UserOAuthInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -53,9 +52,6 @@ class OAuthProvider extends OAuthUserProvider
     /** @var FactoryInterface */
     private $oauthFactory;
 
-    /** @var SenderInterface */
-    private $sender;
-
     /** @var SessionInterface */
     private $session;
 
@@ -78,12 +74,11 @@ class OAuthProvider extends OAuthUserProvider
      * @param CanonicalizerInterface $canonicalizer
      * @param CustomerRepositoryInterface $customerRepository
      * @param FactoryInterface $oauthFactory
-     * @param SenderInterface $sender
      * @param SessionInterface $session
      * @param RouterInterface $router
      * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(EntityManagerInterface $em, RepositoryInterface $oauthRepository, UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory, SenderInterface $sender, SessionInterface $session, RouterInterface $router, TokenStorageInterface $tokenStorage, Security $security)
+    public function __construct(EntityManagerInterface $em, RepositoryInterface $oauthRepository, UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory, SessionInterface $session, RouterInterface $router, TokenStorageInterface $tokenStorage, Security $security)
     {
         $this->em = $em;
         $this->oauthRepository = $oauthRepository;
@@ -93,7 +88,6 @@ class OAuthProvider extends OAuthUserProvider
         $this->canonicalizer = $canonicalizer;
         $this->customerRepository = $customerRepository;
         $this->oauthFactory = $oauthFactory;
-        $this->sender = $sender;
         $this->session = $session;
         $this->tokenStorage = $tokenStorage;
         $this->router = $router;
@@ -207,8 +201,6 @@ class OAuthProvider extends OAuthUserProvider
         $user->setPlainPassword(substr(sha1($response->getAccessToken()), 0, 10));
 
         $user->setEnabled(true);
-
-        $this->sender->send('user_registration', [$customer->getEmail()], ['user' => $user]);
 
         return $this->updateUserByOAuthUserResponse($user, $response, 'store_welcome');
     }
