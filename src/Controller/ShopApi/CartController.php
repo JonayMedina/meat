@@ -330,37 +330,43 @@ class CartController extends AbstractFOSRestController
             $type = $request->get('type');
 
             if ('credit_card' == $type) {
-                $cardHolder = trim($request->get('card_holder'));
-                $cardNumber = trim($request->get('card_number'));
-                $expDate = trim($request->get('exp_date'));
-                $cvv = trim($request->get('cvv'));
+                try {
+                    $cardHolder = trim($request->get('card_holder'));
+                    $cardNumber = trim($request->get('card_number'));
+                    $expDate = trim($request->get('exp_date'));
+                    $cvv = trim($request->get('cvv'));
 
-                $type = APIResponse::TYPE_INFO;
-                $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
-                $message = $result['responseMessage'];
+                    $type = APIResponse::TYPE_INFO;
+                    $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+                    $message = $result['responseMessage'];
 
-                if ('00' !== $result['responseCode']) {
-                    $statusCode = Response::HTTP_BAD_REQUEST;
-                    $type = APIResponse::TYPE_ERROR;
+                    if ('00' !== $result['responseCode']) {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        $type = APIResponse::TYPE_ERROR;
 
-                    if (empty($message)) {
-                        // TODO: Translate this.
-                        $message = 'Parece que hubo un error, inténtalo más tarde.';
+                        if (empty($message)) {
+                            $message = 'Parece que hubo un error, inténtalo más tarde.';
+                        }
+                    } else {
+                        /**
+                         * Seems everything was Ok, response code == 00
+                         * Inject order into response
+                         */
+                        $result['order'] = $this->orderService->serializeOrder($order);
+                        $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
                     }
-                } else {
-                    /**
-                     * Seems everything was Ok, response code == 00
-                     * Inject order into response
-                     */
-                    $result['order'] = $this->orderService->serializeOrder($order);
-                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                    $response = new APIResponse($statusCode, $type, $message, $result);
+
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
+                } catch (\Exception $exception) {
+                    $response = new APIResponse(Response::HTTP_BAD_REQUEST, APIResponse::TYPE_ERROR, 'Error on payment gateway', []);
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
                 }
-
-                $response = new APIResponse($statusCode, $type, $message, $result);
-
-                $view = $this->view($response, $statusCode);
-
-                return $this->handleView($view);
             }
 
             if ('cash_on_delivery' == $type) {
