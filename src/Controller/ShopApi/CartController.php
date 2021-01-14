@@ -173,7 +173,10 @@ class CartController extends AbstractFOSRestController
         $addressId = $request->get('address_id');
         $type = $request->get('type');
 
+        /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($cart);
+
         /** @var Address $address */
         $address = $this->addressRepository->find($addressId);
 
@@ -245,7 +248,11 @@ class CartController extends AbstractFOSRestController
      */
     public function addCouponAction(Request $request, $token) {
         $code = $request->get('coupon');
+
+        /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($cart);
+
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
         if ($cart instanceof Order) {
@@ -304,6 +311,7 @@ class CartController extends AbstractFOSRestController
         try {
             /** @var Order $order */
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
+            $this->recalculate($order);
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
@@ -399,6 +407,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
