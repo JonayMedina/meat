@@ -316,20 +316,4 @@ class Order extends BaseOrder
 
         return $this;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function recalculateAdjustmentsTotal(): void
-    {
-        $this->adjustmentsTotal = 0;
-
-        foreach ($this->adjustments as $adjustment) {
-            if (!$adjustment->isNeutral()) {
-                $this->adjustmentsTotal += $adjustment->getAmount();
-            }
-        }
-//
-//        $this->recalculateTotal();
-    }
 }
