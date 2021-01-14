@@ -209,12 +209,6 @@ class CartController extends AbstractFOSRestController
 
         $this->entityManager->persist($addressCloned);
 
-        /**
-         * Add shipment here...
-         * @var ShippingMethod $shippingMethod
-         */
-        $this->addShipping($cart);
-
         /** OrderCheckoutState: cart -> addressed */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
         if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
@@ -384,6 +378,8 @@ class CartController extends AbstractFOSRestController
 
             throw new BadRequestHttpException('Invalid payment type');
         } catch (\Exception $exception) {
+            $order->setState('cart');
+
             $statusCode = Response::HTTP_BAD_REQUEST;
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage(), []);
             $view = $this->view($response, $statusCode);
@@ -451,11 +447,6 @@ class CartController extends AbstractFOSRestController
             throw new NotFoundHttpException('Cart not found');
         }
 
-        /**
-         * Add shipment here...
-         * @var ShippingMethod $shippingMethod
-         */
-        $this->addShipping($order);
         $this->recalculate($order);
 
         $this->entityManager->flush();
@@ -504,6 +495,12 @@ class CartController extends AbstractFOSRestController
      */
     private function recalculate(Order $order)
     {
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $this->addShipping($order);
+
         $order->recalculateAdjustmentsTotal();
     }
 }
