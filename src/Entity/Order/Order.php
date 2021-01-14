@@ -324,11 +324,11 @@ class Order extends BaseOrder
     {
         $this->adjustmentsTotal = 0;
 
-//        foreach ($this->adjustments as $adjustment) {
-//            if (!$adjustment->isNeutral()) {
-//                $this->adjustmentsTotal += $adjustment->getAmount();
-//            }
-//        }
+        foreach ($this->adjustments as $adjustment) {
+            if (!$adjustment->isNeutral()) {
+                $this->adjustmentsTotal += $adjustment->getAmount();
+            }
+        }
 //
 //        $this->recalculateTotal();
     }
