@@ -377,7 +377,7 @@ class OrderController extends AbstractController
             }
         } else {
             $queryBuilder
-                ->orderBy('o.checkoutCompletedAt', 'DESC');
+                ->orderBy('o.number', 'DESC');
         }
 
         return $queryBuilder;
