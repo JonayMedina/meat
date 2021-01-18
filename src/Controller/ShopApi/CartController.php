@@ -173,7 +173,10 @@ class CartController extends AbstractFOSRestController
         $addressId = $request->get('address_id');
         $type = $request->get('type');
 
+        /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($cart);
+
         /** @var Address $address */
         $address = $this->addressRepository->find($addressId);
 
@@ -205,12 +208,6 @@ class CartController extends AbstractFOSRestController
         }
 
         $this->entityManager->persist($addressCloned);
-
-        /**
-         * Add shipment here...
-         * @var ShippingMethod $shippingMethod
-         */
-        $this->addShipping($cart);
 
         /** OrderCheckoutState: cart -> addressed */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
@@ -245,7 +242,11 @@ class CartController extends AbstractFOSRestController
      */
     public function addCouponAction(Request $request, $token) {
         $code = $request->get('coupon');
+
+        /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($cart);
+
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
         if ($cart instanceof Order) {
@@ -258,7 +259,10 @@ class CartController extends AbstractFOSRestController
                         $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
                     } else {
                         $this->isInIncompleteCart($coupon);
-                        return $this->addCouponAction->__invoke($request);
+                        $response = $this->addCouponAction->__invoke($request);
+                        $this->recalculate($cart);
+
+                        return $response;
                     }
                 } else {
                     if ($coupon->getPromotion()->getEndsAt() && $coupon->getPromotion()->getEndsAt()->format('U') < time()) {
@@ -304,6 +308,7 @@ class CartController extends AbstractFOSRestController
         try {
             /** @var Order $order */
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
+            $this->recalculate($order);
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
@@ -322,37 +327,43 @@ class CartController extends AbstractFOSRestController
             $type = $request->get('type');
 
             if ('credit_card' == $type) {
-                $cardHolder = trim($request->get('card_holder'));
-                $cardNumber = trim($request->get('card_number'));
-                $expDate = trim($request->get('exp_date'));
-                $cvv = trim($request->get('cvv'));
+                try {
+                    $cardHolder = trim($request->get('card_holder'));
+                    $cardNumber = trim($request->get('card_number'));
+                    $expDate = trim($request->get('exp_date'));
+                    $cvv = trim($request->get('cvv'));
 
-                $type = APIResponse::TYPE_INFO;
-                $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
-                $message = $result['responseMessage'];
+                    $type = APIResponse::TYPE_INFO;
+                    $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+                    $message = $result['responseMessage'];
 
-                if ('00' !== $result['responseCode']) {
-                    $statusCode = Response::HTTP_BAD_REQUEST;
-                    $type = APIResponse::TYPE_ERROR;
+                    if ('00' !== $result['responseCode']) {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        $type = APIResponse::TYPE_ERROR;
 
-                    if (empty($message)) {
-                        // TODO: Translate this.
-                        $message = 'Parece que hubo un error, inténtalo más tarde.';
+                        if (empty($message)) {
+                            $message = 'Parece que hubo un error, inténtalo más tarde.';
+                        }
+                    } else {
+                        /**
+                         * Seems everything was Ok, response code == 00
+                         * Inject order into response
+                         */
+                        $result['order'] = $this->orderService->serializeOrder($order);
+                        $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
                     }
-                } else {
-                    /**
-                     * Seems everything was Ok, response code == 00
-                     * Inject order into response
-                     */
-                    $result['order'] = $this->orderService->serializeOrder($order);
-                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                    $response = new APIResponse($statusCode, $type, $message, $result);
+
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
+                } catch (\Exception $exception) {
+                    $response = new APIResponse(Response::HTTP_BAD_REQUEST, APIResponse::TYPE_ERROR, 'Error on payment gateway', []);
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
                 }
-
-                $response = new APIResponse($statusCode, $type, $message, $result);
-
-                $view = $this->view($response, $statusCode);
-
-                return $this->handleView($view);
             }
 
             if ('cash_on_delivery' == $type) {
@@ -370,6 +381,8 @@ class CartController extends AbstractFOSRestController
 
             throw new BadRequestHttpException('Invalid payment type');
         } catch (\Exception $exception) {
+            $order->setState('cart');
+
             $statusCode = Response::HTTP_BAD_REQUEST;
             $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage(), []);
             $view = $this->view($response, $statusCode);
@@ -399,6 +412,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
@@ -436,14 +450,7 @@ class CartController extends AbstractFOSRestController
             throw new NotFoundHttpException('Cart not found');
         }
 
-        /**
-         * Add shipment here...
-         * @var ShippingMethod $shippingMethod
-         */
-        $this->addShipping($order);
-
-        $order->recalculateAdjustmentsTotal();
-        $order->recalculateItemsTotal();
+        $this->recalculate($order);
 
         $this->entityManager->flush();
         $serialized = $this->orderService->serializeOrder($order);
@@ -484,5 +491,19 @@ class CartController extends AbstractFOSRestController
             $this->entityManager->persist($shipment);
             $this->entityManager->flush();
         }
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function recalculate(Order $order)
+    {
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $this->addShipping($order);
+
+        // $order->recalculateAdjustmentsTotal();
     }
 }

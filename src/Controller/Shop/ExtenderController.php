@@ -529,10 +529,9 @@ class ExtenderController extends AbstractController
 
     /**
      * @param Request $request
-     * @param SenderInterface $sender
      * @return SyliusUserInterface|Response|UserInterface
      */
-    public function oauthRegisterAction(Request $request, SenderInterface $sender) {
+    public function oauthRegisterAction(Request $request) {
         $session = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $userData = [];
@@ -591,8 +590,6 @@ class ExtenderController extends AbstractController
                 // set random password to prevent issue with not nullable field & potential security hole
                 $user->setPlainPassword($userData['pass']);
                 $user->setEnabled(true);
-
-                $sender->send('user_registration', [$customer->getEmail()], ['user' => $user]);
 
                 $em->flush();
 
