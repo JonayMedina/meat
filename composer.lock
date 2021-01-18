@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7c24903ee70cf15a06653ea60b90a98",
+    "content-hash": "2fb3fd46adfb3508bfb7adcbf27abdf4",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -9906,16 +9906,16 @@
         },
         {
             "name": "sylius/shop-api-plugin",
-            "version": "v1.1.0",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sylius/ShopApiPlugin.git",
-                "reference": "725f225c38213988048599f50640caf0e7cc42b9"
+                "reference": "d5c273af695f0f567b79567d300d8c6ebb5cb12b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sylius/ShopApiPlugin/zipball/725f225c38213988048599f50640caf0e7cc42b9",
-                "reference": "725f225c38213988048599f50640caf0e7cc42b9",
+                "url": "https://api.github.com/repos/Sylius/ShopApiPlugin/zipball/d5c273af695f0f567b79567d300d8c6ebb5cb12b",
+                "reference": "d5c273af695f0f567b79567d300d8c6ebb5cb12b",
                 "shasum": ""
             },
             "require": {
@@ -9924,14 +9924,16 @@
                 "sylius/sylius": "^1.4",
                 "symfony/messenger": "^4.3"
             },
+            "conflict": {
+                "phpstan/phpstan-webmozart-assert": "^0.11.3"
+            },
             "require-dev": {
                 "lchrusciel/api-test-case": "^4.0",
-                "mamazu/documentation-validator": "^1.0.1",
                 "matthiasnoback/symfony-config-test": "^4.0",
                 "matthiasnoback/symfony-dependency-injection-test": "^4.0",
                 "phpspec/phpspec": "^5.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-webmozart-assert": "^0.12",
+                "phpstan/phpstan-shim": "^0.11",
+                "phpstan/phpstan-webmozart-assert": "^0.11",
                 "phpunit/phpunit": "^8.0",
                 "sensiolabs/security-checker": "^5.0",
                 "sylius-labs/coding-standard": "^3.0",
@@ -9959,7 +9961,7 @@
                 "MIT"
             ],
             "description": "Shop API for Sylius E-Commerce.",
-            "time": "2020-06-19T13:50:08+00:00"
+            "time": "2019-11-23T15:14:10+00:00"
         },
         {
             "name": "sylius/sylius",
@@ -18057,16 +18059,16 @@
         },
         {
             "name": "phpstan/phpstan-webmozart-assert",
-            "version": "0.11.3",
+            "version": "0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-webmozart-assert.git",
-                "reference": "f57366ae6469a5c93748d7d8b274f352512022fb"
+                "reference": "8725bb55b8313906b73691f594b157c3fac1054b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/f57366ae6469a5c93748d7d8b274f352512022fb",
-                "reference": "f57366ae6469a5c93748d7d8b274f352512022fb",
+                "url": "https://api.github.com/repos/phpstan/phpstan-webmozart-assert/zipball/8725bb55b8313906b73691f594b157c3fac1054b",
+                "reference": "8725bb55b8313906b73691f594b157c3fac1054b",
                 "shasum": ""
             },
             "require": {
@@ -18106,7 +18108,7 @@
                 "MIT"
             ],
             "description": "PHPStan webmozart/assert extension",
-            "time": "2019-10-01T11:16:31+00:00"
+            "time": "2019-05-12T16:54:55+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
