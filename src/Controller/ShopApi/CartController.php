@@ -409,16 +409,15 @@ class CartController extends AbstractFOSRestController
         $scheduledDeliveryDate = $request->get('scheduled_delivery_date');
 
         //$nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
-        $nextAvailableDay = new \DateTime();
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($order);
+        //$this->recalculate($order);
 
-        $order->setEstimatedDeliveryDate($nextAvailableDay);
-        $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
-        $order->setPreferredDeliveryTime($preferredDeliveryDate);
-        $this->entityManager->flush();
+        //$order->setEstimatedDeliveryDate($nextAvailableDay);
+        //$order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
+        //$order->setPreferredDeliveryTime($preferredDeliveryDate);
+        //$this->entityManager->flush();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
             'token' => $order->getTokenValue(),
