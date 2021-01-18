@@ -408,7 +408,8 @@ class CartController extends AbstractFOSRestController
         $preferredDeliveryDate = $request->get('preferred_delivery_date');
         $scheduledDeliveryDate = $request->get('scheduled_delivery_date');
 
-        $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
+        //$nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
+        $nextAvailableDay = new \DateTime();
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
