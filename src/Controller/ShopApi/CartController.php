@@ -516,7 +516,5 @@ class CartController extends AbstractFOSRestController
 
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
-
-        $this->container->get('sylius.manager.order')->flush();
     }
 }
