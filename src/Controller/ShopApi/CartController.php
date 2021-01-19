@@ -215,12 +215,13 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
         }
 
-//        /** OrderCheckoutState: addressed -> shipping_skipped */
-//        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
-//        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
-//            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
-//        }
-//
+        /** OrderCheckoutState: addressed -> shipping_selected */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
+        }
+
+        $this->recalculate($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
