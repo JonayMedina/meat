@@ -80,13 +80,6 @@ class Log
     private $order;
 
     /**
-     * @var boolean
-     * @Serializer\Expose()
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $isStateChangeLog = false;
-
-    /**
      * @return mixed
      */
     public function getId()
@@ -242,25 +235,6 @@ class Log
     public function setOrder(?string $order): Log
     {
         $this->order = $order;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isStateChangeLog(): bool
-    {
-        return $this->isStateChangeLog;
-    }
-
-    /**
-     * @param bool $isStateChangeLog
-     * @return Log
-     */
-    public function setIsStateChangeLog(bool $isStateChangeLog): Log
-    {
-        $this->isStateChangeLog = $isStateChangeLog;
 
         return $this;
     }

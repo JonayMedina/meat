@@ -2,7 +2,6 @@
 
 namespace App\EventSubscriber;
 
-use App\Service\LogService;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use App\Entity\Order\Order;
@@ -22,19 +21,12 @@ class OrderSubscriber implements EventSubscriber
     private $adminSyncService;
 
     /**
-     * @var LogService
-     */
-    private $logService;
-
-    /**
      * OrderSubscriber constructor.
      * @param AdminSyncService $adminSyncService
-     * @param LogService $logService
      */
-    public function __construct(AdminSyncService $adminSyncService, LogService $logService)
+    public function __construct(AdminSyncService $adminSyncService)
     {
         $this->adminSyncService = $adminSyncService;
-        $this->logService = $logService;
     }
 
     /**
@@ -82,9 +74,6 @@ class OrderSubscriber implements EventSubscriber
 
             /** Notify about rating */
             $this->checkAdminRatingNotification($entity, $args);
-
-            /** Log status changes */
-            $this->logStateChange($entity, $args);
         }
     }
 
@@ -131,21 +120,6 @@ class OrderSubscriber implements EventSubscriber
         if (isset($changeSet['state']) && $changeSet['state'][0] != Order::STATE_NEW && $changeSet['state'][1] == Order::STATE_NEW) {
             // This is done by workflow event.
             // $this->adminSyncService->syncOrderAfterCheckoutCompleted($order);
-        }
-    }
-
-    /**
-     * @param Order $order
-     * @param LifecycleEventArgs $args
-     */
-    private function logStateChange(Order $order, LifecycleEventArgs $args)
-    {
-        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
-        $changeSet = $unitOfWork->getEntityChangeSet($order);
-
-        if (isset($changeSet['adjustmentsTotal']) || isset($changeSet['total']) || isset($changeSet['itemsTotal'])) {
-            $metadata = $this->logService->getMetadata(null, $order);
-            $this->logService->log($metadata, true);
         }
     }
 }
