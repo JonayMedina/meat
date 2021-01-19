@@ -271,7 +271,7 @@ class OrderService
         $response = [
             'id' => $order->getId(),
             'number' => $order->getNumber(),
-            'items_total' => $order->getTotalQuantity(),
+            'total_quantity' => $order->getTotalQuantity(),
             'token_value' => $order->getTokenValue(),
             'created_at' => $order->getCreatedAt()->format('c'),
             'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
@@ -285,6 +285,8 @@ class OrderService
         ];
 
         if ($details) {
+            $response['items_total'] = $order->getItemsTotal()/100;
+            $response['adjustments_total'] = $order->getAdjustmentsTotal()/100;
             $response['total'] = $order->getTotal()/100;
             $response['payments'] = $payments;
             $response['shipments'] = $shipments;
