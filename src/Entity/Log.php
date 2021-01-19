@@ -73,6 +73,13 @@ class Log
     private $statusCode;
 
     /**
+     * @var string
+     * @Serializer\Expose()
+     * @ORM\Column(name="`order`", type="text", nullable=true)
+     */
+    private $order;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -209,6 +216,25 @@ class Log
     public function setStatusCode(?int $statusCode): Log
     {
         $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOrder(): ?string
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param ?string $order
+     * @return Log
+     */
+    public function setOrder(?string $order): Log
+    {
+        $this->order = $order;
 
         return $this;
     }
