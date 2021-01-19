@@ -235,7 +235,7 @@ services:
                 
     App\EventListener\ApiLogListener:
         tags:
-            - { name: 'kernel.event_listener', event: 'kernel.request' }
+            - { name: 'kernel.event_listener', event: 'kernel.response' }
     
     user.oauth_user_provider:
         class: App\Auth\OAuthProvider

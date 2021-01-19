@@ -59,6 +59,13 @@ class Log
     private $query;
 
     /**
+     * @var string
+     * @Serializer\Expose()
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $response;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -157,6 +164,25 @@ class Log
     public function setQuery(?string $query): Log
     {
         $this->query = $query;
+
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getResponse(): ?string
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param ?string $response
+     * @return Log
+     */
+    public function setResponse(?string $response): Log
+    {
+        $this->response = $response;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use App\Entity\Log;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 /**
  * Class ApiLogListener
@@ -30,26 +31,27 @@ class ApiLogListener
     }
 
     /**
-     * @param RequestEvent $event
+     * @param ResponseEvent $response
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelResponse(ResponseEvent $response)
     {
-        $request = $event->getRequest();
+        $request = $response->getRequest();
         $firewallContext = $request->attributes->get('_firewall_context');
 
         if ($firewallContext == 'security.firewall.map.context.sylius_shop_api') {
-            $metadata = $this->getMetadata($request);
+            $metadata = $this->getMetadata($response);
             $this->log($metadata);
         }
     }
 
     /**
      * Collect request metadata.
-     * @param Request $request
+     * @param ResponseEvent $response
      * @return array
      */
-    private function getMetadata(Request $request): array
+    private function getMetadata(ResponseEvent $response): array
     {
+        $request = $response->getRequest();
         $metadata = [];
 
         $metadata['method'] = $request->getMethod();
@@ -57,6 +59,7 @@ class ApiLogListener
         $metadata['content'] = $request->getContent();
         $metadata['content_type'] = $request->getContentType();
         $metadata['query'] = $request->getQueryString();
+        $metadata['response'] = $response->getResponse()->getContent();
 
         return $metadata;
     }
@@ -73,6 +76,7 @@ class ApiLogListener
         $log->setContent($metadata['content']);
         $log->setContentType($metadata['content_type']);
         $log->setQuery($metadata['query']);
+        $log->setResponse($metadata['response']);
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
