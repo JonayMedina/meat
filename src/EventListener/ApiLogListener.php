@@ -107,8 +107,6 @@ class ApiLogListener
                 unset($serializedOrder['shipping_address']);
                 unset($serializedOrder['billing_address']);
 
-                dd($serializedOrder);
-
                 $metadata['order'] = json_encode($serializedOrder);
             }
         }
