@@ -101,6 +101,13 @@ class ApiLogListener
                 unset($serializedOrder['shipping_state']);
                 unset($serializedOrder['customer']);
                 unset($serializedOrder['rating']);
+                unset($serializedOrder['id']);
+                unset($serializedOrder['number']);
+                unset($serializedOrder['token_value']);
+                unset($serializedOrder['shipping_address']);
+                unset($serializedOrder['billing_address']);
+
+                dd($serializedOrder);
 
                 $metadata['order'] = json_encode($serializedOrder);
             }
