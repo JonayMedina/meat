@@ -515,5 +515,7 @@ class CartController extends AbstractFOSRestController
 
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
+
+        $this->entityManager->flush();
     }
 }
