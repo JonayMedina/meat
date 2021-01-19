@@ -333,6 +333,12 @@ class CartController extends AbstractFOSRestController
                     $expDate = trim($request->get('exp_date'));
                     $cvv = trim($request->get('cvv'));
 
+                    if (strlen($expDate) === 3) {
+                        $year = substr($expDate , 0, 2);
+                        $month = '0'.substr($expDate , 2, 1);
+                        $expDate = $year . $month;
+                    }
+
                     $type = APIResponse::TYPE_INFO;
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
                     $message = $result['responseMessage'];
