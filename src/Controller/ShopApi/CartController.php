@@ -425,6 +425,7 @@ class CartController extends AbstractFOSRestController
             'order' => $this->orderService->serializeOrder($order)
         ]);
 
+        $this->recalculate($order);
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
