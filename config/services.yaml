@@ -232,6 +232,10 @@ services:
     App\EventListener\LoginListener:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+                
+    App\EventListener\ApiLogListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request' }
     
     user.oauth_user_provider:
         class: App\Auth\OAuthProvider
