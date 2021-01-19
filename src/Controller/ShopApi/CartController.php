@@ -329,7 +329,7 @@ class CartController extends AbstractFOSRestController
             if ('credit_card' == $type) {
                 try {
                     $cardHolder = trim($request->get('card_holder'));
-                    $cardNumber = trim($request->get('card_number'));
+                    $cardNumber = str_replace(' ', '', trim($request->get('card_number')));;
                     $expDate = trim($request->get('exp_date'));
                     $cvv = trim($request->get('cvv'));
 
