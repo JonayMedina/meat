@@ -66,6 +66,13 @@ class Log
     private $response;
 
     /**
+     * @var int
+     * @Serializer\Expose()
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $statusCode;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -183,6 +190,25 @@ class Log
     public function setResponse(?string $response): Log
     {
         $this->response = $response;
+
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getStatusCode(): ?int
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * @param ?int $statusCode
+     * @return Log
+     */
+    public function setStatusCode(?int $statusCode): Log
+    {
+        $this->statusCode = $statusCode;
 
         return $this;
     }

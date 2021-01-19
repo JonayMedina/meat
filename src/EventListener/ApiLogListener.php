@@ -60,6 +60,7 @@ class ApiLogListener
         $metadata['content_type'] = $request->getContentType();
         $metadata['query'] = $request->getQueryString();
         $metadata['response'] = $response->getResponse()->getContent();
+        $metadata['status_code'] = $response->getResponse()->getStatusCode();
 
         return $metadata;
     }
@@ -77,6 +78,7 @@ class ApiLogListener
         $log->setContentType($metadata['content_type']);
         $log->setQuery($metadata['query']);
         $log->setResponse($metadata['response']);
+        $log->setStatusCode($metadata['status_code']);
 
         $this->entityManager->persist($log);
         $this->entityManager->flush();
