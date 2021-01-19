@@ -215,13 +215,13 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
         }
 
-        /** OrderCheckoutState: addressed -> shipping_skipped */
-        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
-        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
-            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
-        }
-
-        $this->entityManager->flush();
+//        /** OrderCheckoutState: addressed -> shipping_skipped */
+//        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+//        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
+//            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+//        }
+//
+//        $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
 
@@ -512,11 +512,7 @@ class CartController extends AbstractFOSRestController
          */
         $this->addShipping($order);
 
-        $this->get('sylius.order_processing.order_processor')->process($order);
-
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
-
-        $this->get('sylius.manager.order')->flush();
     }
 }
