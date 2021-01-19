@@ -221,7 +221,7 @@ class CartController extends AbstractFOSRestController
 //            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
 //        }
 //
-//        $this->entityManager->flush();
+        $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
 
