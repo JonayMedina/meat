@@ -512,9 +512,11 @@ class CartController extends AbstractFOSRestController
          */
         $this->addShipping($order);
 
-        $this->container->get('sylius.order_processing.order_processor')->process($order);
+        $this->get('sylius.order_processing.order_processor')->process($order);
 
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
+
+        $this->get('sylius.manager.order')->flush();
     }
 }
