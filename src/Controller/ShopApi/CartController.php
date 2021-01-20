@@ -176,7 +176,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
 
         /** @var Address $address */
         $address = $this->addressRepository->find($addressId);
@@ -222,7 +222,7 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
         }
 
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -251,7 +251,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
 
         /** @var Address $shippingAddress */
         $shippingAddress = $this->addressRepository->find($shippingAddressId);
@@ -295,7 +295,7 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
         }
 
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -320,7 +320,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
 
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
@@ -335,7 +335,7 @@ class CartController extends AbstractFOSRestController
                     } else {
                         $this->isInIncompleteCart($coupon);
                         $response = $this->addCouponAction->__invoke($request);
-                        $this->recalculate($cart);
+                        $this->addAdjustments($cart);
 
                         return $response;
                     }
@@ -383,7 +383,7 @@ class CartController extends AbstractFOSRestController
         try {
             /** @var Order $order */
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
-            $this->recalculate($order);
+            $this->addAdjustments($order);
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
@@ -493,7 +493,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($order);
+        $this->addAdjustments($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
@@ -506,7 +506,7 @@ class CartController extends AbstractFOSRestController
             'order' => $this->orderService->serializeOrder($order)
         ]);
 
-        $this->recalculate($order);
+        $this->addAdjustments($order);
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
@@ -533,7 +533,11 @@ class CartController extends AbstractFOSRestController
             throw new NotFoundHttpException('Cart not found');
         }
 
-        $this->recalculate($order);
+        $this->addAdjustments($order);
+
+        /** do re-calculation here */
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
 
         $this->entityManager->flush();
         $serialized = $this->orderService->serializeOrder($order);
@@ -579,16 +583,13 @@ class CartController extends AbstractFOSRestController
     /**
      * @param Order $order
      */
-    private function recalculate(Order $order)
+    private function addAdjustments(Order $order)
     {
         /**
          * Add shipment here...
          * @var ShippingMethod $shippingMethod
          */
         $this->addShipping($order);
-
-//        $order->recalculateItemsTotal();
-//        $order->recalculateAdjustmentsTotal();
 
         $this->entityManager->flush();
     }
