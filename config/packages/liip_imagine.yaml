@@ -82,6 +82,8 @@ liip_imagine:
                     height: 285
                 thumbnail: { size: [879, 285], mode: outbound, allow_upscale: true }
         sylius_shop_sub_category_thumbnail:
+            quality: 100
+            format: png
             filters:
                 fixed:
                     width: 879
