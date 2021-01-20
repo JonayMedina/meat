@@ -535,10 +535,6 @@ class CartController extends AbstractFOSRestController
 
         $this->addAdjustments($order);
 
-        /** do re-calculation here */
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
-
         $this->entityManager->flush();
         $serialized = $this->orderService->serializeOrder($order);
 
@@ -590,6 +586,10 @@ class CartController extends AbstractFOSRestController
          * @var ShippingMethod $shippingMethod
          */
         $this->addShipping($order);
+
+        /** do re-calculation here */
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
 
         $this->entityManager->flush();
     }
