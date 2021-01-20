@@ -64,12 +64,14 @@ liip_imagine:
                     height: 112
                 thumbnail: { size: [150, 112], mode: outbound }
         sylius_shop_product_thumbnail:
+            format: png
             filters:
                 fixed:
-                    width: 900
-                    height: 656
-                thumbnail: { size: [900, 656], mode: outbound, allow_upscale: true }
+                    width: 350
+                    height: 256
+                thumbnail: { size: [350, 256], mode: outbound, allow_upscale: true }
         sylius_shop_product_large_thumbnail:
+            format: png
             filters:
                 fixed:
                     width: 550
