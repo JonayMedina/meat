@@ -164,6 +164,7 @@ class CartController extends AbstractFOSRestController
      * )
      * @param Request $request
      * @param string $token
+     * @deprecated
      * @return Response
      */
     public function addAddressAction(Request $request, $token)
@@ -208,6 +209,79 @@ class CartController extends AbstractFOSRestController
         }
 
         $this->entityManager->persist($addressCloned);
+
+        /** OrderCheckoutState: cart -> addressed */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+        }
+
+        /** OrderCheckoutState: addressed -> shipping_selected */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
+        }
+
+        $this->recalculate($cart);
+        $this->entityManager->flush();
+
+        $response = $this->orderService->serializeOrder($cart);
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{token}/addresses.{_format}",
+     *     name="shop_api_cart_add_addresses",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @param string $token
+     * @return Response
+     */
+    public function addAddressesAction(Request $request, string $token)
+    {
+        $statusCode = Response::HTTP_OK;
+
+        $shippingAddressId = $request->get('shipping');
+        $billingAddressId = $request->get('billing');
+
+        /** @var Order $cart */
+        $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->recalculate($cart);
+
+        /** @var Address $shippingAddress */
+        $shippingAddress = $this->addressRepository->find($shippingAddressId);
+        /** @var Address $billingAddress */
+        $billingAddress = $this->addressRepository->find($billingAddressId);
+
+        if (!$cart instanceof Order) {
+            throw new NotFoundHttpException('Cart not found.');
+        }
+
+        /** @var Customer $customer */
+        $customer = $cart->getCustomer();
+
+        if (!$shippingAddress instanceof Address || !$billingAddress instanceof Address || !$shippingAddress->getCustomer() instanceof Customer || !$customer instanceof Customer || $billingAddress->getCustomer()->getId() != $customer->getId()) {
+            throw new NotFoundHttpException('Address not found.');
+        }
+
+        $shippingAddressCloned = clone $shippingAddress;
+        $shippingAddressCloned->setCustomer(null);
+        $shippingAddressCloned->setParent($shippingAddress);
+
+        $billingAddressCloned = clone $billingAddress;
+        $billingAddressCloned->setCustomer(null);
+        $billingAddressCloned->setParent($billingAddress);
+
+        $cart->setBillingAddress($billingAddressCloned);
+        $cart->setShippingAddress($shippingAddressCloned);
+
+        $this->entityManager->persist($billingAddressCloned);
+        $this->entityManager->persist($shippingAddressCloned);
 
         /** OrderCheckoutState: cart -> addressed */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
