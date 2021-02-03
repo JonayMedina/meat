@@ -225,7 +225,7 @@ class CartController extends AbstractFOSRestController
         $this->addAdjustments($cart);
         $this->entityManager->flush();
 
-        $response = $this->orderService->serializeOrder($cart);
+        $response = $this->orderService->serializeOrder($cart, true);
 
         $view = $this->view($response, $statusCode);
 
