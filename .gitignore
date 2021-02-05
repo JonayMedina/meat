@@ -44,7 +44,3 @@
 ###< lexik/jwt-authentication-bundle ###
 
 .idea/shelf
-
-###> symfony/web-server-bundle ###
-/.web-server-pid
-###< symfony/web-server-bundle ###

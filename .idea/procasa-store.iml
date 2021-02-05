@@ -297,7 +297,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-hydrator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-stdlib" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/zenstruck/schedule-bundle" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/web-server-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

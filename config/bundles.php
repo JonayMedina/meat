@@ -67,5 +67,4 @@ return [
     Sentry\SentryBundle\SentryBundle::class => ['all' => true],
     Zenstruck\ScheduleBundle\ZenstruckScheduleBundle::class => ['all' => true],
     Sylius\CustomerReorderPlugin\SyliusCustomerReorderPlugin::class => ['all' => true],
-    Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
 ];
