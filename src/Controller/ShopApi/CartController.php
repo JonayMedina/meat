@@ -164,6 +164,7 @@ class CartController extends AbstractFOSRestController
      * )
      * @param Request $request
      * @param string $token
+     * @deprecated
      * @return Response
      */
     public function addAddressAction(Request $request, $token)
@@ -175,7 +176,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
 
         /** @var Address $address */
         $address = $this->addressRepository->find($addressId);
@@ -215,12 +216,86 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
         }
 
-        /** OrderCheckoutState: addressed -> shipping_skipped */
+        /** OrderCheckoutState: addressed -> shipping_selected */
         $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
-        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING)) {
-            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SKIP_SHIPPING);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
         }
 
+        $this->addAdjustments($cart);
+        $this->entityManager->flush();
+
+        $response = $this->orderService->serializeOrder($cart);
+
+        $view = $this->view($response, $statusCode);
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @Route(
+     *     "/{token}/addresses.{_format}",
+     *     name="shop_api_cart_add_addresses",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @param string $token
+     * @return Response
+     */
+    public function addAddressesAction(Request $request, string $token)
+    {
+        $statusCode = Response::HTTP_OK;
+
+        $shippingAddressId = $request->get('shipping');
+        $billingAddressId = $request->get('billing');
+
+        /** @var Order $cart */
+        $cart = $this->repository->findOneBy(['tokenValue' => $token]);
+        $this->addAdjustments($cart);
+
+        /** @var Address $shippingAddress */
+        $shippingAddress = $this->addressRepository->find($shippingAddressId);
+        /** @var Address $billingAddress */
+        $billingAddress = $this->addressRepository->find($billingAddressId);
+
+        if (!$cart instanceof Order) {
+            throw new NotFoundHttpException('Cart not found.');
+        }
+
+        /** @var Customer $customer */
+        $customer = $cart->getCustomer();
+
+        if (!$shippingAddress instanceof Address || !$billingAddress instanceof Address || !$shippingAddress->getCustomer() instanceof Customer || !$customer instanceof Customer || $billingAddress->getCustomer()->getId() != $customer->getId()) {
+            throw new NotFoundHttpException('Address not found.');
+        }
+
+        $shippingAddressCloned = clone $shippingAddress;
+        $shippingAddressCloned->setCustomer(null);
+        $shippingAddressCloned->setParent($shippingAddress);
+
+        $billingAddressCloned = clone $billingAddress;
+        $billingAddressCloned->setCustomer(null);
+        $billingAddressCloned->setParent($billingAddress);
+
+        $cart->setBillingAddress($billingAddressCloned);
+        $cart->setShippingAddress($shippingAddressCloned);
+
+        $this->entityManager->persist($billingAddressCloned);
+        $this->entityManager->persist($shippingAddressCloned);
+
+        /** OrderCheckoutState: cart -> addressed */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_ADDRESS)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_ADDRESS);
+        }
+
+        /** OrderCheckoutState: addressed -> shipping_selected */
+        $stateMachine = $this->stateMachineFactory->get($cart, OrderCheckoutTransitions::GRAPH);
+        if ($stateMachine->can(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING)) {
+            $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
+        }
+
+        $this->addAdjustments($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -245,7 +320,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($cart);
+        $this->addAdjustments($cart);
 
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
@@ -260,7 +335,7 @@ class CartController extends AbstractFOSRestController
                     } else {
                         $this->isInIncompleteCart($coupon);
                         $response = $this->addCouponAction->__invoke($request);
-                        $this->recalculate($cart);
+                        $this->addAdjustments($cart);
 
                         return $response;
                     }
@@ -308,7 +383,7 @@ class CartController extends AbstractFOSRestController
         try {
             /** @var Order $order */
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
-            $this->recalculate($order);
+            $this->addAdjustments($order);
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
@@ -329,9 +404,15 @@ class CartController extends AbstractFOSRestController
             if ('credit_card' == $type) {
                 try {
                     $cardHolder = trim($request->get('card_holder'));
-                    $cardNumber = trim($request->get('card_number'));
+                    $cardNumber = str_replace(' ', '', trim($request->get('card_number')));;
                     $expDate = trim($request->get('exp_date'));
                     $cvv = trim($request->get('cvv'));
+
+                    if (strlen($expDate) === 3) {
+                        $year = substr($expDate , 0, 2);
+                        $month = '0'.substr($expDate , 2, 1);
+                        $expDate = $year . $month;
+                    }
 
                     $type = APIResponse::TYPE_INFO;
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
@@ -412,7 +493,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->recalculate($order);
+        $this->addAdjustments($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
@@ -425,7 +506,7 @@ class CartController extends AbstractFOSRestController
             'order' => $this->orderService->serializeOrder($order)
         ]);
 
-        $this->recalculate($order);
+        $this->addAdjustments($order);
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
@@ -452,7 +533,11 @@ class CartController extends AbstractFOSRestController
             throw new NotFoundHttpException('Cart not found');
         }
 
-        $this->recalculate($order);
+        $this->addAdjustments($order);
+
+        /** do re-calculation here */
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
 
         $this->entityManager->flush();
         $serialized = $this->orderService->serializeOrder($order);
@@ -498,7 +583,7 @@ class CartController extends AbstractFOSRestController
     /**
      * @param Order $order
      */
-    private function recalculate(Order $order)
+    private function addAdjustments(Order $order)
     {
         /**
          * Add shipment here...
@@ -506,6 +591,6 @@ class CartController extends AbstractFOSRestController
          */
         $this->addShipping($order);
 
-        $order->recalculateAdjustmentsTotal();
+        $this->entityManager->flush();
     }
 }

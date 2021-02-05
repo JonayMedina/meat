@@ -151,11 +151,15 @@ class OrderService
 
     /**
      * Merge available carts and return merged cart.
-     * @param ShopUser $user
+     * @param ShopUser|null $user
      * @return Order
      */
-    public function mergeCarts(ShopUser $user): Order
+    public function mergeCarts(ShopUser $user = null): Order
     {
+        if (!$user instanceof ShopUser) {
+            throw new NotFoundHttpException('Esta API necesita autenticación por JWT');
+        }
+
         $orders = $this->getOrders($user);
         /** @var ProductVariant[] $variants */
         $variants = [];

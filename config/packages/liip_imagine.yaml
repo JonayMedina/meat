@@ -64,12 +64,14 @@ liip_imagine:
                     height: 112
                 thumbnail: { size: [150, 112], mode: outbound }
         sylius_shop_product_thumbnail:
+            format: png
             filters:
                 fixed:
-                    width: 900
-                    height: 656
-                thumbnail: { size: [900, 656], mode: outbound, allow_upscale: true }
+                    width: 350
+                    height: 256
+                thumbnail: { size: [350, 256], mode: outbound, allow_upscale: true }
         sylius_shop_product_large_thumbnail:
+            format: png
             filters:
                 fixed:
                     width: 550
@@ -82,11 +84,13 @@ liip_imagine:
                     height: 285
                 thumbnail: { size: [879, 285], mode: outbound, allow_upscale: true }
         sylius_shop_sub_category_thumbnail:
+            quality: 100
+            format: png
             filters:
                 fixed:
-                    width: 879
-                    height: 642
-                thumbnail: { size: [879, 642], mode: outbound, allow_upscale: true }
+                    width: 350
+                    height: 256
+                thumbnail: { size: [350, 256], mode: outbound, allow_upscale: true }
         sylius_shop_location_thumbnail:
             filters:
                 fixed:

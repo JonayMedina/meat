@@ -3,11 +3,13 @@
 namespace App\EventSubscriber;
 
 use Exception;
+use App\Entity\Log;
 use Ramsey\Uuid\Uuid;
 use App\Entity\Order\Order;
 use App\Service\AdminSyncService;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class OrderSubscriber
@@ -74,6 +76,9 @@ class OrderSubscriber implements EventSubscriber
 
             /** Notify about rating */
             $this->checkAdminRatingNotification($entity, $args);
+
+            /** Save API log */
+            $this->logStateChange($entity, $args);
         }
     }
 
@@ -120,6 +125,37 @@ class OrderSubscriber implements EventSubscriber
         if (isset($changeSet['state']) && $changeSet['state'][0] != Order::STATE_NEW && $changeSet['state'][1] == Order::STATE_NEW) {
             // This is done by workflow event.
             // $this->adminSyncService->syncOrderAfterCheckoutCompleted($order);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @param LifecycleEventArgs $args
+     */
+    private function logStateChange(Order $order, LifecycleEventArgs $args)
+    {
+        $unitOfWork = $args->getEntityManager()->getUnitOfWork();
+        $changeSet = $unitOfWork->getEntityChangeSet($order);
+
+        if (isset($changeSet['adjustmentsTotal']) || isset($changeSet['total']) || isset($changeSet['itemsTotal'])) {
+            $serializedOrder = [];
+            $serializedOrder['items_total'] = $order->getItemsTotal()/100;
+            $serializedOrder['adjustments_total'] = $order->getAdjustmentsTotal()/100;
+            $serializedOrder['total'] = $order->getTotal()/100;
+
+            $request = Request::createFromGlobals();
+
+            $log = new Log();
+            $log->setMethod($request->getMethod());
+            $log->setUri($request->getPathInfo());
+            $log->setContent($request->getContent());
+            $log->setContentType($request->getContentType());
+            $log->setQuery($request->getQueryString());
+            $log->setOrder(json_encode($serializedOrder));
+            $log->setStatusCode(1);
+
+            $args->getEntityManager()->persist($log);
+            $args->getEntityManager()->flush();
         }
     }
 }
