@@ -50,6 +50,12 @@ class OrderExtendedController extends OrderController
 
         if ($resource->getScheduledDeliveryDate()) {
             $scheduled = $resource->getScheduledDeliveryDate()->format('Y-m-d');
+            $scheduledDatetime  = new DateTime($scheduled);
+            $today = new DateTime();
+
+            if ($scheduledDatetime <= $today) {
+                $scheduled = '';
+            }
         } else {
             $scheduled = '';
         }
