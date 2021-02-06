@@ -18,7 +18,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-8 info">
                             <h2>{{  'app.ui.history.order#%number%'|trans({'%number%' : order.number}) }}</h2>
                             {% if order.estimatedDeliveryDate %}
-                                <p>{{ 'app.ui.history.performed_on_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m-d-y H:i:s') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
+                                <p>{{ 'app.ui.history.performed_on_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m/d/Y') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
                             {% else %}
                                 <p>{{ 'app.ui.checkout.order.estimated_date.none'|trans }}</p>
                             {% endif %}
@@ -54,6 +54,7 @@
                 $('body').find('.to-format-date').each(function () {
                     var $input = $(this);
                     var date = $input.data('date');
+                    date = new Date(date);
 
                     $input.text(moment(date).format('LL'));
                 });

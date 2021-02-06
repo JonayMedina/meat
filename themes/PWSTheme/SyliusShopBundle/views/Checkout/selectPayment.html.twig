@@ -68,7 +68,7 @@
                                                         <p class="font-semi-bold">{{ 'app.ui.checkout.date'|trans }}</p>
                                                     </div>
                                                     <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-                                                        <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m-d-y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
+                                                        <p class="to-format-date" data-date="{{ order.estimatedDeliveryDate|date('m/d/Y') }}">{{ order.estimatedDeliveryDate|date('d/m/y') }}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,6 +232,7 @@
             $body.find('.to-format-date').each(function () {
                 var $input = $(this);
                 var date = $input.data('date');
+                date = new Date(date);
 
                 $input.text(firstToUpper(moment(date).format('dddd')) + ' ' + moment(date).format('LL'));
             });
