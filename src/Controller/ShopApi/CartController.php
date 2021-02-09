@@ -222,7 +222,6 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
         }
 
-        $this->addAdjustments($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -295,7 +294,6 @@ class CartController extends AbstractFOSRestController
             $stateMachine->apply(OrderCheckoutTransitions::TRANSITION_SELECT_SHIPPING);
         }
 
-        $this->addAdjustments($cart);
         $this->entityManager->flush();
 
         $response = $this->orderService->serializeOrder($cart);
@@ -335,7 +333,6 @@ class CartController extends AbstractFOSRestController
                     } else {
                         $this->isInIncompleteCart($coupon);
                         $response = $this->addCouponAction->__invoke($request);
-                        $this->addAdjustments($cart);
 
                         return $response;
                     }
@@ -506,7 +503,6 @@ class CartController extends AbstractFOSRestController
             'order' => $this->orderService->serializeOrder($order)
         ]);
 
-        $this->addAdjustments($order);
         $view = $this->view($response, $statusCode);
 
         return $this->handleView($view);
