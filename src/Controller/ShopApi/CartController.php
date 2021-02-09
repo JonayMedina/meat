@@ -485,8 +485,13 @@ class CartController extends AbstractFOSRestController
         $statusCode = Response::HTTP_OK;
         $preferredDeliveryDate = $request->get('preferred_delivery_date');
         $scheduledDeliveryDate = $request->get('scheduled_delivery_date');
+        $nextAvailableDay = '';
 
-        $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
+        try {
+            $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
+        } catch (\Exception $e) {
+            $this->redirectToRoute('sylius_shop_cart_summary');
+        }
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
