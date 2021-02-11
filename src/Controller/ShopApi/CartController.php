@@ -139,6 +139,7 @@ class CartController extends AbstractFOSRestController
 
         try  {
             $mainOrder = $this->orderService->mergeCarts($user);
+            $this->addAdjustments($mainOrder);
 
             $statusCode = Response::HTTP_OK;
             $serialized = $this->orderService->serializeOrder($mainOrder);
