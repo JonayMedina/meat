@@ -25,6 +25,7 @@ class ProductService
         'medium' => 'shop_api_product_medium',
         'small' => 'shop_api_product_small',
         'tiny' => 'shop_api_product_tiny',
+        'mobile' => 'mobile_standard_thumbnail',
     ];
 
     /**

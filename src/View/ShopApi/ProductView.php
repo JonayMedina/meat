@@ -14,4 +14,7 @@ class ProductView extends \Sylius\ShopApiPlugin\View\Product\ProductView
 
     /** @var bool */
     public $onHand = true;
+
+    /** @var string */
+    public $thumbnail = null;
 }

@@ -8,6 +8,7 @@ use App\Entity\Product\Product;
 use App\Entity\Product\ProductVariant;
 use App\Entity\User\ShopUser;
 use App\Service\FavoriteService;
+use Liip\ImagineBundle\Service\FilterService;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -54,12 +55,18 @@ final class ProductViewFactory implements ProductViewFactoryInterface
     private $translator;
 
     /**
+     * @var FilterService
+     */
+    private $filterService;
+
+    /**
      * ProductViewFactory constructor.
      * @param ImageViewFactoryInterface $imageViewFactory
      * @param ProductAttributeValuesViewFactoryInterface $attributeValuesViewFactory
      * @param Security $security
      * @param FavoriteService $favoriteService
      * @param TranslatorInterface $translator
+     * @param FilterService $filterService
      * @param string $productViewClass
      * @param string $productTaxonViewClass
      * @param string $fallbackLocale
@@ -70,6 +77,7 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         Security $security,
         FavoriteService $favoriteService,
         TranslatorInterface $translator,
+        FilterService $filterService,
         string $productViewClass,
         string $productTaxonViewClass,
         string $fallbackLocale
@@ -82,6 +90,7 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         $this->security = $security;
         $this->favoriteService = $favoriteService;
         $this->translator = $translator;
+        $this->filterService = $filterService;
     }
 
     /** {@inheritdoc} */
@@ -118,6 +127,8 @@ final class ProductViewFactory implements ProductViewFactoryInterface
         foreach ($product->getImages() as $image) {
             $imageView = $this->imageViewFactory->create($image);
             $productView->images[] = $imageView;
+
+            $productView->thumbnail = $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mobile_standard_thumbnail');
         }
 
         /** @var ProductTaxonView $taxons */
