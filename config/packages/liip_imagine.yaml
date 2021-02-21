@@ -111,7 +111,6 @@ liip_imagine:
                 thumbnail: { size: [480, 320], mode: outbound, allow_upscale: true }
                 
         mobile_standard_thumbnail:
-            format: jpg
             filters:
                 fixed:
                     width: 600
