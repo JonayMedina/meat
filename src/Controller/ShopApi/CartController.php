@@ -383,6 +383,13 @@ class CartController extends AbstractFOSRestController
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
             $this->addAdjustments($order);
 
+            if (null == $order->getCustomer()) {
+                /** @var ShopUser $user */
+                $user = $this->getUser();
+                $order->setCustomer($user->getCustomer());
+                $this->entityManager->flush();
+            }
+
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
             }
