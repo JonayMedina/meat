@@ -388,6 +388,16 @@ class CartController extends AbstractFOSRestController
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
             $this->addAdjustments($order);
 
+            if (null == $order) {
+                $order->setState('cart');
+
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no tiene asociado a ningún cliente.', []);
+                $view = $this->view($response, $statusCode);
+
+                return $this->handleView($view);
+            }
+
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
             }
