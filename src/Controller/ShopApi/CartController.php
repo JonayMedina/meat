@@ -141,6 +141,11 @@ class CartController extends AbstractFOSRestController
             $mainOrder = $this->orderService->mergeCarts($user);
             $this->addAdjustments($mainOrder);
 
+            if (null == $mainOrder->getCustomer()) {
+                $mainOrder->setCustomer($user->getCustomer());
+                $this->entityManager->flush();
+            }
+
             $statusCode = Response::HTTP_OK;
             $serialized = $this->orderService->serializeOrder($mainOrder);
             $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Merged...', $serialized);
@@ -382,13 +387,6 @@ class CartController extends AbstractFOSRestController
             /** @var Order $order */
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
             $this->addAdjustments($order);
-
-            if (null == $order->getCustomer()) {
-                /** @var ShopUser $user */
-                $user = $this->getUser();
-                $order->setCustomer($user->getCustomer());
-                $this->entityManager->flush();
-            }
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
