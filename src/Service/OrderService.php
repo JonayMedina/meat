@@ -278,6 +278,7 @@ class OrderService
             'total_quantity' => $order->getTotalQuantity(),
             'token_value' => $order->getTokenValue(),
             'created_at' => $order->getCreatedAt()->format('c'),
+            'checkout_completed_at' => $order->getCheckoutCompletedAt() ? $order->getCheckoutCompletedAt()->format('c') : null,
             'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
             'status' => $order->getStatus(),
             'order_state' => $order->getState(),
