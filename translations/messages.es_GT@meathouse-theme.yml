@@ -1008,7 +1008,7 @@ app.email.register.products_message: 'Empieza una compra, busca productos y agr�
 app.email.register.favorites_message: 'Agrega productos favoritos para encontrar fácilmente los productos que más compras.'
 app.email.register.footer_message: 'Además puedes recibir promociones y cupones de descuento especiales para ti, después de crear tu perfil.'
 app.email.password_reset.title: '¿Problemas con tu contraseña?'
-app.email.password_reset.footer.message: 'Utilizalo para completar el campo de recuperación de contraseña y luego cambiar tu contraseña. Si por alguna razón pierdes la pantalla para ingresar el código, debes volver a genera uno nuevo.'
+app.email.password_reset.footer.message: 'Utilizalo para completar el campo de recuperación de contraseña y luego cambiar tu contraseña. Si por alguna razón pierdes la pantalla para ingresar el código, debes volver a generar uno nuevo.'
 app.email.footer.change_email.kindly: '¡Si necesitas algo más, no dudes en contáctarnos!<br>Atentamente'
 app.email.change_email.footer.instructions: 'Si tu no hiciste esta solicitud de cambio de correo, por favor revisa tu cuenta.'
 app.email.address.approved: '¡Tu dirección ha sido aprobada!'
