@@ -2,8 +2,6 @@
 
 namespace App\Controller\ShopApi;
 
-use Liip\ImagineBundle\Service\FilterService;
-use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Taxonomy\Taxon;
@@ -15,13 +13,12 @@ use App\Repository\ProductRepository;
 use App\Entity\Product\ProductVariant;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Liip\ImagineBundle\Service\FilterService;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Sylius\Component\Core\Model\ImageInterface;
 use FOS\RestBundle\Controller\Annotations\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Currency\Context\CurrencyContextInterface;
@@ -39,16 +36,6 @@ class TaxonProductsController extends AbstractFOSRestController
     private $entityManager;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var FavoriteService
      */
     private $favoriteService;
@@ -58,7 +45,9 @@ class TaxonProductsController extends AbstractFOSRestController
      */
     private $security;
 
-    /** @var ChannelContextInterface $channelContext */
+    /**
+     * @var ChannelContextInterface $channelContext
+     */
     private $channelContext;
 
     /**
@@ -74,8 +63,6 @@ class TaxonProductsController extends AbstractFOSRestController
     /**
      * SwitchEmailController constructor.
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface $logger
-     * @param TranslatorInterface $translator
      * @param FavoriteService $favoriteService
      * @param Security $security
      * @param ChannelContextInterface $channelContext
@@ -84,8 +71,6 @@ class TaxonProductsController extends AbstractFOSRestController
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger,
-        TranslatorInterface $translator,
         FavoriteService $favoriteService,
         Security $security,
         ChannelContextInterface $channelContext,
@@ -94,8 +79,6 @@ class TaxonProductsController extends AbstractFOSRestController
     )
     {
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
-        $this->translator = $translator;
         $this->favoriteService = $favoriteService;
         $this->security = $security;
         $this->channelContext = $channelContext;
