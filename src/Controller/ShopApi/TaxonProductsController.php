@@ -218,7 +218,7 @@ class TaxonProductsController extends AbstractFOSRestController
             'name' => $product->getName(),
             'slug' => $product->getSlug(),
             'description' => $variant->getDescriptor(),
-            'onHand' => ($variant->getOnHand() > 0),
+            'on_hand' => ($variant->getOnHand() > 0),
             'variants' => $variants,
             'thumbnail' => $this->getImageRoute($image),
             'measurement_unit' => $product->getMeasurementUnit(),
