@@ -2,6 +2,7 @@
 
 namespace App\Controller\ShopApi;
 
+use Liip\ImagineBundle\Service\FilterService;
 use Psr\Log\LoggerInterface;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\QueryBuilder;
@@ -66,6 +67,11 @@ class TaxonProductsController extends AbstractFOSRestController
     private $currencyContext;
 
     /**
+     * @var FilterService
+     */
+    private $filterService;
+
+    /**
      * SwitchEmailController constructor.
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
@@ -74,6 +80,7 @@ class TaxonProductsController extends AbstractFOSRestController
      * @param Security $security
      * @param ChannelContextInterface $channelContext
      * @param CurrencyContextInterface $currencyContext
+     * @param FilterService $filterService
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -82,7 +89,8 @@ class TaxonProductsController extends AbstractFOSRestController
         FavoriteService $favoriteService,
         Security $security,
         ChannelContextInterface $channelContext,
-        CurrencyContextInterface $currencyContext
+        CurrencyContextInterface $currencyContext,
+        FilterService $filterService
     )
     {
         $this->entityManager = $entityManager;
@@ -92,6 +100,7 @@ class TaxonProductsController extends AbstractFOSRestController
         $this->security = $security;
         $this->channelContext = $channelContext;
         $this->currencyContext = $currencyContext;
+        $this->filterService = $filterService;
     }
 
     /**
@@ -220,7 +229,8 @@ class TaxonProductsController extends AbstractFOSRestController
             'description' => $variant->getDescriptor(),
             'on_hand' => ($variant->getOnHand() > 0),
             'variants' => $variants,
-            'thumbnail' => $this->getImageRoute($image),
+            //'thumbnail' => $this->getImageRoute($image),
+            'thumbnail' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mobile_standard_thumbnail'),
             'measurement_unit' => $product->getMeasurementUnit(),
             'is_favorite' => $this->favoriteService->isFavorite($product, $user),
         ];
