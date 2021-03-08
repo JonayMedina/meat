@@ -229,22 +229,10 @@ class TaxonProductsController extends AbstractFOSRestController
             'description' => $variant->getDescriptor(),
             'on_hand' => ($variant->getOnHand() > 0),
             'variants' => $variants,
-            //'thumbnail' => $this->getImageRoute($image),
             'thumbnail' => $this->filterService->getUrlOfFilteredImage($image->getPath(), 'mobile_standard_thumbnail'),
             'measurement_unit' => $product->getMeasurementUnit(),
             'is_favorite' => $this->favoriteService->isFavorite($product, $user),
         ];
-    }
-
-    /**
-     * @param ImageInterface $image
-     * @return string
-     */
-    private function getImageRoute(ImageInterface $image): string
-    {
-        $filter = 'mobile_standard_thumbnail';
-
-        return "https://meathouse-assets.s3.amazonaws.com/media/cache/" . $filter . "/" . $image->getPath();
     }
 
     /**
