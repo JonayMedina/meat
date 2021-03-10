@@ -37,7 +37,7 @@
                                     {% endif %}
                                     {% if available %}
                                     <div class="text-right mt-4">
-                                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg" title="{{ 'app.ui.cart.icon'|trans }}" alt="{{ 'app.ui.cart.icon'|trans }}"> {{ 'sylius.ui.add_to_cart'|trans }}</a>
+                                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded">{{ 'app.ui.view_detail'|trans }}</a>
                                     </div>
                                     {% endif %}
                                 </div>
