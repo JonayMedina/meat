@@ -318,6 +318,10 @@
                                                 {% set product = fav.product %}
                                                 {% set available = true %}
 
+                                                {% if product.variants.first.onHand < 1 %}
+                                                    {% set available = false %}
+                                                {% endif %}
+
                                                 <div class="col-12 product">
                                                     <div class="row">
                                                         <div class="col-4 col-sm-3 col-md-4 col-lg-3 image-container">
@@ -337,7 +341,10 @@
                                                         </div>
                                                         <div class="col-8 col-sm-9 col-md-8 col-lg-9 d-flex flex-column justify-content-between">
                                                             <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
-                                                            {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithoutTitle.html.twig', 'productId': product.id})) }}
+
+                                                            {% if available %}
+                                                                {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithoutTitle.html.twig', 'productId': product.id})) }}
+                                                            {% endif %}
                                                         </div>
                                                     </div>
                                                     <div class="divider"></div>
