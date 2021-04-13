@@ -12,11 +12,9 @@ hwi_oauth_login:
 
 facebook:
     path: /login/check-facebook
-    schemes: [ https ]
 
 apple:
     path: /login/check-apple/
-    schemes: [ https ]
 
 meathouse_admin:
     resource: "Controller/Admin"
