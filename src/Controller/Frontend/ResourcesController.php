@@ -3,25 +3,30 @@
 namespace App\Controller\Frontend;
 
 use App\Entity\Notification;
-use App\Entity\PushNotification;
 use App\Entity\User\ShopUser;
 use App\Entity\Taxonomy\Taxon;
 use App\Service\ProductService;
 use App\Entity\Product\Product;
+use App\Entity\PushNotification;
 use App\Entity\Customer\Customer;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use App\Repository\PromotionBannerRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Class ResourcesController
+ * @package App\Controller\Frontend
+ */
 class ResourcesController extends AbstractController
 {
     /** @var $captchaKey string */
@@ -47,6 +52,7 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/terms", name="store_terms")
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function termsAndConditionsAction()
     {
@@ -58,6 +64,7 @@ class ResourcesController extends AbstractController
     /**
      * @Route("/terms-and-conditions", name="store_terms_page")
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function termsAndConditionsPageAction()
     {
