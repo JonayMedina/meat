@@ -103,7 +103,7 @@ class OAuthProvider extends OAuthUserProvider
     {
         /** @var ShopUser $loggedUser */
         $loggedUser = $this->security->getUser();
-        dd($response);
+        dump($response); exit;
 
         // Silent logout is username is null
         if (is_null($response->getUsername())){
