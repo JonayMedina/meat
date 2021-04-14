@@ -8,7 +8,7 @@ security:
         ROLE_ADMIN:  [ROLE_ADMIN, ROLE_ADMINISTRATION_ACCESS]
         ROLE_ADMIN_API:  [ROLE_ADMIN_API, ROLE_ADMIN]
         ROLE_EDITOR: [ROLE_EDITOR, ROLE_ADMINISTRATION_ACCESS]
-    always_authenticate_before_granting: true
+    always_authenticate_before_granting: false
     providers:
         sylius_admin_user_provider:
             id: sylius.admin_user_provider.email_or_name_based

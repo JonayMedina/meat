@@ -77,6 +77,7 @@ class OAuthProvider extends OAuthUserProvider
      * @param SessionInterface $session
      * @param RouterInterface $router
      * @param TokenStorageInterface $tokenStorage
+     * @param Security $security
      */
     public function __construct(EntityManagerInterface $em, RepositoryInterface $oauthRepository, UserRepositoryInterface $userRepository, FactoryInterface $customerFactory, FactoryInterface $userFactory, CanonicalizerInterface $canonicalizer, CustomerRepositoryInterface $customerRepository, FactoryInterface $oauthFactory, SessionInterface $session, RouterInterface $router, TokenStorageInterface $tokenStorage, Security $security)
     {
@@ -104,13 +105,26 @@ class OAuthProvider extends OAuthUserProvider
         $loggedUser = $this->security->getUser();
         dd($response);
 
+        // Silent logout is username is null
+        if (is_null($response->getUsername())){
+            $this->tokenStorage->setToken(null);
+            return null;
+        }
+
         $oauth = $this->oauthRepository->findOneBy([
             'provider' => $response->getResourceOwner()->getName(),
             'identifier' => $response->getUsername(),
         ]);
 
         if ($oauth instanceof UserOAuthInterface) {
-            $oauthUser = $oauth->getUser();
+            /** @var UserInterface $oauthUser */
+            $oauthUser = $this->userRepository->findOneByEmail($oauth->getUser()->getEmail());
+
+            // Silent logout is username is null
+            if (is_null($oauthUser->getUsername())){
+                $this->tokenStorage->setToken(null);
+                return null;
+            }
 
             if ($loggedUser != null) {
                 if ($oauth->getUser()->getEmail() != $loggedUser->getEmail()) {
