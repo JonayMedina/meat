@@ -3,37 +3,58 @@
 namespace App\Auth;
 
 use Symfony\Component\HttpFoundation\Request;
-use HWI\Bundle\OAuthBundle\Security\OAuthErrorHandler;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Security\OAuthErrorHandler;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use HWI\Bundle\OAuthBundle\OAuth\ResourceOwner\GenericOAuth2ResourceOwner;
 
 /**
- * Class AppleResourceOwner
- * @package App\Auth
+ * AppleResourceOwner.
+ *
+ * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
+ * @author Josip Letica <leticajosip.09@gmail.com>
  */
 class AppleResourceOwner extends GenericOAuth2ResourceOwner
 {
-    protected $paths = array(
-        'identifier' => 'id',
-        'nickname' => 'name',
-        'firstname' => 'firstname',
-        'lastname' => 'lastname',
-        'realname' => 'realname',
+    /**
+     * {@inheritdoc}
+     */
+    protected $paths = [
+        'identifier' => 'sub',
+        'firstname' => 'firstName',
+        'lastname' => 'lastName',
         'email' => 'email',
-    );
+    ];
 
     /**
-     * @param array $accessToken
-     * @param array $extraParameters
-     * @return UserResponseInterface|PathUserResponse
+     * {@inheritdoc}
      */
-    public function getUserInformation(array $accessToken, array $extraParameters = array())
+    public function getAuthorizationUrl($redirectUri, array $extraParameters = [])
     {
+        return parent::getAuthorizationUrl($redirectUri, array_merge([
+            'response_mode' => $this->options['response_mode'],
+        ], $extraParameters));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUserInformation(array $accessToken, array $extraParameters = [])
+    {
+        if (!isset($accessToken['id_token'])) {
+            throw new \Exception('Undefined index id_token');
+        }
+
+        $jwt = self::jwt_decode($accessToken['id_token']);
+        $data = json_decode(base64_decode($jwt), true);
+
+        if (isset($accessToken['firstName'], $accessToken['lastName'])) {
+            $data['firstName'] = $accessToken['firstName'];
+            $data['lastName'] = $accessToken['lastName'];
+        }
+
         $response = $this->getUserResponse();
-        $response->setData($accessToken);
+        $response->setData(json_encode($data));
         $response->setResourceOwner($this);
         $response->setOAuthToken(new OAuthToken($accessToken));
 
@@ -41,71 +62,48 @@ class AppleResourceOwner extends GenericOAuth2ResourceOwner
     }
 
     /**
-     * @param Request $request
-     * @param mixed $redirectUri
-     * @param array $extraParameters
-     * @return array
+     * {@inheritdoc}
      */
-    public function getAccessToken(Request $request, $redirectUri, array $extraParameters = array())
+    public function getAccessToken(Request $request, $redirectUri, array $extraParameters = [])
     {
         OAuthErrorHandler::handleOAuthError($request);
 
-        $parameters = array_merge(array(
+        $parameters = array_merge([
             'code' => $request->request->get('code'),
             'grant_type' => 'authorization_code',
             'client_id' => $this->options['client_id'],
             'client_secret' => $this->options['client_secret'],
             'redirect_uri' => $redirectUri,
-        ), $extraParameters);
+        ], $extraParameters);
 
         $response = $this->doGetTokenRequest($this->options['access_token_url'], $parameters);
         $response = $this->getResponseContent($response);
-
         $this->validateResponseContent($response);
+        $user_info = $request->request->get('user');
+        $user_info = json_decode($user_info, true);
 
-        $user = $request->request->get('user', []);
-        if(!is_object($user))
-            $user = json_decode($user, true);
-        $data = self::jwt_decode($response['id_token']);
-        $response['id'] = $data['sub'];
-        $response['firstname'] = $user['name']['firstName'] ?? null;
-        $response['lastname'] = $user['name']['lastName'] ?? null;
-        $response['realname'] = ($user['name']['firstName'] ?? null).' '.($user['name']['lastName'] ?? null);
-        $response['nickname'] = str_replace(' ', '.', ($user['name']['firstName'] ?? null).'.'.($user['name']['lastName'] ?? null));
-        $response['name'] = str_replace(' ', '.', ($user['name']['firstName'] ?? null).'.'.($user['name']['lastName'] ?? null));
-        $response['email'] = $user['email'] ?? null;
+        if (null !== $user_info) {
+            $response['firstName'] = $user_info['name']['firstName'];
+            $response['lastName'] = $user_info['name']['lastName'];
+        }
 
         return $response;
     }
 
     /**
-     * @param $jwt
-     * @return mixed
+     * {@inheritdoc}
      */
-    private static function jwt_decode($jwt)
+    public function refreshAccessToken($refreshToken, array $extraParameters = [])
     {
-        $tks = explode('.', $jwt);
-        list($headb64, $bodyb64, $cryptob64) = $tks;
-        return json_decode(self::urlsafeB64Decode($bodyb64), true);
+        $parameters = [];
+        $parameters['client_id'] = $this->options['client_id'];
+        $parameters['client_secret'] = $this->options['client_secret'];
+
+        return parent::refreshAccessToken($refreshToken, array_merge($parameters, $extraParameters));
     }
 
     /**
-     * @param $input
-     * @return false|string
-     */
-    private static function urlsafeB64Decode($input)
-    {
-        $remainder = strlen($input) % 4;
-        if ($remainder) {
-            $padlen = 4 - $remainder;
-            $input .= str_repeat('=', $padlen);
-        }
-        return base64_decode(strtr($input, '-_', '+/'));
-    }
-
-    /**
-     * @param Request $request
-     * @return bool
+     * {@inheritdoc}
      */
     public function handles(Request $request)
     {
@@ -113,23 +111,45 @@ class AppleResourceOwner extends GenericOAuth2ResourceOwner
     }
 
     /**
-     * @param OptionsResolver $resolver
+     * {@inheritdoc}
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'authorization_url' => 'https://appleid.apple.com/auth/authorize?response_mode=form_post',
+            'authorization_url' => 'https://appleid.apple.com/auth/authorize',
             'access_token_url' => 'https://appleid.apple.com/auth/token',
             'revoke_token_url' => '',
             'infos_url' => '',
             'use_commas_in_scope' => false,
             'display' => null,
-            'type' => 'oauth2',
-            'user_response_class' => 'HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse',
             'scope' => 'name email',
             'appsecret_proof' => false,
+            'response_mode' => 'form_post',
         ]);
+    }
+
+    private static function jwt_decode($id_token)
+    {
+        //// from http://stackoverflow.com/a/28748285/624544
+        [, $jwt] = explode('.', $id_token, 3);
+
+        // if the token was urlencoded, do some fixes to ensure that it is valid base64 encoded
+        $jwt = str_replace(['-', '_'], ['+', '/'], $jwt);
+
+        // complete token if needed
+        switch (\strlen($jwt) % 4) {
+            case 0:
+                break;
+            case 2:
+            case 3:
+                $jwt .= '=';
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid base64 format sent back');
+        }
+
+        return $jwt;
     }
 }
