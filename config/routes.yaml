@@ -14,7 +14,7 @@ facebook:
     path: /login/check-facebook
 
 apple:
-    path: /login/check-apple/
+    path: /login/check-apple
 
 meathouse_admin:
     resource: "Controller/Admin"
