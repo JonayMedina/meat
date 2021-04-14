@@ -7,3 +7,4 @@ framework:
     templating: { engines: ["twig"] }
     session:
         handler_id: ~
+        cookie_samesite: lax

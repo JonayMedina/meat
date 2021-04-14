@@ -42,6 +42,7 @@
         "hshn/base64-encoded-file": "^2.1",
         "hwi/oauth-bundle": "^0.6.3",
         "jbzoo/image": "^4.0",
+        "kissdigital-com/apple-sign-in-client-secret-generator": "@dev",
         "knplabs/knp-paginator-bundle": "^5.1",
         "league/flysystem-aws-s3-v3": "^1.0",
         "mpdf/mpdf": "^8.0",
