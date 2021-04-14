@@ -12,7 +12,6 @@ use App\Entity\Customer\Customer;
 use App\Form\Admin\TokenPasswordType;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use Kissdigitalcom\AppleSignIn\ClientSecret;
 use App\Repository\PromotionBannerRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,22 +48,6 @@ class ResourcesController extends AbstractController
     {
         return $this->redirectToRoute('sylius_shop_homepage');
     }
-
-//    /**
-//     * @Route("/fucking-apple-secret", name="store_apple_secret")
-//     * @return Response
-//     */
-//    public function appleSecretAction()
-//    {
-//        $clientId = 'gt.com.meathouse';
-//        $teamId   = 'S2K8H28F48';
-//        $keyId    = 'P97GUPA72R';
-//        $certPath = __DIR__ . '/certificate.p8';
-//
-//        $clientSecret = new ClientSecret($clientId, $teamId, $keyId, $certPath);
-//
-//        return $this->render('<h1>' . $clientSecret->generate() . '</h1>');
-//    }
 
     /**
      * @Route("/terms", name="store_terms")
