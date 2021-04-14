@@ -102,6 +102,7 @@ class OAuthProvider extends OAuthUserProvider
     {
         /** @var ShopUser $loggedUser */
         $loggedUser = $this->security->getUser();
+        dd($response);
 
         $oauth = $this->oauthRepository->findOneBy([
             'provider' => $response->getResourceOwner()->getName(),
