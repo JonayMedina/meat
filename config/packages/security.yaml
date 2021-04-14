@@ -84,7 +84,7 @@ security:
             oauth:
                 resource_owners:
                     facebook: "/login/check-facebook"
-                    apple: "/login/check-apple"
+                    apple: "/login/check-apple/"
                 login_path: sylius_shop_login
                 use_forward: false
                 default_target_path: grand_central
