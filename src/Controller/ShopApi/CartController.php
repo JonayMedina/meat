@@ -408,7 +408,13 @@ class CartController extends AbstractFOSRestController
                 throw new BadRequestHttpException('La orden excede el máximo permitido.');
             }
 
-            if (($order->getTotal()/100) < $aboutStore->getMinimumPurchaseValue()) {
+            $realTotal = $order->getTotal();
+
+            if ($order->getOrderPromotionTotal() > 0) {
+                $realTotal = ($order->getOrderPromotionTotal() + $order->getTotal());
+            }
+
+            if (($realTotal/100) < $aboutStore->getMinimumPurchaseValue()) {
                 throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
             }
 
