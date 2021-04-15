@@ -410,8 +410,8 @@ class CartController extends AbstractFOSRestController
 
             $realTotal = $order->getTotal();
 
-            if ($order->getOrderPromotionTotal() > 0) {
-                $realTotal = ($order->getOrderPromotionTotal() + $order->getTotal());
+            if (abs($order->getOrderPromotionTotal()) > 0) {
+                $realTotal = (abs($order->getOrderPromotionTotal()) + $order->getTotal());
             }
 
             if (($realTotal/100) < $aboutStore->getMinimumPurchaseValue()) {
