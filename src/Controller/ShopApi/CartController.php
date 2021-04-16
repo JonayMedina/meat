@@ -408,7 +408,13 @@ class CartController extends AbstractFOSRestController
                 throw new BadRequestHttpException('La orden excede el máximo permitido.');
             }
 
-            if (($order->getTotal()/100) < $aboutStore->getMinimumPurchaseValue()) {
+            $realTotal = $order->getTotal();
+
+            if (abs($order->getOrderPromotionTotal()) > 0) {
+                $realTotal = (abs($order->getOrderPromotionTotal()) + $order->getTotal());
+            }
+
+            if (($realTotal/100) < $aboutStore->getMinimumPurchaseValue()) {
                 throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
             }
 
@@ -501,13 +507,8 @@ class CartController extends AbstractFOSRestController
         $statusCode = Response::HTTP_OK;
         $preferredDeliveryDate = $request->get('preferred_delivery_date');
         $scheduledDeliveryDate = $request->get('scheduled_delivery_date');
-        $nextAvailableDay = '';
 
-        try {
-            $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
-        } catch (\Exception $e) {
-            $this->redirectToRoute('sylius_shop_cart_summary');
-        }
+        $nextAvailableDay = $this->orderService->getNextAvailableDay($preferredDeliveryDate, $scheduledDeliveryDate);
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
