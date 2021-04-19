@@ -416,11 +416,17 @@ class AboutStore implements ResourceInterface
     }
 
     /**
-     * @param array $deliveryHours
+     * @param array|null $deliveryHours
      * @return AboutStore
      */
     public function setDeliveryHours(?array $deliveryHours): AboutStore
     {
+        if (is_array($deliveryHours)) {
+            foreach ($deliveryHours as $key => $deliveryHour) {
+                $deliveryHours[$key]['id'] = md5($key);
+            }
+        }
+
         $this->deliveryHours = $deliveryHours;
 
         return $this;
