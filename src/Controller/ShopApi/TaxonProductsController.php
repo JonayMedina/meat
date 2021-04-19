@@ -190,6 +190,8 @@ class TaxonProductsController extends AbstractFOSRestController
             ->leftJoin('product.variants', 'variant')
             ->leftJoin('product.productTaxons', 'productTaxons')
             ->andWhere('productTaxons.taxon = :taxon')
+            ->andWhere('product.enabled = :enabled')
+            ->setParameter('enabled', true)
             ->setParameter('taxon', $taxon);
     }
 
