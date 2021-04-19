@@ -280,6 +280,7 @@ class OrderService
             'created_at' => $order->getCreatedAt()->format('c'),
             'checkout_completed_at' => $order->getCheckoutCompletedAt() ? $order->getCheckoutCompletedAt()->format('c') : null,
             'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
+            'preferred_delivery_time' => $order->getPreferredDeliveryTime(),
             'status' => $order->getStatus(),
             'order_state' => $order->getState(),
             'checkout_state' => $order->getCheckoutState(),
