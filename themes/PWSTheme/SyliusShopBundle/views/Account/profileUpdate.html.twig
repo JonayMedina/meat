@@ -111,8 +111,8 @@
             {% if defaultAddress %}
                 address = {
                     index: '{{ i }}',
-                    fullAddress: '{{ defaultAddress.fullAddress|truncate(250) }}',
-                    askFor: '{{ defaultAddress.annotations|truncate(100) }}',
+                    fullAddress: '{{ defaultAddress.fullAddress|truncate(247) }}',
+                    askFor: '{{ defaultAddress.annotations|truncate(97) }}',
                     phoneNumber: '{{ defaultAddress.phoneNumber }}',
                     id: '{{ defaultAddress.id }}',
                     checked: 'checked',
@@ -131,8 +131,8 @@
                         {% if defaultAddress.id != address.id %}
                             address = {
                                 index: '{{ i }}',
-                                fullAddress: '{{ address.fullAddress|truncate(250) }}',
-                                askFor: '{{ address.annotations|truncate(100) }}',
+                                fullAddress: '{{ address.fullAddress|truncate(247) }}',
+                                askFor: '{{ address.annotations|truncate(97) }}',
                                 phoneNumber: '{{ address.phoneNumber }}',
                                 id: '{{ address.id }}',
                                 checked: '',
@@ -145,8 +145,8 @@
                     {% else %}
                         address = {
                             index: '{{ i }}',
-                            fullAddress: '{{ address.fullAddress|truncate(250) }}',
-                            askFor: '{{ address.annotations|truncate(100) }}',
+                            fullAddress: '{{ address.fullAddress|truncate(247) }}',
+                            askFor: '{{ address.annotations|truncate(97) }}',
                             phoneNumber: '{{ address.phoneNumber }}',
                             id: '{{ address.id }}',
                             checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
@@ -163,8 +163,8 @@
                 {% for address in nonAddresses %}
                     address = {
                         index: '{{ i }}',
-                        fullAddress: '{{ address.fullAddress|truncate(250) }}',
-                        askFor: '{{ address.annotations|truncate(100) }}',
+                        fullAddress: '{{ address.fullAddress|truncate(247) }}',
+                        askFor: '{{ address.annotations|truncate(97) }}',
                         phoneNumber: '{{ address.phoneNumber }}',
                         id: '{{ address.id }}',
                         checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
@@ -224,6 +224,27 @@
                 };
 
                 appendTo($addressContainer, Mustache.render($addressTemplate.html(), defaultAddress));
+                LimitAddresses();
+            }
+
+            LimitAddresses();
+
+            function LimitAddresses() {
+                $('#sylius_customer_profile_address_fullAddress').keyup(function () {
+                    CharLimit(this, 250);
+                });
+
+                $('#sylius_customer_profile_address_annotations').keyup(function () {
+                    CharLimit(this, 100);
+                });
+            }
+
+            function CharLimit(input, maxChar) {
+                var len = $(input).val().length;
+
+                if (len > maxChar) {
+                    $(input).val($(input).val().substring(0, maxChar));
+                }
             }
 
             function appendTo($container, $address, exists = false) {
