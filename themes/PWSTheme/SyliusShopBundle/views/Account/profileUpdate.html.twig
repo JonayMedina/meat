@@ -35,7 +35,7 @@
             <div class="address-container">
                 <div id="address-container"></div>
 
-                {% if customer.addresses|shipping|length  < limitAddress %}
+                {% if customer.addresses|shipping|length < limitAddress %}
                     <div class="text-right">
                         <a class="cancel-address text-underline d-none">{{ 'app.ui.cancel'|trans }}</a>
                         <a id="add-address" class="btn-rounded inverted d-inline-block">{{ 'app.ui.add_another_address'|trans }}</a>
@@ -111,8 +111,8 @@
             {% if defaultAddress %}
                 address = {
                     index: '{{ i }}',
-                    fullAddress: '{{ defaultAddress.fullAddress }}',
-                    askFor: '{{ defaultAddress.annotations }}',
+                    fullAddress: '{{ defaultAddress.fullAddress|truncate(250) }}',
+                    askFor: '{{ defaultAddress.annotations|truncate(100) }}',
                     phoneNumber: '{{ defaultAddress.phoneNumber }}',
                     id: '{{ defaultAddress.id }}',
                     checked: 'checked',
@@ -120,6 +120,8 @@
                 }
 
                 addresses.push(address);
+
+                console.log(address);
                 {% set i = i + 1 %}
             {% endif %}
 
@@ -129,8 +131,8 @@
                         {% if defaultAddress.id != address.id %}
                             address = {
                                 index: '{{ i }}',
-                                fullAddress: '{{ address.fullAddress }}',
-                                askFor: '{{ address.annotations }}',
+                                fullAddress: '{{ address.fullAddress|truncate(250) }}',
+                                askFor: '{{ address.annotations|truncate(100) }}',
                                 phoneNumber: '{{ address.phoneNumber }}',
                                 id: '{{ address.id }}',
                                 checked: '',
@@ -143,8 +145,8 @@
                     {% else %}
                         address = {
                             index: '{{ i }}',
-                            fullAddress: '{{ address.fullAddress }}',
-                            askFor: '{{ address.annotations }}',
+                            fullAddress: '{{ address.fullAddress|truncate(250) }}',
+                            askFor: '{{ address.annotations|truncate(100) }}',
                             phoneNumber: '{{ address.phoneNumber }}',
                             id: '{{ address.id }}',
                             checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
@@ -161,8 +163,8 @@
                 {% for address in nonAddresses %}
                     address = {
                         index: '{{ i }}',
-                        fullAddress: '{{ address.fullAddress }}',
-                        askFor: '{{ address.annotations }}',
+                        fullAddress: '{{ address.fullAddress|truncate(250) }}',
+                        askFor: '{{ address.annotations|truncate(100) }}',
                         phoneNumber: '{{ address.phoneNumber }}',
                         id: '{{ address.id }}',
                         checked: {% if i == 0 %}'checked'{% else %}''{% endif %},
