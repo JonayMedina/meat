@@ -398,7 +398,7 @@ class OrderService
         $deliveryHours = $aboutStore->getDeliveryHours();
 
         foreach ($deliveryHours as $deliveryHour) {
-            $label = $deliveryHour['id'];
+            $label = $deliveryHour['name'];
             $hours[$label] = $deliveryHour;
         }
 

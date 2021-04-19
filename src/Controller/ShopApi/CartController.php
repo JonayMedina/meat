@@ -517,26 +517,27 @@ class CartController extends AbstractFOSRestController
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
+        $order->setPreferredDeliveryTime($preferredDeliveryDate);
         $this->entityManager->flush();
 
-        $aboutStore = $this->aboutStoreRepository->findLatest();
-
-        if (!$aboutStore instanceof AboutStore) {
-            throw new NotFoundHttpException('Settings are missing.');
-        }
-
-        $hours = [];
-        $deliveryHours = $aboutStore->getDeliveryHours();
-
-        foreach ($deliveryHours as $deliveryHour) {
-            $label = $deliveryHour['id'];
-            $hours[$label] = $deliveryHour;
-        }
-
-        $timeRange = $hours[$preferredDeliveryDate]['name'] ?? null;
-
-        $order->setPreferredDeliveryTime($timeRange);
-        $this->entityManager->flush();
+//        $aboutStore = $this->aboutStoreRepository->findLatest();
+//
+//        if (!$aboutStore instanceof AboutStore) {
+//            throw new NotFoundHttpException('Settings are missing.');
+//        }
+//
+//        $hours = [];
+//        $deliveryHours = $aboutStore->getDeliveryHours();
+//
+//        foreach ($deliveryHours as $deliveryHour) {
+//            $label = $deliveryHour['id'];
+//            $hours[$label] = $deliveryHour;
+//        }
+//
+//        $timeRange = $hours[$preferredDeliveryDate]['name'] ?? null;
+//
+//        $order->setPreferredDeliveryTime($timeRange);
+//        $this->entityManager->flush();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
             'token' => $order->getTokenValue(),
