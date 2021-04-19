@@ -68,6 +68,7 @@ class OrderItemExtendedController extends OrderItemController
             $this->getOrderModifier()->addToOrder($addToCartCommand->getCart(), $addToCartCommand->getCartItem());
 
             $cartManager = $this->getCartManager();
+            $cart->setCustomerIp($request->getClientIp());
             $cartManager->persist($cart);
             $cartManager->flush();
 

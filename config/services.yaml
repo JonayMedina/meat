@@ -232,6 +232,14 @@ services:
     App\EventListener\LoginListener:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+
+    sylius.context.cart.session_and_channel_based:
+        class: Sylius\Bundle\CoreBundle\Context\SessionAndChannelBasedCartContext
+        arguments:
+            - '@sylius.storage.cart_session'
+            - '@sylius.context.channel'
+        tags:
+            - {name: sylius.context.cart, priority: -333}
                 
 #    App\EventListener\ApiLogListener:
 #        tags:
