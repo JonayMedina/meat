@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sylius\Component\Core\Model\Address as BaseAddress;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -66,12 +67,20 @@ class Address extends BaseAddress
     /**
      * @var string
      * @ORM\Column(name="full_address", type="text", nullable=true)
+     * @Assert\Length(
+     *     min="5",
+     *     max="250"
+     * )
      */
     private $fullAddress;
 
     /**
      * @var string
      * @ORM\Column(name="annotations", type="text", nullable=true)
+     * @Assert\Length(
+     *     min="2",
+     *     max="100"
+     * )
      */
     private $annotations;
 
