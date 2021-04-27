@@ -353,6 +353,15 @@ class ResourcesController extends AbstractFOSRestController
                     }
 
                     try {
+                        $children = $address->getChildren();
+
+                        /** @var Address $child */
+                        foreach ($children as $child) {
+                            $child->setParent(null);
+                        }
+
+                        $this->em->flush();
+
                         $this->em->remove($address);
                         $this->em->flush();
 
