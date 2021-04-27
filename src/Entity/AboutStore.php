@@ -218,6 +218,13 @@ class AboutStore implements ResourceInterface
      */
     private $lastAuditNumber = "000000";
 
+    /**
+     * Settings API Usage.
+     * @var null
+     * @Serializer\Expose()
+     */
+    public $shippingCost = null;
+
     public function getId(): ?int
     {
         return $this->id;

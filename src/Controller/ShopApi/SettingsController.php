@@ -2,14 +2,17 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Repository\TermsAndConditionsRepository;
 use Symfony\Component\Intl\Currencies;
+use App\Entity\Shipping\ShippingMethod;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AboutStoreRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\TermsAndConditionsRepository;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
-use Sylius\Component\Currency\Context\CurrencyContextInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sylius\Component\Currency\Context\CurrencyContextInterface;
 
 /**
  * SettingsController
@@ -28,14 +31,32 @@ class SettingsController extends AbstractFOSRestController
     private $termsAndConditionsRepository;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @var ChannelContextInterface
+     */
+    private $channelContext;
+
+    /**
      * SettingsController constructor.
      * @param AboutStoreRepository $repository
      * @param TermsAndConditionsRepository $termsAndConditionsRepository
+     * @param EntityManagerInterface $entityManager
+     * @param ChannelContextInterface $channelContext
      */
-    public function __construct(AboutStoreRepository $repository, TermsAndConditionsRepository $termsAndConditionsRepository)
-    {
+    public function __construct(
+        AboutStoreRepository $repository,
+        TermsAndConditionsRepository $termsAndConditionsRepository,
+        EntityManagerInterface $entityManager,
+        ChannelContextInterface $channelContext
+    ) {
         $this->repository = $repository;
         $this->termsAndConditionsRepository = $termsAndConditionsRepository;
+        $this->entityManager = $entityManager;
+        $this->channelContext = $channelContext;
     }
 
     /**
@@ -58,6 +79,7 @@ class SettingsController extends AbstractFOSRestController
         $aboutStore->currencyCode = $currencyContext->getCurrencyCode();
         $aboutStore->currencySymbol = Currencies::getSymbol($aboutStore->currencyCode);
         $aboutStore->termsAndConditionsUrl = $urlGenerator->generate('store_terms_page', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $aboutStore->shippingCost = $this->getShippingCost();
 
         $view = $this->view($aboutStore, $statusCode);
 
@@ -84,5 +106,17 @@ class SettingsController extends AbstractFOSRestController
         ], $statusCode);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Returns the current shipping cost.
+     * @return float
+     */
+    private function getShippingCost()
+    {
+        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
+
+        return $shippingMethod->getConfiguration()[$this->channelContext->getChannel()->getCode()]['amount'];
     }
 }

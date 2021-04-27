@@ -2,7 +2,6 @@
 
 namespace App\Controller\ShopApi;
 
-use App\Entity\AboutStore;
 use Carbon\Carbon;
 use SM\Factory\Factory;
 use App\Model\APIResponse;
