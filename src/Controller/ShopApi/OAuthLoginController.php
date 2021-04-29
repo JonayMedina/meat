@@ -74,13 +74,13 @@ class OAuthLoginController extends AbstractFOSRestController
      */
     public function loginAction(Request $request)
     {
+        $idToken = $request->get('id_token');
         $identifier = $request->get('identifier');
-        $accessToken = $request->get('access_token');
+        $accessToken = $request->get('access_token', $idToken);
         $provider = $request->get('provider');
         $email = $request->get('email');
         $firstName = $request->get('first_name');
         $lastName = $request->get('last_name');
-        $idToken = $request->get('id_token');
 
         if (!$this->validateProvider($provider)) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -91,7 +91,7 @@ class OAuthLoginController extends AbstractFOSRestController
             return $this->handleView($view);
         }
 
-        $serverResponse = $this->validateAccessToken($provider, $identifier, $provider == self::PROVIDER_APPLE ? $idToken : $accessToken);
+        $serverResponse = $this->validateAccessToken($provider, $identifier, $accessToken);
 
         if (null === $serverResponse) {
             $statusCode = Response::HTTP_UNAUTHORIZED;
