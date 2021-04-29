@@ -540,7 +540,7 @@ class CartController extends AbstractFOSRestController
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
             'token' => $order->getTokenValue(),
-            'estimated_delivery_date' => $order->getEstimatedDeliveryDate(),
+            'estimated_delivery_date' => $order->getEstimatedDeliveryDate()->setTimezone(new \DateTimeZone('America/Guatemala')),
             'order' => $this->orderService->serializeOrder($order)
         ]);
 
