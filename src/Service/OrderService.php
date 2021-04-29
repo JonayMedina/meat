@@ -79,6 +79,11 @@ class OrderService
     private $channelContext;
 
     /**
+     * @var string Current local store timezone.
+     */
+    private $timezone = 'America/Guatemala';
+
+    /**
      * OrderService constructor.
      * @param HolidayRepository $holidayRepository
      * @param AboutStoreRepository $aboutStoreRepository
@@ -121,7 +126,7 @@ class OrderService
      */
     public function getNextAvailableDay($preferredDeliveryDate = "", $scheduledDeliveryDate = "")
     {
-        $today = Carbon::now();
+        $today = Carbon::now($this->timezone);
         $aboutStore = $this->aboutStoreRepository->findLatest();
 
         if (!$aboutStore instanceof AboutStore) {
@@ -129,7 +134,7 @@ class OrderService
         }
 
         try {
-            $scheduledDeliveryDate = Carbon::parse($scheduledDeliveryDate);
+            $scheduledDeliveryDate = Carbon::parse($scheduledDeliveryDate, $this->timezone);
         } catch (InvalidFormatException $exception) {
             throw new BadRequestHttpException('Settings are missing.');
         }
@@ -342,7 +347,7 @@ class OrderService
     private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = 'now'): Carbon
     {
         $isAvailable = false;
-        $today = Carbon::parse($start);
+        $today = Carbon::parse($start, $this->timezone);
 
         while (!$isAvailable) {
             $todayAtTwelve = $today->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
