@@ -516,7 +516,9 @@ class ExtenderController extends AbstractController
                     $params = [$session->get('redirect_param') => true];
 
                     $session->remove('redirect_param');
-                } else {
+                }
+
+                if ($session->get('connected')) {
                     $params = ['connected' => true];
                 }
             }
