@@ -144,6 +144,10 @@ class OAuthProvider extends OAuthUserProvider
             $user = $loggedUser != null ? $loggedUser : $this->userRepository->findOneByEmail($response->getEmail());
 
             if ($user instanceof ShopUser) {
+                if ($response->getResourceOwner()->getName() == 'facebook') {
+                    $this->session->set('connected', 'true');
+                }
+
                 return $this->updateUserByOAuthUserResponse($user, $response, 'sylius_shop_account_dashboard');
             }
 
