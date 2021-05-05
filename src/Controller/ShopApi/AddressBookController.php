@@ -162,7 +162,7 @@ class AddressBookController extends AbstractFOSRestController
             return $this->renderError('Invalid address');
         }
 
-        if (empty($phoneNumber)) {
+        if (empty($phoneNumber) || !$this->isPhoneNumberValid($phoneNumber)) {
             return $this->renderError('Invalid phone number');
         }
 
@@ -393,4 +393,12 @@ class AddressBookController extends AbstractFOSRestController
             ->getSingleScalarResult();
     }
 
+    /**
+     * @param $phoneNumber
+     * @return bool
+     */
+    private function isPhoneNumberValid($phoneNumber): bool
+    {
+        return is_numeric($phoneNumber) && (strlen(trim($phoneNumber)) ==  8);
+    }
 }
