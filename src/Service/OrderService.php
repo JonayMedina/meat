@@ -2,9 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Customer\Customer;
-use App\Entity\Order\Adjustment;
-use App\Entity\Promotion\PromotionCoupon;
 use Carbon\Carbon;
 use App\Entity\Holiday;
 use App\Entity\AboutStore;
@@ -12,27 +9,40 @@ use App\Entity\Order\Order;
 use App\Entity\User\ShopUser;
 use App\Entity\Order\OrderItem;
 use App\Entity\Payment\Payment;
+use App\Entity\Order\Adjustment;
+use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use App\Repository\HolidayRepository;
 use App\Entity\Product\ProductVariant;
+use Psr\Cache\InvalidArgumentException;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Promotion\PromotionCoupon;
 use Doctrine\ORM\NonUniqueResultException;
 use Carbon\Exceptions\InvalidFormatException;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
-use Sylius\Component\Core\Model\ShipmentInterface;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\ShipmentInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sylius\Bundle\OrderBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Component\Core\Factory\CartItemFactoryInterface;
 use Sylius\Component\Order\Processor\CompositeOrderProcessor;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
 
 class OrderService
 {
+    /** Order will be sent today during day */
+    const TODAY = 'TODAY';
+
+    /** Order will be sent next available day at morning */
+    const NEXT_DAY_MORNING = 'NEXT_DAY_MORNING';
+
+    /** Order will be sent next available day afternoon */
+    const NEXT_DAY_AFTERNOON = 'NEXT_DAY_AFTERNOON';
+
     /**
      * @var HolidayRepository
      */
@@ -119,14 +129,40 @@ class OrderService
 
     /**
      * Find next available date for order.
-     * @param $preferredDeliveryDate
-     * @param $scheduledDeliveryDate
+     * @param string $preferredDeliveryDate
+     * @param string $scheduledDeliveryDate
      * @return Carbon
      * @throws NonUniqueResultException
+     * @throws InvalidArgumentException
      */
     public function getNextAvailableDay($preferredDeliveryDate = "", $scheduledDeliveryDate = "")
     {
         $today = Carbon::now($this->timezone);
+        $hour = (int)$today->format('G');
+        $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate);
+        $immutableToday = clone $today;
+
+// TODO: Remove
+//        $today = new Carbon();
+//        $today->setTime(mt_rand(0, 23), mt_rand(0, 59));
+
+        $nextAvailability = self::TODAY;
+
+        if ($hour >= 0 && $hour <= 6) {
+            $nextAvailability = self::TODAY;
+        }
+
+        if ($hour >= 6 && $hour < 15) {
+            $nextAvailability = self::NEXT_DAY_MORNING;
+        }
+
+        if ($hour >= 15 && $hour <= 23) {
+            $nextAvailability = self::NEXT_DAY_AFTERNOON;
+        }
+
+// TODO: Remove
+//        dump($today->format('H:i'), $nextAvailability);
+
         $aboutStore = $this->aboutStoreRepository->findLatest();
 
         if (!$aboutStore instanceof AboutStore) {
@@ -139,8 +175,32 @@ class OrderService
             throw new BadRequestHttpException('Settings are missing.');
         }
 
-        if ($scheduledDeliveryDate->lessThanOrEqualTo($today)) {
+        if ($isOrderForToday) {
+            $today->setHour(0)->setMinutes(0)->setSeconds(0)->setMicroseconds(0);
+        }
+
+        if ($scheduledDeliveryDate->lessThan($today)) {
             throw new BadRequestHttpException('La fecha elegida para el envío no es valida, seleccione una fecha futura.');
+        }
+
+        $hours = [];
+        $deliveryHours = $aboutStore->getDeliveryHours();
+
+        foreach ($deliveryHours as $deliveryHour) {
+            $label = $deliveryHour['name'];
+            $hours[$label] = $deliveryHour;
+        }
+
+        $timeRange = $hours[$preferredDeliveryDate] ?? null;
+
+        if ($isOrderForToday) {
+            $timeRangeParts = explode(':', $timeRange['end']);
+            $timeRangeHour = (int)$timeRangeParts[0];
+            $timeRangeMinutes = (int)$timeRangeParts[1];
+
+            if ((int)$immutableToday->format('H') >= $timeRangeHour && (int)$immutableToday->format('i') >= $timeRangeMinutes) {
+                throw new BadRequestHttpException('La fecha elegida para el envío no es valida, seleccione una fecha futura.');
+            }
         }
 
         $daysDifference = $this->diffInDays($today, $scheduledDeliveryDate);
@@ -149,9 +209,9 @@ class OrderService
             throw new BadRequestHttpException('El día de entrega seleccionado sobrepasa el rango permitido.');
         }
 
-        $nextAvailableDay = $this->findValidDeliverDate($scheduledDeliveryDate);
+        $nextAvailableDay = $this->findValidDeliverDate($scheduledDeliveryDate, null, $nextAvailability);
 
-        return $this->setTimeToAvailableDay($nextAvailableDay, $preferredDeliveryDate);
+        return $this->setTimeToAvailableDay($nextAvailableDay, $preferredDeliveryDate, $nextAvailability);
     }
 
     /**
@@ -341,13 +401,18 @@ class OrderService
 
     /**
      * @param Carbon $scheduledDeliveryDate
-     * @param string $start
+     * @param string|null $start
+     * @param null $nextAvailability
      * @return Carbon
+     * @throws NonUniqueResultException
      */
-    private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = 'now'): Carbon
+    private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = null, $nextAvailability = null): Carbon
     {
         $isAvailable = false;
+        $start = $start ? $start : 'now';
         $today = Carbon::parse($start, $this->timezone);
+
+        // TODO: Tal vez recibir el today...
 
         while (!$isAvailable) {
             $todayAtTwelve = $today->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
@@ -388,10 +453,12 @@ class OrderService
     /**
      * @param Carbon $nextAvailableDay
      * @param $preferredDeliveryDate
+     * @param $nextAvailability
      * @return Carbon
+     * @throws InvalidArgumentException
      * @throws NonUniqueResultException
      */
-    private function setTimeToAvailableDay(Carbon $nextAvailableDay, $preferredDeliveryDate): Carbon
+    private function setTimeToAvailableDay(Carbon $nextAvailableDay, $preferredDeliveryDate, $nextAvailability): Carbon
     {
         $aboutStore = $this->aboutStoreRepository->findLatest();
 
