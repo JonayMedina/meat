@@ -241,9 +241,9 @@ services:
         tags:
             - {name: sylius.context.cart, priority: -333}
                 
-#    App\EventListener\ApiLogListener:
-#        tags:
-#            - { name: 'kernel.event_listener', event: 'kernel.response' }
+    App\EventListener\ApiLogListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.response' }
     
     user.oauth_user_provider:
         class: App\Auth\OAuthProvider
