@@ -137,6 +137,7 @@ class AddressBookController extends AbstractFOSRestController
         $taxId = $request->get('tax_id');
         $customer = $this->getCustomer();
         $isDefault = filter_var($request->get('is_default', false), FILTER_VALIDATE_BOOLEAN);
+        $phoneNumber = $this->sanitizePhoneNumber($phoneNumber);
 
         if ($type == Address::TYPE_SHIPPING && $this->countAddressByType($type) >= ShopUser::SHIPPING_ADDRESS_LIMIT) {
             $message = $this->translator->trans('api.address_book.shipping_limit_reached', ['%limit%' => ShopUser::SHIPPING_ADDRESS_LIMIT]);
@@ -400,5 +401,14 @@ class AddressBookController extends AbstractFOSRestController
     private function isPhoneNumberValid($phoneNumber): bool
     {
         return is_numeric($phoneNumber) && (strlen(trim($phoneNumber)) ==  8);
+    }
+
+    /**
+     * @param $phoneNumber
+     * @return string
+     */
+    private function sanitizePhoneNumber($phoneNumber)
+    {
+        return str_replace("-", "", $phoneNumber);
     }
 }
