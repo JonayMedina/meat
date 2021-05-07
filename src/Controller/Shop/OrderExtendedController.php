@@ -22,6 +22,34 @@ use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
 class OrderExtendedController extends OrderController
 {
+    public function summaryAction(Request $request): Response
+    {
+        $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+
+        $cart = $this->getCurrentCart();
+        if (null !== $cart->getId()) {
+            $cart = $this->getOrderRepository()->findCartById($cart->getId());
+        }
+
+        if (!$configuration->isHtmlRequest()) {
+            return $this->viewHandler->handle($configuration, View::create($cart));
+        }
+
+        /** Remove non-existing products from cart. */
+        $cart = $this->get('app.service.order')->sanitizeCart($cart);
+        $form = $this->resourceFormFactory->create($configuration, $cart);
+
+        $view = View::create()
+            ->setTemplate($configuration->getTemplate('summary.html'))
+            ->setData([
+                'cart' => $cart,
+                'form' => $form->createView(),
+            ])
+        ;
+
+        return $this->viewHandler->handle($configuration, $view);
+    }
+
     public function updateAction(Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();

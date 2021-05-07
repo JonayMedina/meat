@@ -680,6 +680,32 @@ class OrderService
     }
 
     /**
+     * Sanitize cart to purge items that are not available anymore.
+     * @param Order $cart
+     * @return Order
+     */
+    public function sanitizeCart(Order $cart): Order
+    {
+        foreach ($cart->getItems() as $orderItem) {
+            $productVariant = $orderItem->getVariant();
+            $onHand = $productVariant->getOnHand();
+            $isEnabled = $productVariant->getProduct()->isEnabled();
+
+            if (!$onHand || !$isEnabled) {
+                /** Remove product */
+                $cart->removeItem($orderItem);
+            }
+        }
+
+        $cart->recalculateAdjustmentsTotal();
+        $cart->recalculateItemsTotal();
+
+        $this->entityManager->flush();
+
+        return $cart;
+    }
+
+    /**
      * @param \DateTimeInterface|null $birthday
      * @return false|int|mixed|string|null
      */
