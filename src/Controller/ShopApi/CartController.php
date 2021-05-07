@@ -147,6 +147,7 @@ class CartController extends AbstractFOSRestController
             }
 
             $statusCode = Response::HTTP_OK;
+            $mainOrder = $this->get('app.service.order')->sanitizeCart($mainOrder);
             $serialized = $this->orderService->serializeOrder($mainOrder);
             $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Merged...', $serialized);
             $view = $this->view($response, $statusCode);
