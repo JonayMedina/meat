@@ -139,8 +139,9 @@ class OrderService
     {
         $today = Carbon::now($this->timezone);
         $hour = (int)$today->format('G');
-        $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate);
+        $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate) || empty($scheduledDeliveryDate);
         $immutableToday = clone $today;
+        $preferredDeliveryDate = ($preferredDeliveryDate == "Sin preferencia") ? "" : $preferredDeliveryDate;
 
 // TODO: Remove
 //        $today = new Carbon();
@@ -193,7 +194,7 @@ class OrderService
 
         $timeRange = $hours[$preferredDeliveryDate] ?? null;
 
-        if ($isOrderForToday) {
+        if ($isOrderForToday && !empty($preferredDeliveryDate)) {
             $timeRangeParts = explode(':', $timeRange['end']);
             $timeRangeHour = (int)$timeRangeParts[0];
             $timeRangeMinutes = (int)$timeRangeParts[1];
@@ -411,11 +412,20 @@ class OrderService
         $isAvailable = false;
         $start = $start ? $start : 'now';
         $today = Carbon::parse($start, $this->timezone);
+        $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate->format('Y-m-d')) || empty($scheduledDeliveryDate);
 
-        // TODO: Tal vez recibir el today...
+        if ($isOrderForToday) {
+            if (in_array($nextAvailability, [
+                self::NEXT_DAY_MORNING,
+                self::NEXT_DAY_AFTERNOON,
+            ])) {
+                $this->addOneDay($today);
+            }
+        }
 
         while (!$isAvailable) {
             $todayAtTwelve = $today->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
+            // TODO: Tal vez incluir sabados aquí también?
             if ($this->isHoliday($today) || $today->isAfter($todayAtTwelve) || $today->isSunday()) {
                 $this->addOneDay($today);
             } else {
@@ -427,7 +437,7 @@ class OrderService
 
         $scheduledDeliveryDateAtTwelve = $scheduledDeliveryDate->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
         if ($scheduledDeliveryDate->isAfter($scheduledDeliveryDateAtTwelve)) {
-            return $this->findValidDeliverDate($nextAvailableDay, $scheduledDeliveryDate->format('Y-m-d H:i:s'));
+            return $this->findValidDeliverDate($nextAvailableDay, $scheduledDeliveryDate->format('Y-m-d H:i:s'), $nextAvailability);
         }
 
         $scheduledDeliveryDate = ($scheduledDeliveryDate->isAfter($nextAvailableDay)) ? $scheduledDeliveryDate : $nextAvailableDay;
@@ -486,9 +496,9 @@ class OrderService
                 ->setSeconds(00);
         }
 
-        if ($nextAvailableDay->isSaturday()) {
+        if ($nextAvailability == self::NEXT_DAY_MORNING) {
             return $nextAvailableDay
-                ->setHours(13)
+                ->setHours(12)
                 ->setMinutes(00)
                 ->setSeconds(00);
         }
