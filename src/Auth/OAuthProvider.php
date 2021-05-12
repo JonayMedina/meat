@@ -2,6 +2,7 @@
 
 namespace App\Auth;
 
+use App\Entity\Customer\Customer;
 use Webmozart\Assert\Assert;
 use App\Entity\User\ShopUser;
 use Doctrine\ORM\EntityManagerInterface;
@@ -116,13 +117,22 @@ class OAuthProvider extends OAuthUserProvider
         ]);
 
         if ($oauth instanceof UserOAuthInterface) {
-            /** @var UserInterface $oauthUser */
+            /** @var ShopUser $oauthUser */
             $oauthUser = $this->userRepository->findOneByEmail($oauth->getUser()->getEmail());
 
             // Silent logout is username is null
             if (is_null($oauthUser->getUsername())){
                 $this->tokenStorage->setToken(null);
                 return null;
+            }
+
+            $customer = $oauthUser->getCustomer();
+
+            if ($customer instanceof Customer && !$customer->getFirstName() && !$customer->getLastName()) {
+                /** Hidden by Apple */
+                $chunks = explode("@", $customer->getEmail());
+                $customer->setFirstName($customer->getEmail());
+                $customer->setLastName($chunks[1]);
             }
 
             if ($loggedUser != null) {
