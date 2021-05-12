@@ -117,22 +117,13 @@ class OAuthProvider extends OAuthUserProvider
         ]);
 
         if ($oauth instanceof UserOAuthInterface) {
-            /** @var ShopUser $oauthUser */
+            /** @var UserInterface $oauthUser */
             $oauthUser = $this->userRepository->findOneByEmail($oauth->getUser()->getEmail());
 
             // Silent logout is username is null
             if (is_null($oauthUser->getUsername())){
                 $this->tokenStorage->setToken(null);
                 return null;
-            }
-
-            $customer = $oauthUser->getCustomer();
-
-            if ($customer instanceof Customer && !$customer->getFirstName() && !$customer->getLastName()) {
-                /** Hidden by Apple */
-                $chunks = explode("@", $customer->getEmail());
-                $customer->setFirstName($customer->getEmail());
-                $customer->setLastName($chunks[1]);
             }
 
             if ($loggedUser != null) {
@@ -156,6 +147,15 @@ class OAuthProvider extends OAuthUserProvider
             if ($user instanceof ShopUser) {
                 if ($response->getResourceOwner()->getName() == 'facebook') {
                     $this->session->set('connected', 'true');
+                }
+
+                $customer = $user->getCustomer();
+
+                if ($customer instanceof Customer && !$customer->getFirstName() && !$customer->getLastName()) {
+                    /** Hidden by Apple */
+                    $chunks = explode("@", $customer->getEmail());
+                    $customer->setFirstName($customer->getEmail());
+                    $customer->setLastName($chunks[1]);
                 }
 
                 return $this->updateUserByOAuthUserResponse($user, $response, 'sylius_shop_account_dashboard');
