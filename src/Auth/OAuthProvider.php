@@ -211,6 +211,13 @@ class OAuthProvider extends OAuthUserProvider
             $customer->setLastName($lastName);
         }
 
+        if (!$customer->getFirstName() && !$customer->getLastName()) {
+            /** Hidden by Apple */
+            $chunks = explode("@", $customer->getEmail());
+            $customer->setFirstName($customer->getEmail());
+            $customer->setLastName($chunks[1]);
+        }
+
         if (!$user->getUsername()) {
             $user->setUsername($response->getEmail() ?: $response->getNickname());
         }
