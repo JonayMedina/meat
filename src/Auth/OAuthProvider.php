@@ -156,6 +156,8 @@ class OAuthProvider extends OAuthUserProvider
                     $chunks = explode("@", $customer->getEmail());
                     $customer->setFirstName($customer->getEmail());
                     $customer->setLastName($chunks[1]);
+
+                    $this->em->flush();
                 }
 
                 return $this->updateUserByOAuthUserResponse($user, $response, 'sylius_shop_account_dashboard');
