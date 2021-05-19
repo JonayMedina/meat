@@ -123,6 +123,16 @@
                 $input.prop('checked', true).change();
             });
 
+            $('.checkbox').click(function (evt) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                var $input = $(this).find('input#sylius_customer_registration_termsAccepted');
+
+                if ($input.length > 0) {
+                    checkTerms(true);
+                }
+            });
+
             $('a.show-terms').click(function () {
                 var $btn = $(this);
                 var $buttons = $('#termsModal .modal-footer button');
