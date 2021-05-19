@@ -389,7 +389,14 @@ class CartController extends AbstractFOSRestController
             $order = $this->repository->findOneBy(['tokenValue' => $token]);
             $this->addAdjustments($order);
 
-            if (null == $order) {
+            if (null == $order->getCustomer()) {
+                /** @var ShopUser $user */
+                $user = $this->getUser();
+                $order->setCustomer($user->getCustomer());
+                $this->entityManager->flush();
+            }
+
+            if (null == $order->getCustomer()) {
                 $order->setState('cart');
 
                 $statusCode = Response::HTTP_BAD_REQUEST;
