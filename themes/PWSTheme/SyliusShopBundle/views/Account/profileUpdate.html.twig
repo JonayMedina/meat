@@ -2,6 +2,15 @@
 
 {% form_theme form '@SyliusShop/Form/theme.html.twig' %}
 
+{% block extracss %}
+    <style>
+        button.disabled, a.disabled {
+            filter: contrast(0.7);
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
 {% block subcontent %}
     {% set limitAddress = constant('App\\Entity\\User\\ShopUser::SHIPPING_ADDRESS_LIMIT') %}
     <div class="row register profile edit pt-5">
@@ -104,6 +113,7 @@
             var $addressContainer = $('#address-container');
             var $cancel = $('.cancel-address');
             var $addressTemplate = $('#address-template');
+            var $submit = $('button[type="submit"]');
             var address = {};
             var addresses = [];
             var $modal = $('#showMessage');
@@ -120,8 +130,6 @@
                 }
 
                 addresses.push(address);
-
-                console.log(address);
                 {% set i = i + 1 %}
             {% endif %}
 
@@ -182,6 +190,8 @@
                 addresses.forEach(function (address) {
                     appendTo($addressContainer, Mustache.render($addressTemplate.html(), address), true);
                 });
+
+                verifyForm();
             } else {
                 addEmptyAddress();
             }
@@ -256,12 +266,49 @@
                 }
 
                 refactorAddresses();
-                $('.phone-number').inputmask("9999 9999");
+                $('.phone-number').inputmask("9999 9999").on('keyup', function () {
+                   verifyForm();
+                });
             }
 
             $('.delete-address').click(function () {
                 deleteAddress($(this));
             });
+
+            function countCharacters(phone) {
+                var length = 0;
+
+                var i = phone.length;
+                while (i--) {
+                    if (phone.charAt(i) !== '_' && phone.charAt(i) !== ' ') {
+                        length++;
+                    }
+                }
+
+                return length;
+            }
+
+            function verifyForm() {
+                var errors = 0;
+
+                $('body').find('.phone-number').each(function () {
+                    var length = countCharacters($( this ).val());
+                    var $field = $( this ).closest('.field');
+
+                    if (length === 8) {
+                        $field.removeClass('error');
+                    } else {
+                        $field.addClass('error');
+                        errors++;
+                    }
+                });
+
+                if (errors > 0) {
+                    $submit.attr('disabled', true).addClass('disabled');
+                } else {
+                    $submit.attr('disabled', false).removeClass('disabled');
+                }
+            }
 
             function deleteAddress($input) {
                 var id = $input.attr('data-id');
@@ -314,6 +361,7 @@
                 index--;
                 nAddresses--;
                 refactorAddresses();
+                verifyForm();
             }
 
             function renameInputs() {

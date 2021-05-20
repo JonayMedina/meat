@@ -306,6 +306,12 @@ h4 {
     border-radius: 50px !important;
 }
 
+/* Disabled */
+button.disabled, a.disabled {
+    filter: contrast(0.7);
+    cursor: not-allowed;
+}
+
 /* On mouse-over, add a grey background color */
 .checkbox:hover input ~ .check-mark, .radio:hover input ~ .check-mark {
     background-color: #ccc;
