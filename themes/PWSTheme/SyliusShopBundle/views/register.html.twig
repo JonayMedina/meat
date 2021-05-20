@@ -126,7 +126,7 @@
             $('.checkbox').click(function (evt) {
                 evt.preventDefault();
                 evt.stopPropagation();
-                var $input = $(this).find('input#sylius_customer_registration_termsAccepted');
+                var $input = $(this).find('input');
 
                 if ($input.length > 0) {
                     checkTerms(true);
