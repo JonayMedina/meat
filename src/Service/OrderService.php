@@ -391,6 +391,15 @@ class OrderService
     }
 
     /**
+     * @param Carbon $date
+     * @return bool
+     */
+    private function isSunday(Carbon $date): bool
+    {
+        return $date->isSunday();
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      * @return mixed
@@ -410,9 +419,13 @@ class OrderService
     private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = null, $nextAvailability = null): Carbon
     {
         $isAvailable = false;
-        $start = $start ? $start : 'now';
+        $start = $start ? $start : $scheduledDeliveryDate->format('Y-m-d');
         $today = Carbon::parse($start, $this->timezone);
         $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate->format('Y-m-d')) || empty($scheduledDeliveryDate);
+
+        if (!$this->isScheduledDeliveryDateAvailable($scheduledDeliveryDate)) {
+            $this->addOneDay($today);
+        }
 
         if ($isOrderForToday) {
             if (in_array($nextAvailability, [
@@ -750,5 +763,15 @@ class OrderService
             'created_at' => $shipment->getCreatedAt(),
             'updated_at' => $shipment->getUpdatedAt(),
         ];
+    }
+
+    /**
+     * @param Carbon $scheduledDeliveryDate
+     * @return bool
+     * @throws NonUniqueResultException
+     */
+    private function isScheduledDeliveryDateAvailable(Carbon $scheduledDeliveryDate): bool
+    {
+        return !($this->isHoliday($scheduledDeliveryDate) || $this->isSunday($scheduledDeliveryDate));
     }
 }
