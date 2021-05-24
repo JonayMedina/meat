@@ -137,6 +137,14 @@ class CartController extends AbstractFOSRestController
         /** @var ShopUser $user */
         $user = $this->getUser();
 
+        if (!$user instanceof ShopUser) {
+            $statusCode = Response::HTTP_BAD_REQUEST;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Please sign in to start checkout process.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
         try  {
             $mainOrder = $this->orderService->mergeCarts($user);
             $this->addAdjustments($mainOrder);
@@ -384,36 +392,21 @@ class CartController extends AbstractFOSRestController
         $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
-        /** @var ShopUser $user */
-        $user = $this->getUser();
+        /** @var Order $order */
+        $order = $this->repository->findOneBy(['tokenValue' => $token]);
 
-        if (!$user instanceof ShopUser) {
+        if (null == $order->getCustomer()) {
+            $order->setState('cart');
+
             $statusCode = Response::HTTP_BAD_REQUEST;
-            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Please sign in to start payment process.', []);
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no tiene asociado a ningún cliente.', []);
             $view = $this->view($response, $statusCode);
 
             return $this->handleView($view);
         }
 
         try {
-            /** @var Order $order */
-            $order = $this->repository->findOneBy(['tokenValue' => $token]);
             $this->addAdjustments($order);
-
-            if (null == $order->getCustomer()) {
-                $order->setCustomer($user->getCustomer());
-                $this->entityManager->flush();
-            }
-
-            if (null == $order->getCustomer()) {
-                $order->setState('cart');
-
-                $statusCode = Response::HTTP_BAD_REQUEST;
-                $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no tiene asociado a ningún cliente.', []);
-                $view = $this->view($response, $statusCode);
-
-                return $this->handleView($view);
-            }
 
             if (!$order instanceof Order) {
                 throw new NotFoundHttpException('Cart not found');
