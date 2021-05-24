@@ -419,34 +419,26 @@ class OrderService
     private function findValidDeliverDate(Carbon $scheduledDeliveryDate, $start = null, $nextAvailability = null): Carbon
     {
         $isAvailable = false;
-        $start = $start ? $start : $scheduledDeliveryDate->format('Y-m-d');
-        $today = Carbon::parse($start, $this->timezone);
-        $isOrderForToday = ($today->format('Y-m-d') == $scheduledDeliveryDate->format('Y-m-d')) || empty($scheduledDeliveryDate);
-
-        if (!$this->isScheduledDeliveryDateAvailable($scheduledDeliveryDate)) {
-            $this->addOneDay($today);
-        }
+        $isOrderForToday = $scheduledDeliveryDate->isToday();
 
         if ($isOrderForToday) {
             if (in_array($nextAvailability, [
                 self::NEXT_DAY_MORNING,
                 self::NEXT_DAY_AFTERNOON,
             ])) {
-                $this->addOneDay($today);
+                $this->addOneDay($scheduledDeliveryDate);
             }
         }
 
         while (!$isAvailable) {
-            $todayAtTwelve = $today->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
-            // TODO: Tal vez incluir sabados aquí también?
-            if ($this->isHoliday($today) || $today->isAfter($todayAtTwelve) || $today->isSunday()) {
-                $this->addOneDay($today);
+            if ($this->isHoliday($scheduledDeliveryDate) || $scheduledDeliveryDate->isSunday()) {
+                $this->addOneDay($scheduledDeliveryDate);
             } else {
                 $isAvailable = true;
             }
         }
 
-        $nextAvailableDay = $today;
+        $nextAvailableDay = $scheduledDeliveryDate;
 
         $scheduledDeliveryDateAtTwelve = $scheduledDeliveryDate->copy()->setHours(12)->setMinutes(00)->setSeconds(00);
         if ($scheduledDeliveryDate->isAfter($scheduledDeliveryDateAtTwelve)) {

@@ -461,6 +461,7 @@ class ResourcesController extends AbstractFOSRestController
                     $estimated = $this->orderService->getNextAvailableDay($preferred, $date);
 
                     $order->setEstimatedDeliveryDate(New DateTime($estimated));
+                    $order->setScheduledDeliveryDate(New DateTime($estimated));
                     $this->em->flush();
                     $op = 'success';
                     $result = $estimated;
