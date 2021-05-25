@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AboutStoreRepository;
 use App\Entity\Promotion\PromotionCoupon;
 use Sylius\Component\Mailer\Sender\SenderInterface;
+use Sylius\Component\Payment\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -394,6 +395,39 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+        if (!$order instanceof Order) {
+            $statusCode = Response::HTTP_NOT_FOUND;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no existe.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        /**
+         * Si ya hay pago, retornar un 429 (Too many requests)
+         */
+        $payments = (int)$this->entityManager->getRepository('App:Payment\Payment')
+            ->createQueryBuilder('payment')
+            ->select('COUNT(payment)')
+            ->andWhere('payment.order = :order')
+            ->andWhere('payment.state NOT IN (:notValidStates)')
+            ->setParameter('order', $order)
+            ->setParameter('notValidStates', [
+                PaymentInterface::STATE_REFUNDED,
+                PaymentInterface::STATE_CANCELLED,
+                PaymentInterface::STATE_FAILED,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($payments > 0) {
+            $statusCode = Response::HTTP_TOO_MANY_REQUESTS;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Already paid.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
 
         if (null == $order->getCustomer()) {
             $order->setState('cart');
