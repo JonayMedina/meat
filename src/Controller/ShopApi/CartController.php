@@ -407,19 +407,7 @@ class CartController extends AbstractFOSRestController
         /**
          * Si ya hay pago, retornar un 429 (Too many requests)
          */
-        $payments = (int)$this->entityManager->getRepository('App:Payment\Payment')
-            ->createQueryBuilder('payment')
-            ->select('COUNT(payment)')
-            ->andWhere('payment.order = :order')
-            ->andWhere('payment.state NOT IN (:notValidStates)')
-            ->setParameter('order', $order)
-            ->setParameter('notValidStates', [
-                PaymentInterface::STATE_REFUNDED,
-                PaymentInterface::STATE_CANCELLED,
-                PaymentInterface::STATE_FAILED,
-            ])
-            ->getQuery()
-            ->getSingleScalarResult();
+        $payments = $this->getPaymentsCounter($order);
 
         if ($payments > 0) {
             $statusCode = Response::HTTP_TOO_MANY_REQUESTS;
@@ -654,5 +642,26 @@ class CartController extends AbstractFOSRestController
         $this->addShipping($order);
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Order $order
+     * @return int
+     */
+    private function getPaymentsCounter(Order $order): int
+    {
+        return (int)$this->entityManager->getRepository('App:Payment\Payment')
+            ->createQueryBuilder('payment')
+            ->select('COUNT(payment)')
+            ->andWhere('payment.order = :order')
+            ->andWhere('payment.state NOT IN (:notValidStates)')
+            ->setParameter('order', $order)
+            ->setParameter('notValidStates', [
+                PaymentInterface::STATE_REFUNDED,
+                PaymentInterface::STATE_CANCELLED,
+                PaymentInterface::STATE_FAILED,
+            ])
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }
