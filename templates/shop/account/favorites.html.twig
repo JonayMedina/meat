@@ -251,7 +251,7 @@
                 });
 
                 $('#delete').click(function () {
-                    var id = $(this).data('id');
+                    var id = $(this).attr('data-id');
                     $deleteModal.modal('hide');
                     blockPage();
 
@@ -259,7 +259,7 @@
                         url: Routing.generate("store_api_favorites_remove", { version: 1}),
                         method: "DELETE",
                         data: JSON.stringify({
-                            product: $(this).attr('data-id')
+                            product: id
                         }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
