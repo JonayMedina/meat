@@ -218,12 +218,18 @@ class OrderService
     /**
      * Merge available carts and return merged cart.
      * @param ShopUser|null $user
+     * @param null $token
      * @return Order
      */
-    public function mergeCarts(ShopUser $user = null): Order
+    public function mergeCarts(ShopUser $user = null, $token = null): Order
     {
         if (!$user instanceof ShopUser) {
             throw new NotFoundHttpException('Esta API necesita autenticación por JWT');
+        }
+
+        /** Update order with no customer_id */
+        if (!empty($token)) {
+            $this->updateOrphanCart($user, $token);
         }
 
         $orders = $this->getOrders($user);
@@ -765,5 +771,22 @@ class OrderService
     private function isScheduledDeliveryDateAvailable(Carbon $scheduledDeliveryDate): bool
     {
         return !($this->isHoliday($scheduledDeliveryDate) || $this->isSunday($scheduledDeliveryDate));
+    }
+
+    /**
+     * @param ShopUser $user
+     * @param $token
+     */
+    private function updateOrphanCart(ShopUser $user, $token): void
+    {
+        $order = $this->entityManager->getRepository('App:Order\Order')
+            ->findOneBy(['tokenValue' => $token]);
+
+        if ($order instanceof Order && !$order->getCustomer()) {
+            $customer = $user->getCustomer();
+
+            $order->setCustomer($customer);
+            $this->entityManager->flush();
+        }
     }
 }

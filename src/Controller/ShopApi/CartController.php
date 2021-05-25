@@ -131,12 +131,14 @@ class CartController extends AbstractFOSRestController
      *     methods={"GET"}
      * )
      *
+     * @param Request $request
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         /** @var ShopUser $user */
         $user = $this->getUser();
+        $token = $request->get('token');
 
         if (!$user instanceof ShopUser) {
             $statusCode = Response::HTTP_BAD_REQUEST;
@@ -147,7 +149,7 @@ class CartController extends AbstractFOSRestController
         }
 
         try  {
-            $mainOrder = $this->orderService->mergeCarts($user);
+            $mainOrder = $this->orderService->mergeCarts($user, $token);
             $this->addAdjustments($mainOrder);
 
             if (null == $mainOrder->getCustomer()) {
@@ -156,7 +158,7 @@ class CartController extends AbstractFOSRestController
             }
 
             $statusCode = Response::HTTP_OK;
-            $mainOrder = $this->get('app.service.order')->sanitizeCart($mainOrder);
+            $mainOrder = $this->orderService->sanitizeCart($mainOrder);
             $serialized = $this->orderService->serializeOrder($mainOrder);
             $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Merged...', $serialized);
             $view = $this->view($response, $statusCode);
