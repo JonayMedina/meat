@@ -662,6 +662,7 @@ class CartController extends AbstractFOSRestController
                 PaymentInterface::STATE_REFUNDED,
                 PaymentInterface::STATE_CANCELLED,
                 PaymentInterface::STATE_FAILED,
+                PaymentInterface::STATE_CART,
             ])
             ->getQuery()
             ->getSingleScalarResult();
