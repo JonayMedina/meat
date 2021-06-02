@@ -530,10 +530,10 @@
                 var month = (date.getMonth() + 1) < 9 ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1);
                 var dmy = day + "-" + month + "-" + date.getFullYear();
 
-                if (!unavailableDates.includes(dmy)) {
-                    return [true, ""];
-                } else {
+                if (unavailableDates.includes(dmy) || date.getDay() === 0) {
                     return [false, "", "Unavailable"];
+                } else {
+                    return [true, ""];
                 }
             }
 
