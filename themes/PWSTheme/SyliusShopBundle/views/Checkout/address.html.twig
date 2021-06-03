@@ -337,11 +337,38 @@
                 "{{ holiday.date|date('d-m-Y') }}",
                 {% endfor %}
             ];
-            var deliveryHours = [
-                {% for deliveryHour in about_store('delivery-hours')|format_schedule %}
-                    '{{ deliveryHour }}',
-                {% endfor %}
-            ];
+
+            function setDeliveryHours() {
+                var scheduledValue = $('#sylius_checkout_address_scheduledDate').val().split("/");
+                var scheduledValueDate = new Date(scheduledValue[2], scheduledValue[1] - 1, scheduledValue[0]);
+                var hours = [];
+
+                if (scheduledValueDate.getDay() === 6) {
+                    hours = [
+                        {% for key, deliveryHour in about_store('delivery-hours')|format_schedule %}
+                            {% if key == 0 %}
+                                '{{ deliveryHour }}',
+                            {% endif %}
+                        {% endfor %}
+                    ];
+                } else {
+                    hours = [
+                        {% for deliveryHour in about_store('delivery-hours')|format_schedule %}
+                            '{{ deliveryHour }}',
+                        {% endfor %}
+                    ];
+                }
+
+                return hours;
+            }
+
+            var deliveryHours = [];
+            deliveryHours = setDeliveryHours();
+
+            $("#sylius_checkout_address_scheduledDate").change(function() {
+                setTimeout(location.reload.bind(location), 2000);
+            });
+
             moment.locale('es');
             var step = document.querySelector("#address-step");
 
