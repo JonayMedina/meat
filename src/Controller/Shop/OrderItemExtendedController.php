@@ -21,7 +21,7 @@ class OrderItemExtendedController extends OrderItemController
 
         if ($user instanceof ShopUser) {
             try {
-                $cart = $this->get('app.service.order')->mergeCarts($user);
+                $cart = $this->get('app.service.order')->mergeCartsFromContext($user, $this->getCurrentCart());
             } catch (\Exception $e) {
                 $cart = $this->getCurrentCart();
             }

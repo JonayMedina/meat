@@ -288,6 +288,78 @@ class OrderService
     }
 
     /**
+     * Merge available carts and contexts cart, return merged cart.
+     * @param ShopUser|null $user
+     * @param Order|null $cart
+     * @return Order
+     */
+    public function mergeCartsFromContext(ShopUser $user = null, Order $cart = null): Order
+    {
+        if (!$user instanceof ShopUser) {
+            throw new NotFoundHttpException('Esta API necesita autenticación por JWT');
+        }
+    
+        /** Update order with no customer_id */
+        if (!empty($cart)) {
+            $this->updateOrphanCartFromContext($user, $cart);
+        }
+
+        $orders = $this->getOrders($user);
+        /** @var ProductVariant[] $variants */
+        $variants = [];
+        $mainOrder = $orders[0] ?? null;
+
+        foreach ($orders as $index => $order) {
+            /** No sumar los productos del carrito que no se eliminará... */
+            if ($index > 0) {
+                /** @var OrderItem $orderItem */
+                foreach ($order->getItems() as $orderItem) {
+                    $variant = $orderItem->getVariant();
+                    $variants[$variant->getId()]['variant'] = $variant;
+
+                    /** calculate quantity max always... */
+                    if ($orderItem->getQuantity() > ($variants[$variant->getId()]['quantity'] ?? 0)) {
+                        $variants[$variant->getId()]['quantity'] = $orderItem->getQuantity();
+                    }
+                }
+            }
+        }
+
+        if (!$mainOrder instanceof Order) {
+            throw new NotFoundHttpException($this->translator->trans('app.api.cart.no_carts_available_for_current_user'));
+        }
+
+        foreach ($variants as $variant) {
+            /** @var OrderItem $orderItem */
+            $orderItem = $this->cartItemFactory->createNew();
+            $orderItem->setVariant($variant['variant']);
+            $this->itemQuantityModifier->modify($orderItem, $variant['quantity']);
+
+            $this->entityManager->persist($orderItem);
+
+            $mainOrder->addItem($orderItem);
+            $this->compositeOrderProcessor->process($mainOrder);
+        }
+
+        $this->repository->add($mainOrder);
+
+        /** Remove previous carts */
+        foreach ($orders as $index => $order) {
+            if ($index > 0) {
+                $this->repository->remove($order);
+            }
+        }
+
+        try {
+            $this->entityManager->flush();
+
+            return $mainOrder;
+        } catch (\Exception $exception) {
+            throw new BadRequestHttpException($exception->getMessage());
+        }
+    }
+
+    /**
      * Return serialized order object.
      * @param Order|null $order
      * @param bool $details
@@ -789,4 +861,19 @@ class OrderService
             $this->entityManager->flush();
         }
     }
+
+    /**
+     * @param ShopUser $user
+     * @param Order $cart
+     */
+    private function updateOrphanCartFromContext(ShopUser $user, Order $order): void
+    {
+        if ($order instanceof Order && !$order->getCustomer()) {
+            $customer = $user->getCustomer();
+
+            $order->setCustomer($customer);
+            $this->entityManager->flush();
+        }
+    }
+    
 }
