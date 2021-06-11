@@ -12,9 +12,9 @@
     {{ form_row(form.preferredTime) }}
 
     {% if not order.estimatedDeliveryDate %}
-        <p id="estimated" class="mh-color" style="display: none">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'now'|date('m/d/y')}) }}</p>
+        <p id="estimated" class="mh-color" style="display: none">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'now'|date('m/d/y H:i:s')}) }}</p>
     {% else %}
-        <p id="estimated" class="mh-color">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m/d/Y') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
+        <p id="estimated" class="mh-color">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m/d/Y H:i:s') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
     {% endif %}
 
     <div class="d-none">
