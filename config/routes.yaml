@@ -46,6 +46,12 @@ sylius_shop_api_add_coupon_to_cart:
     methods: [PUT]
     defaults:
         _controller: app.shop_api.cart:addCouponAction
+
+sylius_shop_api_remove_coupon_from_cart:
+    path: /shop-api/carts/{token}/coupon
+    methods: [DELETE]
+    defaults:
+        _controller: app.shop_api.cart:removeCouponAction
       
 meathouse_frontend_api:
     resource: "Controller/FrontendApi"

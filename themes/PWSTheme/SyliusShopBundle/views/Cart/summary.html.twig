@@ -100,6 +100,7 @@
             var toCheckout = false;
             var withCoupon = {% if cart.promotionCoupon %}true{% else %}false{% endif %};
             var $coupon = $('#sylius_cart_promotionCoupon');
+            var $removeCouponButton = $('#coupon-remove');
 
             localStorage.setItem('viewing', '');
 
@@ -117,6 +118,7 @@
 
             {% if cart.promotionCoupon %}
                 $coupon.attr('readonly', true);
+                $removeCouponButton.show();
             {% endif %}
 
             $toPay.click(function (evt) {
@@ -150,6 +152,7 @@
                 }
             });
 
+            // Call coupon add action
             $couponAdd.click(function (evt) {
                 evt.preventDefault();
 
@@ -192,6 +195,39 @@
                         });
                     }
                 }
+            });
+
+            // Call coupon remove action
+            $removeCouponButton.click(function (evt) {
+                evt.preventDefault();
+
+                blockPage();
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ path('sylius_shop_api_remove_coupon_from_cart', {'token': cart.tokenValue}) }}',
+                    data: {
+                        'coupon': $coupon.val()
+                    },
+                    success: function () {
+                        $removeCouponButton.hide();
+                        withCoupon = false;
+                        updateCart();
+                    },
+                    error: function (error) {
+                        let recordset = error['responseJSON'];
+                        var errorMsg = '{{ 'app.api.cart.coupon.error'|trans }}';
+                        $modal.find('.modal-title').html('{{ 'app.ui.cart.coupon.error.title'|trans }}');
+
+                        if (recordset['message']) {
+                            errorMsg = recordset['message'];
+                        }
+
+                        $modal.find('.modal-body').html(errorMsg);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    }
+                });
             });
 
             function updateCart() {
