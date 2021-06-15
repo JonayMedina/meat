@@ -1,4 +1,6 @@
 {% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+{% set itemsSubtotal = sylius_order_items_subtotal(cart) %}
+
 <div class="col-12 segment pt-4 xs-pb-2-i products-list favorites-list" style="display: block;">
     <div class="row">
         {% for key, item in cart.items %}
@@ -17,14 +19,18 @@
                 <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                     <div class="total row">
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                            <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.sub-total'|trans }}</p>
+                            <p class="pre-total-title title">{{ 'app.ui.cart.sub-total'|trans }}</p>
                             <p class="pre-total-title title" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ 'app.ui.cart.discount'|trans }}</p>
+                            {% if cart.shippingTotal > 0 %}
+                                <p class="pre-total-title title">{{ 'app.ui.cart.shipment'|trans }}</p>
+                            {% endif %}
                             <p class="title">{{ 'app.ui.cart.your_total'|trans }}</p>
                         </div>
                         <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                            {% if cart.promotionCoupon %}
-                                <p class="pre-total sub-total xs-text-right" data-value="{{ cart.total + (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.total + (cart.orderPromotionTotal * -1)) }}</p>
-                                <p class="discount xs-text-right" data-value="{{ (cart.orderPromotionTotal * -1) }}">{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
+                            <p class="pre-total sub-total xs-text-right" data-value="{{ itemsSubtotal }}">{{ money.convertAndFormat(itemsSubtotal) }}</p>
+                            <p class="discount xs-text-right" data-value="{{ (cart.orderPromotionTotal * -1) }}" {% if not cart.promotionCoupon %}style="display: none"{% endif %}>{{ money.convertAndFormat(cart.orderPromotionTotal) }}</p>
+                            {% if cart.shippingTotal > 0 %}
+                                <p class="pre-total sub-total xs-text-right" data-value="{{ cart.shippingTotal }}">+{{ money.convertAndFormat(cart.shippingTotal) }}</p>
                             {% endif %}
                             <p class="value xs-text-right" data-value="{{ cart.total }}">{{ money.convertAndFormat(cart.total) }}</p>
                         </div>
