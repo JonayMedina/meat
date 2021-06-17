@@ -218,6 +218,10 @@ class CartController extends AbstractFOSRestController
         $addressCloned->setCustomer(null);
         $addressCloned->setParent($address);
 
+        $addressCloned->setFirstName($address->getAnnotations());
+        $addressCloned->setFullAddress($address->getFullAddress());
+        $addressCloned->setTaxId($address->getTaxId());
+
         if (Address::TYPE_BILLING == $type) {
             $cart->setBillingAddress($addressCloned);
         }
