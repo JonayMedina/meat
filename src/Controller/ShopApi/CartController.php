@@ -32,6 +32,7 @@ use Sylius\Component\Order\Processor\OrderProcessorInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
+use Psr\Log\LoggerInterface;
 
 /**
  * CartController
@@ -85,6 +86,11 @@ class CartController extends AbstractFOSRestController
     private $orderProcessor;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * CartController constructor.
      * @param OrderRepository $repository
      * @param PromotionCouponRepository $couponRepository
@@ -97,6 +103,7 @@ class CartController extends AbstractFOSRestController
      * @param Factory $stateMachineFactory
      * @param RemoveCouponAction $removeCouponAction
      * @param OrderProcessorInterface $orderProcessor
+     * @param LoggerInterface $logger
      */
     public function __construct(
         OrderRepository $repository,
@@ -109,7 +116,8 @@ class CartController extends AbstractFOSRestController
         AboutStoreRepository $aboutStoreRepository,
         Factory $stateMachineFactory,
         RemoveCouponAction $removeCouponAction,
-        OrderProcessorInterface $orderProcessor
+        OrderProcessorInterface $orderProcessor,
+        LoggerInterface $logger
     ) {
         $this->repository = $repository;
         $this->couponRepository = $couponRepository;
@@ -122,6 +130,7 @@ class CartController extends AbstractFOSRestController
         $this->stateMachineFactory = $stateMachineFactory;
         $this->removeCouponAction = $removeCouponAction;
         $this->orderProcessor = $orderProcessor;
+        $this->logger = $logger;
     }
 
     /**
@@ -139,6 +148,8 @@ class CartController extends AbstractFOSRestController
         /** @var ShopUser $user */
         $user = $this->getUser();
         $token = $request->get('token');
+
+        $this->logger->error("prueba de logs");
 
         if (!$user instanceof ShopUser) {
             $statusCode = Response::HTTP_BAD_REQUEST;

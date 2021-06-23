@@ -31,6 +31,7 @@ use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Component\Core\Cart\Modifier\LimitingOrderItemQuantityModifier;
+use Psr\Log\LoggerInterface;
 
 class OrderService
 {
@@ -42,6 +43,11 @@ class OrderService
 
     /** Order will be sent next available day afternoon */
     const NEXT_DAY_AFTERNOON = 'NEXT_DAY_AFTERNOON';
+
+    /**
+     * @var LoggerInterface $logger
+     */
+    private $logger;
 
     /**
      * @var HolidayRepository
@@ -104,6 +110,7 @@ class OrderService
      * @param CompositeOrderProcessor $compositeOrderProcessor
      * @param CartItemFactoryInterface $cartItemFactory
      * @param ChannelContextInterface $channelContext
+     * @param LoggerInterface $logger
      */
     public function __construct(
         HolidayRepository $holidayRepository,
@@ -114,7 +121,8 @@ class OrderService
         LimitingOrderItemQuantityModifier $itemQuantityModifier,
         CompositeOrderProcessor $compositeOrderProcessor,
         CartItemFactoryInterface $cartItemFactory,
-        ChannelContextInterface $channelContext
+        ChannelContextInterface $channelContext, 
+        LoggerInterface $logger
     ) {
         $this->holidayRepository = $holidayRepository;
         $this->aboutStoreRepository = $aboutStoreRepository;
@@ -125,6 +133,7 @@ class OrderService
         $this->compositeOrderProcessor = $compositeOrderProcessor;
         $this->cartItemFactory = $cartItemFactory;
         $this->channelContext = $channelContext;
+        $this->logger = $logger;
     }
 
     /**
@@ -181,7 +190,7 @@ class OrderService
         }
 
         if ($scheduledDeliveryDate->lessThan($today)) {
-            throw new BadRequestHttpException('La fecha elegida para el envío no es valida, seleccione una fecha futura.');
+            throw new BadRequestHttpException('Debido a la hora actual, la fecha elegida para el envío no es valida, seleccione una fecha mayor al día de hoy.');
         }
 
         $hours = [];
@@ -200,7 +209,7 @@ class OrderService
             $timeRangeMinutes = (int)$timeRangeParts[1];
 
             if ((int)$immutableToday->format('H') >= $timeRangeHour && (int)$immutableToday->format('i') >= $timeRangeMinutes) {
-                throw new BadRequestHttpException('La fecha elegida para el envío no es valida, seleccione una fecha futura.');
+                throw new BadRequestHttpException('Debido a la hora actual, la fecha elegida para el envío no es valida, seleccione una fecha mayor al día de hoy.');
             }
         }
 
@@ -240,6 +249,16 @@ class OrderService
         foreach ($orders as $index => $order) {
             /** No sumar los productos del carrito que no se eliminará... */
             if ($index > 0) {
+                /** Agregar el cupon de la orden secundaria a la orden principal... */
+                $this->logger->info("prueba de logs");
+                // $mainOrder->addPromotion($order->getPromotions()[0]);
+                // $this->compositeOrderProcessor->process($mainOrder);
+
+                // if ($mainOrder->getPromotionCoupon() == null && $order->getPromotionCoupon() != null) {
+                //     $mainOrder->setPromotionCoupon($order->getPromotionCoupon());
+                //     $this->compositeOrderProcessor->process($mainOrder);
+                // }
+
                 /** @var OrderItem $orderItem */
                 foreach ($order->getItems() as $orderItem) {
                     $variant = $orderItem->getVariant();

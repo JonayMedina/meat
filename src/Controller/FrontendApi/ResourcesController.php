@@ -429,6 +429,7 @@ class ResourcesController extends AbstractFOSRestController
         $order = $this->orderRepository->findOneBy(['tokenValue' => $token]);
         $op = 'error';
         $result = "";
+        $errorMessage = '';
         $deliveryHours = $settingsService->getDeliveryHours();
 
         if ($order instanceof Order) {
@@ -466,7 +467,8 @@ class ResourcesController extends AbstractFOSRestController
                     $op = 'success';
                     $result = $estimated;
                 } catch (\Exception $e) {
-                    $op = 'error';
+                    $op = 'logic-error';
+                    $errorMessage = $e->getMessage();
                 }
             }
         } else {
@@ -486,6 +488,13 @@ class ResourcesController extends AbstractFOSRestController
                 $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
                     'title' => $this->translator->trans('app.api.cart.estimate.error.title'),
                     'message' => $this->translator->trans('app.api.cart.estimate.error.non_exists'),
+                ]);
+                break;
+            case 'logic-error':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                $data = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Error', [
+                    'title' => $this->translator->trans('app.api.cart.estimate.error.title'),
+                    'message' => $errorMessage,
                 ]);
                 break;
             case 'error':
