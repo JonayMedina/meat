@@ -1,0 +1,53 @@
+<a id="go-to-cart" href="{{ path('sylius_shop_cart_summary') }}" class="ui circular cart button">
+    <div class="cart-icon {% if not cart.empty %}not-empty{% endif %}">
+        <img class="cart icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/cart.svg" alt="cart icon">
+    </div>
+    {{ 'app.ui.cart'|trans }}
+</a>
+
+{% if not cart.empty %}
+    <script>
+        $(function () {
+            let $errorModal = $('#showErrorMessage');
+
+            if (!(Boolean)(localStorage.getItem('showed'))) {
+                if ($('#homepage').length > 0) {
+                    if (localStorage.getItem('cart') !== '{{ cart.tokenValue }}') {
+                        if (!(Boolean)(localStorage.getItem('viewing'))) {
+                            $('#showCartModal').modal('show');
+                            localStorage.setItem('cart', '{{ cart.tokenValue }}');
+                            localStorage.setItem('showed', 'true');
+                            localStorage.setItem('viewing', '');
+                        }
+                    } else {
+                        localStorage.setItem('showed', 'true');
+                        localStorage.setItem('viewing', '');
+                    }
+                }
+            }
+
+            $('#delete-cart').click(function (evt) {
+                evt.preventDefault();
+                $('#showCartModal').modal('hide');
+                blockPage();
+
+                $.ajax({
+                    type: 'DELETE',
+                    url: '{{ path('sylius_shop_api_drop_cart', {'token': cart.tokenValue}) }}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                })
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function () {
+                    $errorModal.find('.modal-title').html('{{ 'app.ui.cart.abandoned.delete.error.title'|trans }}');
+                    $errorModal.find('.modal-body').html('{{ 'app.ui.cart.abandoned.delete.error.message'|trans }}');
+
+                    unblockPage();
+                    $errorModal.modal('show');
+                });
+            });
+        });
+    </script>
+{% endif %}

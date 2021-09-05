@@ -1,0 +1,60 @@
+<div style="position: absolute; top: 20px; right: 20px;">
+    <div class="toast toast-success toast-bootstrap hide" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="{{ asset('meathouse/img/favicon-16x16.png') }}" alt="{{ app_name }}">
+            <strong class="mr-auto m-l-sm toast-title"></strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+
+        </div>
+    </div>
+</div>
+
+<div id="ui-success-title" style="display: none;">{{ 'app.ui.success_default_title'|trans }}</div>
+<div id="ui-error-title" style="display: none;">{{ 'app.ui.error_default_title'|trans }}</div>
+<div id="ui-yes" style="display: none;">{{ 'app.ui.yes'|trans }}</div>
+<div id="ui-no" style="display: none;">{{ 'app.ui.no'|trans }}</div>
+<div id="ui-cancel" style="display: none;">{{ 'app.ui.cancel'|trans }}</div>
+<div id="ui-delete" style="display: none;">{{ 'app.ui.delete'|trans }}</div>
+<div id="ui-delete-title" style="display: none;">{{ 'app.ui.delete_title'|trans }}</div>
+<div id="ui-delete-text" style="display: none;">{{ 'app.ui.delete_text'|trans }}</div>
+<div id="blockUIMessage" style="display:none;">
+    <div class="spinner-loader">
+        <img src="{{ asset('meathouse/img/spinner.gif') }}" alt="{{ app_name }}"/>
+        <span class="block-message">
+            {{ 'app.ui.block-ui-message'|trans }}
+        </span>
+    </div>
+</div>
+
+<script>
+    /**
+     * Datepicker JS defaults
+     * */
+    if ($.fn.datepicker.dates) {
+        $.fn.datepicker.dates['{{ app.request.locale  }}'] = {
+            days: ["{{ 'app.ui.dates.sunday' | trans }}", "{{ 'app.ui.dates.monday' | trans }}", "{{ 'app.ui.dates.tuesday' | trans }}", "{{ 'app.ui.dates.wednesday' | trans }}", "{{ 'app.ui.dates.thursday' | trans }}", "{{ 'app.ui.dates.friday' | trans }}", "{{ 'app.ui.dates.saturday' | trans }}"],
+            daysShort: ["{{ 'app.ui.dates.sun' | trans }}", "{{ 'app.ui.dates.mon' | trans }}", "{{ 'app.ui.dates.tue' | trans }}", "{{ 'app.ui.dates.wed' | trans }}", "{{ 'app.ui.dates.thu' | trans }}", "{{ 'app.ui.dates.fri' | trans }}", "{{ 'app.ui.dates.sat' | trans }}"],
+            daysMin: ["{{ 'app.ui.dates.su' | trans }}", "{{ 'app.ui.dates.mo' | trans }}", "{{ 'app.ui.dates.tu' | trans }}", "{{ 'app.ui.dates.we' | trans }}", "{{ 'app.ui.dates.th' | trans }}", "{{ 'app.ui.dates.fr' | trans }}", "{{ 'app.ui.dates.sa' | trans }}"],
+            months: ["{{ 'app.ui.dates.january' | trans }}", "{{ 'app.ui.dates.february' | trans }}", "{{ 'app.ui.dates.march' | trans }}", "{{ 'app.ui.dates.april' | trans }}", "{{ 'app.ui.dates.may' | trans }}", "{{ 'app.ui.dates.june' | trans }}", "{{ 'app.ui.dates.july' | trans }}", "{{ 'app.ui.dates.august' | trans }}", "{{ 'app.ui.dates.september' | trans }}", "{{ 'app.ui.dates.october' | trans }}", "{{ 'app.ui.dates.november' | trans }}", "{{ 'app.ui.dates.december' | trans }}"],
+            monthsShort: ["{{ 'app.ui.dates.jan' | trans }}", "{{ 'app.ui.dates.feb' | trans }}", "{{ 'app.ui.dates.mar' | trans }}", "{{ 'app.ui.dates.apr' | trans }}", "{{ 'app.ui.dates.ma_' | trans }}", "{{ 'app.ui.dates.jun' | trans }}", "{{ 'app.ui.dates.jul' | trans }}", "{{ 'app.ui.dates.aug' | trans }}", "{{ 'app.ui.dates.sep' | trans }}", "{{ 'app.ui.dates.oct' | trans }}", "{{ 'app.ui.dates.nov' | trans }}", "{{ 'app.ui.dates.dec' | trans }}"],
+            today: "{{ 'app.ui.today' | trans }}",
+            clear: "{{ 'app.ui.clear' | trans }}",
+            format: "yyyy-mm-dd",
+            titleFormat: "MM yyyy",
+            weekStart: 0
+        };
+
+        $.fn.datepicker.defaults.language = '{{ app.request.locale  }}';
+        $.fn.datepicker.defaults.format = 'yyyy-mm-dd';
+        $.fn.datepicker.defaults.startView = 1;
+        $.fn.datepicker.defaults.todayBtn = "linked";
+        $.fn.datepicker.defaults.keyboardNavigation = false;
+        $.fn.datepicker.defaults.forceParse = false;
+        $.fn.datepicker.defaults.autoclose = true;
+        $.fn.datepicker.defaults.todayHighlight = true;
+    }
+</script>

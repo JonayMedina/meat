@@ -23,7 +23,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "7.2",
         "ext-curl": "*",
         "ext-dom": "*",
         "ext-intl": "*",
@@ -43,7 +43,9 @@
         "hwi/oauth-bundle": "^0.6.3",
         "jbzoo/image": "^4.0",
         "knplabs/knp-paginator-bundle": "^5.1",
+        "laminas/laminas-diactoros": "^2.4",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "meng-tian/async-soap-guzzle": "0.2.5",
         "mpdf/mpdf": "^8.0",
         "nesbot/carbon": "^2.34",
         "oneup/flysystem-bundle": "^3.4",
@@ -98,7 +100,8 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Tribal\\": "tribal/"
         }
     },
     "autoload-dev": {

@@ -295,13 +295,17 @@ class ExtenderController extends AbstractController
                 $formattedDate = $expDate[1].$expDate[0];
                 $result = $paymentGateway->orderPayment($order, $card['name'], str_replace(" ", "", $card['number']), $formattedDate, $card['cvv']);
 
-                if (isset($result['responseCode']) && $result['responseCode'] == "00") {
-                    $session->set('tokenValue', $order->getTokenValue());
-                    $session->set('payment', null);
-                    $session->set('card', null);
-                    $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+                $htmlForm = $result['HTMLFormData'];
 
-                    return $this->redirectToRoute('sylius_shop_order_thank_you');
+                if ($htmlForm != '') {
+                    
+                    
+                    //$sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                    return $this->render('fac/three_ds.html.twig', [
+                        'HTMLFormData' => $htmlForm,
+                    ]);
+                    
                 } else {
                     $order->setCheckoutState(OrderCheckoutStates::STATE_PAYMENT_SELECTED);
                     $em->flush();

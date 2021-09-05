@@ -1,0 +1,6 @@
+<div class="col-12 association xs-pr-0">
+    <h4>{{ product_association.type.name }}</h4>
+    <div id="sylius-product-association-{{ product_association.type.name }}">
+        {% include '@SyliusShop/Product/_slider.html.twig' with {'products': product_association.associatedProducts} %}
+    </div>
+</div>

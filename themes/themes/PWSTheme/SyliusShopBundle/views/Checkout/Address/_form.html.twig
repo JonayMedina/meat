@@ -1,0 +1,33 @@
+<div id="sylius-shipping-address">
+    {% include '@SyliusShop/Common/Form/_address.html.twig' with {'form': form.shippingAddress, 'order': order} %}
+
+    <a id="show-scheduled" class="mt-3 mb-3" {% if order.scheduledDeliveryDate %}style="display: none"{% endif %}>{{ 'app.ui.checkout.order.schedule'|trans }}</a>
+    <div class="scheduled-date mb-3" {% if not order.scheduledDeliveryDate %}style="display: none"{% endif %}>
+        <button type="button" class="close-btn">
+            <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+        </button>
+        {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate ? order.scheduledDeliveryDate|date('d/m/Y') : ''}) }}
+    </div>
+
+    {{ form_row(form.preferredTime) }}
+
+    {% if not order.estimatedDeliveryDate %}
+        <p id="estimated" class="mh-color" style="display: none">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': 'now'|date('m/d/y H:i:s')}) }}</p>
+    {% else %}
+        <p id="estimated" class="mh-color">{{ 'app.ui.checkout.order.estimated_%date%'|trans({'%date%': '<span class="to-format-date" data-date="' ~ order.estimatedDeliveryDate|date('m/d/Y H:i:s') ~ '">' ~ order.estimatedDeliveryDate|date('d/m/y H:i:s')})|raw }}</p>
+    {% endif %}
+
+    <div class="d-none">
+        {{ form_widget(form.addressId, {'value': order.customer.defaultAddress ? order.customer.defaultAddress.id : '' }) }}
+        {{ form_widget(form.skipBilling, {'value': 'false'}) }}
+    </div>
+    {{ sonata_block_render_event('sylius.shop.checkout.address.shipping_address_form', {'order': order}) }}
+</div>
+
+<div class="d-none">
+    {{ form_row(form.differentBillingAddress, {'attr': {'data-toggles': 'sylius-billing-address'}}) }}
+    {{ form_row(form.billingAddress.fullAddress, {'value': order.billingAddress.fullAddress|default('-')}) }}
+    {{ form_row(form.billingAddress.annotations, {'value': order.billingAddress.annotations|default('-')}) }}
+    {{ form_row(form.billingAddress.phoneNumber, {'value': order.billingAddress.phoneNumber|default('-')}) }}
+    {{ form_row(form.billingAddress.taxId, {'value': order.billingAddress.taxId|default('')}) }}
+</div>

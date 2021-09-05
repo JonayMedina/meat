@@ -1,0 +1,111 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+
+{% block content %}
+    <div class="container first">
+        {% block header %}{% endblock %}
+        {% block flashes %}{% endblock %}
+
+        {{ sonata_block_render_event('sylius.shop.layout.before_content') }}
+
+        <div class="row home pt-5">
+            {% include '/frontend/pages/widgets/_search.html.twig' with {'search': search} %}
+        </div>
+
+        {{ render(url('store_categories')) }}
+
+        {{ sonata_block_render_event('sylius.shop.layout.after_content') }}
+
+        <div class="row">
+            {% if results|length > 0 %}
+                <div class="col-12 mt-3">
+                    {% include'/frontend/pages/widgets/_products.html.twig' with {'products': results}  %}
+                </div>
+            {% else %}
+                <div id="empty-search" class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 xs-mt-3">
+                    <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0 sm-pl-0 sm-pr-0">
+                        <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/empty-search.png" title="{{ 'app.ui.search.empty'|trans }}" alt="{{ 'app.ui.search.empty'|trans }}" width="auto" height="auto">
+                        <p class="mt-4 mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 md-pl-0 md-pr-0 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.search.empty.message'|trans }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        jQuery(function () {
+            (function ($) {
+                $('.taxons-carousel').owlCarousel({
+                    loop: false,
+                    margin: 15,
+                    nav: true,
+                    dots: false,
+                    items: 5,
+                    autoWidth: true,
+                    responsiveClass:true,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                    responsive:{
+                        0:{
+                            items: 2,
+                            autoWidth: true,
+                            nav: false
+                        },
+                        576:{
+                            items: 2,
+                            autoWidth: true
+                        },
+                        768:{
+                            items: 3,
+                            autoWidth: true
+                        },
+                        992:{
+                            items: 4,
+                            autoWidth: true
+                        },
+                        1200:{
+                            items: 5,
+                            autoWidth: true
+                        }
+                    }
+                });
+            })(jQuery);
+
+            calcPL();
+
+            $(window).resize(function () {
+                calcPL();
+            });
+
+            function calcPL () {
+                var $container =  $('.container');
+                var marg = ($container.outerWidth(true) - $container.outerWidth())/2;
+
+                if (window.innerWidth < 992) {
+                    marg = 15;
+                }
+
+                $('.carousel-caption').attr('style', 'right: ' + marg + 'px; left: ' + marg + 'px');
+                $('.carousel-indicators').attr('style', 'margin-right: ' + marg + 'px; margin-left: ' + marg + 'px');
+            }
+
+            $('.xpress-button').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.find('div.custom-overlay').attr('style', 'display: block;');
+
+                setTimeout(function () {
+                    $div.addClass('show');
+                }, 150);
+            });
+
+            $('button.close').click(function () {
+                let $div = $(this).closest('div.custom-overlay-container');
+                $div.removeClass('show');
+
+                setTimeout(function () {
+                    $div.find('div.custom-overlay').attr('style', 'display: none;');
+                }, 150);
+            });
+        });
+    </script>
+{% endblock %}

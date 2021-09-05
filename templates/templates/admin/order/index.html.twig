@@ -1,0 +1,245 @@
+{% extends "/admin/base.html.twig" %}
+
+{% block title %}{{ 'app.ui.orders_list'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12 orders">
+        <div class="row wrapper page-heading">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-4">
+                <h1>{{ 'app.ui.orders_list'|trans }}</h1>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 col">
+                <div class="title-action d-flex justify-content-end align-items-center flex-wrap">
+                    <div class="legend">
+                        <span class="pending">{{ 'app.ui.orders.states.pending'|trans }}</span>
+                        <span class="cancelled">{{ 'app.ui.orders.states.cancelled'|trans }}</span>
+                        <span class="delivered">{{ 'app.ui.orders.states.delivered'|trans }}</span>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="{{ path('orders_download', {
+                            'format': 'xlsx',
+                            'filter': app.request.get('filter'),
+                            'status': app.request.get('status'),
+                            'order': app.request.get('order')
+                        }) }}" class="btn btn-primary btn-lg btn-standard-width">
+                            <i class="fa fa-cloud-download pull-left"></i>
+                            &nbsp;
+                            {{'app.ui.orders.export_to_excel'|trans}}
+                        </a>
+                        <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-top-right-radius: 25px;border-bottom-right-radius: 25px; background-color: #AB172C; border-color: #AB172C;">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'csv',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">
+                                <i class="fa fa-file-csv"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_csv'|trans}}
+                            </a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'xls',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">
+                                <i class="fa fa-file-excel"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_excel_97'|trans}}
+                            </a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'html',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">
+                                <i class="fa fa-html5"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_html'|trans}}
+                            </a>
+                            <a class="dropdown-item" href="{{ path('orders_download', {
+                                'format': 'pdf',
+                                'filter': app.request.get('filter'),
+                                'status': app.request.get('status'),
+                                'order': app.request.get('order')
+                            }) }}">
+                                <i class="fa fa-file-pdf"></i>
+                                &nbsp;
+                                {{'app.ui.orders.export_to_pdf'|trans}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content no-padding">
+
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="search-box search-box-fullwidth" style="width: 100%;">
+                                    <input type="search" name="filter" class="search-box-input form-control" maxlength="50" placeholder="{{ 'app.ui.orders_search_label'|trans }}" value="{{ app.request.get('filter')|default('') }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 search-box">
+                                <select class="search-box-input status-filter form-control">
+                                    <option value="">{{ 'app.ui.order.status.all'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATE_CANCELLED') }}" {% if constant('App\\Entity\\Order\\Order::STATE_CANCELLED') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.cancelled'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATUS_DELIVERED') }}" {% if constant('App\\Entity\\Order\\Order::STATUS_DELIVERED') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.delivered'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::STATUS_PENDING') }}" {% if constant('App\\Entity\\Order\\Order::STATUS_PENDING') == app.request.get('status') %}selected{% endif %}>{{ 'app.ui.order.status.pending'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 search-box text-right">
+                                <label for="order-by-control">{{ 'app.ui.filter_order_by'|trans }}</label>
+                            </div>
+                            <div class="col-lg-2 search-box">
+                                <select id="order-by-control" class="search-box-input order-filter form-control">
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::SORT_RECENT') }}" {% if constant('App\\Entity\\Order\\Order::SORT_RECENT')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.order.sort.recent'|trans }}</option>
+                                    <option value="{{ constant('App\\Entity\\Order\\Order::SORT_ORDER_NUMBER') }}" {% if constant('App\\Entity\\Order\\Order::SORT_ORDER_NUMBER')  == app.request.get('order') %}selected{% endif %}>{{ 'app.ui.order.sort.order_number'|trans }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive-sm">
+                            <table class="table top-products-table" style="margin-bottom: 0;">
+                                <thead>
+                                <tr>
+                                    <th style="width: 1%;">&nbsp;</th>
+                                    <th>{{ 'app.ui.order.label'|trans }}</th>
+                                    <th>{{ 'app.ui.name'|trans }}</th>
+                                    <th>{{ 'app.ui.deliver_date'|trans }}</th>
+                                    <th>{{ 'app.ui.deliver_time'|trans }}</th>
+                                    <th>{{ 'app.ui.amount'|trans }}</th>
+                                    <th>&nbsp;</th>
+                                    <th class="actions-header">
+                                        {{ 'app.ui.actions'|trans }}
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for order in pagination %}
+                                    <tr>
+                                        <td class="order-{{ order.status }}"></td>
+                                        <td>
+                                            <strong>{{ '#' ~ order.number }}</strong>
+                                            <br>
+                                            {% if order.shippingAddress %}
+                                                {% if order.shippingAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_PENDING') %}
+                                                    <div class="dot bg-warning"></div>
+                                                {% endif %}
+
+                                                {% if order.shippingAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_VALIDATED') %}
+                                                    <div class="dot bg-primary"></div>
+                                                {% endif %}
+
+                                                {% if order.shippingAddress.status == constant('App\\Entity\\Addressing\\Address::STATUS_REJECTED') %}
+                                                    <div class="dot bg-danger"></div>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ order.customerName }}</td>
+                                        <td>
+                                            {% if order.estimatedDeliveryDate %}
+                                                {{ order.estimatedDeliveryDate|localizeddate("full", "none") }}
+                                            {% else %}
+                                                {{ 'app.ui.n/a'|trans }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ order.preferredDeliveryTime|default('app.ui.n/a'|trans) }}
+                                        </td>
+                                        <td>
+                                            <h4>{{ order.total|price|number_format_currency(currency) }}</h4>
+                                        </td>
+                                        <td>{{ ('app.ui.orders.states.'~order.status)|trans }}</td>
+                                        <td>
+                                            <a href="{{ path('orders_show', {id: order.id}) }}" class="btn btn-default btn-block" style="border-radius: 10px;">
+                                                {{ 'app.ui.view_detail'|trans }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="8" class="text-center">
+                                            {% if in_search_scope %}
+                                                {{ 'app.ui.orders_no_items_in_search'|trans|raw }}
+                                            {% else %}
+                                                {{ 'app.ui.orders_no_items_on_table'|trans|raw }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {{ knp_pagination_render(pagination) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+    <style>
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script>
+$(document).ready(function() {
+    var $wrapper = $('#wrapper');
+    var $searchBox = $wrapper.find('.search-box .search-box-input');
+    var $statusFilter = $wrapper.find('.search-box .status-filter');
+    var $orderFilter = $wrapper.find('.search-box .order-filter');
+
+    function filter() {
+        var searchText = $searchBox.val();
+        var status = $statusFilter.val();
+        var order = $orderFilter.val();
+
+        window.location = Routing.generate('orders_index', {
+            filter: searchText,
+            status: status,
+            order: order
+        });
+    }
+
+    $searchBox.on('keypress', function(event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+
+        if (keycode === '13') {
+            filter();
+        }
+    });
+
+    $searchBox.on('change', function() {
+        filter();
+    });
+
+    $statusFilter.on('change', function() {
+        filter();
+    });
+
+    $orderFilter.on('change', function() {
+        filter();
+    });
+});
+</script>
+{% endblock %}

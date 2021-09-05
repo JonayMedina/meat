@@ -1,0 +1,20 @@
+{% set ancestors = taxon.ancestors|reverse %}
+
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mh-breadcrumb mb-4 pt-4 pb-3 d-none d-sm-flex">
+        {% for ancestor in ancestors %}
+            {% if ancestor.isRoot() %}
+                <a href="{{ path('sylius_shop_product_index', {'slug': ancestor.slug, '_locale': ancestor.translation.locale}) }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_%taxon%'|trans({'%taxon%': ancestor.name}) }}</a>
+            {% else %}
+                <a href="{{ path('sylius_shop_product_index', {'slug': ancestor.slug, '_locale': ancestor.translation.locale}) }}">{{ ancestor.name }}</a>
+            {% endif %}
+            <div class="divider"> / </div>
+        {% endfor %}
+
+        {% if taxon.isRoot() %}
+            <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}"><i class="fas fa-chevron-left"></i> {{ 'app.ui.back_to_%taxon%'|trans({'%taxon%': taxon.name}) }}</a>
+        {% else %}
+            <a href="{{ path('sylius_shop_product_index', {'slug': taxon.slug, '_locale': taxon.translation.locale}) }}">{{ taxon.name }}</a>
+        {% endif %}
+    </div>
+</div>

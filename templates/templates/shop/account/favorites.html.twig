@@ -1,0 +1,465 @@
+{% extends '@SyliusShop/layout.html.twig' %}
+{% import "@SyliusShop/Common/Macro/money.html.twig" as money %}
+
+{% block extracontent %}
+    <div class="row favorites page pt-4">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 xs-mb-0">
+            <h1 class="text-center">{{ 'app.ui.my_favorites'|trans }}</h1>
+        </div>
+
+        {% if favorites|length > 0 %}
+            {% if about_store('show-search') %}
+                <div class="col-12 mb-4 favorites-exist">
+                    <form class="search-box form d-flex" role="search" method="get" action="">
+                        <label>
+                            <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/search.svg" title="{{ 'app.ui.search'|trans }}" alt="{{ 'app.ui.search'|trans }}" width="auto" height="auto">
+                            <input type="search" id="site-search" name="search" placeholder="{{ 'app.ui.favorites.search.placeholder'|trans }}">
+                        </label>
+                        <button class="btn-rounded pl-5 pr-5 mt-0 d-none d-sm-none d-md-block"><span style="display: block;">{{ 'app.ui.search'|trans }}</span><img style="display: none;" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/ajax-loader.gif" alt="{{ 'app.ui.loading'|trans }}" title="{{ 'app.ui.loading'|trans }}" width="auto" height="auto"></button>
+                    </form>
+                </div>
+            {% endif %}
+
+            <div class="col-12 favorites-exist">
+                {{ render(url('store_categories', {'from': 'favorites'})) }}
+            </div>
+
+            <div class="col-12 segment pt-4 xs-pb-4-i favorites-exist favorites-list" style="display: block;">
+                <div class="row">
+                    {% for favorite in favorites %}
+                        {% set product = favorite.product %}
+                        {% set available = true %}
+
+                        {% if product.variants.first.onHand < 1 %}
+                            {% set available = false %}
+                        {% endif %}
+
+                        <div class="col-12 favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
+                            <div class="row">
+                                <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                                    <div class="row prt-{{ product.id }}">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
+                                            <div class="row">
+                                                <div class="col-6 col-sm-6 col-md-6 col-lg-12 image-container">
+                                                    <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                                                        <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                                        {% if not available %}
+                                                            <div class="sold-out">{{ 'app.ui.sold_out'|trans }}</div>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-lg-none">
+                                                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+                                            <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
+                                            <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                                                {% if get_price(product)['isOffer'] %}
+                                                    <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
+                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                                {% else %}
+                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-pt-1">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+                                            {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithSubTotal.html.twig', 'productId': product.id})) }}
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 delete-content d-none d-md-none d-lg-flex">
+                                            <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="divider product-{{ product.id }} {{ get_principal_taxon(product.mainTaxon).code }} {{ product.name|lower|replace({' ': '-'}) }}"></div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="empty-search" class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 xs-mt-3" style="display: none;">
+                <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0 sm-pl-0 sm-pr-0">
+                    <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/empty-search.png" title="{{ 'app.ui.search.empty'|trans }}" alt="{{ 'app.ui.search.empty'|trans }}" width="auto" height="auto">
+                    <p class="mt-4 mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 md-pl-0 md-pr-0 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.search.empty.message'|trans }}</p>
+                </div>
+            </div>
+
+            <div id="no-favorites" class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0" style="display: none;">
+                <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0">
+                    <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/empty-favorites.png" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-4">{{ 'app.ui.favorites.empty'|trans }}</h2>
+                    <p class="mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.favorites.empty_instructions'|trans }}</p>
+                    <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0">
+                <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-0 xs-pb-0">
+                    <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/empty-favorites.png" title="{{ 'app.ui.favorites.empty'|trans }}" alt="{{ 'app.ui.favorites.empty'|trans }}" width="auto" height="auto">
+                    <h2 class="mt-4">{{ 'app.ui.favorites.empty'|trans }}</h2>
+                    <p class="mb-4 text-center xs-text-left mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.favorites.empty_instructions'|trans }}</p>
+                    <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="modal smaller fade" id="deleteFavorite" tabindex="-1" role="dialog" aria-labelledby="deleteFavoriteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="deleteFavoriteLabel">{{ 'app.ui.favorites.delete_favorite'|trans }}</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <p>{{ 'app.ui.favorites.delete.are_you_sure?'|trans }}</p>
+                    <div class="content"></div>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn-rounded inverted" data-dismiss="modal">{{ 'app.ui.back'|trans }}</button>
+                    <button id="delete" data-id="" type="button" class="btn-rounded">{{ 'app.ui.favorites.delete_from'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal smaller fade" id="showMessage" tabindex="-1" role="dialog" aria-labelledby="showMessageLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="showMessageLabel"></h5>
+                </div>
+                <div class="modal-body text-center"></div>
+                <div class="modal-footer text-center">
+                    <button id="cleanForm" type="button" class="btn-rounded" data-dismiss="modal">{{ 'app.ui.accept.short'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block addedCartModal %}
+    <div class="modal fade" id="product-in-cart" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="product-in-cartLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="product-in-cartLabel"></h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-8">
+                            <div class="row info">
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                                    <img class="product-image" src="" alt="{{ 'app.ui.product.image'|trans }}" title="{{ 'app.ui.product.image'|trans }}" width="auto" height="auto">
+                                    <img class="d-none d-lg-block" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/check.svg" title="{{ 'app.ui.check'|trans }}" alt="{{ 'app.ui.check'|trans }}" width="auto" height="auto">
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-8 product-text md-mt-2"><p></p></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-4 calculated md-mt-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p>{{ 'app.ui.quantity'|trans }}</p>
+                                    <p class="quantity-text"></p>
+                                </div>
+                                <div class="col-6">
+                                    <p>{{ 'app.ui.total'|trans }}</p>
+                                    <p class="total-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a data-dismiss="modal" class="btn-rounded inverted">{{ 'app.ui.return_to_favorites'|trans }}</a>
+                        <a href="{{ path('sylius_shop_cart_summary') }}" class="btn-rounded">{{ 'app.ui.go_to_my_cart'|trans }}</a>
+                    </div>
+                </div>
+                <div class="modal-footer d-none d-lg-block">
+                    <h4>{{ 'app.ui.complement_with'|trans }}</h4>
+                    {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% if favorites|length > 0 %}
+    {% block extrajs %}
+        <script>
+            $(document).ready(function () {
+                var $deleteModal = $('#deleteFavorite');
+                var $modal = $('#showMessage');
+                var typingTimer;
+                var doneTypingInterval = 1000;
+                var $search = $('#site-search');
+                var $searchBtn = $('form.search-box button');
+                var noFavorites = {{ favorites|length|e('js') }};
+
+                $('.taxons-carousel').owlCarousel({
+                    loop: false,
+                    margin: 15,
+                    nav: true,
+                    dots: false,
+                    items: 5,
+                    autoWidth: true,
+                    responsiveClass:true,
+                    navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+                    responsive:{
+                        0:{
+                            items: 2,
+                            autoWidth: true,
+                            nav: false
+                        },
+                        576:{
+                            items: 2,
+                            autoWidth: true
+                        },
+                        768:{
+                            items: 3,
+                            autoWidth: true
+                        },
+                        992:{
+                            items: 4,
+                            autoWidth: true
+                        },
+                        1200:{
+                            items: 5,
+                            autoWidth: true
+                        }
+                    }
+                });
+
+                $('.quantity-up').click(function () {
+                    calculateSubtotal($(this).closest('form'));
+                });
+
+                $('.quantity-down').click(function () {
+                    calculateSubtotal($(this).closest('form'));
+                });
+
+                $('a.delete').click(function () {
+                    var id = $(this).data('id');
+                    var $content = $('.favorites-list').find('.prt-' + id)[0].outerHTML;
+
+                    $deleteModal.find('.content').html($content);
+                    $deleteModal.find('#delete').attr('data-id', id);
+                    $deleteModal.modal('show');
+                });
+
+                $('#delete').click(function () {
+                    var id = $(this).attr('data-id');
+                    $deleteModal.modal('hide');
+                    blockPage();
+
+                    $.ajax({
+                        url: Routing.generate("store_api_favorites_remove", { version: 1}),
+                        method: "DELETE",
+                        data: JSON.stringify({
+                            product: id
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    })
+                    .done(function (data) {
+                        noFavorites--;
+                        unblockPage();
+
+                        if (noFavorites > 0) {
+                            cuteHide($('.favorites-list').find('.product-' + id));
+                        } else {
+                            showNoFavorites();
+                        }
+                    })
+                    .fail(function (error) {
+                        let recordset = error['responseJSON']['recordset'];
+                        $modal.find('.modal-title').html(recordset['title']);
+                        $modal.find('.modal-body').html(recordset['message']);
+
+                        unblockPage();
+                        $modal.modal('show');
+                    });
+                });
+
+                /* Filter by taxon */
+                var $btns = $('.owl-item').click(function() {
+                    showFavorites();
+
+                    if ($(this).find('.item').hasClass('all')) {
+                        showAllTaxons();
+                    } else {
+                        var $el = $('.' + $(this).find('.item').data('taxon'));
+
+                        if ($el.length > 1) {
+                            showElements($el);
+                        } else {
+                            showEmptySearch();
+                        }
+                    }
+                    $btns.find('.item').removeClass('current');
+                    $(this).find('.item').addClass('current');
+                });
+
+                {% if about_store('show-search') %}
+                    $search.on('keyup', function () {
+                        clearTimeout(typingTimer);
+                        searching();
+
+                        typingTimer = setTimeout(function () {
+                            initSearch();
+                        }, doneTypingInterval);
+                    });
+
+                    $('form.search-box').on('submit', function (evt) {
+                        evt.preventDefault();
+                        searching();
+
+                        setTimeout(function () {
+                            initSearch();
+                        }, 200);
+                    });
+
+                    function initSearch() {
+                        var $favoritesList = $('.favorites-list');
+                        var i = 0;
+                        var $el;
+
+                        if ((Boolean)($search.val()) && $search.val().length > 1) {
+                            $favoritesList.find('.product-name').each(function () {
+                                var $pName = $(this);
+                                var name = $pName.text().toLowerCase();
+
+                                if (name.includes($search.val().toLowerCase())) {
+                                    $pName.closest('.favorite-item').addClass('similar');
+                                    $('.divider.' + name.replace(' ', '-')).addClass('similar');
+                                    i++;
+                                } else {
+                                    $pName.closest('.favorite-item').removeClass('similar');
+                                    $('.divider.' + name.replace(' ', '-')).removeClass('similar');
+                                }
+                            });
+
+                            if (i > 0) {
+                                $el = $('.similar');
+
+                                if ($el.length > 0) {
+                                    showFavorites();
+                                    showElements($el);
+                                } else {
+                                    showEmptySearch();
+                                }
+                            } else {
+                                showEmptySearch();
+                            }
+                        } else {
+                            showFavorites();
+
+                            var $currentTaxon = $('.owl-carousel').find('.item.current');
+
+                            if ($currentTaxon.length > 0) {
+                                if ($currentTaxon.hasClass('all')) {
+                                    showAllTaxons()
+                                } else {
+                                    $el = $('.' + $currentTaxon.data('taxon'));
+
+                                    if ($el.length > 1) {
+                                        showElements($el);
+                                    } else {
+                                        showEmptySearch();
+                                    }
+                                }
+                            }
+                        }
+
+                        searched();
+                    }
+
+                    function searching() {
+                        $searchBtn.find('span').hide();
+                        $searchBtn.find('img').show();
+                    }
+
+                    function searched() {
+                        $searchBtn.find('img').hide();
+                        $searchBtn.find('span').show();
+                    }
+                {% endif %}
+
+                function calculateSubtotal($form) {
+                    var quantity = $form.find('input').val();
+                    var dataPrice = (String) ($form.data('price'));
+                    var currency = dataPrice.slice(0, 1);
+                    var price = dataPrice.replace(/\D/g, "")/100;
+                    var total = quantity*price;
+
+                    $form.find('.sub-total').html(currency + ' ' + total.toFixed(2));
+                }
+
+                // Animated element removal
+                function cuteHide(el) {
+                    el.animate({opacity: '0'}, 150, function(){
+                        el.animate({height: '0px'}, 150, function(){
+                            el.remove();
+                        });
+                    });
+
+                    setTimeout(function () {
+                        findFirstFavorite();
+                    }, 500);
+                }
+
+                function showFavorites() {
+                    $('#empty-search').hide();
+                    $('.favorites-list').fadeIn(450);
+                }
+
+                function showEmptySearch() {
+                    $('.favorites-list').hide();
+                    $('#empty-search').fadeIn(450);
+                }
+
+                function showAllTaxons() {
+                    $('.favorites-list .favorite-item').fadeIn(450).addClass('view');
+                    $('.favorites-list .divider').fadeIn(450);
+                    findFirstFavorite();
+                }
+
+                function showElements($el) {
+                    $el.addClass('view');
+                    $el.fadeIn(450);
+
+                    $('.favorites-list .favorite-item').not($el).removeClass('view').hide();
+                    $('.favorites-list .divider').not($el).removeClass('view').hide();
+                    findFirstFavorite();
+                }
+
+                function showNoFavorites() {
+                    $('.favorites-exist').remove();
+                    $('#empty-search').remove();
+                    $('#no-favorites').fadeIn(450);
+                }
+
+                findFirstFavorite();
+
+                function findFirstFavorite() {
+                    var i = 0;
+
+                    $('.favorites-list').find('.favorite-item.view').each(function () {
+                        var $favorite = $(this);
+
+                        if (i === 0) {
+                            $favorite.addClass('first');
+                        } else {
+                            $favorite.removeClass('first');
+                        }
+
+                        i++;
+                    });
+                }
+            });
+        </script>
+    {% endblock %}
+{% endif %}

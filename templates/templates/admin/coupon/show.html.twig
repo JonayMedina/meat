@@ -1,0 +1,126 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ coupon.code }}{% endblock %}
+
+{% block content %}
+    {% set promotion = coupon.promotion %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-4">
+                {{ UI.back(path('coupons_index')) }}
+                <br>
+                <h1>{{ 'app.ui.coupon_detail'|trans }}</h1>
+            </div>
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="{{ path('coupons_edit', {id: coupon.id}) }}" class="btn btn-primary btn-lg btn-standard-width">
+                        {{'app.ui.edit_coupon'|trans}}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="show-container">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.coupon_code_name'|trans }}</h3>
+                                    {{ coupon.code }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.coupon_code_status'|trans }}</h3>
+                                    {{ coupon.enabled ? 'app.ui.active'|trans : 'app.ui.inactive'|trans }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.description'|trans }}</h3>
+                                    {{ promotion.description|default('-') }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.quantiy_of_usages'|trans }}</h3>
+                                    {{ coupon.used|default('app.ui.n/a'|trans) }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.total_of_discounts'|trans }}</h3>
+                                    Q{{ totalOfDiscounts|default('0.00') }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.discount_type'|trans }}</h3>
+                                    {{ coupon.type(channel) }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.coupon_duration'|trans }}</h3>
+                                    {% if promotion.startsAt and promotion.endsAt %}
+                                        {{ promotion.startsAt|localizeddate("medium", "medium") }} - {{ promotion.endsAt|localizeddate("medium", "medium") }}
+                                    {% else %}
+                                        {{ 'app.ui.n/a'|trans }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.coupon_usage_limit'|trans }}</h3>
+                                    {% if coupon.perCustomerUsageLimit != constant('App\\Entity\\Promotion\\PromotionCoupon::MAX_USAGES_PER_USER') %}
+                                        {{ 'app.ui.coupon_one_usage_per_user'|trans }}
+                                        <br>
+                                    {% elseif coupon.usageLimit %}
+                                        {% trans with {'%x%': coupon.usageLimit} %}app.ui.coupon_limit_to_%x%_users{% endtrans %}
+                                        <br>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.created_at'|trans }}</h3>
+                                    {{ coupon.createdAt|localizeddate("medium", "none") }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <h3>{{ 'app.ui.created_by'|trans }}</h3>
+                                    {{ coupon.createdBy|default('app.ui.n/a'|trans) }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <div class="row border-bottom padding-bottom-35">
+                                <div class="col-lg-12">
+                                    <h3>{{ 'app.ui.updated_at'|trans }}</h3>
+                                    {{ coupon.updatedAt|localizeddate("medium", "none") }}
+                                </div>
+                            </div>
+                            <br><br>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sylius\Bundle\OrderBundle\Controller\OrderController;
 use Sylius\Component\Resource\Exception\UpdateHandlingException;
 
+use Tribal\Services\PaymentHandler;
+
 class OrderExtendedController extends OrderController
 {
     public function summaryAction(Request $request): Response
@@ -155,7 +157,7 @@ class OrderExtendedController extends OrderController
 
             /* If skip billing step is true */
             if (filter_var($skipBilling, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-                $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
+               $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
                 $stateMachine['transition'] = 'select_shipping';
 
                 $configuration->getParameters()->set('state_machine', $stateMachine);

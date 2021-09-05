@@ -27,9 +27,17 @@ use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Repository\AddressRepositoryInterface;
 use Sylius\Component\Core\Repository\CustomerRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
+use Tribal\Services\PaymentHandler;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Sylius\Component\Core\OrderCheckoutStates;
 
 class ResourcesController extends AbstractFOSRestController
 {
+
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var SenderInterface */
     private $sender;
 
@@ -88,8 +96,9 @@ class ResourcesController extends AbstractFOSRestController
      * @param EntityManagerInterface $entityManager
      * @param OrderService $orderService
      * @param HistoryService $historyService
+     * @param LoggerInterface $logger
      */
-    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager, OrderService $orderService, HistoryService $historyService)
+    public function __construct(SenderInterface $sender, TranslatorInterface $translator, CaptchaVerificationService $captchaVerification, SettingsService $settingsService, FavoriteService $favoriteService, ProductRepositoryInterface $productRepository, ContactUsController $contactUsController, UserRepositoryInterface $userRepository, AddressRepositoryInterface $addressRepository, OrderRepositoryInterface $orderRepository, CustomerRepositoryInterface $customerRepository, EntityManagerInterface $entityManager, OrderService $orderService, HistoryService $historyService, LoggerInterface $logger)
     {
         $this->sender = $sender;
         $this->translator = $translator;
@@ -105,6 +114,7 @@ class ResourcesController extends AbstractFOSRestController
         $this->customerRepository = $customerRepository;
         $this->orderService = $orderService;
         $this->historyService = $historyService;
+        $this->logger = $logger;
     }
 
     /**
@@ -117,7 +127,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function newMessageAction(Request $request) {
+    public function newMessageAction(Request $request)
+    {
         $data = json_decode($request->getContent(), true);
 
         if ($this->captchaVerification->verify($data['captcha_code'])) {
@@ -145,7 +156,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function addFavoriteAction(Request $request) {
+    public function addFavoriteAction(Request $request)
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         /**
@@ -174,7 +186,7 @@ class ResourcesController extends AbstractFOSRestController
             $op = 'error';
         }
 
-        switch($op){
+        switch ($op) {
             case 'success':
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
@@ -212,7 +224,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function removeFavoriteAction(Request $request) {
+    public function removeFavoriteAction(Request $request)
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         /**
@@ -241,7 +254,7 @@ class ResourcesController extends AbstractFOSRestController
             $op = 'error';
         }
 
-        switch($op){
+        switch ($op) {
             case 'success':
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
@@ -279,7 +292,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function newRequestPasswordResetAction(Request $request) {
+    public function newRequestPasswordResetAction(Request $request)
+    {
         $email = $request->get('email', null);
 
         if ($email) {
@@ -331,7 +345,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param Request $request
      * @return Response
      */
-    public function deleteAddressAction(Request $request) {
+    public function deleteAddressAction(Request $request)
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $data = json_decode($request->getContent(), true);
 
@@ -366,7 +381,7 @@ class ResourcesController extends AbstractFOSRestController
                         $this->em->flush();
 
                         $op = 'success';
-                    }  catch (\Exception $e) {
+                    } catch (\Exception $e) {
                         $op = 'error';
                     }
                 }
@@ -377,7 +392,7 @@ class ResourcesController extends AbstractFOSRestController
             $op = 'non-address';
         }
 
-        switch($op){
+        switch ($op) {
             case 'success':
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
@@ -423,7 +438,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param string $token
      * @return Response
      */
-    public function updateDeliveryTime(Request $request, $token, SettingsService $settingsService) {
+    public function updateDeliveryTime(Request $request, $token, SettingsService $settingsService)
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $data = json_decode($request->getContent(), true);
         $order = $this->orderRepository->findOneBy(['tokenValue' => $token]);
@@ -461,8 +477,8 @@ class ResourcesController extends AbstractFOSRestController
                 try {
                     $estimated = $this->orderService->getNextAvailableDay($preferred, $date);
 
-                    $order->setEstimatedDeliveryDate(New DateTime($estimated));
-                    $order->setScheduledDeliveryDate(New DateTime($estimated));
+                    $order->setEstimatedDeliveryDate(new DateTime($estimated));
+                    $order->setScheduledDeliveryDate(new DateTime($estimated));
                     $this->em->flush();
                     $op = 'success';
                     $result = $estimated;
@@ -475,7 +491,7 @@ class ResourcesController extends AbstractFOSRestController
             $op = 'non-order';
         }
 
-        switch($op){
+        switch ($op) {
             case 'success':
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
@@ -522,7 +538,8 @@ class ResourcesController extends AbstractFOSRestController
      * @param string $token
      * @return Response
      */
-    public function reorderAction(Request $request, string $token) {
+    public function reorderAction(Request $request, string $token)
+    {
         $this->denyAccessUnlessGranted('ROLE_USER');
         /** @var ShopUser $user */
         $user = $this->getUser();
@@ -544,7 +561,7 @@ class ResourcesController extends AbstractFOSRestController
             $op = 'non-order';
         }
 
-        switch($op){
+        switch ($op) {
             case 'success':
                 $statusCode = Response::HTTP_OK;
                 $data = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Ok', [
@@ -571,5 +588,91 @@ class ResourcesController extends AbstractFOSRestController
         $view = $this->view($data, $statusCode);
 
         return $this->handleView($view);
+    }
+
+
+    /**
+     * @Route(
+     *     "/payment",
+     *     name="store_api_payment",
+     *     methods={"POST"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @return Response
+     */
+
+
+    public function apiPayAction(Request $request)
+    {
+
+        $dataCard = array(
+            'orderNumber' => $request->request->get('orderNumber'),
+            'card_number' => $request->request->get('card_number'),
+            'amount' => $request->request->get('amount'),
+            'card_cvv2' => $request->request->get('card_cvv2'),
+            'exp_date' => $request->request->get('exp_date'),
+
+        );
+
+        $payment = new PaymentHandler();
+        $result = $payment->transaction($dataCard);
+
+        if ($result['is_3ds']) {
+
+            $html_form = $result['data']['Authorize3DSResult']['HTMLFormData'];
+
+            return new JsonResponse(['respponse' => $html_form], Response::HTTP_OK);
+        }
+
+        return new JsonResponse(['respponse' => "Aproved not 3DS"], Response::HTTP_OK);
+
+    }
+
+    /**
+     * @Route(
+     *     "/three_ds_return",
+     *     name="store_api_three_ds_return",
+     *     methods={"POST"},
+     *     options={"expose" = true}
+     * )
+     * @param Request $request
+     * @param SenderInterface $sender
+     * @return Response
+     */
+
+
+    public function apiTreeDSReturnAction(Request $request, SenderInterface $sender)
+    {
+        $session = $request->getSession();
+        $em = $this->getDoctrine()->getManager();
+        
+        $order = $this->repository->findOneBy(['number' => $request->request->get('orderNumber')]);
+
+        $payment = new PaymentHandler();
+        
+        $result = $payment->modification(
+            [
+                'orderNumber' => $order->getNumber(),
+                'amount' => $order->getTotal(),
+                'operation' => 1 // Capture
+            ]
+        );
+
+        if($result['TransactionModificationResult']['ReasonCode'] == '1101'){
+            $session->set('tokenValue', $order->getTokenValue());
+            $session->set('payment', null);
+            $session->set('card', null);
+
+            $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+            return $this->redirectToRoute('sylius_shop_order_thank_you');
+        }else{
+            $order->setCheckoutState(OrderCheckoutStates::STATE_PAYMENT_SELECTED);
+            $em->flush();
+            return $this->redirectToRoute('sylius_shop_checkout_complete', ['error' => $result['responseCode'] ?? 'Unknown']);
+        }
+
+        return new JsonResponse(['respponse' => "Aproved not 3DS"], Response::HTTP_OK);
+
     }
 }

@@ -49,7 +49,6 @@ class AdminSyncService
     public function syncOrderAfterCheckoutCompleted(Order $order): void
     {
         $url = $this->apiUrl . '/v1/orders/' . $order->getId();
-
         $metadata = [
             'id' => $order->getId(),
             'token' => $order->getTokenValue(),

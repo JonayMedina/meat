@@ -1,0 +1,80 @@
+<footer id="footer" class="bg-white p-0">
+    <div class="container">
+        {{ sonata_block_render_event('sylius.shop.layout.before_footer') }}
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+                <a class="logo d-block max-w-mx-content" href="{{ path('sylius_shop_homepage') }}"><img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/logo.png" alt="{{ app_name }} logo" title="{{ sylius.channel.name }} logo" width="auto" height="auto"/></a>
+            </div>
+            <div class="col-12 col-sm-12 col-md-5 col-lg-5 links">
+                <a href="{{ path('store_about_us') }}" class="d-block">{{ 'app.ui.frontend.about_procasa'|trans }}</a>
+                <a href="{{ path('store_work_with_us') }}" class="d-block">{{ 'app.ui.work_with_us'|trans }}</a>
+                <a href="{{ path('store_faqs') }}" class="d-block">{{ 'app.ui.faqs_list'|trans  }}</a>
+                <a href="{{ path('store_terms_page') }}" class="d-block">{{ 'app.ui.terms_and_conditions'|trans }}</a>
+            </div>
+            <div class="col-12 col-sm-12 col-md-5 col-lg-5 app-btns">
+                <p class="text-right">{{ 'app.ui.download_app'|trans  }} {{ app_name }}</p>
+                <div class="text-right">
+                    {% if about_store('app-store') %}
+                    <a href="{{ about_store('app-store') }}"><img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/app/app_store.png" alt="{{ 'app.ui.app_store_logo'|trans }}" title="{{ 'app.ui.app_store_logo'|trans }}" width="auto" height="auto"></a>
+                    {% endif %}
+                    {% if about_store('play-store') %}
+                    <a href="{{ about_store('play-store') }}"><img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/app/google_play.png" alt="{{ 'app.ui.google_play_logo'|trans }}" title="{{ 'app.ui.google_play_logo'|trans }}" width="auto" height="auto"></a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {{ sonata_block_render_event('sylius.shop.layout.after_footer') }}
+    </div>
+    <div class="bg-gray bottom-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                    <p>Procasa &copy; {{ "now"|date('Y') }}</p>
+                </div>
+                {% set i = 0 %}
+                {% if about_store('facebook') %}
+                    {% set i = i +1 %}
+                {% endif %}
+                {% if about_store('twitter') %}
+                    {% set i = i +1 %}
+                {% endif %}
+                {% if about_store('instagram') %}
+                    {% set i = i +1 %}
+                {% endif %}
+                {% if about_store('pinterest') %}
+                    {% set i = i +1 %}
+                {% endif %}
+                <div class="col-12 col-sm-4 col-md-4 col-lg-4 d-flex justify-content-{%  if i >= 4 %}between{% elseif i > 2 %}around{% else %}center{% endif %}">
+                    {% if about_store('facebook') %}
+                    <a href="{{ about_store('facebook') }}" title="Facebook link" class="{% if i <= 2 %}mr-4{% endif %}"><i class="fab fa-facebook"></i></a>
+                    {% endif %}
+                    {% if about_store('twitter') %}
+                    <a href="{{ about_store('twitter') }}" title="Twitter link" class="opposite {% if i <= 2 %}mr-4{% endif %}"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+                    {% if about_store('instagram') %}
+                    <a href="{{ about_store('instagram') }}" title="Instagram link" class="opposite {% if i <= 2 %}mr-4{% endif %}"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if about_store('pinterest') %}
+                    <a href="{{ about_store('pinterest') }}" title="Pinterest link" class="{% if i <= 2 %}mr-4{% endif %}"><i class="fab fa-pinterest"></i></a>
+                    {% endif %}
+                </div>
+                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                    <p class="text-right">{% trans with {"%name%": dev_name } %}app.ui.powered_by_%name% {% endtrans %} </p>
+                </div>
+                {%  if i >= 3 %}
+                <style>
+                    @media (max-width: 575px) {
+                        #footer .bottom-footer>div>div>div:nth-of-type(2) {
+                            justify-content: space-around !important;
+                        }
+                    }
+                </style>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="sticky-button" style="display: none">
+        <i class="fas fa-angle-up"></i>
+    </div>
+</footer>

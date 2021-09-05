@@ -1,0 +1,112 @@
+{% extends "/admin/base.html.twig" %}
+{% import "admin/_macros.html.twig" as UI %}
+
+{% block title %}{{ 'app.ui.about_procasa'|trans }}{% endblock %}
+
+{% block content %}
+    <div class="col-lg-12">
+
+        <div class="row wrapper page-heading">
+            <div class="col-sm-12">
+                <h1>{{ 'app.ui.about_procasa.alternative'|trans }}</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content padding-55">
+                        <h2>{{ 'app.ui.about_us'|trans }}</h2>
+                        <hr>
+                        <p>{{ 'app.ui.about_procasa_text'|trans }}</p>
+
+                        {{ form_start(form, {attr: {'novalidate': 'novalidate'}}) }}
+                        {{ form_row(form.aboutUs) }}
+
+                        <br><br>
+                        <h2>{{ 'app.ui.about_procasa_phrase'|trans }}</h2>
+                        <hr>
+
+                        <div class="form-group">
+                            {{ form_label(form.phrase) }}
+                            {{ form_widget(form.phrase) }}
+                            <div class="counter-label"></div>
+                        </div>
+
+                        <br>
+
+                        <div class="form-group">
+                            {{ form_label(form.author) }}
+                            {{ form_widget(form.author) }}
+                            <div class="counter-label"></div>
+                        </div>
+
+                        <br><br>
+                        <h2>{{ 'app.ui.about_procasa_links'|trans }}</h2>
+                        <hr>
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.facebookUrl},
+                            {'span': 6, 'field': form.twitterUrl}
+                        ]) }}
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.instagramUrl},
+                            {'span': 6, 'field': form.pinterestUrl}
+                        ]) }}
+
+                        {{ UI.row([
+                            {'span': 6, 'field': form.appStoreUrl},
+                            {'span': 6, 'field': form.playStoreUrl}
+                        ]) }}
+
+                        <br><br>
+                        <h2>{{ 'app.ui.contact_info'|trans }}</h2>
+                        <hr>
+
+                        {{ UI.row([
+                            {'span': 4, 'field': form.complaintsEmail},
+                            {'span': 4, 'field': form.contactEmail},
+                            {'span': 4, 'field': form.phoneNumber},
+                        ]) }}
+
+                        <br><br>
+                        <div class="form-group">
+                            <div class="text-center">
+                                <button class="btn btn-primary width-250" type="submit" data-style="zoom-in">{{ 'app.ui.save_changes'|trans }}</button>
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('meathouse/css/plugins/summernote/summernote-bs4.css') }}">
+{% endblock %}
+
+
+{% block javascript %}
+{{ parent() }}
+<script src="{{ asset('meathouse/js/plugins/summernote/summernote-bs4.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $('.summernote').summernote({
+            height: 250,
+            toolbar: [
+                ['style', ['style', 'bold', 'italic', 'underline']],
+                ['para', ['paragraph', 'ul', 'ol']],
+                ['fontsize', ['fontsize']],
+            ]
+        });
+
+        initCounter();
+    });
+</script>
+{% endblock %}

@@ -45,7 +45,9 @@
     {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
     <div class="extra {% if not available %}invisible{% endif %}">
-        <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/cart.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+<!--        <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/cart.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button> -->
+        <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse.com.gt/assets/shop/img/carrito.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+
     </div>
 
     {{ form_row(form._token) }}

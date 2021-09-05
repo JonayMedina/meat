@@ -27,6 +27,7 @@ use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Tribal\Services\PaymentHandler;
 
 class PaymentGatewayService
 {
@@ -330,7 +331,7 @@ class PaymentGatewayService
         $amount = $order->getTotal();
 
         /** Pay using Visa Epay... */
-        $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv);
+        $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order->getNumber());
 
         /**
          * Retrieve epay payment method
@@ -340,7 +341,7 @@ class PaymentGatewayService
         /** Get Currency */
         $currency = $this->currencyContext->getCurrencyCode();
 
-        /** Mark as paid */
+        /** Mark as paid */ //<<< MOVE to Capture transaction CAPTURE TRANSACTION
         if (isset($response['responseCode']) && '00' === $response['responseCode']) {
             try {
                 /**
@@ -363,7 +364,7 @@ class PaymentGatewayService
                 $this->logger->error($exception->getMessage());
 
                 /** Reverse transaction */
-                $response = $this->reverse($amount, $cardNumber, $expDate, $cvv);
+                $response = $this->reverse($order->getNumber(),$amount, $cardNumber, $expDate, $cvv);
 
                 /** PaymentState: paid -> refunded */
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
@@ -380,25 +381,29 @@ class PaymentGatewayService
         return $response;
     }
 
-    public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv): array
+    public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $orderId): array
     {
-        $response = $this
-            ->configureSell()
-            ->configureAuditNumber()
-            ->setPan($cardNumber)
-            ->setExpDate("$expDate")
-            ->setAmount($amount)
-            ->setCvv2($cvv)
-            ->request();
+        $dataCard = array(
+            'orderNumber' => $orderId,
+            'card_number' => $cardNumber,
+            'amount' => $amount,
+            'card_cvv2' => $cvv,
+            'exp_date' => $expDate,
+        );
 
-        if (!isset($response['response'])) {
+        $payment = new PaymentHandler();
+        $result = $payment->transaction($dataCard);
+
+        if (!isset($result['data']['Authorize3DSResult']['HTMLFormData'])) {
             return [];
         }
 
-        $response['response']['responseMessage'] = $this->getResponseMessage($response['response']['responseCode']);
+        $response['response']['responseMessage'] = $this->getResponseMessage('1001');
         $response['response']['cardHolder'] = $cardHolder;
         $response['response']['cardNumber'] = $this->maskCreditCard($cardNumber);
         $response['response']['dateTime'] = date('c');
+
+        $response['response']['HTMLFormData'] = $result['data']['Authorize3DSResult']['HTMLFormData'];
 
         return $response['response'];
     }
@@ -410,16 +415,18 @@ class PaymentGatewayService
      * @param $cvv
      * @return array
      */
-    public function reverse($amount, $cardNumber, $expDate, $cvv)
+    public function reverse($orderId, $amount, $cardNumber, $expDate, $cvv)
     {
-        return $this
-            ->configureReverse()
-            ->configureAuditNumber()
-            ->setPan($cardNumber)
-            ->setExpDate($expDate)
-            ->setAmount($amount)
-            ->setCvv2($cvv)
-            ->request();
+
+        $payment = new PaymentHandler();
+
+        return $payment->modification(
+            [
+                'orderNumber' => $orderId,
+                'amount' => $amount,
+                'operation' => 2 // Refaund on FAC
+            ]
+        );
     }
 
     /**
@@ -831,7 +838,7 @@ class PaymentGatewayService
      */
     private function getPaymentMethod(): PaymentMethod
     {
-        $gatewayName = 'visanet';
+        $gatewayName = 'bac_fac_3ds';
         $factoryName = 'sylius_payment';
 
         $paymentMethod = $this->paymentMethodRepository->findOneBy(['code' => self::PAYMENT_METHOD_EPAY]);

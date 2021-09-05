@@ -4,7 +4,8 @@
     <a id="show-scheduled" class="mt-3 mb-3" {% if order.scheduledDeliveryDate %}style="display: none"{% endif %}>{{ 'app.ui.checkout.order.schedule'|trans }}</a>
     <div class="scheduled-date mb-3" {% if not order.scheduledDeliveryDate %}style="display: none"{% endif %}>
         <button type="button" class="close-btn">
-            <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+<!--            <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">-->
+<img src="https://meathouse.com.gt/assets/shop/img/close-red.svg" title="{{ 'app.ui.close'|trans }}" alt="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
         </button>
         {{ form_row(form.scheduledDate, {'value': order.scheduledDeliveryDate ? order.scheduledDeliveryDate|date('d/m/Y') : ''}) }}
     </div>

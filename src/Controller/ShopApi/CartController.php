@@ -484,9 +484,9 @@ class CartController extends AbstractFOSRestController
 
                     $type = APIResponse::TYPE_INFO;
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
-                    $message = $result['responseMessage'];
+                    $htmlForm = $result['HTMLFormData'];
 
-                    if ('00' !== $result['responseCode']) {
+                    if ($htmlForm == '') {
                         $statusCode = Response::HTTP_BAD_REQUEST;
                         $type = APIResponse::TYPE_ERROR;
 
@@ -498,8 +498,13 @@ class CartController extends AbstractFOSRestController
                          * Seems everything was Ok, response code == 00
                          * Inject order into response
                          */
-                        $result['order'] = $this->orderService->serializeOrder($order);
-                        $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                        return $this->render('fac/three_ds.html.twig', [
+                            'HTMLFormData' => $htmlForm,
+                        ]);
+
+                        //$result['order'] = $this->orderService->serializeOrder($order);
+                        //$sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
                     }
 
                     $response = new APIResponse($statusCode, $type, $message, $result);

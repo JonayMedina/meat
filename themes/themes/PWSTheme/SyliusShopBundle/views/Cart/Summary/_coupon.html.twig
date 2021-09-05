@@ -1,0 +1,10 @@
+<div class="ui form" id="sylius-coupon">
+    <p>{{ 'app.ui.coupon.instructions'|trans|raw }}</p>
+    <div class="input">
+        {{ form_widget(form, {'attr': {'form': main_form, 'placeholder': 'app.ui.code'|trans}}) }}
+        <a id="coupon-add" class="btn-rounded">{{ 'app.ui.coupon.apply'|trans }}</a>
+        &nbsp;<a id="coupon-remove" class="btn-rounded" style="display: none;">{{ 'app.ui.cart.delete'|trans }}</a>
+    </div>
+    <br>
+    {{ form_errors(form) }}
+</div>

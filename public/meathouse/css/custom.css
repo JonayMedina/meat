@@ -51,7 +51,7 @@ body.mini-navbar #main-logo {
     border-color: #B03143;
     border-radius: 25px;
     height: 48px;
-    padding-top: 14px;
+    padding-top: 8px;
 }
 
 .btn-primary:hover, .btn-primary:visited, .btn-primary:active, .btn-primary:focus {

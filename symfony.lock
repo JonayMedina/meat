@@ -311,6 +311,9 @@
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
+    "laminas/laminas-diactoros": {
+        "version": "2.4.1"
+    },
     "laminas/laminas-eventmanager": {
         "version": "3.2.1"
     },
@@ -385,6 +388,18 @@
     },
     "matthiasnoback/symfony-dependency-injection-test": {
         "version": "v2.3.1"
+    },
+    "meng-tian/async-soap-guzzle": {
+        "version": "v0.4.0"
+    },
+    "meng-tian/php-async-soap": {
+        "version": "1.0.2"
+    },
+    "meng-tian/php-soap-interpreter": {
+        "version": "1.0.3"
+    },
+    "meng-tian/soap-http-binding": {
+        "version": "0.4.0"
     },
     "mikey179/vfsstream": {
         "version": "v1.6.5"
@@ -1111,6 +1126,15 @@
             "branch": "master",
             "version": "3.3",
             "ref": "6bdfa1a95f6b2e677ab985cd1af2eae35d62e0f6"
+        }
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
         }
     },
     "symfony/yaml": {

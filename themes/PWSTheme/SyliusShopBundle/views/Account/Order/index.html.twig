@@ -33,7 +33,9 @@
         {% else %}
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-5 xs-mb-0 segment">
                 <div class="text-center pt-5 pl-5 ml-5 pb-5 pr-5 mr-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0 xs-pt-2">
-                    <img src="https://meathouse-assets.s3.us-east-1.amazonaws.com/assets/img/icons/empty-history.png" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto">
+<!--                    <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/empty-history.png" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto"> -->
+                    <img src="https://meathouse.com.gt/assets/shop/img/p_emtpy_historial.png" title="{{ 'app.ui.order_history.empty'|trans }}" alt="{{ 'app.ui.order_history.empty'|trans }}" width="auto" height="auto">
+
                     <h2 class="mt-4">{{ 'app.ui.order_history.empty'|trans }}</h2>
                     <p class="text-center xs-text-left mb-0 mr-5 ml-5 pr-5 pl-5 xs-ml-0 xs-mr-0 xs-pr-0 xs-pl-0">{{ 'app.ui.order_history.empty_instructions'|trans|raw }}</p>
                     <a class="btn-rounded d-inline-block" href="{{ path('sylius_shop_homepage') }}">{{ 'app.ui.go_to_home'|trans }}</a>
