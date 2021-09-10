@@ -327,3 +327,9 @@ sylius_shop_product_show:
                     - "expr:service('sylius.context.channel').getChannel()"
                     - "expr:service('sylius.context.locale').getLocaleCode()"
                     - $slug
+
+fac_order_thank_you:
+    path: /order_token/{token}
+    methods: [GET]
+    defaults:
+        _controller: app.controller.shop.extender:showAction

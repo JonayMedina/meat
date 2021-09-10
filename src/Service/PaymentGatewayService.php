@@ -329,9 +329,8 @@ class PaymentGatewayService
         }
 
         $amount = $order->getTotal();
-
-        /** Pay using Visa Epay... */
-        $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order->getNumber());
+        /** Pay using FAC PAYMENT... */
+        $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);
 
         /**
          * Retrieve epay payment method
@@ -381,10 +380,17 @@ class PaymentGatewayService
         return $response;
     }
 
-    public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $orderId): array
+    public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order): array
     {
+
+        $expDate = trim($expDate);
+        
+        $year = substr($expDate , 0, 2);
+        $month = substr($expDate , 2, 2);
+        $expDate = $month.$year;
+
         $dataCard = array(
-            'orderNumber' => $orderId,
+            'orderNumber' => $order->getTokenValue(),
             'card_number' => $cardNumber,
             'amount' => $amount,
             'card_cvv2' => $cvv,
@@ -394,14 +400,33 @@ class PaymentGatewayService
         $payment = new PaymentHandler();
         $result = $payment->transaction($dataCard);
 
-        if (!isset($result['data']['Authorize3DSResult']['HTMLFormData'])) {
-            return [];
-        }
-
         $response['response']['responseMessage'] = $this->getResponseMessage('1001');
         $response['response']['cardHolder'] = $cardHolder;
         $response['response']['cardNumber'] = $this->maskCreditCard($cardNumber);
         $response['response']['dateTime'] = date('c');
+
+        if (!isset($result['data']['Authorize3DSResult']['HTMLFormData'])) {
+            return [];
+        }else{
+            /**
+             * Register payment in sylius.
+             * @var Payment $payment
+             */
+            $payment = $this->paymentFactory->createNew();
+
+            $payment->setOrder($order);
+            $payment->setDetails($response);
+            $payment->setCurrencyCode($this->currencyContext->getCurrencyCode());
+            $payment->setMethod($this->getPaymentMethod());
+            $payment->setAmount($amount);
+            $order->addPayment($payment);
+
+            $this->executeStateMachine($order, $payment);
+
+            $this->entityManager->flush();
+        }
+
+       
 
         $response['response']['HTMLFormData'] = $result['data']['Authorize3DSResult']['HTMLFormData'];
 

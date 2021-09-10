@@ -42,6 +42,7 @@ use Sylius\Component\Resource\Generator\RandomnessGeneratorInterface;
 use Sylius\Component\Core\Model\ShopUserInterface as SyliusUserInterface;
 use Sylius\Bundle\CoreBundle\Form\Type\Customer\CustomerRegistrationType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Sylius\Component\Core\OrderPaymentStates;
 
 class ExtenderController extends AbstractController
 {
@@ -62,6 +63,9 @@ class ExtenderController extends AbstractController
 
     /** @var FactoryInterface */
     private $oauthFactory;
+
+    /** @var string */
+    protected $paymentState = OrderPaymentStates::STATE_CART;
 
     /**
      * ExtenderController constructor.
@@ -300,7 +304,7 @@ class ExtenderController extends AbstractController
                 if ($htmlForm != '') {
                     
                     
-                    //$sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+                    
 
                     return $this->render('fac/three_ds.html.twig', [
                         'HTMLFormData' => $htmlForm,
@@ -331,6 +335,31 @@ class ExtenderController extends AbstractController
             }
         } else {
             return $this->redirectToRoute('sylius_shop_cart_summary', ['error' => true]);
+        }
+    }
+
+     /**
+     * @param Request $request
+     * @return RedirectResponse
+     * @param SenderInterface $sender
+     */
+    public function showAction(Request $request, SenderInterface $sender)
+    {
+        $id = $request->get('token');
+
+        $manager = $this->get('doctrine')->getManager();
+        
+        $order = $manager->getRepository('App:Order\Order')->findOneBy(['tokenValue' => $id]);
+
+        if ($order instanceof Order) {
+            if ($order->getPaymentState() != OrderPaymentStates::STATE_PAID) {
+                $order->setPaymentState(OrderPaymentStates::STATE_PAID);
+                $manager->flush();
+                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+            }
+            return $this->render('@SyliusShop/Order/thankYou.html.twig', ['order' => $order]);
+        } else {
+            return $this->redirectToRoute('sylius_shop_homepage');
         }
     }
 

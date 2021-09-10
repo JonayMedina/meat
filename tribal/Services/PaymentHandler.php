@@ -210,9 +210,10 @@ class PaymentHandler
     }
 
     public function convertAmount($amount){
-        $amount = number_format( $amount, 2 );
+        $amount = number_format( $amount, 0 );
         $amount = strval($amount);
         $amount = str_replace('.', '', $amount);
+        $amount = str_replace(',', '', $amount);
         $mask = substr_replace('000000000000', '', 12 - strlen( $amount) , strlen( $amount) );
         $amount = substr_replace($mask, $amount, 12 - strlen( $amount) , 1 );
         return $amount;
