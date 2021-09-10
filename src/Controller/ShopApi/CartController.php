@@ -545,6 +545,156 @@ class CartController extends AbstractFOSRestController
         }
     }
 
+
+    /**
+     * @Route(
+     *     "/{token}/complete_mobile.{_format}",
+     *     name="shop_api_pay_mobile_cart",
+     *     methods={"POST"}
+     * )
+     * @param Request $request
+     * @param PaymentGatewayService $paymentService
+     * @param SenderInterface $sender
+     * @return Response
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    public function payMobileAction(Request $request, PaymentGatewayService $paymentService, SenderInterface $sender) {
+        $token = $request->get('token');
+        $statusCode = Response::HTTP_OK;
+
+        /** @var Order $order */
+        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+        if (!$order instanceof Order) {
+            $statusCode = Response::HTTP_NOT_FOUND;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no existe.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        /**
+         * Si ya hay pago, retornar un 429 (Too many requests)
+         */
+        $payments = $this->getPaymentsCounter($order);
+
+        if ($payments > 0) {
+            $statusCode = Response::HTTP_TOO_MANY_REQUESTS;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Already paid.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        if (null == $order->getCustomer()) {
+            $order->setState('cart');
+
+            $statusCode = Response::HTTP_BAD_REQUEST;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, 'Este carrito no tiene asociado a ningún cliente.', []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+
+        try {
+            $this->addAdjustments($order);
+
+            if (!$order instanceof Order) {
+                throw new NotFoundHttpException('Cart not found');
+            }
+
+            $aboutStore = $this->aboutStoreRepository->findLatest();
+
+            if (($order->getTotal()/100) > $aboutStore->getMaximumPurchaseValue()) {
+                throw new BadRequestHttpException('La orden excede el máximo permitido.');
+            }
+
+            $realTotal = $order->getTotal();
+
+            if (abs($order->getOrderPromotionTotal()) > 0) {
+                $realTotal = (abs($order->getOrderPromotionTotal()) + $order->getTotal());
+            }
+
+            if (($realTotal/100) < $aboutStore->getMinimumPurchaseValue()) {
+                throw new BadRequestHttpException('La orden no cumple con el mínimo de compra permitido.');
+            }
+
+            $type = $request->get('type');
+
+            if ('credit_card' == $type) {
+                try {
+                    $cardHolder = trim($request->get('card_holder'));
+                    $cardNumber = str_replace(' ', '', trim($request->get('card_number')));;
+                    $expDate = trim($request->get('exp_date'));
+                    $cvv = trim($request->get('cvv'));
+
+                    if (strlen($expDate) === 3) {
+                        $year = substr($expDate , 0, 2);
+                        $month = '0'.substr($expDate , 2, 1);
+                        $expDate = $year . $month;
+                    }
+
+                    $type = APIResponse::TYPE_INFO;
+                    $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+                    $htmlForm = $result['HTMLFormData'];
+
+                    if ($htmlForm == '') {
+                        $statusCode = Response::HTTP_BAD_REQUEST;
+                        $type = APIResponse::TYPE_ERROR;
+
+                        if (empty($message)) {
+                            $message = 'Parece que hubo un error, inténtalo más tarde.';
+                        }
+                    } else {
+                        /**
+                         * Seems everything was Ok, response code == 00
+                         * Inject order into response
+                         */
+
+                        $response = new APIResponse($statusCode, $type, '', $htmlForm);
+
+                        //$result['order'] = $this->orderService->serializeOrder($order);
+                        //$sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+                    }
+
+                    $response = new APIResponse($statusCode, $type, $message, $result);
+
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
+                } catch (\Exception $exception) {
+                    $response = new APIResponse(Response::HTTP_BAD_REQUEST, APIResponse::TYPE_ERROR, 'Error on payment gateway', []);
+                    $view = $this->view($response, $statusCode);
+
+                    return $this->handleView($view);
+                }
+            }
+
+            if ('cash_on_delivery' == $type) {
+                $result = $paymentService->cashOnDelivery($order);
+
+                /** Inject order into response */
+                $result['order'] = $this->orderService->serializeOrder($order);
+                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+
+                $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, $result['message'] ?? '', $result);
+                $view = $this->view($response, $statusCode);
+
+                return $this->handleView($view);
+            }
+
+            throw new BadRequestHttpException('Invalid payment type');
+        } catch (\Exception $exception) {
+            $order->setState('cart');
+
+            $statusCode = Response::HTTP_BAD_REQUEST;
+            $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $exception->getMessage(), []);
+            $view = $this->view($response, $statusCode);
+
+            return $this->handleView($view);
+        }
+    }
+
     /**
      * @Route(
      *     "/{token}/schedule-my-delivery.{_format}",
