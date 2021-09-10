@@ -122,7 +122,7 @@ class PaymentHandler
     {
         $this->orderNumber = $transaction_data['orderNumber'];
         $this->amount = $this->convertAmount($transaction_data['amount']);
-        $this->sessionId= $transaction_data['session_id'];
+        $this->sessionId= isset($transaction_data['session_id']) ? $transaction_data['session_id'] : '';
         $this->signature = $this->sign(
             $this->password, 
             $this->facId, 

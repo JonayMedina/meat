@@ -417,7 +417,7 @@ class PaymentGatewayService
             $payment = $this->paymentFactory->createNew();
 
             $payment->setOrder($order);
-            $payment->setDetails($response);
+            $payment->setDetails($response['response']);
             $payment->setCurrencyCode($this->currencyContext->getCurrencyCode());
             $payment->setMethod($this->getPaymentMethod());
             $payment->setAmount($amount);

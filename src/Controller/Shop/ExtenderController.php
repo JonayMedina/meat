@@ -303,9 +303,6 @@ class ExtenderController extends AbstractController
 
                 if ($htmlForm != '') {
                     
-                    
-                    
-
                     return $this->render('fac/three_ds.html.twig', [
                         'HTMLFormData' => $htmlForm,
                     ]);
@@ -350,13 +347,15 @@ class ExtenderController extends AbstractController
         $manager = $this->get('doctrine')->getManager();
         
         $order = $manager->getRepository('App:Order\Order')->findOneBy(['tokenValue' => $id]);
+        
+        if($order->getPaymentState() != 'paid'){
+            $order->setPaymentState(OrderPaymentStates::STATE_PAID);
+            $manager->flush();
+            $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
+        }
+        
 
         if ($order instanceof Order) {
-            if ($order->getPaymentState() != OrderPaymentStates::STATE_PAID) {
-                $order->setPaymentState(OrderPaymentStates::STATE_PAID);
-                $manager->flush();
-                $sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
-            }
             return $this->render('@SyliusShop/Order/thankYou.html.twig', ['order' => $order]);
         } else {
             return $this->redirectToRoute('sylius_shop_homepage');
