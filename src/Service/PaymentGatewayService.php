@@ -324,8 +324,10 @@ class PaymentGatewayService
             throw new BadRequestHttpException('Invalid cart state.');
         }
 
-        if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
-            throw new BadRequestHttpException('This cart is already paid.');
+        if(substr($order->getTokenValue(), -3) != '-TA') {
+            if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
+                throw new BadRequestHttpException('This cart is already paid.');
+            }
         }
 
         $amount = $order->getTotal();

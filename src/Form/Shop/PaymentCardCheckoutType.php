@@ -42,7 +42,9 @@ class PaymentCardCheckoutType extends AbstractType
                 'label' => 'app.ui.form.payment.expiration_date',
                 'attr' => [
                     'class' => 'datepicker',
-                    'placeholder' => 'MM/YY'
+                    'placeholder' => 'MM/YY',
+                    'maxlength' => 7,
+                    'minlength' => 7
                 ],
                 'mapped' => false,
                 'constraints' => [
@@ -52,8 +54,12 @@ class PaymentCardCheckoutType extends AbstractType
             ->add('cvv', PasswordType::class, [
                 'label' => 'app.ui.form.payment.cvv',
                 'mapped' => false,
+                'attr' => [
+                    'maxlength' => 4,
+                    'placeholder' => '123',
+                ],
                 'constraints' => [
-                    new NotBlank()
+                    new NotBlank(),
                 ]
             ])
         ;
