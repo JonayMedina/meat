@@ -651,7 +651,7 @@ class CartController extends AbstractFOSRestController
                          * Inject order into response
                          */
 
-                        $response = new APIResponse($statusCode, $type, '', $htmlForm);
+                        $response = new APIResponse($statusCode, $type, '', [$htmlForm]);
 
                         //$result['order'] = $this->orderService->serializeOrder($order);
                         //$sender->send('order_ticket', [$order->getCustomer()->getEmail()], ['order' => $order]);
