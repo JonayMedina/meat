@@ -30,55 +30,54 @@
                         {% set product = favorite.product %}
                         {% set available = true %}
 
-                        {% if product.variants.first.onHand < 1 %}
-                            {% set available = false %}
-                        {% endif %}
+                        {% if product.variants.first.onHand >= 1 %}
 
-                        <div class="col-12 favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
-                            <div class="row">
-                                <div class="col-12 col-sm-12 col-md-5 col-lg-5">
-                                    <div class="row prt-{{ product.id }}">
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
-                                            <div class="row">
-                                                <div class="col-6 col-sm-6 col-md-6 col-lg-12 image-container">
-                                                    <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
-                                                        <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
-                                                        {% if not available %}
-                                                            <div class="sold-out">{{ 'app.ui.sold_out'|trans }}</div>
-                                                        {% endif %}
-                                                    </a>
-                                                </div>
-                                                <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-lg-none">
-                                                    <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                            <div class="col-12 favorite-item view {{ get_principal_taxon(product.mainTaxon).code }} product-{{ product.id }} {{ product.name|lower|replace({' ': '-'}) }}">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-5 col-lg-5">
+                                        <div class="row prt-{{ product.id }}">
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 md-pb-1">
+                                                <div class="row">
+                                                    <div class="col-6 col-sm-6 col-md-6 col-lg-12 image-container">
+                                                        <a class="d-block image {% if not available %}sold-out{% endif %}" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                                                            <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                                                            {% if not available %}
+                                                                <div class="sold-out">{{ 'app.ui.sold_out'|trans }}</div>
+                                                            {% endif %}
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-6 col-sm-6 col-md-6 col-lg-12 delete-content d-flex d-lg-none">
+                                                        <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
-                                            <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
-                                            <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
-                                                {% if get_price(product)['isOffer'] %}
-                                                    <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
-                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
-                                                {% else %}
-                                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
-                                                {% endif %}
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+                                                <a class="name" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}><p class="product-name">{{ product.name }}</p></a>
+                                                <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                                                    {% if get_price(product)['isOffer'] %}
+                                                        <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
+                                                        {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                                    {% else %}
+                                                        {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                                    {% endif %}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-pt-1">
-                                    <div class="row">
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-9">
-                                            {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithSubTotal.html.twig', 'productId': product.id})) }}
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-3 delete-content d-none d-md-none d-lg-flex">
-                                            <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                                    <div class="col-12 col-sm-12 col-md-7 col-lg-7 sm-pt-1">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-9">
+                                                {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCartWithSubTotal.html.twig', 'productId': product.id})) }}
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-12 col-lg-3 delete-content d-none d-md-none d-lg-flex">
+                                                <a class="delete hvr-icon-buzz-out" data-id="{{ product.id }}"><span>{{ 'app.ui.favorites.delete'|trans|raw }}</span> <img class="hvr-icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/trash.svg" alt="{{ 'app.ui.favorites.delete'|trans }}" title="{{ 'app.ui.favorites.delete'|trans }}" width="auto" height="auto"></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="divider product-{{ product.id }} {{ get_principal_taxon(product.mainTaxon).code }} {{ product.name|lower|replace({' ': '-'}) }}"></div>
+                            <div class="divider product-{{ product.id }} {{ get_principal_taxon(product.mainTaxon).code }} {{ product.name|lower|replace({' ': '-'}) }}"></div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

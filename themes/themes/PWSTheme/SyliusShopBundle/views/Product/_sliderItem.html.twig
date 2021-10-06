@@ -2,56 +2,57 @@
 
 {{ sonata_block_render_event('sylius.shop.product.index.before_box', {'product': product}) }}
 
-<div class="item" style="width: 240px">
-    {% set available = true %}
+{% set available = true %}
 
-    {% if product.variants.first.onHand < 1 %}
-        {% set available = false %}
-    {% endif %}
+{% if product.variants.first.onHand < 1 %}
+    {% set available = false %}
+{% else %}
+    <div class="item" style="width: 240px">
 
-    <div class="custom-overlay-container {% if not available %}show sold-out{% endif %}">
-        <div class="bg-white">
-            <div class="image">
-                <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
-                    <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
-                </a>
-                <span class="{% if available %}xpress-button{% else %}xpress-button-disabled{% endif %}">{{ 'app.ui.express_buy'|trans }}</span>
-            </div>
-            <div class="content">
-                <a {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}>
-                    <p>{{ product.name }}</p>
-                </a>
-                <div>
-                    {% if not product.variants.empty() %}
-                        <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
-                            {% if get_price(product)['isOffer'] %}
-                                <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
-                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
-                            {% else %}
-                                {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
-                            {% endif %}
+        <div class="custom-overlay-container {% if not available %}show sold-out{% endif %}">
+            <div class="bg-white">
+                <div class="image">
+                    <a class="d-block" {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %} style="background: url('{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}')">
+                        <img src="{{ product.images.first.path|imagine_filter('sylius_shop_product_thumbnail') }}" alt="{{ product.name }}" title="{{ product.name }}" width="auto" height="auto">
+                    </a>
+                    <span class="{% if available %}xpress-button{% else %}xpress-button-disabled{% endif %}">{{ 'app.ui.express_buy'|trans }}</span>
+                </div>
+                <div class="content">
+                    <a {% if available %}href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}"{% endif %}>
+                        <p>{{ product.name }}</p>
+                    </a>
+                    <div>
+                        {% if not product.variants.empty() %}
+                            <div class="price {% if get_price(product)['isOffer'] %}offer{% endif %}">
+                                {% if get_price(product)['isOffer'] %}
+                                    <span class="original">{{ money.convertAndFormat(product.variants.first.channelPricings.first.originalPrice) }}</span>
+                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span class="offer">' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                {% else %}
+                                    {{ 'app.ui.produc.%price%_peer_%measure%'|trans({'%price%': '<span>' ~ money.calculatePrice(product|sylius_resolve_variant) ~ '</span>', '%measure%': product.measurementUnit.singular})|raw }}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="text-right mt-4 {% if not available %}invisible{% endif %}">
+                            <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded">{{ 'app.ui.view_detail'|trans }}</a>
                         </div>
-                    {% endif %}
-                    <div class="text-right mt-4 {% if not available %}invisible{% endif %}">
-                        <a href="{{ path('sylius_shop_product_show', {'slug': product.slug, '_locale': product.translation.locale}) }}" class="btn-rounded">{{ 'app.ui.view_detail'|trans }}</a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="custom-overlay">
-            <div>
-                {% if available %}
-                    <button type="button" class="close">
-                        <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/close-red.svg" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
-                    </button>
+            <div class="custom-overlay">
+                <div>
+                    {% if available %}
+                        <button type="button" class="close">
+                            <img src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/close-red.svg" alt="{{ 'app.ui.close'|trans }}" title="{{ 'app.ui.close'|trans }}" width="auto" height="auto">
+                        </button>
 
-                    {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCart.html.twig', 'productId': product.id})) }}
-                {% else %}
-                    <h3>{{ 'app.ui.sold_out'|trans }}</h3>
-                {% endif %}
+                        {{ render(url('sylius_shop_partial_cart_add_item', {'template': '@SyliusShop/Product/Show/_addToCart.html.twig', 'productId': product.id})) }}
+                    {% else %}
+                        <h3>{{ 'app.ui.sold_out'|trans }}</h3>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-{{ sonata_block_render_event('sylius.shop.product.index.after_box', {'product': product}) }}
+    {{ sonata_block_render_event('sylius.shop.product.index.after_box', {'product': product}) }}
+{% endif %}

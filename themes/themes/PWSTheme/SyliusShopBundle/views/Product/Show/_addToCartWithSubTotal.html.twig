@@ -11,43 +11,44 @@
     {% if product.variants.first.onHand < 1 %}
         {% set available = false %}
         {% set class = 'unavailable' %}
-    {% endif %}
+    {% else %}
 
-    {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
-        'class': 'ui loadable form text-center product-buy ' ~ class, 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
-        'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': product.measurementUnit.plural }}) }}
-    {{ form_errors(form) }}
-    <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
-    <div class="d-none">
-        {% if not product.simple %}
-            {% if product.variantSelectionMethodChoice %}
-                {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
-            {% else %}
-                {% include '@SyliusShop/Product/Show/_options.html.twig' %}
+        {{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart-' ~ product.id,
+            'class': 'ui loadable form text-center product-buy ' ~ class, 'novalidate': 'novalidate', 'data-id': product.id, 'data-name': product.name,
+            'data-img': product.images.first.path|imagine_filter('sylius_shop_product_thumbnail'), 'data-price': money.calculatePrice(product|sylius_resolve_variant), 'data-measure': product.measurementUnit.plural }}) }}
+        {{ form_errors(form) }}
+        <div class="ui red label bottom pointing hidden sylius-validation-error" id="sylius-cart-validation-error"></div>
+        <div class="d-none">
+            {% if not product.simple %}
+                {% if product.variantSelectionMethodChoice %}
+                    {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
+                {% else %}
+                    {% include '@SyliusShop/Product/Show/_options.html.twig' %}
+                {% endif %}
             {% endif %}
-        {% endif %}
-    </div>
-
-    <div class="required field {% if not available %}invisible{% endif %}">
-        {{ form_label(form.cartItem.quantity) }}
-        {{ form_errors(form.cartItem.quantity) }}
-        <div class="quantity">
-            {{ form_widget(form.cartItem.quantity) }}
         </div>
-        <p class="type">{{ product.measurementUnit.plural }}</p>
-    </div>
 
-    <div>
-        <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
-        <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
-    </div>
+        <div class="required field {% if not available %}invisible{% endif %}">
+            {{ form_label(form.cartItem.quantity) }}
+            {{ form_errors(form.cartItem.quantity) }}
+            <div class="quantity">
+                {{ form_widget(form.cartItem.quantity) }}
+            </div>
+            <p class="type">{{ product.measurementUnit.plural }}</p>
+        </div>
 
-    {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
+        <div>
+            <p class="sub-total-title">{{ 'app.ui.sub_total'|trans }}</p>
+            <p class="sub-total">{{ money.calculatePrice(product|sylius_resolve_variant) }}</p>
+        </div>
 
-    <div class="extra {% if not available %}invisible{% endif %}">
-        <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/cart.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
-    </div>
+        {{ sonata_block_render_event('sylius.shop.product.show.add_to_cart_form', {'product': product, 'order_item': order_item}) }}
 
-    {{ form_row(form._token) }}
-    {{ form_end(form, {'render_rest': false}) }}
+        <div class="extra {% if not available %}invisible{% endif %}">
+            <button type="submit" class="btn-rounded"><img class="cart icon" src="https://meathouse-assets-prod.s3.amazonaws.com/assets/img/icons/cart.svg"> {{ 'sylius.ui.add_to_cart'|trans }}</button>
+        </div>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    {% endif %}
 </div>
