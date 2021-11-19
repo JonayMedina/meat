@@ -163,15 +163,21 @@ class OrderExtendedController extends OrderController
                 $configuration->getParameters()->set('state_machine', $stateMachine);
                 $configuration->getParameters()->set('redirect', 'sylius_shop_checkout_select_payment');
 
+
+
                 /* Add shipment to order */
-                if (count($resource->getShipments()) <= 0) {
-                    /** @var ShipmentInterface $shipment */
-                    $shipment = $this->container->get('sylius.factory.shipment')->createNew();
-                    $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
-                    $resource->addShipment($shipment);
-                    $this->container->get('sylius.order_processing.order_processor')->process($resource);
-                    $this->container->get('sylius.manager.order')->flush();
-                }
+
+                // Remove existing shipments 
+                $resource->removeShipments();
+                /** @var ShipmentInterface $shipment */
+                $shipment = $this->container->get('sylius.factory.shipment')->createNew();
+                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
+                $resource->addShipment($shipment);
+                $this->container->get('sylius.order_processing.order_processor')->process($resource);
+                $this->container->get('sylius.manager.order')->flush();
+
+                /* END Add shipment to order */
+
 
                 $defaultBilling = $customer->getDefaultBillingAddress();
 
@@ -318,14 +324,16 @@ class OrderExtendedController extends OrderController
             $event = $this->eventDispatcher->dispatchPreEvent(ResourceActions::UPDATE, $configuration, $resource);
 
             /* Add shipment to order */
-            if (count($resource->getShipments()) <= 0) {
-                /** @var ShipmentInterface $shipment */
-                $shipment = $this->container->get('sylius.factory.shipment')->createNew();
-                $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
-                $resource->addShipment($shipment);
-                $this->container->get('sylius.order_processing.order_processor')->process($resource);
-                $this->container->get('sylius.manager.order')->flush();
-            }
+            $resource->removeShipments();
+
+            /** @var ShipmentInterface $shipment */
+            $shipment = $this->container->get('sylius.factory.shipment')->createNew();
+            $shipment->setMethod($this->container->get('sylius.repository.shipping_method')->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]));
+            $resource->addShipment($shipment);
+            $this->container->get('sylius.order_processing.order_processor')->process($resource);
+            $this->container->get('sylius.manager.order')->flush();
+
+            /* END Add shipment to order */
 
             if ($event->isStopped() && !$configuration->isHtmlRequest()) {
                 throw new HttpException($event->getErrorCode(), $event->getMessage());
