@@ -22,7 +22,7 @@ use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 use Sylius\Component\Product\Repository\ProductRepositoryInterface;
-
+use Psr\Log\LoggerInterface;
 /**
  * Class ResourcesController
  * @package App\Controller\Frontend
@@ -33,11 +33,17 @@ class ResourcesController extends AbstractController
     private $captchaKey;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ResourcesController constructor.
      * @param $captchaKey
      */
-    public function __construct($captchaKey) {
+    public function __construct($captchaKey, LoggerInterface $logger) {
         $this->captchaKey = $captchaKey;
+        $this->logger = $logger;
     }
 
     /**
