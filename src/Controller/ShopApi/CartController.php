@@ -610,13 +610,13 @@ class CartController extends AbstractFOSRestController
             }
 
 
-            $this->addAdjustments($order);
+            //$this->addAdjustments($order);
 
             /** do re-calculation here */
-            $order->recalculateItemsTotal();
-            $order->recalculateAdjustmentsTotal();
+            //$order->recalculateItemsTotal();
+            //$order->recalculateAdjustmentsTotal();
 
-            $this->entityManager->flush();
+            //$this->entityManager->flush();
 
 
             $realTotal = $order->getTotal();
