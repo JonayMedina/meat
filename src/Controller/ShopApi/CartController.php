@@ -609,6 +609,16 @@ class CartController extends AbstractFOSRestController
                 throw new BadRequestHttpException('La orden excede el máximo permitido.');
             }
 
+
+            $this->addAdjustments($order);
+
+            /** do re-calculation here */
+            $order->recalculateItemsTotal();
+            $order->recalculateAdjustmentsTotal();
+
+            $this->entityManager->flush();
+
+
             $realTotal = $order->getTotal();
 
             if (abs($order->getOrderPromotionTotal()) > 0) {
