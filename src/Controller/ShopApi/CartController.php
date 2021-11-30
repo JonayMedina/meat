@@ -802,7 +802,7 @@ class CartController extends AbstractFOSRestController
 
         $order->removeShipments();
 
-        //if ($shippingMethod && !$order->hasShipments()) {
+        if ($shippingMethod && !$order->hasShipments()) {
             $shipment = new Shipment();
             $shipment->setOrder($order);
             $shipment->setMethod($shippingMethod);
@@ -811,7 +811,7 @@ class CartController extends AbstractFOSRestController
 
             $this->entityManager->persist($shipment);
             $this->entityManager->flush();
-        //}
+        }
     }
 
     /**
