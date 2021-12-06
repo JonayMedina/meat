@@ -673,6 +673,9 @@ class CartController extends AbstractFOSRestController
 
                     return $this->handleView($view);
                 } catch (\Exception $exception) {
+
+                    $this->logger->error($exception);
+
                     $response = new APIResponse(Response::HTTP_BAD_REQUEST, APIResponse::TYPE_ERROR, 'Error on payment gateway', []);
                     $view = $this->view($response, $statusCode);
 
