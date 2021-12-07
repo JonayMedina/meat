@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 use App\Entity\Payment\Payment;
 use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
+use App\Entity\Shipping\ShippingMethod;
+use App\Entity\Shipping\Shipment;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -336,8 +338,12 @@ class PaymentGatewayService
 
         $this->logger->info($amount);
 
+        $this->addAdjustments($order);
+
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
+
+        $this->entityManager->flush();
 
         $this->logger->info("this is the amount after recalculate");
 
@@ -395,6 +401,44 @@ class PaymentGatewayService
 
         return $response;
     }
+
+    /**
+     * @param Order $order
+     */
+    private function addAdjustments(Order $order)
+    {
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $this->addShipping($order);
+
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * @param Order $order
+     */
+    private function addShipping(Order $order)
+    {
+        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
+
+        //$order->removeShipments();
+
+        if ($shippingMethod && !$order->hasShipments()) {
+            $shipment = new Shipment();
+            $shipment->setOrder($order);
+            $shipment->setMethod($shippingMethod);
+            $shipment->setCreatedAt(new \DateTime());
+            $shipment->setState('ready');
+
+            $this->entityManager->persist($shipment);
+            $this->entityManager->flush();
+        }
+    }
+
 
     public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order): array
     {
