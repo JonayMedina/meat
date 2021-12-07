@@ -289,7 +289,27 @@ class PaymentGatewayService
             'message' => 'Ok.'
         ];
 
+
+        $this->logger->info("this is the amount");
+
         $amount = $order->getTotal();
+
+        $this->logger->info($amount);
+
+        $this->addAdjustments($order);
+
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
+
+        $this->entityManager->flush();
+
+        $this->logger->info("this is the amount after recalculate");
+
+        $amount = $order->getTotal();
+
+        $this->logger->info($amount);
+
+        //$amount = $order->getTotal();
         $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
 
         if (!$paymentMethod instanceof PaymentMethod) {
