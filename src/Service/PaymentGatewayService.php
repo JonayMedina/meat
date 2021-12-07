@@ -330,19 +330,20 @@ class PaymentGatewayService
             }
         }
 
-        $this->logger->error("this is the amount");
+        $this->logger->info("this is the amount");
 
         $amount = $order->getTotal();
 
-        $this->logger->error($amount);
+        $this->logger->info($amount);
 
         $order->recalculateItemsTotal();
         $order->recalculateAdjustmentsTotal();
 
-        $this->logger->error("this is the amount after recalculate");
+        $this->logger->info("this is the amount after recalculate");
 
         $amount = $order->getTotal();
 
+        $this->logger->info($amount);
 
         /** Pay using FAC PAYMENT... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);
