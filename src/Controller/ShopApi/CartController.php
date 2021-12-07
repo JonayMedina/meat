@@ -645,7 +645,15 @@ class CartController extends AbstractFOSRestController
                     }
 
                     $type = APIResponse::TYPE_INFO;
+
+                    $this->logger->error("before the pay");
+
+                    $this->logger->error(json_encode($order));
+
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+
+
+
                     $htmlForm = $result['HTMLFormData'];
 
                     if ($htmlForm == '') {

@@ -330,7 +330,20 @@ class PaymentGatewayService
             }
         }
 
+        $this->logger->error("this is the amount");
+
         $amount = $order->getTotal();
+
+        $this->logger->error($amount);
+
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
+
+        $this->logger->error("this is the amount after recalculate");
+
+        $amount = $order->getTotal();
+
+
         /** Pay using FAC PAYMENT... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);
 
@@ -386,7 +399,7 @@ class PaymentGatewayService
     {
 
         $expDate = trim($expDate);
-        
+
         $year = substr($expDate , 0, 2);
         $month = substr($expDate , 2, 2);
         $expDate = $month.$year;
@@ -428,7 +441,7 @@ class PaymentGatewayService
             $this->entityManager->flush();
         }
 
-       
+
 
         $response['response']['HTMLFormData'] = $result['data']['Authorize3DSResult']['HTMLFormData'];
 
