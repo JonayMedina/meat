@@ -425,9 +425,11 @@ class PaymentGatewayService
         $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
             ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
 
-        $order->removeShipments();
+
 
         if ($shippingMethod && !$order->hasShipments()) {
+            $order->removeShipments();
+
             $shipment = new Shipment();
             $shipment->setOrder($order);
             $shipment->setMethod($shippingMethod);
