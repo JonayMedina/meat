@@ -692,7 +692,12 @@ class CartController extends AbstractFOSRestController
             }
 
             if ('cash_on_delivery' == $type) {
+
+                $this->logger->error("This is just to check if on mobile comes here");
+
                 $result = $paymentService->cashOnDelivery($order);
+
+                $this->logger->error("after the mobile");
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
