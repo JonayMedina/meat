@@ -521,6 +521,11 @@ class CartController extends AbstractFOSRestController
             }
 
             if ('cash_on_delivery' == $type) {
+
+                $this->logger->error("Show this log on cash moon");
+
+
+
                 $result = $paymentService->cashOnDelivery($order);
 
                 /** Inject order into response */
