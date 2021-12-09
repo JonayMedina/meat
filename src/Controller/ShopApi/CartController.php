@@ -786,13 +786,13 @@ class CartController extends AbstractFOSRestController
             throw new NotFoundHttpException('Cart not found');
         }
 
-        $this->addAdjustments($order);
+        //$this->addAdjustments($order);
 
         /** do re-calculation here */
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
+        //$order->recalculateItemsTotal();
+        //$order->recalculateAdjustmentsTotal();
 
-        $this->entityManager->flush();
+        //$this->entityManager->flush();
         $serialized = $this->orderService->serializeOrder($order);
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Success', $serialized);
