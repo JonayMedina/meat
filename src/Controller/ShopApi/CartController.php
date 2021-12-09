@@ -776,15 +776,15 @@ class CartController extends AbstractFOSRestController
      */
     public function recalculateAction(Request $request)
     {
-        $token = $request->get('token');
+        // $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
         /** @var Order $order */
-        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+        //$order = $this->repository->findOneBy(['tokenValue' => $token]);
 
-        if (!$order instanceof Order) {
-            throw new NotFoundHttpException('Cart not found');
-        }
+        // if (!$order instanceof Order) {
+        //     throw new NotFoundHttpException('Cart not found');
+        // }
 
         //$this->addAdjustments($order);
 
@@ -793,7 +793,7 @@ class CartController extends AbstractFOSRestController
         //$order->recalculateAdjustmentsTotal();
 
         //$this->entityManager->flush();
-        $serialized = $this->orderService->serializeOrder($order);
+        $serialized = array();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Success', $serialized);
         $view = $this->view($response, $statusCode);
