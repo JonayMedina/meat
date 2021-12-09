@@ -351,7 +351,9 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->addAdjustments($cart);
+
+
+        //$this->addAdjustments($cart);
 
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
