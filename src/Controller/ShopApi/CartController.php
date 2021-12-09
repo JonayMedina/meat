@@ -366,6 +366,9 @@ class CartController extends AbstractFOSRestController
                         $date = iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", $coupon->getPromotion()->getEndsAt()->format('U')));
                         $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
                     } else {
+
+                        $this->logger->error("Show this only once");
+
                         $this->isInIncompleteCart($coupon);
                         $response = $this->addCouponAction->__invoke($request);
 
