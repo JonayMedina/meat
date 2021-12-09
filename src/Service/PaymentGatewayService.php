@@ -289,25 +289,7 @@ class PaymentGatewayService
             'message' => 'Ok.'
         ];
 
-
-        $this->logger->info("this is the amount");
-
-        $amount = $order->getTotal();
-
-        $this->logger->info($amount);
-
-        $this->addAdjustments($order);
-
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
-
-        $this->entityManager->flush();
-
-        $this->logger->info("this is the amount after recalculate");
-
-        $amount = $order->getTotal();
-
-        $this->logger->info($amount);
+        $amount = $this->recalculateBeforePay($order);
 
         //$amount = $order->getTotal();
         $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
@@ -340,18 +322,9 @@ class PaymentGatewayService
         return $response;
     }
 
-    public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
-    {
-        if ($order->getState() != OrderInterface::STATE_CART) {
-            throw new BadRequestHttpException('Invalid cart state.');
-        }
 
-        if(substr($order->getTokenValue(), -3) != '-TA') {
-            if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
-                throw new BadRequestHttpException('This cart is already paid.');
-            }
-        }
 
+    private function recalculateBeforePay($order){
         $this->logger->info("this is the amount");
 
         $amount = $order->getTotal();
@@ -370,6 +343,25 @@ class PaymentGatewayService
         $amount = $order->getTotal();
 
         $this->logger->info($amount);
+
+        return $amount;
+    }
+
+
+
+    public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
+    {
+        if ($order->getState() != OrderInterface::STATE_CART) {
+            throw new BadRequestHttpException('Invalid cart state.');
+        }
+
+        if(substr($order->getTokenValue(), -3) != '-TA') {
+            if ($order->getPaymentState() == OrderPaymentStates::STATE_PAID) {
+                throw new BadRequestHttpException('This cart is already paid.');
+            }
+        }
+
+        $amount = $this->recalculateBeforePay($order);
 
         /** Pay using FAC PAYMENT... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);
