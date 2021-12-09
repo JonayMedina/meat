@@ -747,7 +747,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->addAdjustments($order);
+        //$this->addAdjustments($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
@@ -793,6 +793,9 @@ class CartController extends AbstractFOSRestController
         //$order->recalculateAdjustmentsTotal();
 
         //$this->entityManager->flush();
+
+        $this->logger->info("Did enter on recalculate");
+
         $serialized = array();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Success', $serialized);
