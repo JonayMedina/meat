@@ -10,6 +10,8 @@ use Psr\Log\LoggerInterface;
 use App\Entity\Payment\Payment;
 use App\Entity\Payment\GatewayConfig;
 use App\Entity\Payment\PaymentMethod;
+use App\Entity\Shipping\ShippingMethod;
+use App\Entity\Shipping\Shipment;
 use App\Repository\AboutStoreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -28,6 +30,7 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tribal\Services\PaymentHandler;
+use Cartpay\Service\CartPayment;
 
 class PaymentGatewayService
 {
@@ -287,7 +290,12 @@ class PaymentGatewayService
             'message' => 'Ok.'
         ];
 
-        $amount = $order->getTotal();
+        //$amount = $this->recalculateBeforePay($order);
+        $pay = new CartPayment();
+        $totals = json_decode($pay->calculate_cart($order->getId()));
+
+        $amount = $totals->total;
+
         $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
 
         if (!$paymentMethod instanceof PaymentMethod) {
@@ -318,6 +326,33 @@ class PaymentGatewayService
         return $response;
     }
 
+
+
+    private function recalculateBeforePay($order){
+        $this->logger->info("this is the amount");
+
+        $amount = $order->getTotal();
+
+        $this->logger->info($amount);
+
+        $this->addAdjustments($order);
+
+        $order->recalculateItemsTotal();
+        $order->recalculateAdjustmentsTotal();
+
+        $this->entityManager->flush();
+
+        $this->logger->info("this is the amount after recalculate");
+
+        $amount = $order->getTotal();
+
+        $this->logger->info($amount);
+
+        return $amount;
+    }
+
+
+
     public function orderPayment(Order $order, $cardHolder, $cardNumber, $expDate, $cvv)
     {
         if ($order->getState() != OrderInterface::STATE_CART) {
@@ -330,7 +365,13 @@ class PaymentGatewayService
             }
         }
 
-        $amount = $order->getTotal();
+        //$amount = $this->recalculateBeforePay($order);
+
+        $pay = new CartPayment();
+        $totals = json_decode($pay->calculate_cart($order->getId()));
+
+        $amount = $totals->total;
+
         /** Pay using FAC PAYMENT... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);
 
@@ -382,11 +423,51 @@ class PaymentGatewayService
         return $response;
     }
 
+    /**
+     * @param Order $order
+     */
+    private function addAdjustments(Order $order)
+    {
+        /**
+         * Add shipment here...
+         * @var ShippingMethod $shippingMethod
+         */
+        $this->addShipping($order);
+
+        $this->entityManager->flush();
+    }
+
+
+    /**
+     * @param Order $order
+     */
+    private function addShipping(Order $order)
+    {
+        $shippingMethod = $this->entityManager->getRepository('App:Shipping\ShippingMethod')
+            ->findOneBy(['code' => ShippingMethod::DEFAULT_SHIPPING_METHOD]);
+
+
+
+        if ($shippingMethod && !$order->hasShipments()) {
+            $order->removeShipments();
+
+            $shipment = new Shipment();
+            $shipment->setOrder($order);
+            $shipment->setMethod($shippingMethod);
+            $shipment->setCreatedAt(new \DateTime());
+            $shipment->setState('ready');
+
+            $this->entityManager->persist($shipment);
+            $this->entityManager->flush();
+        }
+    }
+
+
     public function pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order): array
     {
 
         $expDate = trim($expDate);
-        
+
         $year = substr($expDate , 0, 2);
         $month = substr($expDate , 2, 2);
         $expDate = $month.$year;
@@ -428,7 +509,7 @@ class PaymentGatewayService
             $this->entityManager->flush();
         }
 
-       
+
 
         $response['response']['HTMLFormData'] = $result['data']['Authorize3DSResult']['HTMLFormData'];
 

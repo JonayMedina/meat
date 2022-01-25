@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
 use Psr\Log\LoggerInterface;
+use Cartpay\Service\CartPayment;
 
 /**
  * CartController
@@ -351,7 +352,9 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $cart */
         $cart = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->addAdjustments($cart);
+
+
+        //$this->addAdjustments($cart);
 
         $coupon = $this->couponRepository->findOneBy(['code' => $code]);
 
@@ -364,6 +367,9 @@ class CartController extends AbstractFOSRestController
                         $date = iconv('ISO-8859-2', 'UTF-8', strftime("%A, %d de %B de %Y", $coupon->getPromotion()->getEndsAt()->format('U')));
                         $response = new APIResponse($statusCode, APIResponse::TYPE_ERROR, $this->translator->trans('app.api.cart.coupon_expired_at', ['%date%' => $date]));
                     } else {
+
+                        $this->logger->error("Show this only once");
+
                         $this->isInIncompleteCart($coupon);
                         $response = $this->addCouponAction->__invoke($request);
 
@@ -521,6 +527,11 @@ class CartController extends AbstractFOSRestController
             }
 
             if ('cash_on_delivery' == $type) {
+
+                $this->logger->error("Show this log on cash moon");
+
+
+
                 $result = $paymentService->cashOnDelivery($order);
 
                 /** Inject order into response */
@@ -563,7 +574,14 @@ class CartController extends AbstractFOSRestController
         $statusCode = Response::HTTP_OK;
 
         /** @var Order $order */
+
+
+
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+
+
+
 
         if (!$order instanceof Order) {
             $statusCode = Response::HTTP_NOT_FOUND;
@@ -645,7 +663,16 @@ class CartController extends AbstractFOSRestController
                     }
 
                     $type = APIResponse::TYPE_INFO;
+
+                    $this->logger->error("before the pay total");
+
+                    $this->logger->error($order->getTotal());
+
+
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
+
+
+
                     $htmlForm = $result['HTMLFormData'];
 
                     if ($htmlForm == '') {
@@ -673,6 +700,9 @@ class CartController extends AbstractFOSRestController
 
                     return $this->handleView($view);
                 } catch (\Exception $exception) {
+
+                    $this->logger->error($exception);
+
                     $response = new APIResponse(Response::HTTP_BAD_REQUEST, APIResponse::TYPE_ERROR, 'Error on payment gateway', []);
                     $view = $this->view($response, $statusCode);
 
@@ -681,7 +711,12 @@ class CartController extends AbstractFOSRestController
             }
 
             if ('cash_on_delivery' == $type) {
+
+                $this->logger->error("This is just to check if on mobile comes here");
+
                 $result = $paymentService->cashOnDelivery($order);
+
+                $this->logger->error("after the mobile");
 
                 /** Inject order into response */
                 $result['order'] = $this->orderService->serializeOrder($order);
@@ -726,7 +761,7 @@ class CartController extends AbstractFOSRestController
 
         /** @var Order $order */
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
-        $this->addAdjustments($order);
+        //$this->addAdjustments($order);
 
         $order->setEstimatedDeliveryDate($nextAvailableDay);
         $order->setScheduledDeliveryDate(Carbon::parse($scheduledDeliveryDate));
@@ -755,24 +790,27 @@ class CartController extends AbstractFOSRestController
      */
     public function recalculateAction(Request $request)
     {
-        $token = $request->get('token');
+        // $token = $request->get('token');
         $statusCode = Response::HTTP_OK;
 
         /** @var Order $order */
-        $order = $this->repository->findOneBy(['tokenValue' => $token]);
+        //$order = $this->repository->findOneBy(['tokenValue' => $token]);
 
-        if (!$order instanceof Order) {
-            throw new NotFoundHttpException('Cart not found');
-        }
+        // if (!$order instanceof Order) {
+        //     throw new NotFoundHttpException('Cart not found');
+        // }
 
-        $this->addAdjustments($order);
+        //$this->addAdjustments($order);
 
         /** do re-calculation here */
-        $order->recalculateItemsTotal();
-        $order->recalculateAdjustmentsTotal();
+        //$order->recalculateItemsTotal();
+        //$order->recalculateAdjustmentsTotal();
 
-        $this->entityManager->flush();
-        $serialized = $this->orderService->serializeOrder($order);
+        //$this->entityManager->flush();
+
+        $this->logger->info("Did enter on recalculate");
+
+        $serialized = array();
 
         $response = new APIResponse($statusCode, APIResponse::TYPE_INFO, 'Success', $serialized);
         $view = $this->view($response, $statusCode);

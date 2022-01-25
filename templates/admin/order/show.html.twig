@@ -157,9 +157,16 @@
 
                                     <div class="col-12">
                                         <p><span><span>{{ 'app.ui.sub_total'|trans }}</span></span> {{ order.itemsTotal|price|number_format_currency(currency) }}</p>
-                                        {% for adjustment in order.adjustments %}
-                                            <p class="discount"><span>{{ adjustment.label }}:</span> {{ adjustment.amount|price|number_format_currency(currency) }}</p>
+
+                                        {% set i = 0 %}
+
+                                         {% for adjustment in order.adjustments %}
+                                            {% if i == 0 %}
+                                                {% set i = 1 %}
+                                                <p class="discount"><span>{{ adjustment.label }}:</span> {{ adjustment.amount|price|number_format_currency(currency) }}</p>
+                                            {% endif %}
                                         {% endfor %}
+
                                         <p class="total"><span>{{ 'app.ui.total'|trans }}</span> <strong>{{ order.total|price|number_format_currency(currency) }}</strong></p>
                                     </div>
                                 </div>

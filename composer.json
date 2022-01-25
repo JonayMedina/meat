@@ -105,7 +105,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "Tribal\\": "tribal/"
+            "Tribal\\": "tribal/",
+            "Cartpay\\": "cartpay/"
         }
     },
     "autoload-dev": {
