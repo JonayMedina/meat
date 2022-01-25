@@ -11,6 +11,7 @@ use FOS\RestBundle\View\View;
 use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use App\Entity\Shipping\ShippingMethod;
+use Cartpay\Service\CartPayment;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Resource\ResourceActions;
@@ -24,6 +25,7 @@ use Tribal\Services\PaymentHandler;
 
 class OrderExtendedController extends OrderController
 {
+
     public function summaryAction(Request $request): Response
     {
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
@@ -167,7 +169,7 @@ class OrderExtendedController extends OrderController
 
                 /* Add shipment to order */
 
-                // Remove existing shipments 
+                // Remove existing shipments
                 $resource->removeShipments();
                 /** @var ShipmentInterface $shipment */
                 $shipment = $this->container->get('sylius.factory.shipment')->createNew();
@@ -311,6 +313,7 @@ class OrderExtendedController extends OrderController
 
     public function billingAction(Request $request): Response
     {
+
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
@@ -318,6 +321,9 @@ class OrderExtendedController extends OrderController
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
         $form = $this->resourceFormFactory->create($configuration, $resource);
+
+        $pay = new CartPayment();
+        $pay->calculate_cart($_GET['id']);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true) && $form->handleRequest($request)->isValid()) {
             $resource = $form->getData();
@@ -395,6 +401,8 @@ class OrderExtendedController extends OrderController
             return $initializeEventResponse;
         }
 
+
+
         $view = View::create()
             ->setData([
                 'configuration' => $configuration,
@@ -422,6 +430,9 @@ class OrderExtendedController extends OrderController
         $cardType = $paymentType == 'card';
         $this->get('session')->set('payment', $paymentType);
         $valid = false;
+
+        $pay = new CartPayment();
+        $pay->calculate_cart($_GET['id']);
 
         if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH'], true)) {
             if ($paymentType) {
@@ -489,6 +500,8 @@ class OrderExtendedController extends OrderController
                 }
             }
         }
+
+
 
         if (!$configuration->isHtmlRequest()) {
             return $this->viewHandler->handle($configuration, View::create($form, Response::HTTP_BAD_REQUEST));

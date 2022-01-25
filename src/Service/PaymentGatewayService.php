@@ -30,6 +30,7 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\PaymentMethodRepository;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tribal\Services\PaymentHandler;
+use Cartpay\Service\CartPayment;
 
 class PaymentGatewayService
 {
@@ -289,9 +290,12 @@ class PaymentGatewayService
             'message' => 'Ok.'
         ];
 
-        $amount = $this->recalculateBeforePay($order);
+        //$amount = $this->recalculateBeforePay($order);
+        $pay = new CartPayment();
+        $totals = json_decode($pay->calculate_cart($order->getId()));
 
-        //$amount = $order->getTotal();
+        $amount = $totals->total;
+
         $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
 
         if (!$paymentMethod instanceof PaymentMethod) {
@@ -361,7 +365,12 @@ class PaymentGatewayService
             }
         }
 
-        $amount = $this->recalculateBeforePay($order);
+        //$amount = $this->recalculateBeforePay($order);
+
+        $pay = new CartPayment();
+        $totals = json_decode($pay->calculate_cart($order->getId()));
+
+        $amount = $totals->total;
 
         /** Pay using FAC PAYMENT... */
         $response = $this->pay($amount, $cardHolder, $cardNumber, $expDate, $cvv, $order);

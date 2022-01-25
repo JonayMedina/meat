@@ -33,6 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Sylius\Bundle\PromotionBundle\Doctrine\ORM\PromotionCouponRepository;
 use Psr\Log\LoggerInterface;
+use Cartpay\Service\CartPayment;
 
 /**
  * CartController
@@ -573,7 +574,14 @@ class CartController extends AbstractFOSRestController
         $statusCode = Response::HTTP_OK;
 
         /** @var Order $order */
+
+
+
         $order = $this->repository->findOneBy(['tokenValue' => $token]);
+
+
+
+
 
         if (!$order instanceof Order) {
             $statusCode = Response::HTTP_NOT_FOUND;
@@ -656,9 +664,10 @@ class CartController extends AbstractFOSRestController
 
                     $type = APIResponse::TYPE_INFO;
 
-                    $this->logger->error("before the pay");
+                    $this->logger->error("before the pay total");
 
-                    $this->logger->error(json_encode($order));
+                    $this->logger->error($order->getTotal());
+
 
                     $result = $paymentService->orderPayment($order, $cardHolder, $cardNumber, $expDate, $cvv);
 
