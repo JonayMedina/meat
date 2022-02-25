@@ -313,7 +313,13 @@ class PaymentGatewayService
          */
         $payment = $this->paymentFactory->createNew();
 
-        $details = ['date' => date('c'), 'payment_on_delivery' => true];
+        $queueCreated = json_decode($pay->create_queue($order->getId()));
+
+        $details = [
+            'date' => date('c'),
+            'payment_on_delivery' => $queueCreated['payed']
+        ];
+
         $payment->setOrder($order);
         $payment->setDetails($details);
         $payment->setCurrencyCode($currency);
@@ -324,8 +330,6 @@ class PaymentGatewayService
         $this->executeStateMachine($order, $payment);
 
         $this->entityManager->flush();
-
-        $pay->create_queue($order->getId());
 
         return $response;
     }
