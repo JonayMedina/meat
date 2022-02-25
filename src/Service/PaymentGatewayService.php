@@ -315,6 +315,8 @@ class PaymentGatewayService
 
         $queueCreated = json_decode($pay->create_queue($order->getId()));
 
+        $this->logger->error(json_encode($queueCreated));
+
         $details = [
             'date' => date('c'),
             'payment_on_delivery' => $queueCreated['payed']
