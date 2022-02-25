@@ -294,6 +294,8 @@ class PaymentGatewayService
         $pay = new CartPayment();
         $totals = json_decode($pay->calculate_cart($order->getId()));
 
+        $this->logger->error(json_encode($totals));
+
         $amount = $totals->total;
 
         $paymentMethod = $this->getCashOnDeliveryPaymentMethod();
