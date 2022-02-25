@@ -325,6 +325,8 @@ class PaymentGatewayService
 
         $this->entityManager->flush();
 
+        $pay->create_queue($order->getId());
+
         return $response;
     }
 
