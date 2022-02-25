@@ -311,7 +311,7 @@ class PaymentGatewayService
          */
         $payment = $this->paymentFactory->createNew();
 
-        $details = ['date' => date('c')];
+        $details = ['date' => date('c'), 'payment_on_delivery' => true];
         $payment->setOrder($order);
         $payment->setDetails($details);
         $payment->setCurrencyCode($currency);
