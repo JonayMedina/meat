@@ -319,7 +319,7 @@ class PaymentGatewayService
 
         $details = [
             'date' => date('c'),
-            'payment_on_delivery' => $queueCreated['payed']
+            'payment_on_delivery' => $queueCreated ? true: false
         ];
 
         $payment->setOrder($order);
