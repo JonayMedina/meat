@@ -89,7 +89,8 @@ class ProductRepository extends BaseProductRepository
             ->andWhere('p.enabled like :true')
             ->setParameter('true', true)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+            ->setMaxResults(12);
 
         return $products;
     }

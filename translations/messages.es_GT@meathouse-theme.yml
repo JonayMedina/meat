@@ -820,7 +820,7 @@ app.ui.checkout.billing.cf: 'Consumidor Final'
 app.ui.checkout.billing.cf.short: CF
 app.ui.checkout.billing.city: Ciudad
 app.ui.checkout.complete_order: 'Completar tu compra'
-app.ui.checkout.order.payment.cash_on_delivery: 'Pago contra entrega (Tarjeta o Efectivo)'
+app.ui.checkout.order.payment.cash_on_delivery: Pago contra entrega (Tarjeta o Efectivo)
 app.ui.checkout.order.payment.bank_transfer: 'Transferencia bancaria'
 app.ui.checkout.order.payment.card: Tarjeta
 app.ui.checkout.order.payment.card.message: 'No guardaremos la información de tu tarjeta'
