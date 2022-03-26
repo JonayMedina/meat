@@ -90,7 +90,7 @@ class ProductRepository extends BaseProductRepository
             ->setParameter('true', true)
             ->getQuery()
             ->getResult()
-            ->setMaxResults(12);
+            ->setFirstResult(12);
 
         return $products;
     }
