@@ -435,7 +435,11 @@
             "branch": "master",
             "version": "3.2",
             "ref": "5ef2976310e8f9621c1a722a73bfbe115c1559a3"
-        }
+        },
+        "files": [
+            "config/packages/dev/nelmio_alice.yaml",
+            "config/packages/test/nelmio_alice.yaml"
+        ]
     },
     "nesbot/carbon": {
         "version": "2.34.2"

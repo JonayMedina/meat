@@ -1,5 +1,14 @@
 FROM php:7.2-fpm-alpine
 
+ARG UID
+EXPOSE $UID
+
+RUN adduser -u ${UID} --disabled-password --gecos "" appuser
+RUN mkdir /home/appuser/.ssh
+RUN chown -R appuser:appuser /home/appuser/
+RUN echo "StrictHostKeyChecking no" >> /home/appuser/.ssh/config
+RUN echo "export COLUMNS=300" >> /home/appuser/.bashrc
+RUN echo "alias sf=/var/www/bin/console" >> /home/appuser/.bashrc
 
 RUN apk add icu-dev 
 RUN docker-php-ext-install mysqli pdo pdo_mysql

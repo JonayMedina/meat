@@ -141,7 +141,12 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/thanks": true,
+            "symfony/flex": true,
+            "phpstan/extension-installer": true
+        }
     },
     "extra": {
         "symfony": {

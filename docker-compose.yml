@@ -42,9 +42,12 @@ services:
         build: 
             context: .
             dockerfile: Dockerfile
+            args:
+                UID: $U_ID
         container_name: php-mh-fac
         volumes: 
             - ./:/var/www
+            - ~/.ssh/id_rsa:/home/appuser/.ssh/id_rsa
         ports: 
             - "9011:9000"
         networks:
