@@ -24,6 +24,13 @@
         {% include '@SyliusUi/_stylesheets.html.twig' with {'path': 'assets/shop/css/style.css'} %}
 
         <style>
+
+.modal-content .associations .content p {margin-bottom: 0px;}
+.modal-content .associations .content {padding-top: 0px;}
+.modal-content .text-right{margin-top: 4px !important;}
+//#product-in-cart > div > div > div.modal-footer.d-none.d-lg-block > div > div > div:nth-child(1) {display: none;}
+
+//#product-in-cart > div > div > div.modal-footer.d-none.d-lg-block > h4 {display: none;}
             /* Fonts */
             @font-face {
                 font-family: "Raleway";
@@ -192,8 +199,10 @@
                         </div>
                     </div>
                     <div class="modal-footer d-none d-lg-block">
-                        <h4>{{ 'app.ui.complement_with'|trans }}</h4>
-                        {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }}
+                       <!-- <h4>{{ 'app.ui.complement_with'|trans }}</h4> -->
+                      <!--  {{ render(url('store_products_by_taxon', {'code': 'com', 'count': 3})) }} -->
+                {% include '@SyliusShop/Product/Show/_associations.html.twig' %}
+
                     </div>
                 </div>
             </div>
