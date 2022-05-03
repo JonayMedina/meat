@@ -59,10 +59,10 @@ class OrderExtendedController extends OrderController
 
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
-        Log::debug('--addres delivery-----');
-        Log::debug(json_encode($configuration));
-        Log::debug(json_encode($request->request));
-        Log::debug('-fiinn address---');
+        Log::error('--addres delivery-----');
+        Log::error(json_encode($configuration));
+        Log::error(json_encode($request->request));
+        Log::error('-fiinn address---');
         /** @var AboutStore $aboutStore */
         $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
         $deliveryHours = $aboutStore->getDeliveryHours();
@@ -321,10 +321,10 @@ class OrderExtendedController extends OrderController
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
-        Log::debug('--- Billing -----');
-        Log::debug(json_encode($configuration));
-        Log::debug(json_encode($request->request));
-        Log::debug('-fiinn billing---');
+        Log::error('--- Billing -----');
+        Log::error(json_encode($configuration));
+        Log::error(json_encode($request->request));
+        Log::error('-fiinn billing---');
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
         $form = $this->resourceFormFactory->create($configuration, $resource);
