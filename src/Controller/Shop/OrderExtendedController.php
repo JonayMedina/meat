@@ -59,7 +59,6 @@ class OrderExtendedController extends OrderController
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
-        dd($configuration .  ' datarequest' . $request);
         /** @var AboutStore $aboutStore */
         $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
         $deliveryHours = $aboutStore->getDeliveryHours();
