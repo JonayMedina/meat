@@ -58,9 +58,9 @@ class OrderExtendedController extends OrderController
 
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
-        logger()->info('--addres delivery-----');
-        logger()->info(json_encode($configuration));
-        logger()->info(json_encode($request->request));
+        logger('--addres delivery-----');
+        logger(json_encode($configuration));
+        logger(json_encode($request->request));
         logger('-fiinn address---');
         /** @var AboutStore $aboutStore */
         $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
@@ -320,9 +320,9 @@ class OrderExtendedController extends OrderController
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
-        logger()->info('--- Billing -----');
-        logger()->info(json_encode($configuration));
-        logger()->info(json_encode($request->request));
+        logger('--- Billing -----');
+        logger(json_encode($configuration));
+        logger(json_encode($request->request));
         logger('-fiinn billing---');
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
