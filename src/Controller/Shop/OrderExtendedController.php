@@ -12,7 +12,6 @@ use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use App\Entity\Shipping\ShippingMethod;
 use Cartpay\Service\CartPayment;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Resource\ResourceActions;
@@ -59,10 +58,8 @@ class OrderExtendedController extends OrderController
 
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
-        Log::error('--addres delivery-----');
-        Log::error(json_encode($configuration));
-        Log::error(json_encode($request->request));
-        Log::error('-fiinn address---');
+
+        dd($configuration .  ' datarequest' . $request);
         /** @var AboutStore $aboutStore */
         $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
         $deliveryHours = $aboutStore->getDeliveryHours();
@@ -321,10 +318,7 @@ class OrderExtendedController extends OrderController
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
-        Log::error('--- Billing -----');
-        Log::error(json_encode($configuration));
-        Log::error(json_encode($request->request));
-        Log::error('-fiinn billing---');
+
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
         $form = $this->resourceFormFactory->create($configuration, $resource);
