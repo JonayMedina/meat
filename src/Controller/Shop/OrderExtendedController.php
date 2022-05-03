@@ -48,16 +48,20 @@ class OrderExtendedController extends OrderController
             ->setData([
                 'cart' => $cart,
                 'form' => $form->createView(),
-            ])
-        ;
+            ]);
 
         return $this->viewHandler->handle($configuration, $view);
     }
 
     public function updateAction(Request $request): Response
     {
+
         $em = $this->getDoctrine()->getManager();
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
+        logger()->info('--addres delivery-----');
+        logger()->info(json_encode($configuration));
+        logger()->info(json_encode($request->request));
+        logger('-fiinn address---');
         /** @var AboutStore $aboutStore */
         $aboutStore = $this->getDoctrine()->getRepository('App:AboutStore')->findLatest();
         $deliveryHours = $aboutStore->getDeliveryHours();
@@ -93,7 +97,7 @@ class OrderExtendedController extends OrderController
         }
 
         $estimated = $this->get('app.service.order')->getNextAvailableDay($preferredTime, $scheduled);
-        $resource->setEstimatedDeliveryDate(New DateTime($estimated));
+        $resource->setEstimatedDeliveryDate(new DateTime($estimated));
 
         /* Add customer to order if this doesn't have */
         if (!$resource->getCustomer()) {
@@ -122,7 +126,7 @@ class OrderExtendedController extends OrderController
                     $formatted = DateTime::createFromFormat('d/m/Y', $scheduledDate);
                     $date = $formatted->format('Y-m-d');
 
-                    $resource->setScheduledDeliveryDate(New DateTime($date));
+                    $resource->setScheduledDeliveryDate(new DateTime($date));
                 } else {
                     $resource->setScheduledDeliveryDate(null);
                 }
@@ -159,7 +163,7 @@ class OrderExtendedController extends OrderController
 
             /* If skip billing step is true */
             if (filter_var($skipBilling, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)) {
-               $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
+                $stateMachine['graph'] = $configuration->getParameters()->get('state_machine')['graph'];
                 $stateMachine['transition'] = 'select_shipping';
 
                 $configuration->getParameters()->set('state_machine', $stateMachine);
@@ -305,8 +309,7 @@ class OrderExtendedController extends OrderController
                 $this->metadata->getName() => $resource,
                 'form' => $form->createView(),
             ])
-            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
-        ;
+            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'));
 
         return $this->viewHandler->handle($configuration, $view);
     }
@@ -317,7 +320,10 @@ class OrderExtendedController extends OrderController
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
         $this->isGrantedOr403($configuration, ResourceActions::UPDATE);
-
+        logger()->info('--- Billing -----');
+        logger()->info(json_encode($configuration));
+        logger()->info(json_encode($request->request));
+        logger('-fiinn billing---');
         /** @var Order $resource */
         $resource = $this->findOr404($configuration);
         $form = $this->resourceFormFactory->create($configuration, $resource);
@@ -411,8 +417,7 @@ class OrderExtendedController extends OrderController
                 $this->metadata->getName() => $resource,
                 'form' => $form->createView(),
             ])
-            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
-        ;
+            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'));
 
         return $this->viewHandler->handle($configuration, $view);
     }
@@ -521,8 +526,7 @@ class OrderExtendedController extends OrderController
                 $this->metadata->getName() => $resource,
                 'form' => $form->createView(),
             ])
-            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
-        ;
+            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'));
 
         return $this->viewHandler->handle($configuration, $view);
     }
@@ -614,8 +618,7 @@ class OrderExtendedController extends OrderController
                 $this->metadata->getName() => $resource,
                 'form' => $form->createView(),
             ])
-            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'))
-        ;
+            ->setTemplate($configuration->getTemplate(ResourceActions::UPDATE . '.html'));
 
         return $this->viewHandler->handle($configuration, $view);
     }
@@ -647,8 +650,7 @@ class OrderExtendedController extends OrderController
             ->setData([
                 'order' => $order,
             ])
-            ->setTemplate($configuration->getParameters()->get('template'))
-        ;
+            ->setTemplate($configuration->getParameters()->get('template'));
 
         return $this->viewHandler->handle($configuration, $view);
     }
@@ -657,7 +659,8 @@ class OrderExtendedController extends OrderController
      * @param Customer $customer
      * @return array
      */
-    private function getShippingAddresses($customer) {
+    private function getShippingAddresses($customer)
+    {
         $addresses = $customer->getAddresses();
         $default = $customer->getDefaultAddress();
         $new = [];
@@ -666,7 +669,7 @@ class OrderExtendedController extends OrderController
             $new[] = $default;
         }
 
-        foreach ($addresses as $address ) {
+        foreach ($addresses as $address) {
             if ($default) {
                 if ($default->getId() != $address->getId()) {
                     if ($address->getType() == Address::TYPE_SHIPPING) {
