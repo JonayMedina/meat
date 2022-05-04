@@ -12,6 +12,7 @@ use App\Entity\Customer\Customer;
 use App\Entity\Addressing\Address;
 use App\Entity\Shipping\ShippingMethod;
 use Cartpay\Service\CartPayment;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sylius\Component\Resource\ResourceActions;
@@ -25,6 +26,19 @@ use Tribal\Services\PaymentHandler;
 
 class OrderExtendedController extends OrderController
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @param LoggerInterface $logger
+     */
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     public function summaryAction(Request $request): Response
     {
@@ -313,6 +327,7 @@ class OrderExtendedController extends OrderController
 
     public function billingAction(Request $request): Response
     {
+        $this->logger->info("-billing data--", [$request]);
 
         $configuration = $this->requestConfigurationFactory->create($this->metadata, $request);
 
